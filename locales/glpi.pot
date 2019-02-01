@@ -1,0 +1,201 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Releases Development Team
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GLPI - Releases plugin 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-20 16:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: setup.php:69 inc/profile.class.php:133
+msgid "Release"
+msgid_plural "Releases"
+msgstr[0] ""
+msgstr[1] ""
+
+#: setup.php:81
+msgid "This plugin requires GLPI >= 9.1"
+msgstr ""
+
+#: inc/deployment.class.php:43
+msgid "Deployment"
+msgid_plural "Deployments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/deployment.class.php:93
+msgid "Choice of deployment methode"
+msgstr ""
+
+#: inc/deployment.class.php:104
+msgid "Add a new phase"
+msgstr ""
+
+#: inc/deployment.class.php:132
+msgid "List of phases"
+msgstr ""
+
+#: inc/deployment.class.php:181 inc/deployment.class.php:192
+msgid "Save the configuration of associated elements of change"
+msgstr ""
+
+#: inc/deployment.class.php:185
+msgid "Save configuration"
+msgstr ""
+
+#: inc/deployment.class.php:195
+msgid "You need pdf plugin for this fonctionality"
+msgstr ""
+
+#: inc/deployment.class.php:217
+msgid "Phases"
+msgstr ""
+
+#: inc/deployment.class.php:246
+msgid "Edit phase"
+msgstr ""
+
+#: inc/deployment.class.php:248
+msgid "New phase"
+msgstr ""
+
+#: inc/information.class.php:45
+msgid "Information"
+msgid_plural "Informations"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/information.class.php:139
+msgid "Start notification"
+msgstr ""
+
+#: inc/information.class.php:156
+msgid "Stop notification"
+msgstr ""
+
+#: inc/menu.class.php:34
+msgid "Mep"
+msgid_plural "Meps"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/release.class.php:50
+msgid "Release Management"
+msgid_plural "Releases Management"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/release.class.php:103
+msgid "Would you pass this change into release ?"
+msgstr ""
+
+#: inc/release.class.php:117
+msgid "Would you reopen this release ?"
+msgstr ""
+
+#: inc/release.class.php:135
+msgid "Analyse state"
+msgstr ""
+
+#: inc/release.class.php:137
+msgid "Validate the analyse"
+msgstr ""
+
+#: inc/release.class.php:150
+msgid "Estimation state"
+msgstr ""
+
+#: inc/release.class.php:152 inc/release.class.php:167
+msgid "Validate the cost"
+msgstr ""
+
+#: inc/release.class.php:165
+msgid "Planification state"
+msgstr ""
+
+#: inc/release.class.php:180
+msgid "Phase of tests"
+msgstr ""
+
+#: inc/release.class.php:181
+msgid "Add a new test"
+msgstr ""
+
+#: inc/release.class.php:197
+msgid "Phase of information"
+msgstr ""
+
+#: inc/release.class.php:210
+msgid "Phase of deployment"
+msgstr ""
+
+#: inc/release.class.php:211
+msgid "Save the configuration"
+msgstr ""
+
+#: inc/release.class.php:224
+msgid "Close release"
+msgstr ""
+
+#: inc/release.class.php:230
+msgid "Legend"
+msgstr ""
+
+#: inc/release.class.php:251
+msgid "In progress"
+msgstr ""
+
+#: inc/release.class.php:258
+msgid "Waiting"
+msgstr ""
+
+#: inc/release.class.php:272
+msgid "Default"
+msgstr ""
+
+#: inc/release.class.php:286 inc/release.class.php:289
+#: inc/release.class.php:292 inc/release.class.php:295
+#: inc/release.class.php:298 inc/release.class.php:301
+msgid "Change state"
+msgstr ""
+
+#: inc/task.class.php:46
+msgid "Task of deployment"
+msgid_plural "Tasks of deployment"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/test.class.php:662
+msgid "Add a new Test"
+msgstr ""
+
+#: inc/test.class.php:667
+msgid "No Test found."
+msgstr ""
+
+#: inc/test.class.php:737 inc/test.class.php:747
+msgid "New"
+msgstr ""
+
+#: inc/test.class.php:738 inc/test.class.php:748
+msgid "In Progress"
+msgstr ""
+
+#: inc/test.class.php:739 inc/test.class.php:749
+msgid "Validated"
+msgstr ""
+
+#: inc/test.class.php:740 inc/test.class.php:750
+msgid "Unvalidated"
+msgstr ""
