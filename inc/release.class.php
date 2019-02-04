@@ -29,13 +29,28 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /// Class Release
-class PluginReleasesRelease extends CommonDBTM {
+class PluginReleasesRelease extends CommonITILObject {
 
    // From CommonDBTM
-   var       $dohistory        = true;
-   static    $rightname        = "plugin_releases";
-   protected $usenotepad       = true;
-   protected $usenotepadrights = true;
+   public           $dohistory         = true;
+   static protected $forward_entity_to = ['PluginReleasesReleaseValidation'];
+
+   // From CommonITIL
+   //   public $userlinkclass               = 'PluginReleasesRelease_User';
+   //   public $grouplinkclass              = 'PluginReleasesRelease_Group';
+   //   public $supplierlinkclass           = 'PluginReleasesRelease_Supplier';
+
+   static    $rightname  = 'plugin_releases';
+   protected $usenotepad = true;
+
+   const MATRIX_FIELD = 'priority_matrix';
+   //   const URGENCY_MASK_FIELD            = 'urgency_mask';
+   //   const IMPACT_MASK_FIELD             = 'impact_mask';
+   const STATUS_MATRIX_FIELD = 'release_status';
+
+
+   //   const READMY                        = 1;
+   //   const READALL                       = 1024;
 
 
    /**
@@ -85,294 +100,827 @@ class PluginReleasesRelease extends CommonDBTM {
 
       $ong = [];
       $this->addDefaultFormTab($ong);
+      $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
+      $this->addStandardTab('PluginReleasesOverview', $ong, $options);
       //TODO
-      $this->addStandardTab('PluginReleasesTest', $ong, $options);
-      $this->addStandardTab('PluginReleasesTask', $ong, $options);
-      $this->addStandardTab('PluginReleasesInformation', $ong, $options);
-      $this->addStandardTab('PluginReleases_Change_Release', $ong, $options);
-      $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
+
+      //      $this->addStandardTab('PluginReleasesReleaseDeployment', $ong, $options);
+      $this->addStandardTab('PluginReleasesReleaseTest', $ong, $options);
+      $this->addStandardTab('PluginReleasesReleaseTask', $ong, $options);
+      $this->addStandardTab('PluginReleasesReleaseInformation', $ong, $options);
+      //TODO
+      //      $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
+      $this->addStandardTab('PluginReleasesReleaseDeployment', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options);
+      $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
       $this->addStandardTab('Notepad', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
 
       return $ong;
    }
 
+   function cleanDBonPurge() {
 
-   /**
-    * @param CommonGLPI $item
-    * @param int        $tabnum
-    * @param int        $withtemplate
-    *
-    * @return bool
-    */
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      if ($item->getType() == 'Change') {
-         $release = new PluginReleasesRelease();
-         $ID      = $item->getField('id');
-         $release->showForm($ID);
-      }
-      return true;
+      // CommonITILTask does not extends CommonDBConnexity
+      $ct = new PluginReleasesReleaseTask();
+      $ct->deleteByCriteria(['plugin_releases_releases_id' => $this->fields['id']]);
+
+      $this->deleteChildrenAndRelationsFromDb(
+         [
+            // Done by parent: PluginReleasesRelease_Group::class,
+            //            PluginReleasesRelease_Item::class,
+            //            PluginReleasesRelease_Problem::class,
+            // Done by parent: PluginReleasesRelease_Supplier::class,
+            //            PluginReleasesRelease_Ticket::class,
+            // Done by parent: PluginReleasesRelease_User::class,
+            //            PluginReleasesReleaseValidation::class,
+         ]
+      );
+
+      parent::cleanDBonPurge();
    }
 
-   function showForm($ID, $options = array()) {
-      global $CFG_GLPI, $DB;
 
-      if ($ID > 0) {
-         $release = new self();
-         if (!$release->find(["changes_id" => $ID])) {
+   function prepareInputForUpdate($input) {
 
-            $release->add(array('changes_id' => $ID));
-            $query = "INSERT INTO `glpi_plugin_releases_overviews` (`id`, `changes_id`)
-                  VALUES (" . $ID . "," . $ID . ")";
-            $DB->query($query);
-            $release->showForm($ID);
+      $input = parent::prepareInputForUpdate($input);
+      return $input;
+   }
 
-         } else {
 
-            if (isset($release->fields['is_release']) && $release->fields['is_release'] == 0) {
+   function pre_updateInDB() {
+      parent::pre_updateInDB();
+   }
 
-               $release->initForm($release->getID(), $options);
-               $release->showFormHeader($options);
-               echo '<tbody>';
-               echo '<tr>';
-               echo '<td>' . __('Would you pass this change into release ?', 'releases') . '</td>';
-               echo '<td>';
-               dropdown::showYesNo('is_release',
-                                   $release->fields['is_release']);
-               echo '<td></tr>';
-               $release->showFormButtons();
 
-            } else {
+   function post_updateItem($history = 1) {
+      global $CFG_GLPI;
 
-               if (isset($release->fields['is_release']) && $release->fields['is_release'] == 2) {
-                  $release->initForm($release->getID(), $options);
-                  $release->showFormHeader($options);
-                  echo '<tbody>';
-                  echo '<tr>';
-                  echo '<td>' . __('Would you reopen this release ?', 'releases') . '</td>';
-                  echo '<td>';
-                  dropdown::showYesNo('is_release',
-                                      $release->fields['is_release']);
-                  echo '<td></tr>';
-                  $release->showFormButtons();
-               }
+      //      $donotif =  count($this->updates);
+      //
+      //      if (isset($this->input['_forcenotif'])) {
+      //         $donotif = true;
+      //      }
+      //
+      //      if (isset($this->input['_disablenotif'])) {
+      //         $donotif = false;
+      //      }
+      //
+      //      if ($donotif && $CFG_GLPI["use_notifications"]) {
+      //         $mailtype = "update";
+      //         if (isset($this->input["status"]) && $this->input["status"]
+      //             && in_array("status", $this->updates)
+      //             && in_array($this->input["status"], $this->getSolvedStatusArray())) {
+      //
+      //            $mailtype = "solved";
+      //         }
+      //
+      //         if (isset($this->input["status"]) && $this->input["status"]
+      //             && in_array("status", $this->updates)
+      //             && in_array($this->input["status"], $this->getClosedStatusArray())) {
+      //
+      //            $mailtype = "closed";
+      //         }
+      //
+      //         // Read again change to be sure that all data are up to date
+      //         $this->getFromDB($this->fields['id']);
+      //         NotificationEvent::raiseEvent($mailtype, $this);
+      //      }
+   }
 
-               $overview = getAllDatasFromTable('glpi_plugin_releases_overviews', "`changes_id`='$ID'");
-               echo "<div style='width:50%; margin-left:15%; background-color:#f1f1f1; float:left;'>";
-               echo "<div style='height:70px;'>";
-               echo '<div style="width:20%; float:left; margin-top:10px;">';
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_analyse&old=" . $overview[$ID]['is_validate_analyse'] . "'>";
-               static::getBubble($overview[$ID]['is_validate_analyse']);
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("Analyse state", 'releases') . '</b><br>';
-               if ($overview[$ID]['is_validate_analyse'] != 1) {
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_analyse&old=0'>" . __('Validate the analyse', 'releases') . "</a>";
-               }
-               echo '</div>';
-               echo '</div></div>';
 
-               echo "<div style='height:70px;'>";
-               echo "<div style='width:20%; float:left; margin-top:10px;'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_cost&old=" . $overview[$ID]['is_validate_cost'] . "'>";
-               static::getBubble($overview[$ID]['is_validate_cost']);
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("Estimation state", 'releases') . '</b><br>';
-               if ($overview[$ID]['is_validate_cost'] != 1) {
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_cost&old=0'>" . __('Validate the cost', 'releases') . "</a>";
-               }
-               echo '</div>';
-               echo '</div></div>';
+   function prepareInputForAdd($input) {
 
-               echo "<div style='height:70px;'>";
-               echo "<div style='width:20%; float:left; margin-top:10px;'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_plan&old=" . $overview[$ID]['is_validate_plan'] . "'>";
-               static::getBubble($overview[$ID]['is_validate_plan']);
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("Planification state", 'releases') . '</b><br>';
-               if ($overview[$ID]['is_validate_plan'] != 1) {
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_plan&old=0'>" . __('Validate the cost', 'releases') . "</a>";
-               }
-               echo '</div>';
-               echo '</div></div>';
+      $input = parent::prepareInputForAdd($input);
+      return $input;
+   }
 
-               echo "<div style='height:70px;'>";
-               echo "<div style='width:20%; float:left; margin-top:10px;'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_test_done&old=" . $overview[$ID]['is_test_done'] . "'>";
-               static::getBubble($overview[$ID]['is_test_done'], 'releases');
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("Phase of tests", 'releases') . '</b><br>';
-               echo '<a onclick="' . Html::jsGetElementbyID('new_test') . '.dialog(\'open\')" style="cursor:pointer;">' . __('Add a new test', 'releases') . "</a>";
-               $test = new PluginReleasesTest();
-               echo Ajax::createIframeModalWindow('new_test',
-                                                  '../plugins/releases/front/test.form.php?idChange=' . $ID,
-                                                  array('display' => false));
-               echo '</div>';
-               echo '</div></div>';
 
-               echo "<div style='height:70px;'>";
-               echo "<div style='width:20%; float:left; margin-top:10px;'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_info_done&old=" . $overview[$ID]['is_info_done'] . "'>";
-               static::getBubble($overview[$ID]['is_info_done']);
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("Phase of information", 'releases') . '</b><br>';
-               //echo '<a>'.__('Demarer phase info')."</a>";
-               echo '</div>';
-               echo '</div></div>';
+   function post_addItem() {
+      global $CFG_GLPI;
 
-               echo "<div style='height:70px;'>";
-               echo "<div style='width:20%; float:left; margin-top:10px;'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_deployment_done&old=" . $overview[$ID]['is_deployment_done'] . "'>";
-               static::getBubble($overview[$ID]['is_deployment_done']);
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("Phase of deployment", 'releases') . '</b><br>';
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/saveConf.php?id=" . $ID . "'>" . __('Save the configuration', 'releases') . "</a>";
-               echo '</div>';
-               echo '</div></div>';
+      parent::post_addItem();
 
-               echo "<div style='height:70px;'>";
-               echo "<div style='width:20%; float:left; margin-top:10px;'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_end&old=" . $overview[$ID]['is_end'] . "'>";
-               static::getBubble($overview[$ID]['is_end']);
-               echo '</a>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:35px; float:right;'>";
-               echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
-               echo '<br><b>' . __("End") . '</b><br>';
-               echo "<a style='a:visited:#004F91' href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/closeRelease.php?id=" . $ID . "'>" . __('Close release', 'releases') . "</a>";
-               echo '</div>';
-               echo '</div></div></div>';
+      if (isset($this->input['_changes_id'])) {
+         $change = new Change();
+         if ($change->getFromDB($this->input['_changes_id'])) {
+            $pt = new PluginReleasesChange_Release();
+            $pt->add(['changes_id'                  => $this->input['_changes_id'],
+                      'plugin_releases_releases_id' => $this->fields['id']]);
 
-               echo "<div style='width:25%; line-height:30px; margin-left:10%; vertical-align:middle; float:right; display:inline-block;'>";
-
-               echo "<div style='line-height:30px;'>";
-               echo "<h2>" . __('Legend', 'releases') . "</h2>";
-               echo "</div>";
-
-               echo "<div style='width:20%; float:left;'>";
-               echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/grey.png" width=30 height=30"/>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:30px; float:right;'>";
-               echo "<div style='vertical-align:middle; display: inline-block;'>";
-               echo '<b>' . __("To do") . '</b>';
-               echo '</div></div>';
-
-               echo "<div style='width:20%; float:left;'>";
-               echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/green.png" width=30 height=30"/>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:30px; float:right;'>";
-               echo "<div style='vertical-align:middle; display: inline-block;'>";
-               echo '<b>' . __("Done") . '</b>';
-               echo '</div></div>';
-
-               echo "<div style='width:20%; float:left;'>";
-               echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/yellow.png" width=30 height=30"/>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:30px; float:right;'>";
-               echo "<div style='vertical-align:middle; display: inline-block;'>";
-               echo '<b>' . __("In progress", 'releases') . '</b>';
-               echo '</div></div>';
-
-               echo "<div style='width:20%; float:left;'>";
-               echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/blue.png" width=30 height=30"/>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:30px; float:right;'>";
-               echo "<div style='vertical-align:middle; display: inline-block;'>";
-               echo '<b>' . __("Waiting", 'releases') . '</b>';
-               echo '</div></div>';
-
-               echo "<div style='width:20%; float:left;'>";
-               echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/orange.png" width=30 height=30"/>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:30px; float:right;'>";
-               echo "<div style='vertical-align:middle; display: inline-block;'>";
-               echo '<b>' . __("Late") . '</b>';
-               echo '</div></div>';
-
-               echo "<div style='width:20%; float:left;'>";
-               echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/red.png" width=30 height=30"/>';
-               echo "</div>";
-               echo "<div style='width:80%; line-height:30px; float:right;'>";
-               echo "<div style='vertical-align:middle; display: inline-block;'>";
-               echo '<b>' . __("Default", 'releases') . '</b>';
-               echo '</div></div></div>';
+            if (!empty($change->fields['itemtype']) && $change->fields['items_id'] > 0) {
+               $it = new PluginReleasesRelease_Item();
+               $it->add(['plugin_releases_releases_id' => $this->fields['id'],
+                         'itemtype'                    => $change->fields['itemtype'],
+                         'items_id'                    => $change->fields['items_id']]);
             }
          }
-      } else {
-         echo "<div class='center'><br><br>" .
-              "<i class='fas fa-exclamation-triangle fa-4x' style='color:orange'></i><br><br>";
-         echo "<b>" . __('Please select a change', 'releases') . "</b></div>";
       }
 
+
+      // Processing notifications
+      //      if ($CFG_GLPI["use_notifications"]) {
+      //         // Clean reload of the change
+      //         $this->getFromDB($this->fields['id']);
+      //
+      //         $type = "new";
+      //         if (isset($this->fields["status"])
+      //             && in_array($this->input["status"], $this->getSolvedStatusArray())) {
+      //            $type = "solved";
+      //         }
+      //         NotificationEvent::raiseEvent($type, $this);
+      //      }
+
+      if (isset($this->input['_from_items_id'])
+          && isset($this->input['_from_itemtype'])) {
+         $it = new PluginReleasesRelease_Item();
+         $it->add([
+                     'items_id'                    => (int)$this->input['_from_items_id'],
+                     'itemtype'                    => $this->input['_from_itemtype'],
+                     'plugin_releases_releases_id' => $this->fields['id'],
+                     '_disablenotif'               => true
+                  ]);
+      }
    }
 
-   static function getBubble($stepstate) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI;
-      switch ($stepstate) {
-         case 0:
-            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/grey.png" alt="' . __('Change state', 'releases') . '" width=50 height=50"/>';
-            break;
-         case 1:
-            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/green.png" alt="' . __('Change state', 'releases') . '" width=50 height=50"/>';
-            break;
-         case 2:
-            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/blue.png" alt="' . __('Change state', 'releases') . '" width=50 height=50"/>';
-            break;
-         case 3:
-            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/yellow.png" alt="' . __('Change state', 'releases') . '" width=50 height=50"/>';
-            break;
-         case 4:
-            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/orange.png" alt="' . __('Change state', 'releases') . '" width=50 height=50"/>';
-            break;
-         case 5:
-            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/red.png" alt="' . __('Change state', 'releases') . '" width=50 height=50"/>';
-            break;
 
-         default:
-            break;
+      if (!static::canView()) {
+         return false;
+      }
+
+      // In percent
+      $colsize1 = '13';
+      $colsize2 = '37';
+
+      $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $_SESSION['glpiactive_entity'], '', 1);
+
+      // Set default options
+      if (!$ID) {
+         $values = [
+            '_users_id_requester'        => Session::getLoginUserID(),
+            '_users_id_requester_notif'  => ['use_notification'  => $default_use_notif,
+                                             'alternative_email' => ''],
+            '_groups_id_requester'       => 0,
+            '_users_id_assign'           => 0,
+            '_users_id_assign_notif'     => ['use_notification'  => $default_use_notif,
+                                             'alternative_email' => ''],
+            '_groups_id_assign'          => 0,
+            '_users_id_observer'         => 0,
+            '_users_id_observer_notif'   => ['use_notification'  => $default_use_notif,
+                                             'alternative_email' => ''],
+            '_suppliers_id_assign_notif' => ['use_notification'  => $default_use_notif,
+                                             'alternative_email' => ''],
+            '_groups_id_observer'        => 0,
+            '_suppliers_id_assign'       => 0,
+            'priority'                   => 3,
+            //                    'urgency'                    => 3,
+            //                    'impact'                     => 3,
+            'content'                    => '',
+            'entities_id'                => $_SESSION['glpiactive_entity'],
+            'name'                       => '',
+            //                    'itilcategories_id'          => 0
+         ];
+         foreach ($values as $key => $val) {
+            if (!isset($options[$key])) {
+               $options[$key] = $val;
+            }
+         }
+
+         if (isset($options['changes_id'])) {
+            $change = new Change();
+            if ($change->getFromDB($options['changes_id'])) {
+               $options['content'] = $change->getField('content');
+               $options['name']    = $change->getField('name');
+               //               $options['impact']              = $change->getField('impact');
+               //               $options['urgency']             = $change->getField('urgency');
+               $options['priority'] = $change->getField('priority');
+               //               $options['itilcategories_id']   = $change->getField('itilcategories_id');
+               $options['time_to_resolve'] = $change->getField('time_to_resolve');
+            }
+         }
+      }
+
+      if ($ID > 0) {
+         $this->check($ID, READ);
+      } else {
+         // Create item
+         $this->check(-1, CREATE, $options);
+      }
+
+      $showuserlink = 0;
+      if (User::canView()) {
+         $showuserlink = 1;
+      }
+
+      if (!$this->isNewItem()) {
+         $options['formtitle'] = sprintf(
+            __('%1$s - ID %2$d'),
+            $this->getTypeName(1),
+            $ID
+         );
+         //set ID as already defined
+         $options['noid'] = true;
+      }
+      $this->showFormHeader($options);
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th class='left' width='$colsize1%'>" . __('Opening date') . "</th>";
+      echo "<td class='left' width='$colsize2%'>";
+
+      if (isset($options['changes_id'])) {
+         echo "<input type='hidden' name='_changes_id' value='" . $options['changes_id'] . "'>";
+      }
+
+      if (isset($options['_add_fromitem'])
+          && isset($options['_from_items_id'])
+          && isset($options['_from_itemtype'])) {
+         echo Html::hidden('_from_items_id', ['value' => $options['_from_items_id']]);
+         echo Html::hidden('_from_itemtype', ['value' => $options['_from_itemtype']]);
+      }
+
+      $date = $this->fields["date"];
+      if (!$ID) {
+         $date = date("Y-m-d H:i:s");
+      }
+      Html::showDateTimeField("date", ['value'      => $date,
+                                       'timestep'   => 1,
+                                       'maybeempty' => false]);
+      echo "</td>";
+      echo "<th width='$colsize1%'>" . __('Time to resolve') . "</th>";
+      echo "<td width='$colsize2%' class='left'>";
+
+      if ($this->fields["time_to_resolve"] == 'NULL') {
+         $this->fields["time_to_resolve"] = '';
+      }
+      Html::showDateTimeField("time_to_resolve", ['value'    => $this->fields["time_to_resolve"],
+                                                  'timestep' => 1]);
+
+      echo "</td></tr>";
+
+      //      if ($ID) {
+      //         echo "<tr class='tab_bg_1'><th>".__('By')."</th><td>";
+      //         User::dropdown(['name'   => 'users_id_recipient',
+      //                         'value'  => $this->fields["users_id_recipient"],
+      //                         'entity' => $this->fields["entities_id"],
+      //                         'right'  => 'all']);
+      //         echo "</td>";
+      //         echo "<th>".__('Last update')."</th>";
+      //         echo "<td>".Html::convDateTime($this->fields["date_mod"])."\n";
+      //         if ($this->fields['users_id_lastupdater'] > 0) {
+      //            printf(__('%1$s: %2$s'), __('By'),
+      //                   getUserName($this->fields["users_id_lastupdater"], $showuserlink));
+      //         }
+      //         echo "</td></tr>";
+      //      }
+
+      if ($ID
+          && (in_array($this->fields["status"], $this->getSolvedStatusArray())
+              || in_array($this->fields["status"], $this->getClosedStatusArray()))) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<th>" . __('Date of solving') . "</th>";
+         echo "<td>";
+         Html::showDateTimeField("solvedate", ['value'      => $this->fields["solvedate"],
+                                               'timestep'   => 1,
+                                               'maybeempty' => false]);
+         echo "</td>";
+         if (in_array($this->fields["status"], $this->getClosedStatusArray())) {
+            echo "<th>" . __('Closing date') . "</th>";
+            echo "<td>";
+            Html::showDateTimeField("closedate", ['value'      => $this->fields["closedate"],
+                                                  'timestep'   => 1,
+                                                  'maybeempty' => false]);
+            echo "</td>";
+         } else {
+            echo "<td colspan='2'>&nbsp;</td>";
+         }
+         echo "</tr>";
+      }
+      echo "</table>";
+
+      echo "<table class='tab_cadre_fixe' id='mainformtable2'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<th width='$colsize1%'>" . __('Status') . "</th>";
+      echo "<td width='$colsize2%'>";
+      self::dropdownStatus(['value'    => $this->fields["status"],
+                            'showtype' => 'allowed']);
+//      ChangeValidation::alertValidation($this, 'status');
+      echo "</td>";
+      //      echo "<th width='$colsize1%'>".__('Urgency')."</th>";
+      //      echo "<td width='$colsize2%'>";
+      //      // Only change during creation OR when allowed to change priority OR when user is the creator
+      //      $idurgency = self::dropdownUrgency(['value' => $this->fields["urgency"]]);
+      //      echo "</td>";
+      echo "</tr>";
+
+      //      echo "<tr class='tab_bg_1'>";
+      //      echo "<th>".__('Category')."</th>";
+      //      echo "<td >";
+      //      $opt = [
+      //         'value'  => $this->fields["itilcategories_id"],
+      //         'entity' => $this->fields["entities_id"],
+      //         'condition' => ['is_change' => 1]
+      //      ];
+      //      ITILCategory::dropdown($opt);
+      //      echo "</td>";
+      //      echo "<th>".__('Impact')."</th>";
+      //      echo "<td>";
+      //      $idimpact = self::dropdownImpact(['value' => $this->fields["impact"]]);
+      //      echo "</td>";
+      //      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>" . __('Total duration') . "</th>";
+      echo "<td>" . parent::getActionTime($this->fields["actiontime"]) . "</td>";
+      echo "<th class='left'>" . __('Priority') . "</th>";
+      echo "<td>";
+      //      $idpriority = parent::dropdownPriority(['value'     => $this->fields["priority"],
+      //                                              'withmajor' => true]);
+      //      $idajax     = 'change_priority_' . mt_rand();
+      //      echo "&nbsp;<span id='$idajax' style='display:none'></span>";
+      //      $params = ['urgency'  => '__VALUE0__',
+      //                 'impact'   => '__VALUE1__',
+      //                 'priority' => 'dropdown_priority'.$idpriority];
+      //      Ajax::updateItemOnSelectEvent(['dropdown_urgency'.$idurgency,
+      //                                     'dropdown_impact'.$idimpact],
+      //                                    $idajax,
+      //                                    $CFG_GLPI["root_doc"]."/ajax/priority.php", $params);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>";
+      echo __('Approval');
+      echo "</th>";
+      echo "<td>";
+//      echo ChangeValidation::getStatus($this->fields['global_validation']);
+      echo "</td>";
+      echo "<th></th>";
+      echo "<td></td>";
+      echo "</tr>";
+      echo "</table>";
+
+      //      $this->showActorsPartForm($ID, $options);
+
+      echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<th width='$colsize1%'>" . __('Title') . "</th>";
+      echo "<td colspan='3'>";
+      echo "<input type='text' size='90' maxlength=250 name='name' " .
+           " value=\"" . Html::cleanInputText($this->fields["name"]) . "\">";
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>" . __('Description') . "</th>";
+      echo "<td colspan='3'>";
+      $rand = mt_rand();
+      echo "<textarea id='content$rand' name='content' cols='90' rows='6'>" .
+           Html::clean(Html::entity_decode_deep($this->fields["content"])) . "</textarea>";
+      echo "</td>";
+      echo "</tr>";
+      $options['colspan'] = 2;
+      $this->showFormButtons($options);
+
+      return true;
+
+   }
+
+   /**
+    * get the change status list
+    * To be overridden by class
+    *
+    * @param $withmetaforsearch boolean (default false)
+    *
+    * @return array
+    **/
+   static function getAllStatusArray($withmetaforsearch = false) {
+
+      $tab = [self::INCOMING      => _x('status', 'New'),
+              self::EVALUATION    => __('Evaluation'),
+              self::APPROVAL      => __('Approval'),
+              self::ACCEPTED      => _x('status', 'Accepted'),
+              self::WAITING       => __('Pending'),
+              self::TEST          => _x('change', 'Testing'),
+              self::QUALIFICATION => __('Qualification'),
+              self::SOLVED        => __('Applied'),
+              self::OBSERVED      => __('Review'),
+              self::CLOSED        => _x('status', 'Closed'),
+      ];
+
+      if ($withmetaforsearch) {
+         $tab['notold']    = _x('status', 'Not solved');
+         $tab['notclosed'] = _x('status', 'Not closed');
+         $tab['process']   = __('Processing');
+         $tab['old']       = _x('status', 'Solved + Closed');
+         $tab['all']       = __('All');
+      }
+      return $tab;
+   }
+
+
+   /**
+    * Get the ITIL object closed status list
+    * To be overridden by class
+    *
+    * @since 0.83
+    *
+    * @return array
+    **/
+   static function getClosedStatusArray() {
+
+      // To be overridden by class
+      $tab = [self::CLOSED];
+      return $tab;
+   }
+
+
+   /**
+    * Get the ITIL object solved or observe status list
+    * To be overridden by class
+    *
+    * @since 0.83
+    *
+    * @return array
+    **/
+   static function getSolvedStatusArray() {
+      // To be overridden by class
+      $tab = [self::OBSERVED, self::SOLVED];
+      return $tab;
+   }
+
+   /**
+    * Get the ITIL object new status list
+    *
+    * @since 0.83.8
+    *
+    * @return array
+    **/
+   static function getNewStatusArray() {
+      return [self::INCOMING, self::ACCEPTED, self::EVALUATION, self::APPROVAL];
+   }
+
+   /**
+    * Get the ITIL object test, qualification or accepted status list
+    * To be overridden by class
+    *
+    * @since 0.83
+    *
+    * @return array
+    **/
+   static function getProcessStatusArray() {
+
+      // To be overridden by class
+      $tab = [self::ACCEPTED, self::QUALIFICATION, self::TEST];
+      return $tab;
+   }
+
+   /**
+    * @param integer $output_type Output type
+    * @param string  $mass_id id of the form to check all
+    */
+   static function commonListHeader($output_type = Search::HTML_OUTPUT, $mass_id = '') {
+
+      // New Line for Header Items Line
+      echo Search::showNewLine($output_type);
+      // $show_sort if
+      $header_num = 1;
+
+      $items                                                                      = [];
+      $items[(empty($mass_id) ? '&nbsp' : Html::getCheckAllAsCheckbox($mass_id))] = '';
+      $items[__('Status')]                                                        = "status";
+      $items[__('Date')]                                                          = "date_creation";
+      $items[__('Last update')]                                                   = "date_mod";
+
+      if (count($_SESSION["glpiactiveentities"]) > 1) {
+         $items[_n('Entity', 'Entities', Session::getPluralNumber())] = "glpi_entities.completename";
+      }
+
+      $items[__('Priority')] = "priority";
+      //      $items[__('Requester')]          = "users_id";
+      //      $items[__('Assigned')]           = "users_id_assign";
+      if (static::getType() == 'Ticket') {
+         $items[_n('Associated element', 'Associated elements', Session::getPluralNumber())] = "";
+      }
+      //      $items[__('Category')]           = "glpi_itilcategories.completename";
+      $items[__('Title')]         = "name";
+      $items[__('Planification')] = "glpi_plugin_releases_releasetasks.begin";
+
+      foreach (array_keys($items) as $key) {
+         $link = "";
+         echo Search::showHeaderItem($output_type, $key, $header_num, $link);
+      }
+
+      // End Line for column headers
+      echo Search::showEndLine($output_type);
+   }
+
+   /**
+    * Display a line for an object
+    *
+    * @since 0.85 (befor in each object with differents parameters)
+    *
+    * @param $id                 Integer  ID of the object
+    * @param $options            array of options
+    *      output_type            : Default output type (see Search class / default Search::HTML_OUTPUT)
+    *      row_num                : row num used for display
+    *      type_for_massiveaction : itemtype for massive action
+    *      id_for_massaction      : default 0 means no massive action
+    *      followups              : show followup columns
+    */
+   static function showShort($id, $options = []) {
+      global $DB;
+
+      $p = [
+         'output_type'            => Search::HTML_OUTPUT,
+         'row_num'                => 0,
+         'type_for_massiveaction' => 0,
+         'id_for_massiveaction'   => 0,
+         'followups'              => false,
+      ];
+
+      if (count($options)) {
+         foreach ($options as $key => $val) {
+            $p[$key] = $val;
+         }
+      }
+
+      $rand = mt_rand();
+
+      /// TODO to be cleaned. Get datas and clean display links
+
+      // Prints a job in short form
+      // Should be called in a <table>-segment
+      // Print links or not in case of user view
+      // Make new job object and fill it from database, if success, print it
+      $item = new static();
+
+      $candelete   = static::canDelete();
+      $canupdate   = Session::haveRight(static::$rightname, UPDATE);
+      $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
+      $align       = "class='center";
+      $align_desc  = "class='left";
+
+      if ($p['followups']) {
+         $align      .= " top'";
+         $align_desc .= " top'";
+      } else {
+         $align      .= "'";
+         $align_desc .= "'";
+      }
+
+      if ($item->getFromDB($id)) {
+         $item_num = 1;
+         $bgcolor  = $_SESSION["glpipriority_" . $item->fields["priority"]];
+
+         echo Search::showNewLine($p['output_type'], $p['row_num'] % 2, $item->isDeleted());
+
+         $check_col = '';
+         if (($candelete || $canupdate)
+             && ($p['output_type'] == Search::HTML_OUTPUT)
+             && $p['id_for_massiveaction']) {
+
+            $check_col = Html::getMassiveActionCheckBox($p['type_for_massiveaction'], $p['id_for_massiveaction']);
+         }
+         echo Search::showItem($p['output_type'], $check_col, $item_num, $p['row_num'], $align);
+
+         // First column
+         $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $item->fields["id"]);
+         //         if ($p['output_type'] == Search::HTML_OUTPUT) {
+         //            $first_col .= static::getStatusIcon($item->fields["status"]);
+         //         } else {
+         //            $first_col = sprintf(__('%1$s - %2$s'), $first_col,
+         //                                 static::getStatus($item->fields["status"]));
+         //         }
+
+         echo Search::showItem($p['output_type'], $first_col, $item_num, $p['row_num'], $align);
+
+         // Second column
+         //         if ($item->fields['status'] == static::CLOSED) {
+         //            $second_col = sprintf(__('Closed on %s'),
+         //                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+         //                                  Html::convDateTime($item->fields['closedate']));
+         //         } else if ($item->fields['status'] == static::SOLVED) {
+         //            $second_col = sprintf(__('Solved on %s'),
+         //                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+         //                                  Html::convDateTime($item->fields['solvedate']));
+         //         } else if ($item->fields['begin_waiting_date']) {
+         //            $second_col = sprintf(__('Put on hold on %s'),
+         //                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+         //                                  Html::convDateTime($item->fields['begin_waiting_date']));
+         //         } else if ($item->fields['time_to_resolve']) {
+         //            $second_col = sprintf(__('%1$s: %2$s'), __('Time to resolve'),
+         //                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+         //                                  Html::convDateTime($item->fields['time_to_resolve']));
+         //         } else {
+         $second_col = sprintf(__('Created on %s'),
+                               ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
+                               Html::convDateTime($item->fields['date_creation']));
+         //         }
+
+         echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align . " width=130");
+
+         // Second BIS column
+         $second_col = Html::convDateTime($item->fields["date_mod"]);
+         echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align . " width=90");
+
+         // Second TER column
+         if (count($_SESSION["glpiactiveentities"]) > 1) {
+            $second_col = Dropdown::getDropdownName('glpi_entities', $item->fields['entities_id']);
+            echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'],
+                                  $align . " width=100");
+         }
+
+         // Third Column
+
+         $priority = Ticket::getPriorityName($item->fields["priority"]);
+         echo Search::showItem($p['output_type'],
+                               "<span class='b'>" . $priority .
+                               "</span>",
+                               $item_num, $p['row_num'], "$align bgcolor='$bgcolor'");
+         //
+         //         // Fourth Column
+         //         $fourth_col = "";
+
+         //         foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
+         //            $userdata    = getUserName($d["users_id"], 2);
+         //            $fourth_col .= sprintf(__('%1$s %2$s'),
+         //                                   "<span class='b'>".$userdata['name']."</span>",
+         //                                   Html::showToolTip($userdata["comment"],
+         //                                                     ['link'    => $userdata["link"],
+         //                                                      'display' => false]));
+         //            $fourth_col .= "<br>";
+         //         }
+         //
+         //         foreach ($item->getGroups(CommonITILActor::REQUESTER) as $d) {
+         //            $fourth_col .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
+         //            $fourth_col .= "<br>";
+         //         }
+
+         //         echo Search::showItem($p['output_type'], $fourth_col, $item_num, $p['row_num'], $align);
+
+         // Fifth column
+         //         $fifth_col = "";
+
+         //         foreach ($item->getUsers(CommonITILActor::ASSIGN) as $d) {
+         //            $userdata   = getUserName($d["users_id"], 2);
+         //            $fifth_col .= sprintf(__('%1$s %2$s'),
+         //                                  "<span class='b'>".$userdata['name']."</span>",
+         //                                  Html::showToolTip($userdata["comment"],
+         //                                                    ['link'    => $userdata["link"],
+         //                                                     'display' => false]));
+         //            $fifth_col .= "<br>";
+         //         }
+         //
+         //         foreach ($item->getGroups(CommonITILActor::ASSIGN) as $d) {
+         //            $fifth_col .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
+         //            $fifth_col .= "<br>";
+         //         }
+         //
+         //         foreach ($item->getSuppliers(CommonITILActor::ASSIGN) as $d) {
+         //            $fifth_col .= Dropdown::getDropdownName("glpi_suppliers", $d["suppliers_id"]);
+         //            $fifth_col .= "<br>";
+         //         }
+
+         //         echo Search::showItem($p['output_type'], $fifth_col, $item_num, $p['row_num'], $align);
+
+         // Sixth Colum
+         // Ticket : simple link to item
+         $sixth_col = "";
+         //         $is_deleted = false;
+         //         $item_ticket = new Item_Ticket();
+         //         $data = $item_ticket->find(['tickets_id' => $item->fields['id']]);
+         //
+         //         if ($item->getType() == 'Ticket') {
+         //            if (!empty($data)) {
+         //               foreach ($data as $val) {
+         //                  if (!empty($val["itemtype"]) && ($val["items_id"] > 0)) {
+         //                     if ($object = getItemForItemtype($val["itemtype"])) {
+         //                        if ($object->getFromDB($val["items_id"])) {
+         //                           $is_deleted = $object->isDeleted();
+         //
+         //                           $sixth_col .= $object->getTypeName();
+         //                           $sixth_col .= " - <span class='b'>";
+         //                           if ($item->canView()) {
+         //                              $sixth_col .= $object->getLink();
+         //                           } else {
+         //                              $sixth_col .= $object->getNameID();
+         //                           }
+         //                           $sixth_col .= "</span><br>";
+         //                        }
+         //                     }
+         //                  }
+         //               }
+         //            } else {
+         //               $sixth_col = __('General');
+         //            }
+         //
+         //            echo Search::showItem($p['output_type'], $sixth_col, $item_num, $p['row_num'], ($is_deleted ? " class='center deleted' " : $align));
+         //         }
+
+         // Seventh column
+         //         $categories = "";
+         //         $categories = Dropdown::getDropdownName('glpi_itilcategories',
+         //                                                 $item->fields["itilcategories_id"]);
+         //         echo Search::showItem($p['output_type'],
+         //                               "<span class='b'>".$categories
+         //                               .
+         //                               "</span>",
+         //                               $item_num, $p['row_num'], $align);
+
+         // Eigth column
+         $eigth_column = "<span class='b'>" . $item->getName() . "</span>&nbsp;";
+
+         // Add link
+         if ($item->canViewItem()) {
+            $eigth_column = "<a id='" . $item->getType() . $item->fields["id"] . "$rand' href=\"" . $item->getLinkURL()
+                            . "\">$eigth_column</a>";
+
+            if ($p['followups']
+                && ($p['output_type'] == Search::HTML_OUTPUT)) {
+               $eigth_column .= ITILFollowup::showShortForITILObject($item->fields["id"], static::class);
+            } else {
+               $eigth_column = sprintf(
+                  __('%1$s (%2$s)'),
+                  $eigth_column,
+                  sprintf(
+                     __('%1$s - %2$s'),
+                     0//$item->numberOfFollowups($showprivate)
+                     ,
+                     0 //$item->numberOfTasks($showprivate)
+                  )
+               );
+            }
+         }
+
+         if ($p['output_type'] == Search::HTML_OUTPUT) {
+            $eigth_column = sprintf(__('%1$s %2$s'), $eigth_column,
+                                    Html::showToolTip(Html::clean(Html::entity_decode_deep($item->fields["content"])),
+                                                      ['display' => false,
+                                                       'applyto' => $item->getType() . $item->fields["id"] .
+                                                                    $rand]));
+         }
+
+         echo Search::showItem($p['output_type'], $eigth_column, $item_num, $p['row_num'],
+                               $align_desc . " width='200'");
+
+         //tenth column
+         $tenth_column  = '';
+         $planned_infos = '';
+
+         $tasktype = $item->getType() . "Task";
+         $plan     = new $tasktype();
+         $items    = [];
+
+         $result = $DB->request(
+            [
+               'FROM'  => $plan->getTable(),
+               'WHERE' => [
+                  $item->getForeignKeyField() => $item->fields['id'],
+               ],
+            ]
+         );
+         foreach ($result as $plan) {
+
+            if (isset($plan['begin']) && $plan['begin']) {
+               $items[$plan['id']] = $plan['id'];
+               $planned_infos      .= sprintf(__('From %s') .
+                                              ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                                              Html::convDateTime($plan['begin']));
+               $planned_infos      .= sprintf(__('To %s') .
+                                              ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                                              Html::convDateTime($plan['end']));
+               if ($plan['users_id_tech']) {
+                  $planned_infos .= sprintf(__('By %s') .
+                                            ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                                            getUserName($plan['users_id_tech']));
+               }
+               $planned_infos .= "<br>";
+            }
+
+         }
+
+         $tenth_column = count($items);
+         if ($tenth_column) {
+            $tenth_column = "<span class='pointer'
+                              id='" . $item->getType() . $item->fields["id"] . "planning$rand'>" .
+                            $tenth_column . '</span>';
+            $tenth_column = sprintf(__('%1$s %2$s'), $tenth_column,
+                                    Html::showToolTip($planned_infos,
+                                                      ['display' => false,
+                                                       'applyto' => $item->getType() .
+                                                                    $item->fields["id"] .
+                                                                    "planning" . $rand]));
+         }
+         echo Search::showItem($p['output_type'], $tenth_column, $item_num, $p['row_num'],
+                               $align_desc . " width='150'");
+
+         // Finish Line
+         echo Search::showEndLine($p['output_type']);
+      } else {
+         echo "<tr class='tab_bg_2'>";
+         echo "<td colspan='6' ><i>" . __('No item in progress.') . "</i></td></tr>";
       }
    }
-   //
-   //     /**
-   //    * get the change status list
-   //    * To be overridden by class
-   //    *
-   //    * @param $withmetaforsearch boolean (default false)
-   //    *
-   //    * @return an array
-   //   **/
-   //   static function dropdownState($withmetaforsearch=false) {
-   //
-   //      $tab = array(1   => __('New'),
-   //                   2   => __('Analysing'),
-   //                   3   => __('Estimating'),
-   //                   4   => __('Planificating'),
-   //                   5   => __('Validated'),
-   //                   6   => __('Test'),
-   //                   7   => __('Information'),
-   //                   8   => __('Deployment'),
-   //                   9   => __('Achived'),
-   //                   10  => __('Closed'));
-   //      return Dropdown::showFromArray('status', $tab);
-   //   }
-   //
-   //
 }

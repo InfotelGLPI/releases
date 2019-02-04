@@ -29,13 +29,15 @@ global $DB;
 include ('../../../inc/includes.php');
 
 $release = new PluginReleasesRelease();
-if($release->find(["changes_id" => $_GET['id']])) {
-   if ($release->fields['is_release'] == 1) {
+
+if($release->getFromDB($_GET['plugin_releases_releases_id'])) {
+   if (isset($release->fields['is_release'])
+       && $release->fields['is_release'] == 1) {
       $temp = 2;
    } else {
       $temp = 1;
    }
    $release->update(array('id' => $release->getID(), 'is_release' => $temp));
 }
-html::back();
+Html::back();
 

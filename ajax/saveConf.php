@@ -31,14 +31,14 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-Plugin::load('pdf', true);
-
-$change = getAllDatasFromTable('glpi_changes_items', '`changes_id`="'.$_GET['id'].'"');
-foreach ($change as $itemdata){
-    $item = new $itemdata['itemtype']();
-    $item->getFromDB($itemdata['items_id']);
-    $itempdf = new $PLUGIN_HOOKS['plugin_pdf'][$itemdata['itemtype']]($item);
-    echo '<iframe style="display:none" src="createPdf.php?idChange='.$_GET['id'].'&itemtype='.$itemdata['itemtype'].'&itemId='.$itemdata['items_id'].'"></iframe>';
-
-}
-html::back();
+//Plugin::load('pdf', true);
+//
+//$change = getAllDatasFromTable('glpi_changes_items', '`changes_id`="'.$_GET['id'].'"');
+//foreach ($change as $itemdata){
+//    $item = new $itemdata['itemtype']();
+//    $item->getFromDB($itemdata['items_id']);
+//    $itempdf = new $PLUGIN_HOOKS['plugin_pdf'][$itemdata['itemtype']]($item);
+//    echo '<iframe style="display:none" src="createPdf.php?idChange='.$_GET['id'].'&itemtype='.$itemdata['itemtype'].'&itemId='.$itemdata['items_id'].'"></iframe>';
+//
+//}
+Html::back();

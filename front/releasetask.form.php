@@ -26,7 +26,7 @@
 
 include ('../../../inc/includes.php');
 
-$task = new PluginReleasesTest();
+$task = new PluginReleasesReleaseTask();
 
 // autoload include in objecttask.form (tickettask, problemtask,...)
 if (!defined('GLPI_ROOT')) {
@@ -34,12 +34,14 @@ if (!defined('GLPI_ROOT')) {
 }
 Session::checkCentralAccess();
 
-
+//if (!($task instanceof CommonITILTask)) {
+//   Html::displayErrorAndDie('');
+//}
 if (!$task->canView()) {
    Html::displayRightError();
 }
 
-$itemtype = "PluginReleasesTest";
+$itemtype = "PluginReleasesReleaseTask";
 $fk       = getForeignKeyFieldForItemType($itemtype);
 
 if (isset($_POST["add"])) {
@@ -49,6 +51,7 @@ if (isset($_POST["add"])) {
    Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
               //TRANS: %s is the user login
               sprintf(__('%s adds a task'), $_SESSION["glpiname"]));
+   //Html::redirect(Toolbox::getItemTypeFormURL($itemtype)."?id=".$task->getField($fk));
    Html::back();
 
 } else if (isset($_POST["purge"])) {
@@ -58,6 +61,7 @@ if (isset($_POST["add"])) {
    Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
               //TRANS: %s is the user login
               sprintf(__('%s purges a task'), $_SESSION["glpiname"]));
+   //Html::redirect(Toolbox::getItemTypeFormURL($itemtype)."?id=".$task->getField($fk));
    Html::back();
 
 } else if (isset($_POST["update"])) {
@@ -69,11 +73,6 @@ if (isset($_POST["add"])) {
               sprintf(__('%s updates a task'), $_SESSION["glpiname"]));
    Html::back();
 
-} else if (isset($_GET['_in_modal'])) {
-   Html::popHeader($task->getTypeName(1),$_SERVER['PHP_SELF']);
-   $task->showForm(-1,array('idChange'=>$_GET['idChange']));
-   Html::popFooter();
-} else {
-   Html::displayErrorAndDie('Lost'); 
 }
 
+Html::displayErrorAndDie('Lost');

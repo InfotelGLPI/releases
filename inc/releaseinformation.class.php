@@ -28,7 +28,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginReleasesInformation extends CommonDBTM {
+class PluginReleasesReleaseInformation extends CommonDBTM {
 
 
    static $rightname = "plugin_releases";
@@ -42,6 +42,11 @@ class PluginReleasesInformation extends CommonDBTM {
    }
 
 
+   static function countForItem(CommonDBTM $item) {
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_releases_informations',
+                                        ["plugin_releases_releases_id" => $item->getID()]);
+   }
    /**
     * Return the name of the tab for item including forms like the config page
     *
@@ -51,13 +56,10 @@ class PluginReleasesInformation extends CommonDBTM {
     * @return String                   Name to be displayed
     */
    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-      switch ($item->getType()) {
-         case "Change":
-            $nb = 0;
-            return self::createTabEntry(self::getTypeName($nb), $nb);
-            break;
+      if ($_SESSION['glpishow_count_on_tabs']) {
+         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
       }
-      return '';
+      return self::getTypeName(2);
    }
 
    /**
@@ -76,7 +78,7 @@ class PluginReleasesInformation extends CommonDBTM {
    function showForm($item, $ID, $options = array()) {
       global $CFG_GLPI;
 
-      if ($this->find(["changes_id" => $ID]) && isset($this->fields['id'])) {
+      if ($this->find(["plugin_releases_releases_id" => $ID]) && isset($this->fields['id'])) {
          if (isset ($this->fields['alerts_id']) && $this->fields['alerts_id'] > 0) {
             $alert    = new PluginMydashboardAlert();
             $alert_id = $this->fields['alerts_id'];
@@ -86,26 +88,26 @@ class PluginReleasesInformation extends CommonDBTM {
             $remind->getFromDB($remind_id);
          } else {
             $remind    = new Reminder();
-            $remind_id = $remind->add(array('name' => 'Information for change ' . $ID, 'users_id' => $_SESSION['glpiID'], 'text' => $item->fields['content']));
+            $remind_id = $remind->add(array('name' => 'Information for release ' . $ID, 'users_id' => $_SESSION['glpiID'], 'text' => $item->fields['content']));
             $alert     = new PluginMydashboardAlert();
             $alert_id  = $alert->add(array('reminders_id' => $remind_id, 'type' => 2, 'impact' => 3));
-            $this->update(array('id' => $this->fields['id'], 'alerts_id' => $alert_id, 'changes_id' => $ID));
+            $this->update(array('id' => $this->fields['id'], 'alerts_id' => $alert_id, 'plugin_releases_releases_id' => $ID));
          }
 
 
          //targeting user
-         if (isset ($this->fields['is_active']) && $this->fields['is_active'] == 1) {
-            $change_items = new Change_Item();
-            $items        = $change_items->find("`glpi_changes_items`.`changes_id` = '" . $ID . "'");
-            foreach ($items as $data) {
-               $item_use = new $data['itemtype']();
-               $item_use->getFromDB($data['items_id']);
-               $target = new Reminder_User();
-               if (!$target->find("`glpi_reminders_users`.`reminders_id` = '" . $remind_id . "' AND `glpi_reminders_users`.`users_id` = '" . $item_use->fields['users_id'] . "'")) {
-                  $target->add(array('reminders_id' => $remind_id, 'users_id' => $item_use->fields['users_id']));
-               }
-            }
-         }
+//         if (isset ($this->fields['is_active']) && $this->fields['is_active'] == 1) {
+//            $change_items = new Change_Item();
+//            $items        = $change_items->find("`glpi_changes_items`.`changes_id` = '" . $ID . "'");
+//            foreach ($items as $data) {
+//               $item_use = new $data['itemtype']();
+//               $item_use->getFromDB($data['items_id']);
+//               $target = new Reminder_User();
+//               if (!$target->find("`glpi_reminders_users`.`reminders_id` = '" . $remind_id . "' AND `glpi_reminders_users`.`users_id` = '" . $item_use->fields['users_id'] . "'")) {
+//                  $target->add(array('reminders_id' => $remind_id, 'users_id' => $item_use->fields['users_id']));
+//               }
+//            }
+//         }
 
 
          echo '<div>';
@@ -153,7 +155,7 @@ class PluginReleasesInformation extends CommonDBTM {
 
 
       } else {
-         $info_id = $this->add(array('changes_id' => $ID));
+         $info_id = $this->add(array('plugin_releases_releases_id' => $ID));
          $this->getFromDB($info_id);
          $this->showForm($item, $ID);
       }
@@ -161,17 +163,20 @@ class PluginReleasesInformation extends CommonDBTM {
 
    }
 
+
    static function getBubble($stepstate) {
+      global $CFG_GLPI;
       switch ($stepstate) {
          case 0:
-            return '../plugins/releases/pics/grey.png';
+            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/grey.png" width=50 height=50>';
             break;
          case 1:
-            return '../plugins/releases/pics/green.png';
+            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/green.png" width=50 height=50>';
             break;
          case 2:
-            return '../plugins/releases/pics/red.png';
+            echo '<img src="' . $CFG_GLPI["root_doc"] . '/plugins/releases/pics/red.png" width=50 height=50>';
             break;
+
          default:
             break;
       }

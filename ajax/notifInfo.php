@@ -24,7 +24,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
@@ -34,27 +34,26 @@ global $DB;
 
 if (isset($_POST['id'])) {
 
-    $info = new PluginReleasesInformation();
-    $info->getFromDB($_POST['id']);
-    $alert = new PluginMydashboardAlert();
-    $alert->getFromDB($_POST['alerts_id']);
-    
-    if ($_POST['action']=='start'){
-        $info->update(array('id'=>$_POST['id'], 'is_active'=>'1'));
-        $alert->update(array('id'=>$_POST['alerts_id'], 'type' => 1));
-    }
-    else if ($_POST['action']=='stop' && $_POST['is_active']=='1' && $_POST['reminders_id']>0){
-        $info->update(array('id'=>$_POST['id'], 'is_active'=>'2'));
-        $query = "DELETE FROM `glpi_reminders_users`
-                  WHERE `reminders_id` = ".$_POST['reminders_id'];
-        $DB->query($query);
-        $alert->update(array('id'=>$_POST['alerts_id'], 'type' => 2));
-        
-        
-    }
-    
-    
-    echo '<script>location.reload();</script>';
-    
-    
+   $info = new PluginReleasesReleaseInformation();
+   $info->getFromDB($_POST['id']);
+   $alert = new PluginMydashboardAlert();
+   $alert->getFromDB($_POST['alerts_id']);
+
+   if ($_POST['action'] == 'start') {
+      $info->update(array('id' => $_POST['id'], 'is_active' => '1'));
+      $alert->update(array('id' => $_POST['alerts_id'], 'type' => 1));
+   } else if ($_POST['action'] == 'stop' && $_POST['is_active'] == '1' && $_POST['reminders_id'] > 0) {
+      $info->update(array('id' => $_POST['id'], 'is_active' => '2'));
+      $query = "DELETE FROM `glpi_reminders_users`
+                  WHERE `reminders_id` = " . $_POST['reminders_id'];
+      $DB->query($query);
+      $alert->update(array('id' => $_POST['alerts_id'], 'type' => 2));
+
+
+   }
+
+
+   echo '<script>location.reload();</script>';
+
+
 }

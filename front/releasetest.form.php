@@ -26,7 +26,7 @@
 
 include ('../../../inc/includes.php');
 
-$deplo = new PluginReleasesDeployment();
+$test = new PluginReleasesReleaseTest();
 
 // autoload include in objecttask.form (tickettask, problemtask,...)
 if (!defined('GLPI_ROOT')) {
@@ -35,45 +35,45 @@ if (!defined('GLPI_ROOT')) {
 Session::checkCentralAccess();
 
 
-$itemtype = "PluginReleasesDeployment";
+if (!$test->canCreate()) {
+   Html::displayRightError();
+}
+
+$itemtype = "PluginReleasesReleaseTest";
 $fk       = getForeignKeyFieldForItemType($itemtype);
 
 if (isset($_POST["add"])) {
    //$task->check(-1, CREATE, $_POST);
-   $deplo->add($_POST);
+   $test->add($_POST);
 
-//   Event::log($deplo->getField($fk), strtolower($itemtype), 4, "tracking",
-//              //TRANS: %s is the user login
-//              sprintf(__('%s adds a task'), $_SESSION["glpiname"]));
+   Event::log($test->getField($fk), strtolower($itemtype), 4, "tracking",
+              //TRANS: %s is the user login
+              sprintf(__('%s adds a test'), $_SESSION["glpiname"]));
    Html::back();
 
 } else if (isset($_POST["purge"])) {
-   $deplo->check($_POST['id'], PURGE);
-   $deplo->delete($_POST, 1);
+   $test->check($_POST['id'], PURGE);
+   $test->delete($_POST, 1);
 
-//   Event::log($deplo->getField($fk), strtolower($itemtype), 4, "tracking",
-//              //TRANS: %s is the user login
-//              sprintf(__('%s purges a task'), $_SESSION["glpiname"]));
+   Event::log($test->getField($fk), strtolower($itemtype), 4, "tracking",
+              //TRANS: %s is the user login
+              sprintf(__('%s purges a test'), $_SESSION["glpiname"]));
    Html::back();
 
 } else if (isset($_POST["update"])) {
    //$task->check($_POST["id"], UPDATE);
-   $deplo->update($_POST);
+   $test->update($_POST);
 
-//   Event::log($deplo->getField($fk), strtolower($itemtype), 4, "tracking",
-//              //TRANS: %s is the user login
-//              sprintf(__('%s updates a task'), $_SESSION["glpiname"]));
+   Event::log($test->getField($fk), strtolower($itemtype), 4, "tracking",
+              //TRANS: %s is the user login
+              sprintf(__('%s updates a test'), $_SESSION["glpiname"]));
    Html::back();
 
-} else if (isset($_POST["updatetype"])) {
-   //$task->check($_POST["id"], UPDATE);
-   $deplo->update($_POST);
-
-//   Event::log($deplo->getField($fk), strtolower($itemtype), 4, "tracking",
-//              //TRANS: %s is the user login
-//              sprintf(__('%s updates a task'), $_SESSION["glpiname"]));
-   Html::back();
-
+} else if (isset($_GET['_in_modal'])) {
+   Html::popHeader($test->getTypeName(1),$_SERVER['PHP_SELF']);
+   $test->showForm(-1,array('plugin_releases_releases_id'=>$_GET['plugin_releases_releases_id']));
+   Html::popFooter();
+} else {
+   Html::displayErrorAndDie('Lost'); 
 }
 
-Html::displayErrorAndDie('Lost');

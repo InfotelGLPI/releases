@@ -30,10 +30,10 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-$item = getItemForItemtype('PluginReleasesDeployment');
+$item = getItemForItemtype('PluginReleasesReleasePhase');
 
    if (isset($_POST["id"])) {
-      $item->showForm($_POST["id"],array('deployments_id'=>$_POST['deployments_id']));
+      $item->showForm($_POST["id"],array('plugin_releases_deployments_id'=>$_POST['plugin_releases_deployments_id']));
 
    } else {
       _e('Access denied');

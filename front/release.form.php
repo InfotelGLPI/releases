@@ -33,9 +33,9 @@ $mep = new PluginReleasesRelease();
 if (isset($_POST["add"])) {
    $mep->check(-1,CREATE,$_POST);
    $newID = $mep->add($_POST);
-   Event::log($newID, "change", 4, "maintain",
-              //TRANS: %1$s is the user login, %2$s is the name of the item
-              sprintf(__('%1$s adds the item %2$s'), $_SESSION["glpiname"], $_POST["name"]));
+//   Event::log($newID, "change", 4, "maintain",
+//              //TRANS: %1$s is the user login, %2$s is the name of the item
+//              sprintf(__('%1$s adds the item %2$s'), $_SESSION["glpiname"], $_POST["name"]));
    if ($_SESSION['glpibackcreated']) {
       Html::redirect($mep->getFormURL()."?id=".$newID);
    } else {

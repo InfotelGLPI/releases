@@ -40,8 +40,8 @@ function plugin_init_releases() {
 
       $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesMenu'];
 
-      Plugin::registerClass('PluginReleases_Change_Release',
-                              array('addtabon' => array('Change')));
+      Plugin::registerClass('PluginReleasesChange_Release',
+                            array('addtabon' => array('Change')));
    }
 }
 
@@ -50,12 +50,12 @@ function plugin_init_releases() {
 function plugin_version_releases() {
 
    return [
-      'name'           => _n('Release', 'Releases', 2, 'releases'),
-      'version'        => PLUGIN_RELEASES_VERSION,
-      'author'         => "<a href='http://blogglpi.infotel.com'>Infotel</a>",
-      'license'        => 'GPLv2+',
-      'homepage'       => 'https://github.com/InfotelGLPI/releases',
-      'requirements'   => [
+      'name'         => _n('Release', 'Releases', 2, 'releases'),
+      'version'      => PLUGIN_RELEASES_VERSION,
+      'author'       => "<a href='http://blogglpi.infotel.com'>Infotel</a>",
+      'license'      => 'GPLv2+',
+      'homepage'     => 'https://github.com/InfotelGLPI/releases',
+      'requirements' => [
          'glpi' => [
             'min' => '9.4',
             'dev' => false

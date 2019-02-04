@@ -26,7 +26,7 @@
 
 include ('../../../inc/includes.php');
 
-$phase = new PluginReleasesPhase();
+$phase = new PluginReleasesReleasePhase();
 
 // autoload include in objectphase.form (ticketphase, problemphase,...)
 if (!defined('GLPI_ROOT')) {
@@ -34,44 +34,31 @@ if (!defined('GLPI_ROOT')) {
 }
 Session::checkCentralAccess();
 
-
-$itemtype = "PluginReleasesPhase";
-$fk       = getForeignKeyFieldForItemType($itemtype);
-
 if (isset($_POST["add"])) {
    //$phase->check(-1, CREATE, $_POST);
    $phase->add($_POST);
 
-   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s adds a phase'), $_SESSION["glpiname"]));
+//   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
+//              //TRANS: %s is the user login
+//              sprintf(__('%s adds a phase'), $_SESSION["glpiname"]));
    Html::back();
 
 } else if (isset($_POST["purge"])) {
    $phase->check($_POST['id'], PURGE);
    $phase->delete($_POST, 1);
 
-   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s purges a phase'), $_SESSION["glpiname"]));
+//   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
+//              //TRANS: %s is the user login
+//              sprintf(__('%s purges a phase'), $_SESSION["glpiname"]));
    Html::back();
 
 } else if (isset($_POST["update"])) {
    //$phase->check($_POST["id"], UPDATE);
    $phase->update($_POST);
 
-   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s updates a phase'), $_SESSION["glpiname"]));
-   Html::back();
-
-} else if (isset($_POST["updatetype"])) {
-   //$phase->check($_POST["id"], UPDATE);
-   $phase->update($_POST);
-
-   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s updates a phase'), $_SESSION["glpiname"]));
+//   Event::log($phase->getField($fk), strtolower($itemtype), 4, "tracking",
+//              //TRANS: %s is the user login
+//              sprintf(__('%s updates a phase'), $_SESSION["glpiname"]));
    Html::back();
 
 }

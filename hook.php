@@ -30,7 +30,6 @@ function plugin_releases_install() {
    include_once(GLPI_ROOT . "/plugins/releases/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_releases_releases")) {
-
       // table sql creation
       $DB->runFile(GLPI_ROOT . "/plugins/releases/sql/empty-1.0.0.sql");
 
@@ -47,15 +46,15 @@ function plugin_releases_uninstall() {
    global $DB;
 
    include_once(GLPI_ROOT . "/plugins/releases/inc/profile.class.php");
-   //   include_once (GLPI_ROOT."/plugins/release/inc/menu.class.php");
+   include_once(GLPI_ROOT . "/plugins/release/inc/menu.class.php");
 
    // Plugin tables deletion
    $tables = array("glpi_plugin_releases_releases",
-                   "glpi_plugin_releases_tests",
-                   "glpi_plugin_releases_tasks",
-                   "glpi_plugin_releases_phases",
-                   "glpi_plugin_releases_informations",
-                   "glpi_plugin_releases_deployments",
+                   "glpi_plugin_releases_releasetests",
+                   "glpi_plugin_releases_releasetasks",
+                   "glpi_plugin_releases_releasephases",
+                   "glpi_plugin_releases_releaseinformations",
+                   "glpi_plugin_releases_releasedeployments",
                    "glpi_plugin_releases_overview",
                    "glpi_plugin_releases_changes_releases");
 
@@ -63,8 +62,13 @@ function plugin_releases_uninstall() {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
 
    // Plugin adding information on general table deletion
-   $tables_glpi = array("glpi_displaypreferences",
-                        "glpi_logs");
+   //TODO add knowbase_item
+   $tables_glpi = ["glpi_displaypreferences",
+                   "glpi_documents_items",
+                   "glpi_savedsearches",
+                   "glpi_logs",
+                   "glpi_notepads",
+                   "glpi_dropdowntranslations"];
 
    foreach ($tables_glpi as $table_glpi)
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginReleasesRelease';");
@@ -84,36 +88,28 @@ function plugin_releases_uninstall() {
 
 
 // Define dropdown relations
-function plugin_releases_getDatabaseRelations() {
+//TODO
+//function plugin_releases_getDatabaseRelations() {
+//
+//   $plugin = new Plugin();
+//   if ($plugin->isActivated("releases")) {
+//      //TODO entities_id
+//      return array("glpi_changes" => array("glpi_plugin_releases_release"      => "changes_id",
+//                                           "glpi_plugin_releases_overviews"    => "changes_id",
+//                                           "glpi_plugin_releases_releasetests"        => "changes_id",
+//                                           "glpi_plugin_releases_releasetasks"        => "changes_id",
+//                                           "glpi_plugin_releases_releaseinformations" => "changes_id",
+//                                           "glpi_plugin_releases_releasedeployments"  => "changes_id"),
+//                   //                    "glpi_plugin_releases_deployments" => array(
+//                   //                                       "glpi_plugin_releases_phases" => "glpi_plugin_releases_deployments"),
+//                   //                    "glpi_plugin_mydashboard_alerts" => array(
+//                   //                                       "glpi_plugin_releases_informations" => "glpi_plugin_mydashboard_alerts")
+//      );
+//   } else {
+//      return array();
+//   }
+//}
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated("releases")) {
-      //TODO
-      return array("glpi_changes" => array("glpi_plugin_releases_release"      => "changes_id",
-                                           "glpi_plugin_releases_overviews"    => "changes_id",
-                                           "glpi_plugin_releases_tests"        => "changes_id",
-                                           "glpi_plugin_releases_tasks"        => "changes_id",
-                                           "glpi_plugin_releases_informations" => "changes_id",
-                                           "glpi_plugin_releases_deployments"  => "changes_id"),
-                   //                    "glpi_plugin_releases_deployments" => array(
-                   //                                       "glpi_plugin_releases_phases" => "glpi_plugin_releases_deployments"),
-                   //                    "glpi_plugin_mydashboard_alerts" => array(
-                   //                                       "glpi_plugin_releases_informations" => "glpi_plugin_mydashboard_alerts")
-      );
-   } else {
-      return array();
-   }
-}
-
-////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////
-
-
-////// SEARCH FUNCTIONS ///////(){
-
-// Define search option for types of the plugins
-function plugin_releases_getAddSearchOptions($itemtype) {
-
-}
 
 // Do special actions for dynamic report
 function plugin_releases_dynamicReport($parm) {

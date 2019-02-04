@@ -26,21 +26,16 @@
 
 $AJAX_INCLUDE = 1;
 global $DB;
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
-if ($_GET['old']==5){
-    $old = 0;
+if ($_GET['old'] == 5) {
+   $old = 0;
 } else {
-    $old = $_GET['old'];
+   $old = $_GET['old'];
 }
-$old+=1;
+$old += 1;
 
-
-$query = "UPDATE `glpi_plugin_releases_overviews`
-         SET `".$_GET['field']."` = '". $old ."'
-         WHERE `id` = '".$_GET['id']."'";
-print_r($query);
-$DB->query($query);
-
-html::back();
+$overview = new PluginReleasesOverview();
+$overview->update(array('id' => $_GET['id'], $_GET['field'] => $old));
+Html::back();
 

@@ -42,7 +42,7 @@ if (empty($tab)){
 }
 
 
-$itempdf->generatePDF(array($_GET['itemId']), $tab,0,0,"/var/www/html/infotel/files/releases/pdf/Conf_".$_GET['itemtype'].$_GET['itemId'].".pdf");
+$itempdf->generatePDF(array($_GET['itemId']), $tab,0,0,"/releases/pdf/Conf_".$_GET['itemtype'].$_GET['itemId'].".pdf");
 
 $doc = new Document;
 $doc_id = $doc->add(array('name'=>__('Document').": ".__('Change')." - ".$_GET['itemtype'].$_GET['itemId'], 'upload_file'=>"../../plugins/releases/pdf/Conf_".$_GET['itemtype'].$_GET['itemId'].".pdf", 'filepath'=>'../plugins/release/pdf/', 'mime'=>'application/pdf', 'date_creation'=>$_SESSION['glpi_currenttime']));
