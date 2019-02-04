@@ -35,7 +35,7 @@ if ($_GET['old'] == 5) {
 }
 $old += 1;
 
-$overview = new PluginReleasesOverview();
+$overview = new PluginReleasesReleaseOverview();
 $overview->update(array('id' => $_GET['id'], $_GET['field'] => $old));
 Html::back();
 

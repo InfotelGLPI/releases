@@ -48,9 +48,9 @@ if (isset($_POST["add"])) {
    //$task->check(-1, CREATE, $_POST);
    $task->add($_POST);
 
-   Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s adds a task'), $_SESSION["glpiname"]));
+//   Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
+//              //TRANS: %s is the user login
+//              sprintf(__('%s adds a task'), $_SESSION["glpiname"]));
    //Html::redirect(Toolbox::getItemTypeFormURL($itemtype)."?id=".$task->getField($fk));
    Html::back();
 
@@ -58,9 +58,9 @@ if (isset($_POST["add"])) {
    $task->check($_POST['id'], PURGE);
    $task->delete($_POST, 1);
 
-   Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s purges a task'), $_SESSION["glpiname"]));
+//   Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
+//              //TRANS: %s is the user login
+//              sprintf(__('%s purges a task'), $_SESSION["glpiname"]));
    //Html::redirect(Toolbox::getItemTypeFormURL($itemtype)."?id=".$task->getField($fk));
    Html::back();
 
@@ -68,9 +68,9 @@ if (isset($_POST["add"])) {
    //$task->check($_POST["id"], UPDATE);
    $task->update($_POST);
 
-   Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
-              //TRANS: %s is the user login
-              sprintf(__('%s updates a task'), $_SESSION["glpiname"]));
+//   Event::log($task->getField($fk), strtolower($itemtype), 4, "tracking",
+   //              //TRANS: %s is the user login
+   //              sprintf(__('%s updates a task'), $_SESSION["glpiname"]));
    Html::back();
 
 }

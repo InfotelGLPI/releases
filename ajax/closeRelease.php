@@ -28,16 +28,16 @@ $AJAX_INCLUDE = 1;
 global $DB;
 include ('../../../inc/includes.php');
 
-$release = new PluginReleasesRelease();
+$overview = new PluginReleasesReleaseOverview();
 
-if($release->getFromDB($_GET['plugin_releases_releases_id'])) {
-   if (isset($release->fields['is_release'])
-       && $release->fields['is_release'] == 1) {
+if($overview->getFromDB($_GET['plugin_releases_releases_id'])) {
+   if (isset($overview->fields['is_release'])
+       && $overview->fields['is_release'] == 1) {
       $temp = 2;
    } else {
       $temp = 1;
    }
-   $release->update(array('id' => $release->getID(), 'is_release' => $temp));
+   $overview->update(array('id' => $overview->getID(), 'is_release' => $temp));
 }
 Html::back();
 

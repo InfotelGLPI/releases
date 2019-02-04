@@ -48,12 +48,6 @@ if (isset($_POST['id'])) {
                   WHERE `reminders_id` = " . $_POST['reminders_id'];
       $DB->query($query);
       $alert->update(array('id' => $_POST['alerts_id'], 'type' => 2));
-
-
    }
-
-
    echo '<script>location.reload();</script>';
-
-
 }

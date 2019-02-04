@@ -28,7 +28,7 @@ include ('../../../inc/includes.php');
 
 if (!isset($_GET["id"])) $_GET["id"] = "";
 
-$mep = new PluginReleasesRelease();
+$mep = new PluginReleasesReleaseOverview();
 
 if (isset($_POST["add"])) {
    $mep->check(-1,CREATE,$_POST);

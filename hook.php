@@ -55,7 +55,7 @@ function plugin_releases_uninstall() {
                    "glpi_plugin_releases_releasephases",
                    "glpi_plugin_releases_releaseinformations",
                    "glpi_plugin_releases_releasedeployments",
-                   "glpi_plugin_releases_overview",
+                   "glpi_plugin_releases_releaseoverviews",
                    "glpi_plugin_releases_changes_releases");
 
    foreach ($tables as $table)
@@ -95,7 +95,7 @@ function plugin_releases_uninstall() {
 //   if ($plugin->isActivated("releases")) {
 //      //TODO entities_id
 //      return array("glpi_changes" => array("glpi_plugin_releases_release"      => "changes_id",
-//                                           "glpi_plugin_releases_overviews"    => "changes_id",
+//                                           "glpi_plugin_releases_releaseoverviews"    => "changes_id",
 //                                           "glpi_plugin_releases_releasetests"        => "changes_id",
 //                                           "glpi_plugin_releases_releasetasks"        => "changes_id",
 //                                           "glpi_plugin_releases_releaseinformations" => "changes_id",

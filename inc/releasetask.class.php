@@ -40,13 +40,13 @@ class PluginReleasesReleaseTask extends CommonDBTM {
     * @since version 0.84
     **/
    static function getTypeName($nb = 0) {
-      return _n('Task of deployment', 'Tasks of deployment', $nb, 'releases');
+      return _n('Deployment task', 'Deployment tasks', $nb, 'releases');
    }
 
 
    static function countForItem(CommonDBTM $item) {
       $dbu = new DbUtils();
-      return $dbu->countElementsInTable('glpi_plugin_releases_tasks',
+      return $dbu->countElementsInTable('glpi_plugin_releases_releasetasks',
                                         ["plugin_releases_releases_id" => $item->getID()]);
    }
 

@@ -46,7 +46,7 @@ class PluginReleasesRelease extends CommonITILObject {
    const MATRIX_FIELD = 'priority_matrix';
    //   const URGENCY_MASK_FIELD            = 'urgency_mask';
    //   const IMPACT_MASK_FIELD             = 'impact_mask';
-   const STATUS_MATRIX_FIELD = 'release_status';
+   const STATUS_MATRIX_FIELD = 'change_status';
 
 
    //   const READMY                        = 1;
@@ -101,16 +101,16 @@ class PluginReleasesRelease extends CommonITILObject {
       $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
-      $this->addStandardTab('PluginReleasesOverview', $ong, $options);
+      $this->addStandardTab('PluginReleasesReleaseOverview', $ong, $options);
       //TODO
-
-      //      $this->addStandardTab('PluginReleasesReleaseDeployment', $ong, $options);
+      //      $this->addStandardTab('PluginReleasesReleaseValidation', $ong, $options);
       $this->addStandardTab('PluginReleasesReleaseTest', $ong, $options);
       $this->addStandardTab('PluginReleasesReleaseTask', $ong, $options);
-      $this->addStandardTab('PluginReleasesReleaseInformation', $ong, $options);
+      $this->addStandardTab('PluginReleasesReleaseDeployment', $ong, $options);
+      //TODO
+//      $this->addStandardTab('PluginReleasesReleaseInformation', $ong, $options);
       //TODO
       //      $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
-      $this->addStandardTab('PluginReleasesReleaseDeployment', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options);
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
       $this->addStandardTab('Notepad', $ong, $options);

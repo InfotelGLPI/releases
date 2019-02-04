@@ -44,7 +44,7 @@ class PluginReleasesReleaseInformation extends CommonDBTM {
 
    static function countForItem(CommonDBTM $item) {
       $dbu = new DbUtils();
-      return $dbu->countElementsInTable('glpi_plugin_releases_informations',
+      return $dbu->countElementsInTable('glpi_plugin_releases_releaseinformations',
                                         ["plugin_releases_releases_id" => $item->getID()]);
    }
    /**
@@ -153,14 +153,11 @@ class PluginReleasesReleaseInformation extends CommonDBTM {
 
          echo "<div style='width:20%; float:right'><img width=50 height=50 src='" . static::getBubble($this->fields['is_active']) . "'></div>";
 
-
       } else {
          $info_id = $this->add(array('plugin_releases_releases_id' => $ID));
          $this->getFromDB($info_id);
          $this->showForm($item, $ID);
       }
-
-
    }
 
 
@@ -181,5 +178,4 @@ class PluginReleasesReleaseInformation extends CommonDBTM {
             break;
       }
    }
-
 }

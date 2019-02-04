@@ -29,7 +29,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /// Class PluginReleasesOverview
-class PluginReleasesOverview extends CommonDBTM {
+class PluginReleasesReleaseOverview extends CommonDBTM {
 
    // From CommonDBTM
    static    $rightname        = "plugin_releases";
@@ -68,7 +68,7 @@ class PluginReleasesOverview extends CommonDBTM {
     */
    static function countForItem(CommonDBTM $item) {
       $dbu = new DbUtils();
-      return $dbu->countElementsInTable('glpi_plugin_releases_overviews',
+      return $dbu->countElementsInTable('glpi_plugin_releases_releaseoverviews',
                                         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
@@ -99,48 +99,48 @@ class PluginReleasesOverview extends CommonDBTM {
             $overview->showForm($ID);
 
          } else {
-            $release = new PluginReleasesRelease();
-            if ($release->getFromDB($ID)) {
-               if (isset($release->fields['is_release']) && $release->fields['is_release'] == 0) {
+            $overview = new PluginReleasesReleaseOverview();
+            if ($overview->getFromDB($ID)) {
+               if (isset($overview->fields['is_release']) && $overview->fields['is_release'] == 0) {
 
-                  $release->initForm($release->getID(), $options);
-                  $release->showFormHeader($options);
+                  $overview->initForm($overview->getID(), $options);
+                  $overview->showFormHeader($options);
                   echo '<tbody>';
                   echo '<tr>';
                   echo '<td>' . __('Would you launch the release ?', 'releases') . '</td>';
                   echo '<td>';
                   dropdown::showYesNo('is_release',
-                                      $release->fields['is_release']);
+                                      $overview->fields['is_release']);
                   echo '<td></tr>';
-                  $release->showFormButtons();
+                  $overview->showFormButtons();
 
                } else {
 
-                  if (isset($release->fields['is_release']) && $release->fields['is_release'] == 2) {
-                     $release->initForm($ID, $options);
-                     $release->showFormHeader($options);
+                  if (isset($overview->fields['is_release']) && $overview->fields['is_release'] == 2) {
+                     $overview->initForm($ID, $options);
+                     $overview->showFormHeader($options);
                      echo '<tbody>';
                      echo '<tr>';
                      echo '<td>' . __('Would you reopen this release ?', 'releases') . '</td>';
                      echo '<td>';
                      dropdown::showYesNo('is_release',
-                                         $release->fields['is_release']);
+                                         $overview->fields['is_release']);
                      echo '<td></tr>';
-                     $release->showFormButtons();
+                     $overview->showFormButtons();
                   }
 
-                  $overview = getAllDatasFromTable('glpi_plugin_releases_overviews', "`plugin_releases_releases_id`='$ID'");
+                  $overviews = getAllDatasFromTable('glpi_plugin_releases_releaseoverviews', "`plugin_releases_releases_id`='$ID'");
                   echo "<div style='width:50%; margin-left:15%; background-color:#f1f1f1; float:left;'>";
                   echo "<div style='height:70px;'>";
                   echo '<div style="width:20%; float:left; margin-top:10px;">';
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_analyse&old=" . $overview[$ID]['is_validate_analyse'] . "'>";
-                  static::getBubble($overview[$ID]['is_validate_analyse']);
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_analyse&old=" . $overviews[$ID]['is_validate_analyse'] . "'>";
+                  static::getBubble($overviews[$ID]['is_validate_analyse']);
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
                   echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
                   echo '<br><b>' . __("Analyse state", 'releases') . '</b><br>';
-                  if ($overview[$ID]['is_validate_analyse'] != 1) {
+                  if ($overviews[$ID]['is_validate_analyse'] != 1) {
                      echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_analyse&old=0'>" . __('Validate the analyse', 'releases') . "</a>";
                   }
                   echo '</div>';
@@ -148,14 +148,14 @@ class PluginReleasesOverview extends CommonDBTM {
 
                   echo "<div style='height:70px;'>";
                   echo "<div style='width:20%; float:left; margin-top:10px;'>";
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_cost&old=" . $overview[$ID]['is_validate_cost'] . "'>";
-                  static::getBubble($overview[$ID]['is_validate_cost']);
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_cost&old=" . $overviews[$ID]['is_validate_cost'] . "'>";
+                  static::getBubble($overviews[$ID]['is_validate_cost']);
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
                   echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
                   echo '<br><b>' . __("Estimation state", 'releases') . '</b><br>';
-                  if ($overview[$ID]['is_validate_cost'] != 1) {
+                  if ($overviews[$ID]['is_validate_cost'] != 1) {
                      echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_cost&old=0'>" . __('Validate the cost', 'releases') . "</a>";
                   }
                   echo '</div>';
@@ -163,14 +163,14 @@ class PluginReleasesOverview extends CommonDBTM {
 
                   echo "<div style='height:70px;'>";
                   echo "<div style='width:20%; float:left; margin-top:10px;'>";
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_plan&old=" . $overview[$ID]['is_validate_plan'] . "'>";
-                  static::getBubble($overview[$ID]['is_validate_plan']);
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_plan&old=" . $overviews[$ID]['is_validate_plan'] . "'>";
+                  static::getBubble($overviews[$ID]['is_validate_plan']);
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
                   echo "<div style='vertical-align:middle; line-height: 1.5; display: inline-block;'>";
                   echo '<br><b>' . __("Planification state", 'releases') . '</b><br>';
-                  if ($overview[$ID]['is_validate_plan'] != 1) {
+                  if ($overviews[$ID]['is_validate_plan'] != 1) {
                      echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_validate_plan&old=0'>" . __('Validate the planning', 'releases') . "</a>";
                   }
                   echo '</div>';
@@ -178,8 +178,8 @@ class PluginReleasesOverview extends CommonDBTM {
 
                   echo "<div style='height:70px;'>";
                   echo "<div style='width:20%; float:left; margin-top:10px;'>";
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_test_done&old=" . $overview[$ID]['is_test_done'] . "'>";
-                  static::getBubble($overview[$ID]['is_test_done'], 'releases');
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_test_done&old=" . $overviews[$ID]['is_test_done'] . "'>";
+                  static::getBubble($overviews[$ID]['is_test_done'], 'releases');
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
@@ -188,15 +188,15 @@ class PluginReleasesOverview extends CommonDBTM {
                   echo '<a onclick="' . Html::jsGetElementbyID('new_test') . '.dialog(\'open\')" style="cursor:pointer;">' . __('Add a new test', 'releases') . "</a>";
                   $test = new PluginReleasesReleaseTest();
                   echo Ajax::createIframeModalWindow('new_test',
-                                                     '../front/test.form.php?plugin_releases_releases_id=' . $ID,
+                                                     $test->getFormURL().'?plugin_releases_releases_id=' . $ID,
                                                      array('display' => false));
                   echo '</div>';
                   echo '</div></div>';
 
                   echo "<div style='height:70px;'>";
                   echo "<div style='width:20%; float:left; margin-top:10px;'>";
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_info_done&old=" . $overview[$ID]['is_info_done'] . "'>";
-                  static::getBubble($overview[$ID]['is_info_done']);
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_info_done&old=" . $overviews[$ID]['is_info_done'] . "'>";
+                  static::getBubble($overviews[$ID]['is_info_done']);
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
@@ -208,8 +208,8 @@ class PluginReleasesOverview extends CommonDBTM {
 
                   echo "<div style='height:70px;'>";
                   echo "<div style='width:20%; float:left; margin-top:10px;'>";
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_deployment_done&old=" . $overview[$ID]['is_deployment_done'] . "'>";
-                  static::getBubble($overview[$ID]['is_deployment_done']);
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_deployment_done&old=" . $overviews[$ID]['is_deployment_done'] . "'>";
+                  static::getBubble($overviews[$ID]['is_deployment_done']);
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
@@ -221,8 +221,8 @@ class PluginReleasesOverview extends CommonDBTM {
 
                   echo "<div style='height:70px;'>";
                   echo "<div style='width:20%; float:left; margin-top:10px;'>";
-                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_end&old=" . $overview[$ID]['is_end'] . "'>";
-                  static::getBubble($overview[$ID]['is_end']);
+                  echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php?id=" . $ID . "&field=is_end&old=" . $overviews[$ID]['is_end'] . "'>";
+                  static::getBubble($overviews[$ID]['is_end']);
                   echo '</a>';
                   echo "</div>";
                   echo "<div style='width:80%; line-height:35px; float:right;'>";
