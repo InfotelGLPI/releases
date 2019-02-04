@@ -80,7 +80,7 @@ class PluginReleasesReleaseDeployment extends CommonDBTM {
       $deplo->showSummary($item);
    }
 
-   function showSummary($item, $options = array()) {
+   function showSummary($item, $options = []) {
       global $CFG_GLPI;
 
       if (!$this->find(["plugin_releases_releases_id" => $item->getID()])) {
@@ -104,7 +104,7 @@ class PluginReleasesReleaseDeployment extends CommonDBTM {
 
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         static::dropdownDeploymentType(array('value' => $this->fields['type']));
+         static::dropdownDeploymentType(['value' => $this->fields['type']]);
          echo "</td>";
 
          if (isset($this->fields['type'])
@@ -116,11 +116,11 @@ class PluginReleasesReleaseDeployment extends CommonDBTM {
             echo "</td>";
             echo "<script type='text/javascript' >\n";
             echo "function viewAddPhase" . $ID . "() {\n";
-            $params = array('type'                           => $this->getType(),
+            $params = ['type'                           => $this->getType(),
                             'parenttype'                     => $item->getType(),
                             $item->getForeignKeyField()      => $item->fields['id'],
                             'plugin_releases_deployments_id' => $this->getID(),
-                            'id'                             => -1);
+                            'id'                             => -1];
             Ajax::updateItemJsCode("addphase" . $ID . "", $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitemphase.php", $params);
             echo "};";
             echo "</script>\n";
@@ -167,10 +167,10 @@ class PluginReleasesReleaseDeployment extends CommonDBTM {
 
                echo "\n<script type='text/javascript' >\n";
                echo "function viewEditPhase" . $data['id'] . "() {\n";
-               $params = array('type'                           => $this->getType(),
+               $params = ['type'                           => $this->getType(),
                                'parenttype'                     => $item->getType(),
                                'plugin_releases_deployments_id' => $this->getID(),
-                               'id'                             => $data["id"]);
+                               'id'                             => $data["id"]];
                Ajax::updateItemJsCode("viewphase" . $ID, $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitemphase.php", $params);
                echo "};";
                echo "</script>\n";
@@ -217,10 +217,17 @@ class PluginReleasesReleaseDeployment extends CommonDBTM {
     * */
    static function dropdownDeploymentType($options) {
 
-      $tab = array(0 => Dropdown::EMPTY_VALUE,
-                   1 => __('Big bang', 'releases'),
-                   2 => __('Phases', 'releases'));
+      $p = [
+         'name'     => 'type',
+         'value'    => 0,
+         'showtype' => 'normal',
+         'display'  => true,
+      ];
 
-      return Dropdown::showFromArray('type', $tab, $options);
+      $values = [0 => Dropdown::EMPTY_VALUE,
+                   1 => __('Big bang', 'releases'),
+                   2 => __('Phases', 'releases')];
+
+      return Dropdown::showFromArray($p['name'], $values, $p);
    }
 }

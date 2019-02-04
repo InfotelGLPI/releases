@@ -34,7 +34,7 @@ class PluginReleasesMenu extends CommonGLPI {
    static function getMenuContent() {
       global $CFG_GLPI;
 
-      $menu                                           = array();
+      $menu                                           = [];
       $menu['title']                                  = self::getMenuName();
       $menu['page']                                   = "/plugins/releases/front/release.php";
       $menu['links']['search']                        = PluginReleasesRelease::getSearchURL(false);

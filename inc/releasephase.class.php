@@ -47,7 +47,7 @@ class PluginReleasesReleasePhase extends PluginReleasesReleaseDeployment {
     * @param $options   array
     *     -  parent Object : the object
     * */
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
 
       $rand = mt_rand();
       $this->initForm($ID, $options);

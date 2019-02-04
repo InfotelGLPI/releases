@@ -48,7 +48,7 @@ class PluginReleasesProfile extends CommonDBTM {
          $prof = new self();
 
          self::addDefaultProfileInfos($ID, 
-                                    array('plugin_releases' => 0));
+                                    ['plugin_releases' => 0]);
          $prof->showForm($ID);
       }
       return true;
@@ -57,7 +57,7 @@ class PluginReleasesProfile extends CommonDBTM {
    static function createFirstAccess($ID) {
       //85
       self::addDefaultProfileInfos($ID,
-                                    array("plugin_releases"=> 127), true);
+                                    ["plugin_releases"=> 127], true);
    }
    
    
@@ -96,7 +96,7 @@ class PluginReleasesProfile extends CommonDBTM {
    function showForm($profiles_id=0, $openform=TRUE, $closeform=TRUE) {
 
       echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, PURGE)))
+      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
           && $openform) {
          $profile = new Profile();
          echo "<form method='post' action='".$profile->getFormURL()."'>";
@@ -106,16 +106,16 @@ class PluginReleasesProfile extends CommonDBTM {
       $profile->getFromDB($profiles_id);
       if ($profile->getField('interface') == 'central') {
          $rights = $this->getAllRights();
-         $profile->displayRightsChoiceMatrix($rights, array('canedit'       => $canedit,
+         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
                                                          'default_class' => 'tab_bg_2',
-                                                         'title'         => __('General')));
+                                                         'title'         => __('General')]);
       }
       
       if ($canedit
           && $closeform) {
          echo "<div class='center'>";
-         echo Html::hidden('id', array('value' => $profiles_id));
-         echo Html::submit(_sx('button', 'Save'), array('name' => 'update'));
+         echo Html::hidden('id', ['value' => $profiles_id]);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
          echo "</div>\n";
          Html::closeForm();
       }
@@ -123,12 +123,12 @@ class PluginReleasesProfile extends CommonDBTM {
    }
 
    static function getAllRights($all = false) {
-      $rights = array(
-          array('itemtype'  => 'PluginReleasesRelease',
+      $rights = [
+          ['itemtype'  => 'PluginReleasesRelease',
                 'label'     => _n('Release', 'Releases', 2, 'releases'),
                 'field'     => 'plugin_releases'
-          ),
-      );
+          ],
+      ];
       
       return $rights;
    }
@@ -170,7 +170,7 @@ class PluginReleasesProfile extends CommonDBTM {
       foreach ($DB->request('glpi_plugin_releases_profiles',
                             "`profiles_id`='$profiles_id'") as $profile_data) {
 
-         $matching = array('releases'    => 'plugin_releases');
+         $matching = ['releases'    => 'plugin_releases'];
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
             if (!isset($current_rights[$old])) {

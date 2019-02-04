@@ -103,7 +103,7 @@ class PluginReleasesReleaseTest extends CommonDBTM {
 
 
    function canEditAll() {
-      return Session::haveRightsOr('plugin_releases', array(CREATE, UPDATE, DELETE, PURGE));
+      return Session::haveRightsOr('plugin_releases', [CREATE, UPDATE, DELETE, PURGE]);
       return true;
    }
 
@@ -226,11 +226,11 @@ class PluginReleasesReleaseTest extends CommonDBTM {
          if ($canedit) {
             echo "\n<script type='text/javascript' >\n";
             echo "function viewEditTask" . $item->fields['id'] . $this->fields["id"] . "$rand() {\n";
-            $params = array('type'       => $this->getType(),
+            $params = ['type'       => $this->getType(),
                             'parenttype' => $item->getType(),
                             $item->getForeignKeyField()
                                          => $this->fields[$item->getForeignKeyField()],
-                            'id'         => $this->fields["id"]);
+                            'id'         => $this->fields["id"]];
             Ajax::updateItemJsCode("viewfollowup" . $item->fields['id'] . "$rand",
                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitem.php", $params);
             echo "};";
@@ -309,7 +309,7 @@ class PluginReleasesReleaseTest extends CommonDBTM {
     * @param $options   array
     *     -  parent Object : the object
     **/
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI;
 
       $rand_template = mt_rand();
@@ -397,9 +397,9 @@ class PluginReleasesReleaseTest extends CommonDBTM {
          echo "<tr class='tab_bg_1'>";
          echo "<td>" . __('Date') . "</td>";
          echo "<td>";
-         Html::showDateTimeField("date", array('value'      => $this->fields["date"],
+         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
                                                'timestep'   => 1,
-                                               'maybeempty' => false));
+                                               'maybeempty' => false]);
          echo "</tr>";
       } else {
          echo "<tr class='tab_bg_1'>";
@@ -409,10 +409,10 @@ class PluginReleasesReleaseTest extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Category') . "</td><td>";
-      TaskCategory::dropdown(array('value'     => $this->fields["taskcategories_id"],
+      TaskCategory::dropdown(['value'     => $this->fields["taskcategories_id"],
                                    'rand'      => $rand_type,
                                    'entity'    => $item->fields["entities_id"],
-                                   'condition' => "`is_active` = '1'"));
+                                   'condition' => "`is_active` = '1'"]);
 
       echo "</td></tr>\n";
 
@@ -435,18 +435,18 @@ class PluginReleasesReleaseTest extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Duration') . "</td><td>";
 
-      $toadd = array();
+      $toadd = [];
       for ($i = 9; $i <= 100; $i++) {
          $toadd[] = $i * HOUR_TIMESTAMP;
       }
 
-      Dropdown::showTimeStamp("actiontime", array('min'             => 0,
+      Dropdown::showTimeStamp("actiontime", ['min'             => 0,
                                                   'max'             => 8 * HOUR_TIMESTAMP,
                                                   'value'           => $this->fields["actiontime"],
                                                   'rand'            => $rand_time,
                                                   'addfirstminutes' => true,
                                                   'inhours'         => true,
-                                                  'toadd'           => $toadd));
+                                                  'toadd'           => $toadd]);
 
       echo "</td></tr>\n";
 
@@ -459,19 +459,19 @@ class PluginReleasesReleaseTest extends CommonDBTM {
       echo Html::image($CFG_GLPI['root_doc'] . "/pics/user.png") . "&nbsp;";
       echo _n('User', 'Users', 1);
       $rand_user = mt_rand();
-      $params    = array('name'   => "users_id_tech",
+      $params    = ['name'   => "users_id_tech",
                          'value'  => (($ID > -1)
                             ? $this->fields["users_id_tech"]
                             : Session::getLoginUserID()),
                          'right'  => "own_ticket",
                          'rand'   => $rand_user,
                          'entity' => $item->fields["entities_id"],
-                         'width'  => '');
+                         'width'  => ''];
 
-      $params['toupdate'] = array('value_fieldname'
+      $params['toupdate'] = ['value_fieldname'
                                               => 'users_id',
                                   'to_update' => "user_available$rand_user",
-                                  'url'       => $CFG_GLPI["root_doc"] . "/ajax/planningcheck.php");
+                                  'url'       => $CFG_GLPI["root_doc"] . "/ajax/planningcheck.php"];
       User::dropdown($params);
 
       echo " <a href='#' onClick=\"" . Html::jsGetElementbyID('planningcheck' . $rand) . ".dialog('open');\">";
@@ -483,24 +483,24 @@ class PluginReleasesReleaseTest extends CommonDBTM {
                                     $CFG_GLPI["root_doc"] .
                                     "/front/planning.php?checkavailability=checkavailability" .
                                     "&itemtype=" . $item->getType() . "&$fkfield=" . $item->getID(),
-                                    array('title' => __('Availability')));
+                                    ['title' => __('Availability')]);
 
 
       echo "<br />";
       echo Html::image($CFG_GLPI['root_doc'] . "/pics/group.png") . "&nbsp;";
       echo _n('Group', 'Groups', 1) . "&nbsp;";
       $rand_group = mt_rand();
-      $params     = array('name'      => "groups_id_tech",
+      $params     = ['name'      => "groups_id_tech",
                           'value'     => (($ID > -1)
                              ? $this->fields["groups_id_tech"]
                              : Dropdown::EMPTY_VALUE),
                           'condition' => "is_task",
                           'rand'      => $rand_group,
-                          'entity'    => $item->fields["entities_id"]);
+                          'entity'    => $item->fields["entities_id"]];
 
-      $params['toupdate'] = array('value_fieldname' => 'users_id',
+      $params['toupdate'] = ['value_fieldname' => 'users_id',
                                   'to_update'       => "group_available$rand_group",
-                                  'url'             => $CFG_GLPI["root_doc"] . "/ajax/planningcheck.php");
+                                  'url'             => $CFG_GLPI["root_doc"] . "/ajax/planningcheck.php"];
       Group::dropdown($params);
       echo "</td>\n";
       echo "<td>";
@@ -514,7 +514,7 @@ class PluginReleasesReleaseTest extends CommonDBTM {
             echo "<script type='text/javascript' >\n";
             echo "function showPlan" . $ID . $rand_text . "() {\n";
             echo Html::jsHide("plan$rand_text");
-            $params = array('action'     => 'add_event_classic_form',
+            $params = ['action'     => 'add_event_classic_form',
                             'form'       => 'followups',
                             'users_id'   => $this->fields["users_id_tech"],
                             'groups_id'  => $this->fields["groups_id_tech"],
@@ -525,7 +525,7 @@ class PluginReleasesReleaseTest extends CommonDBTM {
                             'rand_group' => $rand_group,
                             'entity'     => $item->fields["entities_id"],
                             'itemtype'   => $this->getType(),
-                            'items_id'   => $this->getID());
+                            'items_id'   => $this->getID()];
             Ajax::updateItemJsCode("viewplan$rand_text", $CFG_GLPI["root_doc"] . "/ajax/planning.php",
                                    $params);
             echo "}";
@@ -556,13 +556,13 @@ class PluginReleasesReleaseTest extends CommonDBTM {
             echo "<script type='text/javascript' >\n";
             echo "function showPlanUpdate$rand_text() {\n";
             echo Html::jsHide("plan$rand_text");
-            $params = array('action'     => 'add_event_classic_form',
+            $params = ['action'     => 'add_event_classic_form',
                             'form'       => 'followups',
                             'entity'     => $item->fields['entities_id'],
                             'rand_user'  => $rand_user,
                             'rand_group' => $rand_group,
                             'itemtype'   => $this->getType(),
-                            'items_id'   => $this->getID());
+                            'items_id'   => $this->getID()];
             Ajax::updateItemJsCode("viewplan$rand_text", $CFG_GLPI["root_doc"] . "/ajax/planning.php",
                                    $params);
             echo "};";
@@ -585,8 +585,8 @@ class PluginReleasesReleaseTest extends CommonDBTM {
           && PlanningRecall::isAvailable()) {
 
          echo "<tr class='tab_bg_1'><td>" . _x('Planning', 'Reminder') . "</td><td class='center'>";
-         PlanningRecall::dropdown(array('itemtype' => $this->getType(),
-                                        'items_id' => $this->getID()));
+         PlanningRecall::dropdown(['itemtype' => $this->getType(),
+                                        'items_id' => $this->getID()]);
          echo "</td><td colspan='2'></td></tr>";
       }
 
@@ -613,7 +613,7 @@ class PluginReleasesReleaseTest extends CommonDBTM {
       // Display existing Followups
       $showprivate = $this->canViewPrivates();
       $caneditall  = $this->canEditAll();
-      $tmp         = array($item->getForeignKeyField() => $tID);
+      $tmp         = [$item->getForeignKeyField() => $tID];
       $canadd      = $this->can(-1, CREATE, $tmp);
       $canpurge    = $this->canPurgeItem();
       $canview     = $this->canViewItem();
@@ -642,10 +642,10 @@ class PluginReleasesReleaseTest extends CommonDBTM {
       if (1) {//$canadd
          echo "<script type='text/javascript' >\n";
          echo "function viewAddTask" . $item->fields['id'] . "$rand() {\n";
-         $params = array('type'                      => $this->getType(),
+         $params = ['type'                      => $this->getType(),
                          'parenttype'                => $item->getType(),
                          $item->getForeignKeyField() => $item->fields['id'],
-                         'id'                        => -1);
+                         'id'                        => -1];
          Ajax::updateItemJsCode("viewfollowup" . $item->fields['id'] . "$rand",
                                 $CFG_GLPI["root_doc"] . "/ajax/viewsubitem.php", $params);
          echo Html::jsHide('addbutton' . $item->fields['id'] . "$rand");
@@ -676,12 +676,12 @@ class PluginReleasesReleaseTest extends CommonDBTM {
 
          while ($data = $DB->fetch_assoc($result)) {
             if ($this->getFromDB($data['id'])) {
-               $options = array('parent'      => $item,
+               $options = ['parent'      => $item,
                                 'rand'        => $rand,
-                                'showprivate' => $showprivate);
-               Plugin::doHook('pre_show_item', array('item' => $this, 'options' => &$options));
+                                'showprivate' => $showprivate];
+               Plugin::doHook('pre_show_item', ['item' => $this, 'options' => &$options]);
                $this->showInObjectSumnary($item, $rand, $showprivate);
-               Plugin::doHook('post_show_item', array('item' => $this, 'options' => $options));
+               Plugin::doHook('post_show_item', ['item' => $this, 'options' => $options]);
 
             }
          }
@@ -705,16 +705,16 @@ class PluginReleasesReleaseTest extends CommonDBTM {
 
       echo "<br>" . __('Duration');
 
-      $toadd = array();
+      $toadd = [];
       for ($i = 9; $i <= 100; $i++) {
          $toadd[] = $i * HOUR_TIMESTAMP;
       }
 
-      Dropdown::showTimeStamp("actiontime", array('min'             => 0,
+      Dropdown::showTimeStamp("actiontime", ['min'             => 0,
                                                   'max'             => 8 * HOUR_TIMESTAMP,
                                                   'addfirstminutes' => true,
                                                   'inhours'         => true,
-                                                  'toadd'           => $toadd));
+                                                  'toadd'           => $toadd]);
 
       echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
    }
@@ -730,20 +730,20 @@ class PluginReleasesReleaseTest extends CommonDBTM {
     **/
    static function dropdownStatus($name, $value) {
 
-      $tab = array(0 => __('New', 'releases'),
+      $tab = [0 => __('New', 'releases'),
                    1 => __('In Progress', 'releases'),
                    2 => __('Validated', 'releases'),
-                   3 => __('Unvalidated', 'releases'));
+                   3 => __('Unvalidated', 'releases')];
 
-      return Dropdown::showFromArray($name, $tab, array('value' => $value));
+      return Dropdown::showFromArray($name, $tab, ['value' => $value]);
    }
 
    static function getStateName($value) {
 
-      $tab = array(0 => __('New', 'releases'),
+      $tab = [0 => __('New', 'releases'),
                    1 => __('In Progress', 'releases'),
                    2 => __('Validated', 'releases'),
-                   3 => __('Unvalidated', 'releases'));
+                   3 => __('Unvalidated', 'releases')];
 
       return $tab[$value];
    }

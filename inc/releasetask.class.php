@@ -103,7 +103,7 @@ class PluginReleasesReleaseTask extends CommonDBTM {
 
 
    function canEditAll() {
-      return Session::haveRightsOr('plugin_releases', array(CREATE, UPDATE, DELETE, PURGE));
+      return Session::haveRightsOr('plugin_releases', [CREATE, UPDATE, DELETE, PURGE]);
       return true;
    }
 
@@ -311,7 +311,7 @@ class PluginReleasesReleaseTask extends CommonDBTM {
     * @param $options   array
     *     -  parent Object : the object
     **/
-   function showForm($ID, $options = array()) {
+   function showForm($ID, $options = []) {
       global $DB, $CFG_GLPI;
 
       $rand_template = mt_rand();
@@ -427,7 +427,7 @@ class PluginReleasesReleaseTask extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Duration') . "</td><td>";
 
-      $toadd = array();
+      $toadd = [];
       for ($i = 9; $i <= 100; $i++) {
          $toadd[] = $i * HOUR_TIMESTAMP;
       }
@@ -697,7 +697,7 @@ class PluginReleasesReleaseTask extends CommonDBTM {
 
       echo "<br>" . __('Duration');
 
-      $toadd = array();
+      $toadd = [];
       for ($i = 9; $i <= 100; $i++) {
          $toadd[] = $i * HOUR_TIMESTAMP;
       }

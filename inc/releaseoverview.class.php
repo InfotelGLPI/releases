@@ -189,7 +189,7 @@ class PluginReleasesReleaseOverview extends CommonDBTM {
                   $test = new PluginReleasesReleaseTest();
                   echo Ajax::createIframeModalWindow('new_test',
                                                      $test->getFormURL().'?plugin_releases_releases_id=' . $ID,
-                                                     array('display' => false));
+                                                     ['display' => false]);
                   echo '</div>';
                   echo '</div></div>';
 

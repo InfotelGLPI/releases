@@ -49,14 +49,14 @@ function plugin_releases_uninstall() {
    include_once(GLPI_ROOT . "/plugins/release/inc/menu.class.php");
 
    // Plugin tables deletion
-   $tables = array("glpi_plugin_releases_releases",
+   $tables = ["glpi_plugin_releases_releases",
                    "glpi_plugin_releases_releasetests",
                    "glpi_plugin_releases_releasetasks",
                    "glpi_plugin_releases_releasephases",
                    "glpi_plugin_releases_releaseinformations",
                    "glpi_plugin_releases_releasedeployments",
                    "glpi_plugin_releases_releaseoverviews",
-                   "glpi_plugin_releases_changes_releases");
+                   "glpi_plugin_releases_changes_releases"];
 
    foreach ($tables as $table)
       $DB->query("DROP TABLE IF EXISTS `$table`;");
@@ -77,7 +77,7 @@ function plugin_releases_uninstall() {
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
    foreach (PluginReleasesProfile::getAllRights() as $right) {
-      $profileRight->deleteByCriteria(array('name' => $right['field']));
+      $profileRight->deleteByCriteria(['name' => $right['field']]);
    }
    PluginReleasesMenu::removeRightsFromSession();
 
@@ -106,7 +106,7 @@ function plugin_releases_uninstall() {
 //                   //                                       "glpi_plugin_releases_informations" => "glpi_plugin_mydashboard_alerts")
 //      );
 //   } else {
-//      return array();
+//      return [];
 //   }
 //}
 

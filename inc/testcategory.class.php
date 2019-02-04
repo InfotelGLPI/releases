@@ -43,9 +43,9 @@ class PluginReleasesTestCategory extends CommonTreeDropdown {
 
       $tab = parent::getAdditionalFields();
 
-      $tab[] = array('name'  => 'is_active',
+      $tab[] = ['name'  => 'is_active',
                          'label' => __('Active'),
-                         'type'  => 'bool');
+                         'type'  => 'bool'];
 
       return $tab;
    }

@@ -75,7 +75,7 @@ class PluginReleasesReleaseInformation extends CommonDBTM {
       $info->showForm($item, $ID);
    }
 
-   function showForm($item, $ID, $options = array()) {
+   function showForm($item, $ID, $options = []) {
       global $CFG_GLPI;
 
       if ($this->find(["plugin_releases_releases_id" => $ID]) && isset($this->fields['id'])) {
@@ -121,10 +121,10 @@ class PluginReleasesReleaseInformation extends CommonDBTM {
          echo "<div id='viewfollowup" . $item->fields['id'] . "$rand'></div>\n";
          echo "<script type='text/javascript' >\n";
          echo "function addNotif" . $item->fields['id'] . "$rand() {\n";
-         $params = array('id'        => $this->fields['id'],
+         $params = ['id'        => $this->fields['id'],
                          'is_active' => $this->fields['is_active'],
                          'alerts_id' => $alert_id,
-                         'action'    => 'start');
+                         'action'    => 'start'];
          Ajax::updateItemJsCode("viewfollowup" . $item->fields['id'] . "$rand",
                                 $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/notifInfo.php", $params);
          echo "};";
@@ -137,11 +137,11 @@ class PluginReleasesReleaseInformation extends CommonDBTM {
          echo "<div id='viewfollowup" . $item->fields['id'] . "$rand" . "2" . "'></div>\n";
          echo "<script type='text/javascript' >\n";
          echo "function delNotif" . $item->fields['id'] . "$rand() {\n";
-         $params2 = array('id'           => $this->fields['id'],
+         $params2 = ['id'           => $this->fields['id'],
                           'is_active'    => $this->fields['is_active'],
                           'action'       => 'stop',
                           'alerts_id'    => $alert_id,
-                          'reminders_id' => $remind_id);
+                          'reminders_id' => $remind_id];
          Ajax::updateItemJsCode("viewfollowup" . $item->fields['id'] . "$rand" . "2",
                                 $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/notifInfo.php", $params2);
          echo "};";

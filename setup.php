@@ -31,17 +31,17 @@ function plugin_init_releases() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
-   $PLUGIN_HOOKS['change_profile']['releases'] = array('PluginReleasesProfile', 'initProfile');
+   $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
 
    if (Session::getLoginUserID()) {
 
       Plugin::registerClass('PluginReleasesProfile',
-                            array('addtabon' => 'Profile'));
+                            ['addtabon' => 'Profile']);
 
       $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesMenu'];
 
       Plugin::registerClass('PluginReleasesChange_Release',
-                            array('addtabon' => array('Change')));
+                            ['addtabon' => ['Change']]);
    }
 }
 

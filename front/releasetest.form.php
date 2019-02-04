@@ -70,7 +70,7 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_GET['_in_modal'])) {
    Html::popHeader($test->getTypeName(1), $_SERVER['PHP_SELF']);
-   $test->showForm(-1, array('plugin_releases_releases_id' => $_GET['plugin_releases_releases_id']));
+   $test->showForm(-1, ['plugin_releases_releases_id' => $_GET['plugin_releases_releases_id']]);
    Html::popFooter();
 } else {
    Html::displayErrorAndDie('Lost');
