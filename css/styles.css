@@ -1,0 +1,164 @@
+/** release statuses */
+.releasestatus {
+    font-size: 1.4em;
+    margin-right: 0.2em;
+    color: red;
+    background-color: transparent;
+}
+.releasestatus.todo {
+    color: #999;
+}
+.releasestatus.done {
+    color: green;
+}
+.releasestatus.late {
+    color: orange;
+}
+.releasestatus.inprogress {
+    color: #ff0;
+}
+.releasestatus.waiting {
+    color: #2675e7;
+}
+.releasestatus.default {
+    color: #c00;
+}
+
+/** release statuses */
+.workflowstatus {
+    font-size: 1.4em;
+    margin-right: 0.2em;
+    color: red;
+    background-color: transparent;
+}
+.workflowstatus.todo {
+    color: #999;
+    background-color: #999;
+}
+.workflowstatus.done {
+    color: green;
+    background-color: green;
+}
+.workflowstatus.late {
+    color: orange;
+    background-color: orange;
+}
+.workflowstatus.inprogress {
+    color: #ff0;
+    background-color: #ff0;
+}
+.workflowstatus.waiting {
+    color: #2675e7;
+    background-color: #2675e7;
+}
+.workflowstatus.default {
+    color: #c00;
+    background-color: #c00;
+}
+
+
+
+
+
+
+.node {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display:inline-block;
+    transition: all 1000ms ease;
+}
+
+.activated {
+    box-shadow: 0px 0px 3px 2px rgba(194, 255, 194, 0.8);
+}
+
+.divider {
+    height: 40px;
+    width: 2px;
+    margin-left: 9px;
+    transition: all 800ms ease;
+}
+div.workflow {
+    text-align: left;
+    margin-left: 30px;
+}
+div.workflow li p {
+    display:inline-block;
+    margin-left: 25px;
+}
+*, *:after, *:before { margin:0; padding:0; }
+div.workflow li {
+    list-style: none;
+    line-height: 1px;
+}
+
+
+.blue { background-color: rgba(82, 165, 255, 1); }
+.green{ background-color: rgba(92, 184, 92, 1) }
+.red { background-color: rgba(255, 148, 148, 1); }
+.grey { background-color: rgba(201, 201, 201, 1); }
+
+
+.timeline_choices li.risk {
+    background-color: #FFCF48;
+    color: #535353;
+}
+.timeline_choices li.test {
+    background-color: #9FDDFF;
+    color: #535353;
+}
+.timeline_choices li.rollback {
+    background-color: #e0e0e0;
+    color: #3a5d4e;
+}
+.risk {
+    /*background-color: #F39F18;*/
+    background-color: #FFCF48;
+    color: #535353;
+}
+.task {
+    background-color: #FEDA90;
+    color: #535353;
+}
+.test {
+    /*background-color: #77b5fe;*/
+    background-color: #9FDDFF;
+    color: #535353;
+}
+.rollback {
+    background-color: #e0e0e0;
+    color: #3a5d4e;
+}
+
+.newrelease {
+    color: #49bf4d;
+}
+.releasedef {
+    color: #49bf4d;
+}
+.datedef {
+    color: #49bf4d;
+}
+.changedef {
+    color: #49bf4d;
+}
+.riskdef {
+    color: #49bf4d;
+}
+.testdef {
+    color: #49bf4d;
+}
+.rollbackdef {
+    color: #49bf4d;
+}
+.finalize {
+    color: #49bf4d;
+}
+.review {
+    color: black;
+}
+.closerelease {
+    color: black;
+}
+

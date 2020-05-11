@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
+if (strpos($_SERVER['PHP_SELF'], "finalize.php")) {
    $AJAX_INCLUDE = 1;
    include('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
@@ -35,38 +35,13 @@ if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
 }
 
 Session::checkCentralAccess();
-global $CFG_GLPI;
-$foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
-      Html::header_nocache();
-      if (!isset($_REQUEST['type'])) {
-         exit();
-      }
-      if (!isset($_REQUEST['parenttype'])) {
-         exit();
-      }
 
-      $item = getItemForItemtype($_REQUEST['type']);
-      $parent = getItemForItemtype($_REQUEST['parenttype']);
 
-      if (isset($_REQUEST[$parent->getForeignKeyField()])
-         && isset($_REQUEST["id"])
-         && $parent->getFromDB($_REQUEST[$parent->getForeignKeyField()])) {
-
-         $ol = ObjectLock::isLocked( $_REQUEST['parenttype'], $parent->getID() );
-         if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
-            ObjectLock::setReadOnlyProfile( );
-         }
-         $id = isset($_REQUEST['id']) && (int)$_REQUEST['id'] > 0 ? $_REQUEST['id'] : null;
-         if ($id) {
-            $item->getFromDB($id);
-         }
-         $url = $_REQUEST['type']::getFormURL();
-         $item->showForm($id, [$foreignKey => $_POST[$foreignKey],
-            'target' => $url,'parent'=>$parent]);
-
-      } else {
-         echo __('Access denied');
-      }
-
-      Html::ajaxFooter();
-
+if (isset($_REQUEST["id"]) ) {
+   $release = new PluginReleasesRelease();
+   $val = [];
+   $val['id'] = $_REQUEST["id"];
+   $val['state'] = PluginReleasesRelease::FINALIZE;
+   $release->update($val);
+   echo "ok";
+}

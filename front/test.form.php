@@ -36,14 +36,14 @@ if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
 }
 
-$release = New PluginReleasesRelease();
+$release = New PluginReleasesTest();
 
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);
 
    $newID = $release->add($_POST);
    if ($_SESSION['glpibackcreated']) {
-      Html::redirect($release->getFormURL() . "?id=" . $newID);
+      Html::redirect($task->getFormURL() . "?id=" . $newID);
    }
    Html::back();
 } else if (isset($_POST["delete"])) {
@@ -65,46 +65,13 @@ if (isset($_POST["add"])) {
    $release->check($_POST['id'], UPDATE);
    $release->update($_POST);
    Html::back();
-}else if (isset($_POST["createRelease"])){
-   $change = new Change();
-   $change->getFromDB($_POST["changes_id"]);
-   $input = [];
-   $input["name"] = $change->getField("name");
-   $input["release_area"] = $change->getField("content");
-   $input["entities_id"] = $change->getField("entities_id");
 
-   $newID = $release->add($input);
-   $change_release = new PluginReleasesChange_Release();
-   $input = [];
-   $input["changes_id"] = $change->getID();
-   $input["plugin_release_releases_id"] = $newID;
-   $change_release->add($input);
-   if ($_SESSION['glpibackcreated']) {
-      Html::redirect($release->getFormURL() . "?id=" . $newID);
-   }
-   Html::back();
-
-} else if (isset($_REQUEST['delete_document'])) {
-   $doc = new Document();
-   $doc->getFromDB(intval($_REQUEST['documents_id']));
-   if ($doc->can($doc->getID(), UPDATE)) {
-      $document_item = new Document_Item;
-      $found_document_items = $document_item->find([
-         'itemtype'     => 'PluginReleasesRelease',
-         'items_id'     => (int)$_REQUEST['PluginReleasesRelease'],
-         'documents_id' => $doc->getID()
-      ]);
-      foreach ($found_document_items  as $item) {
-         $document_item->delete(Toolbox::addslashes_deep($item), true);
-      }
-   }
-   Html::back();
 } else {
 
    $release->checkGlobal(READ);
    $_SESSION['glpi_js_toload']["tinymce"][] = 'lib/tiny_mce/lib/tinymce.js';
 
-   Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
+   Html::header(PluginReleasesRelease::getTypeName(2), '', "help", PluginReleasesRelease::getType());
 
    $release->display($_GET);
 

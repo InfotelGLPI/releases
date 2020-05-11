@@ -30,32 +30,11 @@
  * ---------------------------------------------------------------------
  */
 
+/**
+ * @since 9.1
+ */
 
-include('../../../inc/includes.php');
-
+include ('../../../inc/includes.php');
 Session::checkLoginUser();
-
-$item = new PluginReleasesChange_Release();
-if (isset($_POST["add"])) {
-   if (!empty($_POST['plugin_release_releases_id']) && empty($_POST['changes_id'])) {
-      $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-         __('Change'));
-      Session::addMessageAfterRedirect($message, false, ERROR);
-      Html::back();
-   }
-   if (empty($_POST['plugin_release_releases_id']) && !empty($_POST['changes_id'])) {
-      $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-         __('Release','releases'));
-      Session::addMessageAfterRedirect($message, false, ERROR);
-      Html::back();
-   }
-   $item->check(-1, CREATE, $_POST);
-
-   if ($item->add($_POST)) {
-
-   }
-   Html::back();
-
-}
-
-Html::displayErrorAndDie("lost");
+$dropdown = new PluginReleasesRisktemplate();
+include (GLPI_ROOT . "/front/dropdown.common.php");

@@ -35,34 +35,25 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * PluginReleasesChange_Release Class
+ * Change_Ticket Class
  *
- * Relation between Changes and Releases
+ * Relation between Changes and Tickets
  **/
 class PluginReleasesChange_Release extends CommonDBRelation {
 
+
    // From CommonDBRelation
-   static public $itemtype_1 = 'Change';
-   static public $items_id_1 = 'changes_id';
+   static public $itemtype_1   = 'Change';
+   static public $items_id_1   = 'changes_id';
 
-   static public $itemtype_2 = 'PluginReleasesRelease';
-   static public $items_id_2 = 'plugin_releases_releases_id';
+   static public $itemtype_2   = 'PluginReleasesRelease';
+   static public $items_id_2   = 'plugin_release_releases_id';
 
-   static $rightname = "plugin_releases";
-
-   function getForbiddenStandardMassiveAction() {
-
-      $forbidden   = parent::getForbiddenStandardMassiveAction();
-      $forbidden[] = 'update';
-      return $forbidden;
-   }
-
+   static $rightname                   = 'ticket';
 
    static function getTypeName($nb = 0) {
-      return _n('Link Release/Change', 'Links Release/Change', $nb);
+      return _n('Link Release/Change', 'Links Release/Change', $nb,'releases');
    }
-
-
    /**
     * @since 0.85
     *
@@ -73,17 +64,10 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       if (static::canView()) {
          $nb = 0;
          switch ($item->getType()) {
-            case 'Change' :
+             case 'PluginReleasesRelease' :
                if ($_SESSION['glpishow_count_on_tabs']) {
-                  $nb = countElementsInTable('glpi_plugin_releases_changes_releases',
-                                             ['changes_id' => $item->getID()]);
-               }
-               return self::createTabEntry(PluginReleasesRelease::getTypeName(Session::getPluralNumber()), $nb);
-
-            case 'PluginReleasesRelease' :
-               if ($_SESSION['glpishow_count_on_tabs']) {
-                  $nb = countElementsInTable('glpi_plugin_releases_changes_releases',
-                                             ['plugin_releases_releases_id' => $item->getID()]);
+                  $nb = countElementsInTable('glpi_plugin_release_changes_releases',
+                     ['plugin_release_releases_id' => $item->getID()]);
                }
                return self::createTabEntry(Change::getTypeName(Session::getPluralNumber()), $nb);
          }
@@ -91,17 +75,12 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       return '';
    }
 
-
    /**
     * @since 0.85
     **/
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       switch ($item->getType()) {
-         case 'Change' :
-            self::showForChange($item);
-            break;
-
          case 'PluginReleasesRelease' :
             self::showForRelease($item);
             break;
@@ -109,243 +88,10 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       return true;
    }
 
-
-   /**
-    * @since 0.85
-    *
-    * @see CommonDBTM::showMassiveActionsSubForm()
-    **/
-   static function showMassiveActionsSubForm(MassiveAction $ma) {
-
-      switch ($ma->getAction()) {
-         case 'add_task' :
-            $tasktype = 'TicketTask';
-            if ($ttype = getItemForItemtype($tasktype)) {
-               $ttype->showFormMassiveAction();
-               return true;
-            }
-            return false;
-
-         case "solveticket" :
-            $change = new Change();
-            $input  = $ma->getInput();
-            if (isset($input['changes_id']) && $change->getFromDB($input['changes_id'])) {
-               $change->showMassiveSolutionForm($change);
-               echo "<br>";
-               echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
-               return true;
-            }
-            return false;
-      }
-      return parent::showMassiveActionsSubForm($ma);
-   }
-
-
-   /**
-    * @since 0.85
-    *
-    * @see CommonDBTM::processMassiveActionsForOneItemtype()
-    **/
-   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,
-                                                       array $ids) {
-
-      switch ($ma->getAction()) {
-         case 'add_task' :
-            if (!($task = getItemForItemtype('TicketTask'))) {
-               $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
-               break;
-            }
-            $ticket = new Ticket();
-            $field  = $ticket->getForeignKeyField();
-
-            $input = $ma->getInput();
-
-            foreach ($ids as $id) {
-               if ($item->can($id, READ)) {
-                  if ($ticket->getFromDB($item->fields['tickets_id'])) {
-                     $input2 = [$field              => $item->fields['tickets_id'],
-                                'taskcategories_id' => $input['taskcategories_id'],
-                                'actiontime'        => $input['actiontime'],
-                                'content'           => $input['content']];
-                     if ($task->can(-1, CREATE, $input2)) {
-                        if ($task->add($input2)) {
-                           $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
-                        } else {
-                           $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
-                           $ma->addMessage($item->getErrorMessage(ERROR_ON_ACTION));
-                        }
-                     } else {
-                        $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
-                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
-                     }
-                  } else {
-                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
-                     $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
-                  }
-               }
-            }
-            return;
-         case 'solveticket' :
-            $input  = $ma->getInput();
-            $ticket = new Ticket();
-            foreach ($ids as $id) {
-               if ($item->can($id, READ)) {
-                  if ($ticket->getFromDB($item->fields['tickets_id'])
-                      && $ticket->canSolve()) {
-                     $solution = new ITILSolution();
-                     $added    = $solution->add([
-                                                   'itemtype'         => $ticket->getType(),
-                                                   'items_id'         => $ticket->getID(),
-                                                   'solutiontypes_id' => $input['solutiontypes_id'],
-                                                   'content'          => $input['content']
-                                                ]);
-
-                     if ($added) {
-                        $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
-                     } else {
-                        $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
-                        $ma->addMessage($ticket->getErrorMessage(ERROR_ON_ACTION));
-                     }
-                  } else {
-                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
-                     $ma->addMessage($ticket->getErrorMessage(ERROR_RIGHT));
-                  }
-               } else {
-                  $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
-                  $ma->addMessage($ticket->getErrorMessage(ERROR_RIGHT));
-               }
-            }
-            return;
-      }
-      parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
-   }
-
-
-   /**
-    * Show Releases for a change
-    *
-    * @param $change Change object
-    **/
-   static function showForChange(Change $change) {
-      global $DB;
-
-      $ID = $change->getField('id');
-      if (!$change->can($ID, READ)) {
-         return false;
-      }
-
-      $canedit = $change->canEdit($ID);
-      $rand    = mt_rand();
-
-      $iterator = $DB->request([
-                                  'SELECT DISTINCT' => 'glpi_plugin_releases_changes_releases.id AS linkID',
-                                  'FIELDS'          => 'glpi_plugin_releases_releases.*',
-                                  'FROM'            => 'glpi_plugin_releases_changes_releases',
-                                  'LEFT JOIN'       => [
-                                     'glpi_plugin_releases_releases' => [
-                                        'ON' => [
-                                           'glpi_plugin_releases_changes_releases'         => 'plugin_releases_releases_id',
-                                           'glpi_plugin_releases_releases' => 'id'
-                                        ]
-                                     ]
-                                  ],
-                                  'WHERE'           => [
-                                     'glpi_plugin_releases_changes_releases.changes_id' => $ID
-                                  ],
-                                  'ORDERBY'         => [
-                                     'glpi_plugin_releases_releases.name'
-                                  ]
-                               ]);
-
-      $releases = [];
-      $used     = [];
-      $numrows  = count($iterator);
-
-      while ($data = $iterator->next()) {
-         $releases[$data['id']] = $data;
-         $used[$data['id']]     = $data['id'];
-      }
-
-      if ($canedit) {
-         echo "<div class='firstbloc'>";
-         echo "<form name='changerelease_form$rand' id='changerelease_form$rand' method='post'
-                action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
-
-         echo "<table class='tab_cadre_fixe'>";
-         echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a release', 'releases') . "</th></tr>";
-
-         echo "<tr class='tab_bg_2'><td>";
-         echo "<input type='hidden' name='changes_id' value='$ID'>";
-         PluginReleasesRelease::dropdown(['used'        => $used,
-                                          'entity'      => $change->getEntityID(),
-                                          'entity_sons' => $change->isRecursive(),
-                                          'displaywith' => ['id']]);
-         echo "</td><td class='center'>";
-         echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
-         echo "</td><td>";
-         if (Session::haveRight('change', CREATE)) {
-            echo "<a href='".Toolbox::getItemTypeFormURL('PluginReleasesRelease')."?changes_id=$ID'>";
-            echo __('Create a release from this change');
-            echo "</a>";
-         }
-         echo "</td></tr></table>";
-         Html::closeForm();
-         echo "</div>";
-      }
-
-      echo "<div class='spaced'>";
-      if ($canedit && $numrows) {
-         Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-         $massiveactionparams
-            = ['num_displayed'    => min($_SESSION['glpilist_limit'], $numrows),
-               'specific_actions' => ['purge' => _x('button', 'Delete permanently'),
-                                      __CLASS__ . MassiveAction::CLASS_ACTION_SEPARATOR . 'solveticket'
-                                              => __('Solve tickets'),
-                                      __CLASS__ . MassiveAction::CLASS_ACTION_SEPARATOR . 'add_task'
-                                              => __('Add a new task')],
-               'container'        => 'mass' . __CLASS__ . $rand,
-               'extraparams'      => ['changes_id' => $change->getID()],
-               'width'            => 1000,
-               'height'           => 500];
-         Html::showMassiveActions($massiveactionparams);
-      }
-
-      echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr class='noHover'><th colspan='12'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
-      echo "</tr>";
-      if ($numrows) {
-         PluginReleasesRelease::commonListHeader(Search::HTML_OUTPUT, 'mass' . __CLASS__ . $rand);
-         Session::initNavigateListItems('PluginReleasesRelease',
-            //TRANS : %1$s is the itemtype name,
-            //        %2$s is the name of the item (used for headings of a list)
-                                        sprintf(__('%1$s = %2$s'), Change::getTypeName(1),
-                                                $change->fields["name"]));
-
-         $i = 0;
-         foreach ($releases as $data) {
-            Session::addToNavigateListItems('PluginReleasesRelease', $data["id"]);
-            PluginReleasesRelease::showShort($data['id'], ['followups'              => false,
-                                                           'row_num'                => $i,
-                                                           'type_for_massiveaction' => __CLASS__,
-                                                           'id_for_massiveaction'   => $data['linkID']]);
-            $i++;
-         }
-         PluginReleasesRelease::commonListHeader(Search::HTML_OUTPUT, 'mass' . __CLASS__ . $rand);
-      }
-      echo "</table>";
-      if ($canedit && $numrows) {
-         $massiveactionparams['ontop'] = false;
-         Html::showMassiveActions($massiveactionparams);
-         Html::closeForm();
-      }
-      echo "</div>";
-   }
-
-
    /**
     * Show changes for a release
     *
-    * @param $release PluginReleasesRelease object
+    * @param $ticket Ticket object
     **/
    static function showForRelease(PluginReleasesRelease $release) {
       global $DB;
@@ -356,56 +102,60 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       }
 
       $canedit = $release->canEdit($ID);
-      $rand    = mt_rand();
+      $rand = mt_rand();
 
       $iterator = $DB->request([
-                                  'SELECT DISTINCT' => 'glpi_plugin_releases_changes_releases.id AS linkID',
-                                  'FIELDS'          => 'glpi_changes.*',
-                                  'FROM'            => 'glpi_plugin_releases_changes_releases',
-                                  'LEFT JOIN'       => [
-                                     'glpi_changes' => [
-                                        'ON' => [
-                                           'glpi_plugin_releases_changes_releases' => 'changes_id',
-                                           'glpi_changes'          => 'id'
-                                        ]
-                                     ]
-                                  ],
-                                  'WHERE'           => [
-                                     'glpi_plugin_releases_changes_releases.plugin_releases_releases_id' => $ID
-                                  ],
-                                  'ORDERBY'         => [
-                                     'glpi_changes.name'
-                                  ]
-                               ]);
+         'SELECT DISTINCT' => 'glpi_plugin_release_changes_releases.id AS linkid',
+         'FIELDS' => 'glpi_changes.*',
+         'FROM' => 'glpi_plugin_release_changes_releases',
+         'LEFT JOIN' => [
+            'glpi_changes' => [
+               'ON' => [
+                  'glpi_plugin_release_changes_releases' => 'changes_id',
+                  'glpi_changes' => 'id'
+               ]
+            ]
+         ],
+         'WHERE' => [
+            'glpi_plugin_release_changes_releases.plugin_release_releases_id' => $ID,
+         ],
+         'ORDERBY' => [
+            'glpi_changes.name'
+         ]
+      ]);
 
       $changes = [];
-      $used    = [];
+      $used = [];
       $numrows = count($iterator);
-
-      while ($data = $iterator->next()) {
-         $changes[$data['id']] = $data;
-         $used[$data['id']]    = $data['id'];
+      $change_release = new self();
+      $all = $change_release->find();
+      foreach ($all as $one){
+         $used[$one['changes_id']] = $one['changes_id'];
       }
 
+
+      while ($data = $iterator->next()) {
+            $changes[$data['id']] = $data;
+
+
+
+      }
+      $statues = Change::getNotSolvedStatusArray();
       if ($canedit) {
          echo "<div class='firstbloc'>";
-         echo "<form name='changerelease_form$rand' id='changerelease_form$rand' method='post'
+         echo "<form name='changeticket_form$rand' id='changeticket_form$rand' method='post'
                action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a change') . "</th></tr>";
          echo "<tr class='tab_bg_2'><td>";
-         echo "<input type='hidden' name='plugin_releases_releases_id' value='$ID'>";
-         Change::dropdown(['used'   => $used,
-                           'entity' => $release->getEntityID()]);
+         echo "<input type='hidden' name='plugin_release_releases_id' value='$ID'>";
+         Change::dropdown(['used' => $used,
+            'entity' => $release->getEntityID(),'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
          echo "</td><td class='center'>";
          echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
          echo "</td><td>";
-         if (Session::haveRight('change', CREATE)) {
-            echo "<a href='" . Toolbox::getItemTypeFormURL('Change') . "?plugin_releases_releases_id=$ID'>";
-            echo __('Create a change from this release');
-            echo "</a>";
-         }
+
          echo "</td></tr></table>";
          Html::closeForm();
          echo "</div>";
@@ -415,7 +165,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       if ($canedit && $numrows) {
          Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
          $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-                                 'container'     => 'mass' . __CLASS__ . $rand];
+            'container' => 'mass' . __CLASS__ . $rand];
          Html::showMassiveActions($massiveactionparams);
       }
 
@@ -427,15 +177,15 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          Session::initNavigateListItems('Change',
             //TRANS : %1$s is the itemtype name,
             //        %2$s is the name of the item (used for headings of a list)
-                                        sprintf(__('%1$s = %2$s'), PluginReleasesRelease::getTypeName(1),
-                                                $release->fields["name"]));
+            sprintf(__('%1$s = %2$s'), Ticket::getTypeName(1),
+               $release->fields["name"]));
 
          $i = 0;
          foreach ($changes as $data) {
             Session::addToNavigateListItems('Change', $data["id"]);
-            Change::showShort($data['id'], ['row_num'                => $i,
-                                            'type_for_massiveaction' => __CLASS__,
-                                            'id_for_massiveaction'   => $data['linkID']]);
+            Change::showShort($data['id'], ['row_num' => $i,
+               'type_for_massiveaction' => __CLASS__,
+               'id_for_massiveaction' => $data['linkid']]);
             $i++;
          }
          Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . __CLASS__ . $rand);
@@ -450,4 +200,44 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       echo "</div>";
 
    }
+
+   function post_addItem() {
+      $release = new PluginReleasesRelease();
+      if($release->getFromDB($this->getField("plugin_release_releases_id"))){
+         if($release->getField("state")<PluginReleasesRelease::CHANGEDEFINITION){
+            $update["id"] = $release->getID();
+            $update["state"] = PluginReleasesRelease::CHANGEDEFINITION;
+            $release->update($update);
+         }
+      }
+
+   }
+   /**
+    * Actions done after the PURGE of the item in the database
+    *
+    * @return void
+    **/
+   function post_purgeItem() {
+    //TODO
+   }
+
+   static function canCreate() {
+      return Session::haveRight('ticket', UPDATE);
+   }
+
+
+
+   /**
+    * Have I the global right to "view" the Object
+    *
+    * Default is true and check entity if the objet is entity assign
+    *
+    * May be overloaded if needed
+    *
+    * @return booleen
+    **/
+   static function canView() {
+      return Session::haveRight('ticket', READ);
+   }
 }
+

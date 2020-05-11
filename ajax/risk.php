@@ -30,32 +30,22 @@
  * ---------------------------------------------------------------------
  */
 
+/**
+ * @since 9.1
+ */
 
-include('../../../inc/includes.php');
+$AJAX_INCLUDE = 1;
+
+include ('../../../inc/includes.php');
+header("Content-Type: application/json; charset=UTF-8");
+Html::header_nocache();
 
 Session::checkLoginUser();
 
-$item = new PluginReleasesChange_Release();
-if (isset($_POST["add"])) {
-   if (!empty($_POST['plugin_release_releases_id']) && empty($_POST['changes_id'])) {
-      $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-         __('Change'));
-      Session::addMessageAfterRedirect($message, false, ERROR);
-      Html::back();
-   }
-   if (empty($_POST['plugin_release_releases_id']) && !empty($_POST['changes_id'])) {
-      $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-         __('Release','releases'));
-      Session::addMessageAfterRedirect($message, false, ERROR);
-      Html::back();
-   }
-   $item->check(-1, CREATE, $_POST);
+if (isset($_POST['templates_id']) && ($_POST['templates_id'] > 0)) {
+   $template = new PluginReleasesRisktemplate();
+   $template->getFromDB($_POST['templates_id']);
 
-   if ($item->add($_POST)) {
-
-   }
-   Html::back();
-
+   $template->fields = array_map('html_entity_decode', $template->fields);
+   echo json_encode($template->fields);
 }
-
-Html::displayErrorAndDie("lost");

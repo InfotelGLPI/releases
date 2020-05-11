@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
+if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
    $AJAX_INCLUDE = 1;
    include('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
@@ -35,38 +35,32 @@ if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
 }
 
 Session::checkCentralAccess();
-global $CFG_GLPI;
-$foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
-      Html::header_nocache();
-      if (!isset($_REQUEST['type'])) {
-         exit();
+
+
+if (isset($_POST["type"]) && isset($_POST["current_type"]) && isset($_POST["values"])) {
+   $values = [];
+   $data = [];
+   if($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
+      if($_POST['type'] == $_POST['current_type']){
+         $values = $_POST['values'];
       }
-      if (!isset($_REQUEST['parenttype'])) {
-         exit();
-      }
+      $dbu = new DbUtils();
 
-      $item = getItemForItemtype($_REQUEST['type']);
-      $parent = getItemForItemtype($_REQUEST['parenttype']);
 
-      if (isset($_REQUEST[$parent->getForeignKeyField()])
-         && isset($_REQUEST["id"])
-         && $parent->getFromDB($_REQUEST[$parent->getForeignKeyField()])) {
+      $item = new $_POST["type"]();
+      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+      $items = $item->find();
 
-         $ol = ObjectLock::isLocked( $_REQUEST['parenttype'], $parent->getID() );
-         if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
-            ObjectLock::setReadOnlyProfile( );
+
+      foreach ($items as $vals) {
+         if($_POST["type"] == User::getType()){
+            $item->getFromDB($vals["id"]);
+            $data[$vals["id"]] = $item->getRawName();
+         }else{
+            $data[$vals["id"]] = $vals["name"];
          }
-         $id = isset($_REQUEST['id']) && (int)$_REQUEST['id'] > 0 ? $_REQUEST['id'] : null;
-         if ($id) {
-            $item->getFromDB($id);
-         }
-         $url = $_REQUEST['type']::getFormURL();
-         $item->showForm($id, [$foreignKey => $_POST[$foreignKey],
-            'target' => $url,'parent'=>$parent]);
-
-      } else {
-         echo __('Access denied');
       }
+   }
 
-      Html::ajaxFooter();
-
+   Dropdown::showFromArray("target", $data, array('id'=> 'target','multiple' => true, 'values' => $values,"display" => true));
+}
