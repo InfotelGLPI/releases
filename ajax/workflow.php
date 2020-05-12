@@ -41,7 +41,7 @@ if (isset($_POST["id"])) {
    global $DB;
    $ID = $_POST["id"];
    $query = "SELECT `state`,`itemtype`
-                      FROM `glpi_plugin_release_globalstatues`"." WHERE plugin_release_releases_id=".$ID;
+                      FROM `glpi_plugin_releases_globalstatues`"." WHERE plugin_releases_releases_id=".$ID;
 
    $result = $DB->query($query);
    $vals    = [];
@@ -110,9 +110,9 @@ if (isset($_POST["id"])) {
          });
          $("#done'.$step.'").click(function () {
               var state = 1;
-              var plugin_release_releases_id = '.$ID.';
+              var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
-              var data = {state,plugin_release_releases_id,itemtype};
+              var data = {state,plugin_releases_releases_id,itemtype};
               if (confirm("'.__("Confirm change status").'")) {
                   $.ajax({
                       data: data,
@@ -137,9 +137,9 @@ if (isset($_POST["id"])) {
           });
          $("#todo'.$step.'").click(function () {
               var state = 0;
-              var plugin_release_releases_id = '.$ID.';
+              var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
-              var data = {state,plugin_release_releases_id,itemtype};
+              var data = {state,plugin_releases_releases_id,itemtype};
               if (confirm("'.__("Confirm change status").'")) {
                   $.ajax({
                       data: data,
@@ -164,9 +164,9 @@ if (isset($_POST["id"])) {
           });
          $("#inprogress'.$step.'").click(function () {
               var state = 2;
-              var plugin_release_releases_id = '.$ID.';
+              var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
-              var data = {state,plugin_release_releases_id,itemtype};
+              var data = {state,plugin_releases_releases_id,itemtype};
               if (confirm("'.__("Confirm change status").'")) {
                   $.ajax({
                       data: data,
@@ -191,9 +191,9 @@ if (isset($_POST["id"])) {
           });
          $("#waiting'.$step.'").click(function () {
               var state = 3;
-              var plugin_release_releases_id = '.$ID.';
+              var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
-              var data = {state,plugin_release_releases_id,itemtype};
+              var data = {state,plugin_releases_releases_id,itemtype};
               if (confirm("'.__("Confirm change status").'")) {
                   $.ajax({
                       data: data,
@@ -218,9 +218,9 @@ if (isset($_POST["id"])) {
           });
          $("#late'.$step.'").click(function () {
               var state = 4;
-              var plugin_release_releases_id = '.$ID.';
+              var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
-              var data = {state,plugin_release_releases_id,itemtype};
+              var data = {state,plugin_releases_releases_id,itemtype};
               if (confirm("'.__("Confirm change status").'")) {
                   $.ajax({
                       data: data,
@@ -245,9 +245,9 @@ if (isset($_POST["id"])) {
           });
          $("#default'.$step.'").click(function () {
               var state = 5;
-              var plugin_release_releases_id = '.$ID.';
+              var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
-              var data = {state,plugin_release_releases_id,itemtype};
+              var data = {state,plugin_releases_releases_id,itemtype};
               if (confirm("'.__("Confirm change status").'")) {
                   $.ajax({
                       data: data,

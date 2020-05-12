@@ -85,7 +85,7 @@ class PluginReleasesRollback extends CommonDBTM {
       $dbu = new DbUtils();
       $table = CommonDBTM::getTable(PluginReleasesRollback::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_release_releases_id" => $item->getID()]);
+         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
 
@@ -168,7 +168,7 @@ class PluginReleasesRollback extends CommonDBTM {
 
 
       echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_release_releases_id'])) {
+      if (isset($options['plugin_releases_releases_id'])) {
 
 
          echo "<td hidden>" . _n('Release', 'Releases', 1, 'release') . "</td>";
@@ -177,7 +177,7 @@ class PluginReleasesRollback extends CommonDBTM {
          echo "<td hidden>";
          Dropdown::show(PluginReleasesRelease::getType(),
             ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-               'value' => $options["plugin_release_releases_id"],
+               'value' => $options["plugin_releases_releases_id"],
                'rand' => $rand]);
          echo "</td>";
       } else {
@@ -185,8 +185,8 @@ class PluginReleasesRollback extends CommonDBTM {
          $rand = mt_rand();
 
          echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-            'value' => $this->fields["plugin_release_releases_id"]]);
+         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+            'value' => $this->fields["plugin_releases_releases_id"]]);
          echo "</td>";
       }
       echo "</tr>";
@@ -198,7 +198,7 @@ class PluginReleasesRollback extends CommonDBTM {
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
                title='"._n('Task template', 'Task templates', 2)."'></i>";
-      PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_release_rollbacktemplates_id'],
+      PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
          'entity'    => $this->getEntityID(),
          'rand'      => $rand_template,
          'on_change' => 'tasktemplate_update(this.value)']);

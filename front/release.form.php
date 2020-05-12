@@ -77,7 +77,7 @@ if (isset($_POST["add"])) {
    $change_release = new PluginReleasesChange_Release();
    $input = [];
    $input["changes_id"] = $change->getID();
-   $input["plugin_release_releases_id"] = $newID;
+   $input["plugin_releases_releases_id"] = $newID;
    $change_release->add($input);
    if ($_SESSION['glpibackcreated']) {
       Html::redirect($release->getFormURL() . "?id=" . $newID);

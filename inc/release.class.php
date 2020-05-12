@@ -80,10 +80,10 @@ class PluginReleasesRelease extends CommonDBTM {
       $table = CommonDBTM::getTable($class);
       if($state){
          return $dbu->countElementsInTable($table,
-            ["plugin_release_releases_id" => $ID,"state"=>2]);
+            ["plugin_releases_releases_id" => $ID,"state"=>2]);
       }
       return $dbu->countElementsInTable($table,
-         ["plugin_release_releases_id" => $ID]);
+         ["plugin_releases_releases_id" => $ID]);
    }
 
 
@@ -191,7 +191,7 @@ class PluginReleasesRelease extends CommonDBTM {
          $change_release = new PluginReleasesChange_Release();
          if($change_release->getFromDBByCrit(['changes_id'=>$item->getID()])){
             $release = new self();
-            $release->showForm($change_release->getField("plugin_release_releases_id"),["changestabs"=>1]);
+            $release->showForm($change_release->getField("plugin_releases_releases_id"),["changestabs"=>1]);
 
          }else{
             $self = new self();
@@ -208,6 +208,7 @@ class PluginReleasesRelease extends CommonDBTM {
       $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginReleasesChange_Release::getType(), $ong, $options);
+      $this->addStandardTab(KnowbaseItem_Item::getType(), $ong, $options);
       $this->addStandardTab(PluginReleasesRisk::getType(), $ong, $options);
       $this->addStandardTab(PluginReleasesTest::getType(), $ong, $options);
       $this->addStandardTab(PluginReleasesRollback::getType(), $ong, $options);
@@ -268,20 +269,20 @@ class PluginReleasesRelease extends CommonDBTM {
          foreach ($tests as $test ){
             if($testTemplate->getFromDB($test)){
                $input = $testTemplate->fields;
-               $input["plugin_release_releases_id"] = $this->getID();
-               if($riskTemplate->getFromDB($input["plugin_release_risks_id"])){
-                  if(array_key_exists($input["plugin_release_risks_id"],$risks)){
-                     $input["plugin_release_risks_id"] = $risks[$input["plugin_release_risks_id"]];
+               $input["plugin_releases_releases_id"] = $this->getID();
+               if($riskTemplate->getFromDB($input["plugin_releases_risks_id"])){
+                  if(array_key_exists($input["plugin_releases_risks_id"],$risks)){
+                     $input["plugin_releases_risks_id"] = $risks[$input["plugin_releases_risks_id"]];
                   }else {
                      $inputRisk = $riskTemplate->fields;
-                     $inputRisk["plugin_release_releases_id"] = $this->getID();
+                     $inputRisk["plugin_releases_releases_id"] = $this->getID();
                      unset($inputRisk["id"]);
                      $idRisk = $releaseRisk->add($inputRisk);
-                     $risks[$input["plugin_release_risks_id"]] = $idRisk;
-                     $input["plugin_release_risks_id"] = $idRisk;
+                     $risks[$input["plugin_releases_risks_id"]] = $idRisk;
+                     $input["plugin_releases_risks_id"] = $idRisk;
                   }
                }else{
-                  $input["plugin_release_risks_id"] = 0;
+                  $input["plugin_releases_risks_id"] = 0;
                }
                unset($input["id"]);
                $releaseTest->add($input);
@@ -290,20 +291,20 @@ class PluginReleasesRelease extends CommonDBTM {
          foreach ($tasks as $task ){
             if($taskTemplate->getFromDB($task)){
                $input = $taskTemplate->fields;
-               $input["plugin_release_releases_id"] = $this->getID();
-               if($riskTemplate->getFromDB($input["plugin_release_risks_id"])){
-                  if(array_key_exists($input["plugin_release_risks_id"],$risks)){
-                     $input["plugin_release_risks_id"] = $risks[$input["plugin_release_risks_id"]];
+               $input["plugin_releases_releases_id"] = $this->getID();
+               if($riskTemplate->getFromDB($input["plugin_releases_risks_id"])){
+                  if(array_key_exists($input["plugin_releases_risks_id"],$risks)){
+                     $input["plugin_releases_risks_id"] = $risks[$input["plugin_releases_risks_id"]];
                   }else {
                      $inputRisk = $riskTemplate->fields;
-                     $inputRisk["plugin_release_releases_id"] = $this->getID();
+                     $inputRisk["plugin_releases_releases_id"] = $this->getID();
                      unset($inputRisk["id"]);
                      $idRisk = $releaseRisk->add($inputRisk);
-                     $risks[$input["plugin_release_risks_id"]] = $idRisk;
-                     $input["plugin_release_risks_id"] = $idRisk;
+                     $risks[$input["plugin_releases_risks_id"]] = $idRisk;
+                     $input["plugin_releases_risks_id"] = $idRisk;
                   }
                }else{
-                  $input["plugin_release_risks_id"] = 0;
+                  $input["plugin_releases_risks_id"] = 0;
                }
                unset($input["id"]);
                $releaseTask->add($input);
@@ -312,7 +313,7 @@ class PluginReleasesRelease extends CommonDBTM {
          foreach ($rollbacks as $rollback ){
             if($rollbackTemplate->getFromDB($rollback)){
                $input = $rollbackTemplate->fields;
-               $input["plugin_release_releases_id"] = $this->getID();
+               $input["plugin_releases_releases_id"] = $this->getID();
                unset($input["id"]);
                $releaseRollback->add($input);
             }
@@ -813,9 +814,22 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<td>";
       $dtF = self::countForItem($ID,PluginReleasesDeployTask::class,1);
       $dtT = self::countForItem($ID ,PluginReleasesDeployTask::class);
-      echo $dtF;
-      echo "/";
-      echo $dtT;
+      if($dtT !=0 ){
+         $pourcentage = $dtF/$dtT *100;
+      }else{
+         $pourcentage = 0;
+      }
+
+      echo "<div class=\"progress-circle\" data-value=\"".round($pourcentage)."\">
+             <div class=\"progress-masque\">
+                 <div class=\"progress-barre\"></div>
+                 <div class=\"progress-sup50\"></div>
+             </div>
+            </div>";
+
+//      echo $dtF;
+//      echo "/";
+//      echo $dtT;
       echo "</td>";
       echo "</tr>";
 
@@ -863,10 +877,12 @@ class PluginReleasesRelease extends CommonDBTM {
    public static function getStateItem($state){
       switch ($state){
          case 0:
-            return __("Waiting","release");
+//            return __("Waiting","release");
+            return "<span><i class=\"fas fa-4x fa-hourglass-half\"></i></span>";
             break;
          case 1:
-            return __("Done");
+//            return __("Done");
+            return "<span><i class=\"fas fa-4x fa-check\"></i></span>";
             break;
       }
    }
@@ -887,7 +903,7 @@ class PluginReleasesRelease extends CommonDBTM {
 
       echo "<script type='text/javascript' >
       function change_task_state(tasks_id, target,type) {
-         $.post('".$CFG_GLPI["root_doc"]."/plugins/release/ajax/updateState.php',
+         $.post('".$CFG_GLPI["root_doc"]."/plugins/releases/ajax/updateState.php',
                 {'action':     'change_task_state',
                   'tasks_id':   tasks_id,
                   'type': type,
@@ -927,7 +943,7 @@ class PluginReleasesRelease extends CommonDBTM {
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('".$CFG_GLPI["root_doc"]."/plugins/release/ajax/viewsubitem.php',
+                                                 .load('".$CFG_GLPI["root_doc"]."/plugins/releases/ajax/viewsubitem.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
@@ -953,7 +969,7 @@ class PluginReleasesRelease extends CommonDBTM {
       }
 
       $out = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-         $CFG_GLPI["root_doc"]."/plugins/release/ajax/viewsubitem.php",
+         $CFG_GLPI["root_doc"]."/plugins/releases/ajax/viewsubitem.php",
          $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
       echo "$('#approbation_form$rand').remove()";
@@ -1162,18 +1178,18 @@ class PluginReleasesRelease extends CommonDBTM {
 
          echo "<div class='b_right'>";
 
-         if (isset($item_i['plugin_release_typedeploytasks_id']) && !empty($item_i['plugin_release_typedeploytasks_id'])) {
-            echo Dropdown::getDropdownName("glpi_plugin_release_typedeploytasks", $item_i['plugin_release_typedeploytasks_id'])."<br>";
+         if (isset($item_i['plugin_releases_typedeploytasks_id']) && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
+            echo Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id'])."<br>";
          }
-         if (isset($item_i['plugin_release_typerisks_id']) && !empty($item_i['plugin_release_typerisks_id'])) {
-            echo Dropdown::getDropdownName("glpi_plugin_release_typerisks", $item_i['plugin_release_typerisks_id'])."<br>";
+         if (isset($item_i['plugin_releases_typerisks_id']) && !empty($item_i['plugin_releases_typerisks_id'])) {
+            echo Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id'])."<br>";
          }
-         if (isset($item_i['plugin_release_typetests_id']) && !empty($item_i['plugin_release_typetests_id'])) {
-            echo Dropdown::getDropdownName("glpi_plugin_release_typetests", $item_i['plugin_release_typetests_id'])."<br>";
+         if (isset($item_i['plugin_releases_typetests_id']) && !empty($item_i['plugin_releases_typetests_id'])) {
+            echo Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id'])."<br>";
          }
-         if (isset($item_i['plugin_release_risks_id']) && !empty($item_i['plugin_release_risks_id'])) {
+         if (isset($item_i['plugin_releases_risks_id']) && !empty($item_i['plugin_releases_risks_id'])) {
             echo __("Associated with")." ";
-            echo Dropdown::getDropdownName("glpi_plugin_release_risks", $item_i['plugin_release_risks_id'])."<br>";
+            echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id'])."<br>";
          }
 
 
@@ -1387,7 +1403,7 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<div class='center'>";
       $rand = mt_rand();
       Dropdown::showYesNo($field,$this->getField($field),-1,["rand"=>$rand]);
-      $params = ['value'=>"__VALUE__","field"=>$field,"plugin_release_releases_id"=>$this->getID(),'state'=>$state];
+      $params = ['value'=>"__VALUE__","field"=>$field,"plugin_releases_releases_id"=>$this->getID(),'state'=>$state];
       Ajax::updateItemOnSelectEvent("dropdown_$field$rand","fakeupdate",$CFG_GLPI["root_doc"]."/plugins/release/ajax/changeitemstate.php",$params);
 
       echo "</div>";

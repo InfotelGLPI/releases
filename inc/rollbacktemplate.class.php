@@ -107,7 +107,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
 //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
 //            break;
          case 'dropdownRisks' :
-            PluginReleasesRisktemplate::dropdown(["name"=>"plugin_release_risks_id"]);
+            PluginReleasesRisktemplate::dropdown(["name"=>"plugin_releases_risks_id"]);
             break;
 
       }

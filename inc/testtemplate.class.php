@@ -56,11 +56,11 @@ class PluginReleasesTesttemplate extends CommonDropdown {
    function getAdditionalFields() {
 
       return [
-         ['name'  => 'plugin_release_typetests_id',
+         ['name'  => 'plugin_releases_typetests_id',
             'label' => __('Type test','Type tests', 'releases'),
             'type'  => 'dropdownTests',
          ],
-         ['name'  => 'plugin_release_risks_id',
+         ['name'  => 'plugin_releases_risks_id',
             'label' => __('Risk','Risks', 'releases'),
             'type'  => 'dropdownRisks',
          ],
@@ -104,10 +104,10 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
       switch ($field['type']) {
          case 'dropdownTests' :
-            PluginReleasesTypeTest::dropdown(["name"=>"plugin_release_typetests_id"]);
+            PluginReleasesTypeTest::dropdown(["name"=>"plugin_releases_typetests_id"]);
             break;
          case 'dropdownRisks' :
-            PluginReleasesRisktemplate::dropdown(["name"=>"plugin_release_risks_id"]);
+            PluginReleasesRisktemplate::dropdown(["name"=>"plugin_releases_risks_id"]);
             break;
 
       }

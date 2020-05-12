@@ -47,7 +47,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
    static public $items_id_1   = 'changes_id';
 
    static public $itemtype_2   = 'PluginReleasesRelease';
-   static public $items_id_2   = 'plugin_release_releases_id';
+   static public $items_id_2   = 'plugin_releases_releases_id';
 
    static $rightname                   = 'ticket';
 
@@ -66,8 +66,8 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          switch ($item->getType()) {
              case 'PluginReleasesRelease' :
                if ($_SESSION['glpishow_count_on_tabs']) {
-                  $nb = countElementsInTable('glpi_plugin_release_changes_releases',
-                     ['plugin_release_releases_id' => $item->getID()]);
+                  $nb = countElementsInTable('glpi_plugin_releases_changes_releases',
+                     ['plugin_releases_releases_id' => $item->getID()]);
                }
                return self::createTabEntry(Change::getTypeName(Session::getPluralNumber()), $nb);
          }
@@ -105,19 +105,19 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       $rand = mt_rand();
 
       $iterator = $DB->request([
-         'SELECT DISTINCT' => 'glpi_plugin_release_changes_releases.id AS linkid',
+         'SELECT DISTINCT' => 'glpi_plugin_releases_changes_releases.id AS linkid',
          'FIELDS' => 'glpi_changes.*',
-         'FROM' => 'glpi_plugin_release_changes_releases',
+         'FROM' => 'glpi_plugin_releases_changes_releases',
          'LEFT JOIN' => [
             'glpi_changes' => [
                'ON' => [
-                  'glpi_plugin_release_changes_releases' => 'changes_id',
+                  'glpi_plugin_releases_changes_releases' => 'changes_id',
                   'glpi_changes' => 'id'
                ]
             ]
          ],
          'WHERE' => [
-            'glpi_plugin_release_changes_releases.plugin_release_releases_id' => $ID,
+            'glpi_plugin_releases_changes_releases.plugin_releases_releases_id' => $ID,
          ],
          'ORDERBY' => [
             'glpi_changes.name'
@@ -149,7 +149,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a change') . "</th></tr>";
          echo "<tr class='tab_bg_2'><td>";
-         echo "<input type='hidden' name='plugin_release_releases_id' value='$ID'>";
+         echo "<input type='hidden' name='plugin_releases_releases_id' value='$ID'>";
          Change::dropdown(['used' => $used,
             'entity' => $release->getEntityID(),'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
          echo "</td><td class='center'>";
@@ -203,7 +203,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
 
    function post_addItem() {
       $release = new PluginReleasesRelease();
-      if($release->getFromDB($this->getField("plugin_release_releases_id"))){
+      if($release->getFromDB($this->getField("plugin_releases_releases_id"))){
          if($release->getField("state")<PluginReleasesRelease::CHANGEDEFINITION){
             $update["id"] = $release->getID();
             $update["state"] = PluginReleasesRelease::CHANGEDEFINITION;

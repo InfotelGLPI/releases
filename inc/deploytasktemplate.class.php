@@ -60,7 +60,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
          'type'  => 'textarea',
          'rows' => 10],
 
-         ['name'  => 'plugin_release_typedeploytasks_id',
+         ['name'  => 'plugin_releases_typedeploytasks_id',
             'label' => __('Deploy Task type','releases'),
             'type'  => 'dropdownValue',
             'list'  => true],

@@ -107,7 +107,7 @@ function plugin_releases_uninstall() {
 /**
  * @return array
  */
-function plugin_release_getDatabaseRelations() {
+function plugin_releases_getDatabaseRelations() {
 
    $plugin = new Plugin();
 
@@ -122,7 +122,7 @@ function plugin_release_getDatabaseRelations() {
 /**
  * @return array
  */
-function plugin_release_getDropdown() {
+function plugin_releases_getDropdown() {
 
    $plugin = new Plugin();
 

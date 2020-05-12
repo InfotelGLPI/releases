@@ -85,7 +85,7 @@ class PluginReleasesRisk extends CommonDBTM {
       $dbu = new DbUtils();
       $table = CommonDBTM::getTable(PluginReleasesRisk::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_release_releases_id" => $item->getID()]);
+         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
 
@@ -184,7 +184,7 @@ class PluginReleasesRisk extends CommonDBTM {
       $rand_type      = mt_rand();
 
       echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_release_releases_id'])) {
+      if (isset($options['plugin_releases_releases_id'])) {
 
 
          echo "<td hidden>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
@@ -192,8 +192,8 @@ class PluginReleasesRisk extends CommonDBTM {
 
          echo "<td hidden>";
          Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-               'value' => $options["plugin_release_releases_id"],
+            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+               'value' => $options["plugin_releases_releases_id"],
                'rand' => $rand]);
          echo "</td>";
       } else {
@@ -201,8 +201,8 @@ class PluginReleasesRisk extends CommonDBTM {
          $rand = mt_rand();
 
          echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-            'value' => $this->fields["plugin_release_releases_id"]]);
+         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+            'value' => $this->fields["plugin_releases_releases_id"]]);
          echo "</td>";
       }
       echo "</tr>";
@@ -211,7 +211,7 @@ class PluginReleasesRisk extends CommonDBTM {
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
                title='"._n('Task template', 'Task templates', 2)."'></i>";
-      PluginReleasesRisktemplate::dropdown(['value'     => $this->fields['plugin_release_risktemplates_id'],
+      PluginReleasesRisktemplate::dropdown(['value'     => '',
          'entity'    => $this->getEntityID(),
          'rand'      => $rand_template,
          'on_change' => 'tasktemplate_update(this.value)']);
@@ -226,15 +226,15 @@ class PluginReleasesRisk extends CommonDBTM {
                }
             }).done(function(data) {
                console.log(data);
-               var plugin_release_typerisks_id = isNaN(parseInt(data.plugin_release_typerisks_id))
+               var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
                   ? 0
-                  : parseInt(data.plugin_release_typerisks_id);
+                  : parseInt(data.plugin_releases_typerisks_id);
 
                // set textarea content
                $("#content'.$rand_text.'").html(data.content);
                // set name
                $("#name'.$rand_name.'").val(data.name);
-               $("#dropdown_plugin_release_typerisks_id'.$rand_type.'").trigger("setValue", plugin_release_typerisks_id);
+               $("#dropdown_plugin_releases_typerisks_id'.$rand_type.'").trigger("setValue", plugin_releases_typerisks_id);
                // set also tinmyce (if enabled)
                if (tasktinymce = tinymce.get("content'.$rand_text.'")) {
                   tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
@@ -256,9 +256,9 @@ class PluginReleasesRisk extends CommonDBTM {
       if (isset($_GET["typeriskid"])) {
          $value = $_GET["typeriskid"];
       } else {
-         $value = $this->fields["plugin_release_typerisks_id"];
+         $value = $this->fields["plugin_releases_typerisks_id"];
       }
-      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name' => "plugin_release_typerisks_id",
+      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name' => "plugin_releases_typerisks_id",
          'value' => $value,'rand'=>$rand_type]);
       echo "</td>";
 

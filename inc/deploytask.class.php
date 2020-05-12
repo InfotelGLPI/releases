@@ -86,7 +86,7 @@ class PluginReleasesDeployTask extends CommonDBTM {
       $dbu = new DbUtils();
       $table = CommonDBTM::getTable(PluginReleasesDeployTask::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_release_releases_id" => $item->getID()]);
+         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
 
@@ -229,7 +229,7 @@ class PluginReleasesDeployTask extends CommonDBTM {
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
                title='"._n('Task template', 'Task templates', 2)."'></i>";
-      PluginReleasesDeploytasktemplate::dropdown(['value'     => $this->fields['plugin_release_deploytasktemplates_id'],
+      PluginReleasesDeploytasktemplate::dropdown(['value'     => $this->fields['plugin_releases_deploytasktemplates_id'],
          'entity'    => $this->getEntityID(),
          'rand'      => $rand_template,
          'on_change' => 'tasktemplate_update(this.value)']);
@@ -299,7 +299,7 @@ class PluginReleasesDeployTask extends CommonDBTM {
          <i class='fas fa-tag fa-fw'
             title='".__('Category')."'></i>";
       PluginReleasesTypeDeployTask::dropdown([
-         'value'     => $this->fields["plugin_release_typedeploytasks_id"],
+         'value'     => $this->fields["plugin_releases_typedeploytasks_id"],
          'rand'      => $rand_type,
          'entity'    => $item->fields["entities_id"],
 //         'condition' => ['is_active' => 1]
@@ -307,8 +307,8 @@ class PluginReleasesDeployTask extends CommonDBTM {
       echo "</div>";
       echo "<div class='fa-label'>
          <span>".__('Risk')."</span>&nbsp;";
-      Dropdown::show(PluginReleasesRisk::getType(), ['name' => "plugin_release_risks_id", "condition"=>["plugin_release_releases_id"=>$options['plugin_release_releases_id']],
-         'value' =>  $this->fields["plugin_release_risks_id"]]);
+      Dropdown::show(PluginReleasesRisk::getType(), ['name' => "plugin_releases_risks_id", "condition"=>["plugin_releases_releases_id"=>$options['plugin_releases_releases_id']],
+         'value' =>  $this->fields["plugin_releases_risks_id"]]);
       echo "</div>";
 
       if (isset($this->fields["state"])) {

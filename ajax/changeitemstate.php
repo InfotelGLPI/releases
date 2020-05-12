@@ -37,10 +37,10 @@ if (strpos($_SERVER['PHP_SELF'], "changeitemstate.php")) {
 Session::checkCentralAccess();
 
 
-if (isset($_POST["value"]) && isset($_POST["plugin_release_releases_id"]) && isset($_POST["field"]) && isset($_POST["state"])) {
+if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && isset($_POST["field"]) && isset($_POST["state"])) {
    global $DB;
    $item = new PluginReleasesRelease();
-   $item->getFromDB($_POST["plugin_release_releases_id"]);
+   $item->getFromDB($_POST["plugin_releases_releases_id"]);
    if($_POST["state"]>$item->getField('state')){
       $update = [$_POST["field"]=>$_POST["value"],"id"=>$item->getID(),'state'=>$_POST["state"]];
    }else{

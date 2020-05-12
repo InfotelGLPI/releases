@@ -37,11 +37,11 @@ if (strpos($_SERVER['PHP_SELF'], "changeState.php")) {
 Session::checkCentralAccess();
 
 
-if (isset($_POST["itemtype"]) && isset($_POST["plugin_release_releases_id"]) && isset($_POST["state"])) {
+if (isset($_POST["itemtype"]) && isset($_POST["plugin_releases_releases_id"]) && isset($_POST["state"])) {
    global $DB;
 
    $query = "UPDATE `glpi_plugin_release_globalstatues`
              SET `state` = ".$_POST["state"]."
-             WHERE `itemtype` ='".$_POST["itemtype"]."' AND `plugin_release_releases_id`=".$_POST["plugin_release_releases_id"]." ";
+             WHERE `itemtype` ='".$_POST["itemtype"]."' AND `plugin_releases_releases_id`=".$_POST["plugin_releases_releases_id"]." ";
    $DB->queryOrDie($query);
 }

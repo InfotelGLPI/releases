@@ -86,7 +86,7 @@ class PluginReleasesTest extends CommonDBTM {
       $dbu = new DbUtils();
       $table = CommonDBTM::getTable(PluginReleasesTest::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_release_releases_id" => $item->getID()]);
+         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
 
@@ -170,7 +170,7 @@ class PluginReleasesTest extends CommonDBTM {
       $rand_risk      = mt_rand();
 
       echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_release_releases_id'])) {
+      if (isset($options['plugin_releases_releases_id'])) {
 
 
          echo "<td hidden>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
@@ -178,8 +178,8 @@ class PluginReleasesTest extends CommonDBTM {
 
          echo "<td hidden>";
          Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-               'value' => $options["plugin_release_releases_id"],
+            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+               'value' => $options["plugins_release_releases_id"],
                'rand' => $rand]);
          echo "</td>";
       } else {
@@ -187,8 +187,8 @@ class PluginReleasesTest extends CommonDBTM {
          $rand = mt_rand();
 
          echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-            'value' => $this->fields["plugin_release_releases_id"]]);
+         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+            'value' => $this->fields["plugin_releases_releases_id"]]);
          echo "</td>";
       }
       echo "</tr>";
@@ -197,7 +197,7 @@ class PluginReleasesTest extends CommonDBTM {
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
                title='"._n('Task template', 'Task templates', 2)."'></i>";
-      PluginReleasesTesttemplate::dropdown(['value'     => $this->fields['plugin_release_risktemplates_id'],
+      PluginReleasesTesttemplate::dropdown(['value'     => '',
          'entity'    => $this->getEntityID(),
          'rand'      => $rand_template,
          'on_change' => 'tasktemplate_update(this.value)']);
@@ -212,17 +212,17 @@ class PluginReleasesTest extends CommonDBTM {
                }
             }).done(function(data) {
                console.log(data);
-               var plugin_release_typetests_id = isNaN(parseInt(data.plugin_release_typetests_id))
+               var plugin_releases_typetests_id = isNaN(parseInt(data.plugin_releases_typetests_id))
                   ? 0
-                  : parseInt(data.plugin_release_typetests_id);
+                  : parseInt(data.plugin_releases_typetests_id);
                   
-                  : parseInt(data.plugin_release_risks_id);
+                  
 
                // set textarea content
                $("#content'.$rand_text.'").html(data.content);
                // set name
                $("#name'.$rand_name.'").val(data.name);
-               $("#dropdown_plugin_release_typetests_id'.$rand_type.'").trigger("setValue", plugin_release_typetests_id);
+               $("#dropdown_plugin_releases_typetests_id'.$rand_type.'").trigger("setValue", plugin_releases_typetests_id);
               
                // set also tinmyce (if enabled)
                if (tasktinymce = tinymce.get("content'.$rand_text.'")) {
@@ -246,9 +246,9 @@ class PluginReleasesTest extends CommonDBTM {
       if (isset($_GET["typetestid"])) {
          $value = $_GET["typetestid"];
       } else {
-         $value = $this->fields["plugin_release_typetests_id"];
+         $value = $this->fields["plugin_releases_typetests_id"];
       }
-      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'=>$rand_type,'name' => "plugin_release_typetests_id",
+      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'=>$rand_type,'name' => "plugin_releases_typetests_id",
          'value' => $value]);
       echo "</td>";
 
@@ -265,8 +265,8 @@ class PluginReleasesTest extends CommonDBTM {
 
       echo "<td>";
 
-      Dropdown::show(PluginReleasesRisk::getType(), ['rand'=>$rand_risk,'name' => "plugin_release_risks_id", "condition"=>["plugin_release_releases_id"=>$options['plugin_release_releases_id']],
-         'value' =>  $this->fields["plugin_release_risks_id"]]);
+      Dropdown::show(PluginReleasesRisk::getType(), ['rand'=>$rand_risk,'name' => "plugin_releases_risks_id", "condition"=>["plugin_releases_releases_id"=>$options['plugin_releases_releases_id']],
+         'value' =>  $this->fields["plugin_releases_risks_id"]]);
       echo "</td>";
       echo "<td colspan='2'></td>";
       echo "</tr>";

@@ -77,7 +77,7 @@ class PluginReleasesReview extends CommonDBTM {
       $dbu = new DbUtils();
       $table = CommonDBTM::getTable(PluginReleasesReview::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_release_releases_id" => $item->getID()]);
+         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
 
@@ -87,12 +87,12 @@ class PluginReleasesReview extends CommonDBTM {
          $self = new self();
          if(self::canCreate()) {
             $review = new PluginReleasesReview();
-            if($review->getFromDBByCrit(["plugin_release_releases_id"=>$item->getField('id')])){
+            if($review->getFromDBByCrit(["plugin_releases_releases_id"=>$item->getField('id')])){
                $ID = $review->getID();
             }else{
                $ID = 0;
             }
-            $self->showForm($ID, ['plugin_release_releases_id' => $item->getField('id'),
+            $self->showForm($ID, ['plugin_releases_releases_id' => $item->getField('id'),
                'target' => $CFG_GLPI['root_doc'] . "/plugins/releases/front/review.form.php"]);
          }
       }
@@ -137,7 +137,7 @@ class PluginReleasesReview extends CommonDBTM {
       $this->input = $this->addFiles($this->input, ['force_update' => true]);
 
       $release = new PluginReleasesRelease();
-      $release->getFromDB($this->input['plugin_release_releases_id']);
+      $release->getFromDB($this->input['plugin_releases_releases_id']);
       if($release->getField('state')<PluginReleasesRelease::REVIEW){
          $val = [];
          $val['id'] = $release->getID();
@@ -159,9 +159,9 @@ class PluginReleasesReview extends CommonDBTM {
     **/
    function post_purgeItem() {
       $release = new PluginReleasesRelease();
-      $release->getFromDB($this->getField("plugin_release_releases_id"));
+      $release->getFromDB($this->getField("plugin_releases_releases_id"));
       $val = [];
-      $val['id'] = $this->getField("plugin_release_releases_id");
+      $val['id'] = $this->getField("plugin_releases_releases_id");
       $val['state'] = PluginReleasesRelease::FINALIZE;
       $release->update($val);
    }
@@ -191,7 +191,7 @@ class PluginReleasesReview extends CommonDBTM {
       $this->getFromDB($ID);
 
       echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_release_releases_id'])) {
+      if (isset($options['plugin_releases_releases_id'])) {
 
 
          echo "<td hidden>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
@@ -199,8 +199,8 @@ class PluginReleasesReview extends CommonDBTM {
 
          echo "<td hidden>";
          Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-               'value' => $options["plugin_release_releases_id"],
+            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+               'value' => $options["plugin_releases_releases_id"],
                'rand' => $rand]);
          echo "</td>";
       } else {
@@ -208,8 +208,8 @@ class PluginReleasesReview extends CommonDBTM {
          $rand = mt_rand();
 
          echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
-            'value' => $this->fields["plugin_release_releases_id"]]);
+         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
+            'value' => $this->fields["plugin_releases_releases_id"]]);
          echo "</td>";
       }
       echo "</tr>";
@@ -247,66 +247,70 @@ class PluginReleasesReview extends CommonDBTM {
       echo "<td colspan='3'>";
       $document = new Document_Item();
       $type = PluginReleasesReview::getType();
-      if(!$document->getFromDBByCrit(["itemtype"=>$type,"items_id"=>$this->getID()])) {
+
 
 
          $content_id = "content$rand";
          Html::file(['filecontainer' => 'fileupload_info_ticket',
             'editor_id' => $content_id,
             'showtitle' => false,
-            'multiple' => false]);
-      }else{
+            'multiple' => true]);
+         if($document->find(["itemtype"=>$type,"items_id"=>$this->getID()])) {
          $d = new Document();
-         $items_i = $d->find(["id"=>$document->getField("documents_id")]);
-         $item_i = reset($items_i);
-         $foreignKey = "plugin_release_reviews_id";
-         $pics_url          = $CFG_GLPI['root_doc']."/pics/timeline";
-      //TODO AJOUTER DAT
-         if ($item_i['filename']) {
-            $filename = $item_i['filename'];
-            $ext      = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-            echo "<img src='";
-            if (empty($filename)) {
-               $filename = $item_i['name'];
-            }
-            if (file_exists(GLPI_ROOT."/pics/icones/$ext-dist.png")) {
-               echo $CFG_GLPI['root_doc']."/pics/icones/$ext-dist.png";
-            } else {
-               echo "$pics_url/file.png";
-            }
-            echo "'/>&nbsp;";
+         $items_i = $document->find(["itemtype"=>$type,"items_id"=>$this->getID()]);
+//         $item_i = reset($items_i);
+         foreach ($items_i as $item) {
+            $items_i = $d->find(["id"=>$item["documents_id"]]);
+            $item_i = reset($items_i);
+            $foreignKey = "plugin_releases_reviews_id";
+            $pics_url = $CFG_GLPI['root_doc'] . "/pics/timeline";
+            //TODO AJOUTER DAT
+            if ($item_i['filename']) {
+               $filename = $item_i['filename'];
+               $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+               echo "<img src='";
+               if (empty($filename)) {
+                  $filename = $item_i['name'];
+               }
+               if (file_exists(GLPI_ROOT . "/pics/icones/$ext-dist.png")) {
+                  echo $CFG_GLPI['root_doc'] . "/pics/icones/$ext-dist.png";
+               } else {
+                  echo "$pics_url/file.png";
+               }
+               echo "'/>&nbsp;";
 
-            echo "<a href='".$CFG_GLPI['root_doc']."/front/document.send.php?docid=".$item_i['id']
-               ."&$foreignKey=".$this->getID()."' target='_blank'>$filename";
-            if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
-               echo "<div class='timeline_img_preview'>";
-               echo "<img src='".$CFG_GLPI['root_doc']."/front/document.send.php?docid=".$item_i['id']
-                  ."&$foreignKey=".$this->getID()."&context=timeline'/>";
-               echo "</div>";
+               echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
+                  . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
+               if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
+                  echo "<div class='timeline_img_preview'>";
+                  echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
+                     . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
+                  echo "</div>";
+               }
+               echo "</a>";
             }
-            echo "</a>";
-         }
-         if ($item_i['link']) {
-            echo "<a href='{$item_i['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
-         }
-         if (!empty($item_i['mime'])) {
-            echo "&nbsp;(".$item_i['mime'].")";
-         }
-         echo "<span class='buttons'>";
-         echo "<a href='".Document::getFormURLWithID($item_i['id'])."' class='edit_document fa fa-eye pointer' title='".
-            _sx("button", "Show")."'>";
-         echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
+            if ($item_i['link']) {
+               echo "<a href='{$item_i['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
+            }
+            if (!empty($item_i['mime'])) {
+               echo "&nbsp;(" . $item_i['mime'] . ")";
+            }
+            echo "<span class='buttons'>";
+            echo "<a href='" . Document::getFormURLWithID($item_i['id']) . "' class='edit_document fa fa-eye pointer' title='" .
+               _sx("button", "Show") . "'>";
+            echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
 
-         $doc = new Document();
-         $doc->getFromDB($item_i['id']);
-         if ($doc->can($item_i['id'], UPDATE)) {
-            echo "<a href='".static::getFormURL().
-               "?delete_document&documents_id=".$item_i['id'].
-               "&$foreignKey=".$this->getID()."' class='delete_document fas fa-trash-alt pointer' title='".
-               _sx("button", "Delete permanently")."'>";
-            echo "<span class='sr-only'>" . _sx('button', 'Delete permanently')  . "</span></a>";
+            $doc = new Document();
+            $doc->getFromDB($item_i['id']);
+            if ($doc->can($item_i['id'], UPDATE)) {
+               echo "<a href='" . static::getFormURL() .
+                  "?delete_document&documents_id=" . $item_i['id'] .
+                  "&$foreignKey=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
+                  _sx("button", "Delete permanently") . "'>";
+               echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
+            }
+            echo "</span>";
          }
-         echo "</span>";
       }
 
       echo "</td>";

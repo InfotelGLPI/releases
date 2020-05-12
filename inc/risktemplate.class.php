@@ -56,7 +56,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
    function getAdditionalFields() {
 
       return [
-         ['name'  => 'plugin_release_typerisks_id',
+         ['name'  => 'plugin_releases_typerisks_id',
             'label' => __('Type risk','Type risks', 'releases'),
             'type'  => 'dropdownTests',
          ],
@@ -101,7 +101,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
 
       switch ($field['type']) {
          case 'dropdownTests' :
-            PluginReleasesTypeRisk::dropdown(["name"=>"plugin_release_typerisks_id"]);
+            PluginReleasesTypeRisk::dropdown(["name"=>"plugin_releases_typerisks_id"]);
             break;
 
       }
