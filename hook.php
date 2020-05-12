@@ -2,28 +2,28 @@
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- Presales plugin for GLPI
- Copyright (C) 2018 by the Presales Development Team.
+ Releases plugin for GLPI
+ Copyright (C) 2018 by the Releases Development Team.
 
- https://github.com/InfotelGLPI/presales
+ https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of Presales.
+ This file is part of Releases.
 
- Presales is free software; you can redistribute it and/or modify
+ Releases is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- Presales is distributed in the hope that it will be useful,
+ Releases is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Presales. If not, see <http://www.gnu.org/licenses/>.
+ along with Releases. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
 
@@ -46,10 +46,10 @@ function plugin_releases_install() {
    }
 
 
-//   PluginPresalesProfile::initProfile();
-//   PluginPresalesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+//   PluginReleasesProfile::initProfile();
+//   PluginReleasesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 //
-//   PluginPresalesNotificationTargetTask::install100();
+//   PluginReleasesNotificationTargetTask::install100();
 
    return true;
 }
@@ -156,39 +156,11 @@ function plugin_releases_displayConfigItem($type, $ID, $data, $num) {
    $field     = $searchopt[$ID]["field"];
 
 //   switch ($table . '.' . $field) {
-//      case "glpi_plugin_presales_tasks.priority" :
+//      case "glpi_plugin_releases_tasks.priority" :
 //         return " style=\"background-color:" . $_SESSION["glpipriority_" . $data[$num][0]['name']] . ";\" ";
 //         break;
 //   }
    return "";
 }
 
-///**
-// * @param $options
-// *
-// * @return array
-// */
-//function plugin_presales_getRuleActions($options) {
-//   $task = new PluginPresalesTask();
-//   return $task->getActions();
-//}
-//
-///**
-// * @param $options
-// *
-// * @return mixed
-// */
-//function plugin_presales_getRuleCriterias($options) {
-//   $task = new PluginPresalesTask();
-//   return $task->getCriterias();
-//}
-//
-///**
-// * @param $options
-// *
-// * @return the
-// */
-//function plugin_presales_executeActions($options) {
-//   $task = new PluginPresalesTask();
-//   return $task->executeActions($options['action'], $options['output'], $options['params']);
-//}
+
