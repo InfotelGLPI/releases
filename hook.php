@@ -84,7 +84,8 @@ function plugin_releases_uninstall() {
    $tables_glpi = ["glpi_displaypreferences",
                    "glpi_notepads",
                    "glpi_savedsearches",
-                   "glpi_logs"];
+                   "glpi_logs",
+                   "glpi_documents_items"];
 
    foreach ($tables_glpi as $table_glpi) {
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginRelease%';");

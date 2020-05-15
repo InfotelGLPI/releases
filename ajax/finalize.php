@@ -37,11 +37,30 @@ if (strpos($_SERVER['PHP_SELF'], "finalize.php")) {
 Session::checkCentralAccess();
 
 
-if (isset($_REQUEST["id"]) ) {
+if (isset($_REQUEST["id"]) && isset($_REQUEST["date"]) ) {
    $release = new PluginReleasesRelease();
    $val = [];
    $val['id'] = $_REQUEST["id"];
    $val['state'] = PluginReleasesRelease::FINALIZE;
    $release->update($val);
+
+   $review = new PluginReleasesReview();
+
+   if($review->getFromDBByCrit(["plugin_releases_releases_id"=> $_REQUEST["id"]])){
+      $val=[];
+      $val['id'] = $review->getID();
+      $val['real_date_release'] = $_REQUEST["date"];
+      $val['date_lock'] = 1;
+
+      $review->update($val);
+   }else{
+      $val=[];
+      $val['plugin_releases_releases_id'] = $_REQUEST["id"];
+      $val['real_date_release'] = $_REQUEST["date"];
+      $val['date_lock'] = 1;
+
+      $review->add($val);
+   }
+
    echo "ok";
 }

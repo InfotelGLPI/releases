@@ -37,11 +37,11 @@ if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
 Session::checkCentralAccess();
 
 
-if (isset($_POST["type"]) && isset($_POST["current_type"]) && isset($_POST["values"])) {
+if (isset($_POST["type"]) && isset($_POST["current_type"])) {
    $values = [];
    $data = [];
    if($_POST["type"] != "0" && $_POST["type"] != "" && $_POST["type"] != "ALL") {
-      if($_POST['type'] == $_POST['current_type']){
+      if($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])){
          $values = $_POST['values'];
       }
       $dbu = new DbUtils();

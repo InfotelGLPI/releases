@@ -14,6 +14,7 @@ CREATE TABLE `glpi_plugin_releases_releases` (
   `communication_type` varchar(255) NOT NULL default 'ALL',
   `target` longtext COLLATE utf8_unicode_ci,
   `state` int(11) NOT NULL default '7',
+  `locations_id` int(11) NOT NULL default '0',
   `risk_state` tinyint(1) NOT NULL default '0',
   `rollback_state` tinyint(1) NOT NULL default '0',
   `test_state` tinyint(1) NOT NULL default '0',
@@ -152,6 +153,8 @@ CREATE TABLE `glpi_plugin_releases_deploytasks` (
   `plugin_releases_deploytasktemplates_id` int(11) NOT NULL DEFAULT '0',
   `timeline_position` tinyint(1) NOT NULL DEFAULT '0',
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
+  `plugin_releases_deploytasks_id` int(11) NOT NULL default 0,
+  `level` int(11) NOT NULL default 0,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -209,6 +212,7 @@ CREATE TABLE `glpi_plugin_releases_reviews` (
    `conforming_realization` tinyint(1) NOT NULL default '0',
    `incident` tinyint(1) NOT NULL default '0',
    `incident_description` longtext collate utf8_unicode_ci,
+   `date_lock` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

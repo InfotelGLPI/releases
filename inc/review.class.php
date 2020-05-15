@@ -220,7 +220,11 @@ class PluginReleasesReview extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      Html::showDateField('real_date_release',["value"=>$this->getField('real_date_release')]);
+      $canedit = true;
+      if($this->getField("date_lock") == 1){
+         $canedit = false;
+      }
+      Html::showDateField('real_date_release',["value"=>$this->getField('real_date_release'),'canedit'=>$canedit]);
       echo "</td>";
       echo "<td>" . __('Conforming realization') . "</td>";
       echo "<td>";
@@ -241,7 +245,7 @@ class PluginReleasesReview extends CommonDBTM {
        Html::textarea(["name"=>"incident_description","enable_richtext"=>true,"value"=>$this->getField('incident_description')]);
       echo "</td>";
       echo "</tr>";
-      echo "<tr>";
+      echo "<tr class='tab_bg_1'>";
       echo "<td>".__("Technical Support Document","releases")."</td>";
 
       echo "<td colspan='3'>";

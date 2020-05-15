@@ -48,6 +48,11 @@ function plugin_init_releases() {
    }
    Plugin::registerClass('PluginReleasesRelease',
       ['addtabon' => ['Change']]);
+   Plugin::registerClass(PluginReleasesDeployTask::class, [
+      'planning_types' => true
+   ]);
+   $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeployTask', 'populatePlanning'];
+   $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeployTask', 'displayPlanningItem'];
    $plugin = new Plugin();
    if($plugin->isInstalled("mydashboard")){
       if($plugin->isActivated("mydashboard")){

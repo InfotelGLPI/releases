@@ -405,14 +405,14 @@ class PluginReleasesRelease extends CommonDBTM {
       }else{
          $tab = [
             self::NEWRELEASE => _x('status', 'New'),
-            self::RELEASEDEFINITION => __( 'Release area defined','release'),
-            self::DATEDEFINITION  => __('Date defined', 'release'),
-            self::CHANGEDEFINITION  => __('Changes defined','release'),
-            self::RISKDEFINITION   => __('Risks defined', 'release'),
-            self::TESTDEFINITION   => __('Tests defined', 'release'),
-            self::ROLLBACKDEFINITION   => __('Rollbacks defined', 'release'),
-            self::FINALIZE   => __('Finalized', 'release'),
-            self::REVIEW   => __('Reviewed', 'release'),
+            self::RELEASEDEFINITION => __( 'Release area defined','releases'),
+            self::DATEDEFINITION  => __('Date defined', 'releases'),
+            self::CHANGEDEFINITION  => __('Changes defined','releases'),
+            self::RISKDEFINITION   => __('Risks defined', 'releases'),
+            self::TESTDEFINITION   => __('Tests defined', 'releases'),
+            self::ROLLBACKDEFINITION   => __('Rollbacks defined', 'releases'),
+            self::FINALIZE   => __('Finalized', 'releases'),
+            self::REVIEW   => __('Reviewed', 'releases'),
             self::CLOSE   => _x('status','Close')];
       }
 
@@ -672,7 +672,7 @@ class PluginReleasesRelease extends CommonDBTM {
 
 
       echo $var;
-      Ajax::updateItem("workflow",$CFG_GLPI["root_doc"] . "/plugins/release/ajax/workflow.php",
+      Ajax::updateItem("workflow",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/workflow.php",
          ["id"=>$ID]);
       echo "</div>";*/
 
@@ -703,7 +703,7 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<td>";
       if(isset($options["changestabs"])){
          echo "<a href='".$this->getFormURL()."?id=$ID'>";
-         echo __('Go to the release',"release");
+         echo __('Go to the release',"releases");
          echo "</a>";
       }
       echo "</td>";
@@ -714,51 +714,61 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Release area','release') . "</td>";
+      echo "<td>" . __('Release area','releases') . "</td>";
       echo "<td colspan='3'>";
        Html::textarea(["name"=>"release_area","enable_richtext"=>true,"value"=>$this->getField('release_area')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Pre-production run date','release') . "</td>";
+      echo "<td>" . __('Pre-production planed run date','releases') . "</td>";
       echo "<td >";
       Html::showDateField("date_preproduction",["value"=>$this->getField('date_preproduction')]);
       echo "</td>";
-      echo "<td>" . __('Production run date','release') . "</td>";
+      echo "<td>" . __('Production planed run date','releases') . "</td>";
       echo "<td >";
       Html::showDateField("date_production",["value"=>$this->getField('date_production')]);
+      echo "</td>";
+
+      echo "</tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Location') . "</td>";
+      echo "<td >";
+      Dropdown::show(Location::getType(),["name"=>"locations_id","value"=>$this->getField('locations_id')]);
+      echo "</td>";
+      echo "<td>" . __('Service shutdown','releases') . "</td>";
+      echo "<td >";
+      Dropdown::showYesNo("service_shutdown",$this->getField('service_shutdown'));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Service shutdown','release') . "</td>";
-      echo "<td >";
-      Dropdown::showYesNo("service_shutdown",$this->getField('service_shutdown'));
-      echo "</td>";
-      echo "<td colspan='2'>";
+      echo "<td>" . __('Service shutdown details','releases') . "</td>";
+      echo "<td colspan='3'>";
       Html::textarea(["name"=>"service_shutdown_details","enable_richtext"=>true,"value"=>$this->getField('service_shutdown_details')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hour','release') . "</td>";
+      echo "<td>" . __('Non-working hour','releases') . "</td>";
       echo "<td >";
       Dropdown::showYesNo("hour_type",$this->getField('hour_type'));
       echo "</td>";
-      echo "<td>" . __('Communication','release') . "</td>";
+      echo "<td>" . __('Communication','releases') . "</td>";
       echo "<td >";
       Dropdown::showYesNo("communication",$this->getField('communication'));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Communication type','release') . "</td>";
+      echo "<td>" . __('Communication type','releases') . "</td>";
       echo "<td >";
       $types   = ['Entity'=>'Entity', 'Group'=>'Group', 'Profile'=>'Profile', 'User'=>'User','Location'=>'Location'];
       $addrand = Dropdown::showItemTypes('communication_type', $types,["id"=>"communication_type","value"=>$this->getField('communication_type')]);
       echo "</td>";
+      $targets = [];
       $targets = json_decode($this->getField('target'));
+//      $targets = $this->getField('target');
       echo "<td>" ._n('Target', 'Targets',
             Session::getPluralNumber()) . "</td>";
 
@@ -768,10 +778,10 @@ class PluginReleasesRelease extends CommonDBTM {
 
       echo "</td>";
       Ajax::updateItem( "targets",
-         $CFG_GLPI["root_doc"] . "/plugins/release/ajax/changeTarget.php",
+         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
          ['type' => $this->getField('communication_type'),'current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
       Ajax::updateItemOnSelectEvent("dropdown_communication_type".$addrand, "targets",
-         $CFG_GLPI["root_doc"] . "/plugins/release/ajax/changeTarget.php",
+         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
          ['type' => '__VALUE__','current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
       echo "</tr>";
       return true;
@@ -784,7 +794,7 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __('Risk','release');
+      echo __('Risk','releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("risk_state"));
@@ -793,7 +803,7 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
 
-      echo __('Test','release');
+      echo __('Test','releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("test_state"));
@@ -801,7 +811,7 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __('Rollback','release');
+      echo __('Rollback','releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("rollback_state"));
@@ -809,7 +819,7 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __('Deploy Task','release');
+      echo __('Deploy Task','releases');
       echo "</td>";
       echo "<td>";
       $dtF = self::countForItem($ID,PluginReleasesDeployTask::class,1);
@@ -838,24 +848,68 @@ class PluginReleasesRelease extends CommonDBTM {
 
       echo "</table>";
       $allfinish =  $this->getField("risk_state") && ($dtT == $dtF) && $this->getField("test_state") && $this->getField("rollback_state");
+      $text = "";
       if(!$allfinish){
 
-         echo '<span style="color: red" class="center"> '.__("Care all steps are not finish !").'</span>';
-         echo "<br>";
+         $text.= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> '.__("Care all steps are not finish !").'</span>';
+         $text.= "<br>";
+         $text.= "<br>";
       }
-      if($this->getField('state')<self::FINALIZE){
-         echo '<a id="finalize" class="vsubmit"> '.__("Finalize",'release').'</a>';
+      if($this->getField('state')<self::FINALIZE) {
+         echo '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
-       echo  Html::scriptBlock(
- "$('#finalize').click(function(){
-            $.ajax({
-               url:  '".$CFG_GLPI['root_doc']."/plugins/release/ajax/finalize.php',
-               data: {'id' : ".$this->getID()."},
-               success: function() {
-                  document.location.reload();
-               }
-            });
+         echo Html::scriptBlock(
+            "$('#finalize').click(function(){
+         $( '#alert-message' ).dialog( 'open' );
+
          });");
+         //TODO
+         echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>".$text. Html::showDateField("date_production",[ "id"=>"date_production","maybeempty"=>false,"display"=>false]) . "</div>";
+         $srcImg = "fas fa-info-circle";
+         $color = "forestgreen";
+         $alertTitle = _n("Information", "Informations", 1);
+
+         echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . "finalize" . " \";");
+         echo Html::scriptBlock( "$( '#alert-message' ).dialog({
+        autoOpen: false,
+        height: " . 200 . ",
+        width: " . 300 . ",
+        modal: true,
+        open: function (){
+         $(this)
+            .parent()
+            .children('.ui-dialog-titlebar')
+            .html(mTitle);
+      },
+        buttons: {
+         'ok': function() {
+            if($(\"[name = '_date_production']\").val() == ''){
+              $(\"[name = '_date_production']\").css('border-color','red');
+            }else{  
+               var date = $(\"[name = '_date_production']\").val();
+               $.ajax({
+                  url:  '".$CFG_GLPI['root_doc']."/plugins/releases/ajax/finalize.php',
+                  data: {'id' : ".$this->getID().",'date' : date},
+                  success: function() {
+                     document.location.reload();
+                  }
+               });
+               
+            }
+         
+         },
+         'cancel': function() {
+               $( this ).dialog( 'close' );
+          }
+      },
+      
+    })");
+    
+    
+
+
+       }
+
       }
       function getField($field) {
 
@@ -871,13 +925,13 @@ class PluginReleasesRelease extends CommonDBTM {
       }
 
 
-   }
+
 
 
    public static function getStateItem($state){
       switch ($state){
          case 0:
-//            return __("Waiting","release");
+//            return __("Waiting","releases");
             return "<span><i class=\"fas fa-4x fa-hourglass-half\"></i></span>";
             break;
          case 1:
@@ -1356,7 +1410,7 @@ class PluginReleasesRelease extends CommonDBTM {
    }
 
    /**
-    * Dropdown of release items state
+    * Dropdown of releases items state
     *
     * @param $name   select name
     * @param $value  default value (default '')
@@ -1373,7 +1427,7 @@ class PluginReleasesRelease extends CommonDBTM {
    }
 
    /**
-    * Dropdown of release state
+    * Dropdown of releases state
     *
     * @param $name   select name
     * @param $value  default value (default '')
@@ -1404,7 +1458,7 @@ class PluginReleasesRelease extends CommonDBTM {
       $rand = mt_rand();
       Dropdown::showYesNo($field,$this->getField($field),-1,["rand"=>$rand]);
       $params = ['value'=>"__VALUE__","field"=>$field,"plugin_releases_releases_id"=>$this->getID(),'state'=>$state];
-      Ajax::updateItemOnSelectEvent("dropdown_$field$rand","fakeupdate",$CFG_GLPI["root_doc"]."/plugins/release/ajax/changeitemstate.php",$params);
+      Ajax::updateItemOnSelectEvent("dropdown_$field$rand","fakeupdate",$CFG_GLPI["root_doc"]."/plugins/releases/ajax/changeitemstate.php",$params);
 
       echo "</div>";
 
@@ -1414,8 +1468,8 @@ class PluginReleasesRelease extends CommonDBTM {
 
       echo "<form name='form' method='post' action='".$this->getFormURL()."'  enctype=\"multipart/form-data\">";
       echo Html::hidden("changes_id",["value"=>$item->getID()]);
-//      echo '<a class="vsubmit"> '.__("Create a release from this change",'release').'</a>';
-      echo Html::submit(__("Create a release from this change",'release'), ['name' => 'createRelease']);
+//      echo '<a class="vsubmit"> '.__("Create a releases from this change",'release').'</a>';
+      echo Html::submit(__("Create a release from this change",'releases'), ['name' => 'createRelease']);
       Html::closeForm();
    }
 

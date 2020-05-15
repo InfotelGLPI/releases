@@ -202,7 +202,10 @@ class PluginReleasesDeployTask extends CommonDBTM {
       echo Html::input("name",["id"=>"name".$rand_name,"rand"=>$rand_name,"value"=>$this->getField('name')]);
 
       echo "</td>";
-      echo "<td colspan='2'></td>";
+      echo "<td >".__("Previous task","releases")."</td>";
+      echo "<td>";
+      Dropdown::show(PluginReleasesDeployTask::getType(),["condition"=>["plugin_releases_releases_id"=> $options['plugin_releases_releases_id'],"NOT"=>["id"=>$this->getID()]],"value"=> $this->fields["plugin_releases_deploytasks_id"]]);
+      echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -496,11 +499,24 @@ class PluginReleasesDeployTask extends CommonDBTM {
 
       $input["users_id"] = Session::getLoginUserID();
 
+      if($input["plugin_releases_deploytasks_id"] != 0){
+         $task = new self();
+         $task->getFromDB($input["plugin_releases_deploytasks_id"]);
+         $input["level"] = $task->getField("level") + 1;
+      }
+
+
       return $input;
    }
    function prepareInputForUpdate($input) {
 
       Toolbox::manageBeginAndEndPlanDates($input['plan']);
+
+      if(isset($input["plugin_releases_deploytasks_id"]) && $input["plugin_releases_deploytasks_id"] != 0){
+         $task = new self();
+         $task->getFromDB($input["plugin_releases_deploytasks_id"]);
+         $input["level"] = $task->getField("level") + 1;
+      }
 
       if (isset($input['_planningrecall'])) {
          PlanningRecall::manageDatas($input['_planningrecall']);
@@ -591,6 +607,155 @@ class PluginReleasesDeployTask extends CommonDBTM {
       $release->showTimeLine($rand,self::class);
 
       echo "</div>";
+   }
+
+   static function populatePlanning($parm) {
+      global $DB, $CFG_GLPI;
+
+      $output = [];
+
+      if (!isset($parm['begin']) || $parm['begin'] == 'NULL' || !isset($parm['end']) || $parm['end'] == 'NULL') {
+         return $parm;
+      }
+
+      $who       = $parm['who'];
+      $who_group = $parm['who_group'];
+      $begin     = $parm['begin'];
+      $end       = $parm['end'];
+      // Get items to print
+      $ASSIGN = "";
+
+      if ($who_group === "mine") {
+         if (count($_SESSION["glpigroups"])) {
+            $groups = implode("','", $_SESSION['glpigroups']);
+            $ASSIGN = " `glpi_plugin_releases_deploytasks`.`users_id_tech` IN (SELECT DISTINCT `users_id`
+                                    FROM `glpi_groups_users`
+                                    WHERE `groups_id` IN ('$groups'))
+                                          AND ";
+         } else { // Only personal ones
+            $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id_tech` = '$who'
+                     AND ";
+         }
+      } else {
+         if ($who > 0) {
+            $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id_tech` = '$who'
+                     AND ";
+         }
+         if ($who_group > 0) {
+            $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id_tech` IN (SELECT `users_id`
+                                    FROM `glpi_groups_users`
+                                    WHERE `groups_id` = '$who_group')
+                                          AND ";
+         }
+      }
+      if (empty($ASSIGN)) {
+         $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id` IN (SELECT DISTINCT `glpi_profiles_users`.`users_id`
+                                 FROM `glpi_profiles`
+                                 LEFT JOIN `glpi_profiles_users`
+                                    ON (`glpi_profiles`.`id` = `glpi_profiles_users`.`profiles_id`)
+                                 WHERE `glpi_profiles`.`interface`='central' ";
+         $dbu = new DbUtils();
+         $ASSIGN .= $dbu->getEntitiesRestrictRequest("AND", "glpi_profiles_users", '', $_SESSION["glpiactive_entity"], 1);
+         $ASSIGN .= ") AND ";
+      }
+
+      $query = "SELECT `glpi_plugin_releases_deploytasks`.*,
+                        `glpi_plugin_releases_deploytasks`.`begin`, 
+                        `glpi_plugin_releases_deploytasks`.`end`,
+                        `glpi_plugin_releases_typedeploytasks`.`name` as type
+                FROM `glpi_plugin_releases_deploytasks`
+                LEFT JOIN `glpi_plugin_releases_typedeploytasks` 
+                ON (`glpi_plugin_releases_typedeploytasks`.`id` = `glpi_plugin_releases_deploytasks`.`plugin_releases_typedeploytasks_id`)
+                WHERE $ASSIGN
+                      '$begin' < `end` AND '$end' > `begin` AND `glpi_plugin_releases_deploytasks`.`state` != 2
+                ORDER BY `begin`";
+
+      $result = $DB->query($query);
+
+      if ($DB->numrows($result) > 0) {
+         for ($i = 0; $data = $DB->fetch_array($result); $i++) {
+
+            $key                                           = $parm["begin"] . $data["id"] . "$$$" . "plugin_release";
+            $output[$key]['color']                         = $parm['color'];
+            $output[$key]['event_type_color']              = $parm['event_type_color'];
+            $output[$key]["id"]                            = $data["id"];
+            $output[$key]["users_id"]                      = $data["users_id_tech"];
+            $output[$key]["begin"]                         = $data["begin"];
+            $output[$key]["end"]                           = $data["end"];
+            $output[$key]["name"]                          = $data["name"];
+
+            $output[$key]["content"]                       = Html::resume_text($data["content"], $CFG_GLPI["cut"]);
+            $output[$key]["itemtype"]                      = 'PluginReleasesDeploytask';
+            $output[$key]["url"]                           = $CFG_GLPI["root_doc"] . "/plugins/releases/front/task.form.php?id=" . $data['id'];;
+         }
+      }
+      return $output;
+   }
+
+   /**
+    * Display a Planning Item
+    *
+    * @param $parm Array of the item to display
+    *
+    * @return Nothing (display function)
+    * */
+   static function displayPlanningItem(array $val, $who, $type = "", $complete = 0) {
+      global $CFG_GLPI;
+
+      $html = "";
+
+      $rand = mt_rand();
+      $html .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $val["id"] . "'";
+
+      $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
+               onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
+      $html .= ">";
+
+      switch ($type) {
+         case "in" :
+            //TRANS: %1$s is the start time of a planned item, %2$s is the end
+            $beginend = sprintf(__('From %1$s to %2$s'), date("H:i", strtotime($val["begin"])), date("H:i", strtotime($val["end"])));
+            $html     .= sprintf(__('%1$s %2$s'), $beginend, Html::resume_text($val["name"], 80));
+
+            break;
+         case "begin" :
+            $start = sprintf(__('Start at %s'), date("H:i", strtotime($val["begin"])));
+            $html  .= sprintf(__('%1$s: %2$s'), $start, Html::resume_text($val["name"], 80));
+            break;
+
+         case "end" :
+            $end  = sprintf(__('End at %s'), date("H:i", strtotime($val["end"])));
+            $html .= sprintf(__('%1$s: %2$s'), $end, Html::resume_text($val["name"], 80));
+            break;
+      }
+
+      if ($val["users_id"] && $who == 0) {
+         $dbu = new DbUtils();
+         $html .= " - " . __('User') . " " . $dbu->getUserName($val["users_id"]);
+      }
+      $html .= "</a><br>";
+
+      $html .= User::getTypeName(1) .
+         " : <a href='" .User::getFormURL()."?id=" .
+         $val["users_id"] . "'";
+      $user = new User();
+      $user->getFromDB($val["users_id"]);
+      $html .= ">" .$user->getRawName() . "</a>";
+
+      $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
+      if ($val["end"]) {
+         $html .= "<strong>" . __('End date') . "</strong> : " . Html::convdatetime($val["end"]) . "<br>";
+      }
+//      if ($val["type"]) {
+//         $html .= "<strong>" . PluginResourcesTaskType::getTypeName(1) . "</strong> : " .
+//            $val["type"] . "<br>";
+//      }
+      if ($val["content"]) {
+         $html .= "<strong>" . __('Description') . "</strong> : " . $val["content"];
+      }
+      $html .= "</div>";
+
+      return $html;
    }
 
 
