@@ -529,12 +529,12 @@ class PluginReleasesDeployTask extends CommonDBTM {
       }
 
 
-      $input["_job"] = new PluginReleasesRelease();
-
-      if (isset($input[$input["_job"]->getForeignKeyField()])
-         && !$input["_job"]->getFromDB($input[$input["_job"]->getForeignKeyField()])) {
-         return false;
-      }
+//      $input["_job"] = new PluginReleasesRelease();
+//
+//      if (isset($input[$input["_job"]->getForeignKeyField()])
+//         && !$input["_job"]->getFromDB($input[$input["_job"]->getForeignKeyField()])) {
+//         return false;
+//      }
 
       if (isset($input["plan"])) {
          $input["begin"]         = $input['plan']["begin"];
@@ -577,12 +577,12 @@ class PluginReleasesDeployTask extends CommonDBTM {
    }
    function post_addItem() {
 
-      $this->input["_job"] = new PluginReleasesRelease();
-
-      if (isset($this->input[$this->input["_job"]->getForeignKeyField()])
-         && !$this->input["_job"]->getFromDB($this->input[$this->input["_job"]->getForeignKeyField()])) {
-         return false;
-      }
+//      $this->input["_job"] = new PluginReleasesRelease();
+//
+//      if (isset($this->input[$this->input["_job"]->getForeignKeyField()])
+//         && !$this->input["_job"]->getFromDB($this->input[$this->input["_job"]->getForeignKeyField()])) {
+//         return false;
+//      }
 
       // Add document if needed, without notification
       $this->input = $this->addFiles($this->input, ['force_update' => true]);

@@ -89,10 +89,10 @@ class PluginReleasesCreationRelease extends CommonDBTM {
    function displayMenu($ID, $options = []) {
       echo "<div class='center'>";
       echo "<table class='tab_cadre'>";
-      echo "<tr>";
+      echo "<tr  class='tab_bg_1'>";
       echo "<th>" . __("Release","releases") . "</th>";
       echo "</tr>";
-      echo "<tr>";
+      echo "<tr  class='tab_bg_1'>";
       echo "<td class='center b' >";
       $item = new PluginReleasesReleasetemplate();
       $dbu = new DbUtils();

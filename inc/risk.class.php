@@ -280,7 +280,7 @@ class PluginReleasesRisk extends CommonDBTM {
          'value'             => $this->fields["content"],
          'rand'              => $rand_text,
          'editor_id'         => $content_id,
-         'enable_fileupload' => true,
+         'enable_fileupload' => false,
          'enable_richtext'   => true,
          'cols'              => $cols,
          'rows'              => $rows]);
