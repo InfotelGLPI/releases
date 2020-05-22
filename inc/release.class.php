@@ -339,10 +339,10 @@ class PluginReleasesRelease extends CommonDBTM {
     */
    function prepareInputForAdd($input) {
 
-      if (isset($input['target']) && empty($input['target'])) {
+      if ((isset($input['target']) && empty($input['target'])) || !isset($input['target']) ) {
          $input['target'] = [];
       }
-      $input['target'] = json_encode($input['target']);
+       $input['target'] = json_encode($input['target']);
       if(!empty($input["date_preproduction"]) && $input["date_preproduction"] !="0000-00-00 00:00:00"  && !empty($input["date_production"]) && $input["date_production"] !="0000-00-00 00:00:00" && $input["state"]<self::DATEDEFINITION  ){
 
          $input['state'] = self::DATEDEFINITION;

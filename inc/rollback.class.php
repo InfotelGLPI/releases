@@ -68,6 +68,7 @@ class PluginReleasesRollback extends CommonDBTM {
    function rawSearchOptions() {
 
       $tab = [];
+      return $tab;
 
    }
 
@@ -176,7 +177,7 @@ class PluginReleasesRollback extends CommonDBTM {
 
          echo "<td hidden>";
          Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_release_releases_id", 'id' => "plugin_release_releases_id",
+            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
                'value' => $options["plugin_releases_releases_id"],
                'rand' => $rand]);
          echo "</td>";

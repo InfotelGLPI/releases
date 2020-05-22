@@ -68,6 +68,7 @@ class PluginReleasesRisk extends CommonDBTM {
    function rawSearchOptions() {
 
       $tab = [];
+      return $tab;
 
    }
 

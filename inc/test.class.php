@@ -69,6 +69,7 @@ class PluginReleasesTest extends CommonDBTM {
    function rawSearchOptions() {
 
       $tab = [];
+      return $tab;
 
    }
 
@@ -179,7 +180,7 @@ class PluginReleasesTest extends CommonDBTM {
          echo "<td hidden>";
          Dropdown::show(PluginReleasesRelease::getType(),
             ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-               'value' => $options["plugins_release_releases_id"],
+               'value' => $options["plugin_releases_releases_id"],
                'rand' => $rand]);
          echo "</td>";
       } else {
