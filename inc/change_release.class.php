@@ -105,8 +105,11 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       $rand = mt_rand();
 
       $iterator = $DB->request([
-         'SELECT DISTINCT' => 'glpi_plugin_releases_changes_releases.id AS linkid',
-         'FIELDS' => 'glpi_changes.*',
+         'SELECT' => [
+                        'glpi_plugin_releases_changes_releases.id AS linkid',
+                        'glpi_changes.*'
+                     ],
+         'DISTINCT' => true,
          'FROM' => 'glpi_plugin_releases_changes_releases',
          'LEFT JOIN' => [
             'glpi_changes' => [

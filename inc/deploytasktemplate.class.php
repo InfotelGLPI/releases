@@ -166,4 +166,49 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
    static function canView() {
       return Session::haveRight('ticket', READ);
    }
+
+   public function showForm($ID, $options = []) {
+      $rand_text      = mt_rand();
+      $rand_name      = mt_rand();
+      $rand_type      = mt_rand();
+      $rand_state     = mt_rand();
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name",["id"=>"name".$rand_name,"value"=>$this->getField('name'),  'rand'      => $rand_name,]);
+      echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td>";
+
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo __("Deploy task type",'releases');
+      echo "</td>";
+
+      echo "<td>";
+
+      $value = $this->fields["plugin_releases_typedeploytasks_id"];
+
+      Dropdown::show(PluginReleasesTypeDeployTask::getType(), ['rand'=>$rand_type,'name' => "plugin_releases_typedeploytasks_id",
+         'value' => $value]);
+
+      echo "<td>";
+      echo __('Status');
+      echo "</td>";
+      echo "<td>";
+      PluginReleasesRelease::dropdownStateItem("state", $this->fields["state"], true, ['rand' => $rand_state]);
+      echo "</td>";
+
+
+
+      echo "</tr>";
+
+
+      $this->showFormButtons($options);
+   }
 }

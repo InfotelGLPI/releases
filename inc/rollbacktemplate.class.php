@@ -128,4 +128,44 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
    static function canView() {
       return Session::haveRight('ticket', READ);
    }
+   function showForm($ID, $options = []) {
+      global $CFG_GLPI, $DB;
+      $rand_template   = mt_rand();
+      $rand_text       = mt_rand();
+      $rand_name      = mt_rand();
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+      echo "<tr class='tab_bg_1'>";
+
+
+
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name",["id"=>"name".$rand_name,"value"=>$this->getField('name'),  'rand'      => $rand_name,]);
+      echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td>";
+
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Description') . "</td>";
+      echo "<td colspan='3'>";
+//       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
+      $content_id = "content$rand_text";
+      $cols       = 100;
+      $rows       = 10;
+      Html::textarea(['name'              => 'content',
+         'value'             => $this->fields["content"],
+         'rand'              => $rand_text,
+         'editor_id'         => $content_id,
+         'enable_fileupload' => false,
+         'enable_richtext'   => true,
+         'cols'              => $cols,
+         'rows'              => $rows]);
+      echo "</td>";
+      echo "</tr>";
+
+      $this->showFormButtons($options);
+   }
 }

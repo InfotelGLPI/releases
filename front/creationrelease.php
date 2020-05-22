@@ -37,6 +37,6 @@ Session::checkLoginUser();
 
 $item = new PluginReleasesCreationRelease();
 
-Html::header(PluginReleasesRelease::getTypeName(2));
+Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
 $item->displayMenu("");
 Html::footer();

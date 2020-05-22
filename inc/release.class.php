@@ -190,7 +190,7 @@ class PluginReleasesRelease extends CommonDBTM {
 
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
+      global $CFG_GLPI,$DB;
       if ($item->getType() == self::getType()) {
          $self = new self();
          $self->showFinalisationTabs($item->getID());
@@ -206,13 +206,15 @@ class PluginReleasesRelease extends CommonDBTM {
             $self->showCreateRelease($item);
 //         }
          $ID = $item->getID();
-         global $DB;
          $canedit = PluginReleasesRelease::canUpdate();
          $rand = mt_rand();
 
          $iterator = $DB->request([
-            'SELECT DISTINCT' => 'glpi_plugin_releases_changes_releases.id AS linkid',
-            'FIELDS' => 'glpi_plugin_releases_releases.*',
+            'SELECT' => [
+                           'glpi_plugin_releases_changes_releases.id AS linkid',
+                           'glpi_plugin_releases_releases.*'
+                         ],
+            'DISTINCT' => true,
             'FROM' => 'glpi_plugin_releases_changes_releases',
             'LEFT JOIN' => [
                'glpi_plugin_releases_releases' => [
@@ -1691,6 +1693,7 @@ class PluginReleasesRelease extends CommonDBTM {
       $menu['links']['search'] = self::getSearchURL(false);
 
       $menu['links']['template'] = "/plugins/releases/front/releasetemplate.php";
+      $menu['icon']            = static::getIcon();
       if (self::canCreate()) {
          $dbu = new DbUtils();
          $template = new PluginReleasesReleasetemplate();
@@ -1706,6 +1709,10 @@ class PluginReleasesRelease extends CommonDBTM {
 
 
       return $menu;
+   }
+
+   static function getIcon() {
+      return "fas fa-tags";
    }
 
 }

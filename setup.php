@@ -78,7 +78,7 @@ function plugin_version_releases() {
       'requirements'   => [
          'glpi'   => [
             'min' => '9.4',
-            'max' => '9.5'
+            'max' => '9.6.'
 //            'plugins' => ['manageentities']
          ]
       ]
@@ -91,7 +91,7 @@ function plugin_version_releases() {
  * @return bool
  */
 function plugin_releases_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.3', 'lt') || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+   if (version_compare(GLPI_VERSION, '9.3', 'lt') || version_compare(GLPI_VERSION, '9.6', 'ge')) {
       echo __('This plugin requires GLPI >= 9.3');
       return false;
    }

@@ -128,4 +128,69 @@ class PluginReleasesTesttemplate extends CommonDropdown {
    static function canView() {
       return Session::haveRight('ticket', READ);
    }
+
+   function showForm($ID, $options = []) {
+
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+
+
+
+      $rand_text       = mt_rand();
+      $rand_name      = mt_rand();
+      $rand_type      = mt_rand();
+      $rand_risk      = mt_rand();
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo __("Test type",'releases');
+      echo "</td>";
+
+      echo "<td>";
+      if (isset($_GET["typetestid"])) {
+         $value = $_GET["typetestid"];
+      } else {
+         $value = $this->fields["plugin_releases_typetests_id"];
+      }
+      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'=>$rand_type,'name' => "plugin_releases_typetests_id",
+         'value' => $value]);
+      echo "</td>";
+
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name')]);
+      echo "</td>";
+
+      echo "</tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>";
+      echo __("Associated risk",'releases');
+      echo "</td>";
+
+      echo "<td>";
+
+      Dropdown::show(PluginReleasesRisktemplate::getType(), ['rand'=>$rand_risk,'name' => "plugin_releases_risks_id",
+         'value' =>  $this->fields["plugin_releases_risks_id"]]);
+      echo "</td>";
+      echo "<td colspan='2'></td>";
+      echo "</tr>";
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Description') . "</td>";
+      echo "<td colspan='3'>";
+//       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
+      $content_id = "content$rand_text";
+      $cols       = 100;
+      $rows       = 10;
+      Html::textarea(['name'              => 'content',
+         'value'             => $this->fields["content"],
+         'rand'              => $rand_text,
+         'editor_id'         => $content_id,
+         'enable_fileupload' => false,
+         'enable_richtext'   => true,
+         'cols'              => $cols,
+         'rows'              => $rows]);
+      echo "</td>";
+      echo "</tr>";
+      $this->showFormButtons($options);
+   }
 }

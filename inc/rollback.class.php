@@ -193,8 +193,6 @@ class PluginReleasesRollback extends CommonDBTM {
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
 
-
-
       echo "<td style='vertical-align: middle' colspan='4'>";
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
