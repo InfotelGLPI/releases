@@ -69,7 +69,6 @@ if (isset($_POST["add"])) {
 } else {
 
    $release->checkGlobal(READ);
-   $_SESSION['glpi_js_toload']["tinymce"][] = 'lib/tiny_mce/lib/tinymce.js';
 
    Html::header(PluginReleasesRelease::getTypeName(2), '', "help", PluginReleasesRelease::getType());
 

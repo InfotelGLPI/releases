@@ -268,7 +268,7 @@ class PluginReleasesReview extends CommonDBTM {
             $item_i = reset($items_i);
             $foreignKey = "plugin_releases_reviews_id";
             $pics_url = $CFG_GLPI['root_doc'] . "/pics/timeline";
-            //TODO AJOUTER DAT
+
             if ($item_i['filename']) {
                $filename = $item_i['filename'];
                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));

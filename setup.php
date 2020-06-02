@@ -36,6 +36,7 @@ function plugin_init_releases() {
 
    $PLUGIN_HOOKS['use_rules']['releases'] = ['RuleMailCollector'];
    $PLUGIN_HOOKS['add_css']['releases'][] = "css/styles.css";
+   Html::requireJs('tinymce');
 //   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_ticket.css";
 //   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_main.css";
 

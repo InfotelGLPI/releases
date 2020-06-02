@@ -81,15 +81,15 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             'type'  => 'bool',
          ],
          ['name'  => 'tests',
-            'label' => __('Test','Tests', 'release'),
+            'label' => _n('Test','Tests', 2,'release'),
             'type'  => 'dropdownTests',
          ],
          ['name'  => 'rollbacks',
-            'label' => __('Rollback','Rollbacks', 'release'),
+            'label' => _n('Rollback','Rollbacks',2, 'release'),
             'type'  => 'dropdownRollbacks',
          ],
          ['name'  => 'tasks',
-            'label' => __('Deploy Task','Deploy Tasks', 'release'),
+            'label' => _n('Deploy Task','Deploy Tasks',2, 'release'),
             'type'  => 'dropdownTasks',
          ],
       ];
@@ -230,5 +230,172 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $input["tasks"] = isset($input["tasks"])?json_encode($input["tasks"]):json_encode([]);
       $input["rollbacks"] =isset($input["rollbacks"])? json_encode($input["rollbacks"]):json_encode([]);
       return $input;
+   }
+
+   function ShowForm($ID, $options = []) {
+      global $CFG_GLPI, $DB;
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name",["value"=>$this->getField('name')]);
+
+      echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td >";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Release area','releases') . "</td>";
+      echo "<td colspan='3'>";
+      Html::textarea(["name"=>"release_area","enable_richtext"=>true,"value"=>$this->getField('release_area')]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Pre-production planned run date','releases') . "</td>";
+      echo "<td >";
+      Html::showDateField("date_preproduction",["value"=>$this->getField('date_preproduction')]);
+      echo "</td>";
+      echo "<td>" . __('Production planned run date','releases') . "</td>";
+      echo "<td >";
+      Html::showDateField("date_production",["value"=>$this->getField('date_production')]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Location') . "</td>";
+      echo "<td >";
+      Dropdown::show(Location::getType(),["name"=>"locations_id","value"=>$this->getField('locations_id')]);
+      echo "</td>";
+      echo "<td>" . __('Service shutdown','releases') . "</td>";
+      echo "<td >";
+      Dropdown::showYesNo("service_shutdown",$this->getField('service_shutdown'));
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Service shutdown details','releases') . "</td>";
+      echo "<td colspan='3'>";
+      Html::textarea(["name"=>"service_shutdown_details","enable_richtext"=>true,"value"=>$this->getField('service_shutdown_details')]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Non-working hour','releases') . "</td>";
+      echo "<td colspan='2'>";
+      echo "</td >";
+      echo "<td >";
+      Dropdown::showYesNo("hour_type",$this->getField('hour_type'));
+      echo "</td>";
+//      echo "<td>" . __('Communication','releases') . "</td>";
+//      echo "<td >";
+//      Dropdown::showYesNo("communication",$this->getField('communication'));
+//      echo "</td>";
+      echo "</tr>";
+      $dbu = new DbUtils();
+      echo "<tr>";
+      echo "<td>";
+      echo _n('Test','Tests', 2,'release');
+
+
+      echo "</td>";
+
+      echo "<td>";
+            $item = new PluginReleasesRollbacktemplate();
+            $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+           $rolltemp = new PluginReleasesRollbacktemplate();
+           $alltemps = $rolltemp->find($condition);
+           $rolls = [];
+           foreach ($alltemps as $roll){
+              $rolls[$roll["id"]] = $roll["name"];
+           }
+
+           $val = $this->getField("rollbacks");
+           $val = json_decode($val);
+           if($val == ""){
+              $val = [];
+           }
+           Dropdown::showFromArray("rollbacks", $rolls, array('id' => 'rollbacks', 'multiple' => true, 'values' => $val, "display" => true));
+
+      echo "</td>";
+      echo "<td>";
+      echo _n('Rollback','Rollbacks',2, 'release');
+
+
+      echo "</td>";
+      echo "<td>";
+
+            $item = new PluginReleasesTesttemplate();
+            $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+            $testtemp = new PluginReleasesTesttemplate();
+            $alltemps = $testtemp->find($condition);
+            $tests = [];
+            foreach ($alltemps as $test){
+               $tests[$test["id"]] = $test["name"];
+            }
+
+            $val = $this->getField("tests");
+            $val = json_decode($val);
+            if($val == ""){
+               $val = [];
+            }
+            Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
+      echo "</td>";
+      echo "</tr>";
+      echo "<tr>";
+      echo "<td>";
+      echo  _n('Deploy Task','Deploy Tasks',2, 'release');
+      echo "</td>";
+      echo "<td>";
+            $item = new PluginReleasesDeploytasktemplate();
+            $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+            $tasktemp = new PluginReleasesDeploytasktemplate();
+            $alltemps = $tasktemp->find($condition);
+            $tasks = [];
+            foreach ($alltemps as $task){
+               $tasks[$task["id"]] = $task["name"];
+            }
+
+            $val = $this->getField("tasks");
+            $val = json_decode($val);
+            if($val == ""){
+               $val = [];
+            }
+            Dropdown::showFromArray("tasks", $tasks, array('id' => 'tasks', 'multiple' => true, 'values' => $val, "display" => true));
+      echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td>";
+      echo "</tr>";
+
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>" . __('Communication type','releases') . "</td>";
+//      echo "<td >";
+//      $types   = ['Entity'=>'Entity', 'Group'=>'Group', 'Profile'=>'Profile', 'User'=>'User','Location'=>'Location'];
+//      $addrand = Dropdown::showItemTypes('communication_type', $types,["id"=>"communication_type","value"=>$this->getField('communication_type')]);
+//      echo "</td>";
+//      $targets = [];
+//      $targets = json_decode($this->getField('target'));
+////      $targets = $this->getField('target');
+//      echo "<td>" ._n('Target', 'Targets',
+//            Session::getPluralNumber()) . "</td>";
+//
+//
+//      echo "<td id='targets'>";
+//
+//
+//      echo "</td>";
+//      Ajax::updateItem( "targets",
+//         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+//         ['type' => $this->getField('communication_type'),'current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
+//      Ajax::updateItemOnSelectEvent("dropdown_communication_type".$addrand, "targets",
+//         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+//         ['type' => '__VALUE__','current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
+//      echo "</tr>";
+      $this->showFormButtons($options);
+      return true;
    }
 }
