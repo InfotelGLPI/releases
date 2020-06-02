@@ -1068,10 +1068,12 @@ class PluginReleasesRelease extends CommonDBTM {
       },
         buttons: {
          'ok': function() {
-            if($(\"[name = '_date_production']\").val() == ''){
-              $(\"[name = '_date_production']\").css('border-color','red');
+            if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
+        
+              $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
             }else{  
-               var date = $(\"[name = '_date_production']\").val();
+               var date = $(\"[name = 'date_production']\").val();
+               console.log(date);
                $.ajax({
                   url:  '".$CFG_GLPI['root_doc']."/plugins/releases/ajax/finalize.php',
                   data: {'id' : ".$this->getID().",'date' : date},
