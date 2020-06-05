@@ -82,12 +82,11 @@ class PluginReleasesProfile extends Profile {
       //85
       self::addDefaultProfileInfos($ID,
          [
-            'plugin_releases_releasesTemplate' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_testsTemplate' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_risksTemplate' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_rollbacksTemplate' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_tasksTemplate' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
             'plugin_releases_releases' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+            'plugin_releases_tests' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+            'plugin_releases_risks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+            'plugin_releases_rollbacks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+            'plugin_releases_tasks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
             'plugin_releases_use' => 1
 
          ], true);
@@ -182,30 +181,30 @@ class PluginReleasesProfile extends Profile {
     */
    static function getAllRights($all = false) {
       $rights = array(
-         array('itemtype' => PluginReleasesReleasetemplate::getType(),
-            'label' => PluginReleasesReleasetemplate::getTypeName(2),
-            'field' => 'plugin_releases_releasesTemplate'
-         ),
-         array('itemtype' => PluginReleasesTesttemplate::getType(),
-            'label' => PluginReleasesTesttemplate::getTypeName(2),
-            'field' => 'plugin_releases_testsTemplate'
-         ),
-         array('itemtype' => PluginReleasesRisktemplate::getType(),
-            'label' => PluginReleasesRisktemplate::getTypeName(2),
-            'field' => 'plugin_releases_risksTemplate'
-         ),
-         array('itemtype' => PluginReleasesRollbacktemplate::getType(),
-            'label' => PluginReleasesRollbacktemplate::getTypeName(2),
-            'field' => 'plugin_releases_rollbacksTemplate'
-         ),
-         array('itemtype' => PluginReleasesDeploytasktemplate::getType(),
-            'label' => PluginReleasesDeploytasktemplate::getTypeName(2),
-            'field' => 'plugin_releases_tasksTemplate'
-         ),
          array('itemtype' => PluginReleasesRelease::getType(),
             'label' => PluginReleasesRelease::getTypeName(2),
             'field' => 'plugin_releases_releases'
-         )
+         ),
+         array('itemtype' => PluginReleasesTest::getType(),
+            'label' => PluginReleasesTest::getTypeName(2),
+            'field' => 'plugin_releases_tests'
+         ),
+         array('itemtype' => PluginReleasesRisk::getType(),
+            'label' => PluginReleasesRisk::getTypeName(2),
+            'field' => 'plugin_releases_risks'
+         ),
+         array('itemtype' => PluginReleasesRollback::getType(),
+            'label' => PluginReleasesRollback::getTypeName(2),
+            'field' => 'plugin_releases_rollbacks'
+         ),
+         array('itemtype' => PluginReleasesDeploytask::getType(),
+            'label' => PluginReleasesDeploytask::getTypeName(2),
+            'field' => 'plugin_releases_tasks'
+         ),
+//         array('itemtype' => PluginReleasesRelease::getType(),
+//            'label' => PluginReleasesRelease::getTypeName(2),
+//            'field' => 'plugin_releases_releases'
+//         )
          //TODO continuer les droits
       );
 

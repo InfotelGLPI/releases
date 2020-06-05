@@ -47,7 +47,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       return _n('Test type', 'Test types', $nb, 'release');
    }
 
-   static $rightname = 'plugin_releases_releases';
+   static $rightname = 'plugin_releases_tests';
    var $can_be_translated = true;
 
    /**
@@ -158,7 +158,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
    }
 
    static function canCreate() {
-      return Session::haveRight('ticket', UPDATE);
+      return Session::haveRight(static::$rightname, UPDATE);
    }
 
    /**

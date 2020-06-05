@@ -44,7 +44,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    public $dohistory          = true;
    public $can_be_translated  = true;
 
-   static $rightname          = 'plugin_releases_releasesTemplate';
+   static $rightname          = 'plugin_releases_releases';
 
 
 

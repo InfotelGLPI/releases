@@ -44,7 +44,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
    public $dohistory          = true;
    public $can_be_translated  = true;
 
-   static $rightname          = 'plugin_releases_rollbacksTemplate';
+   static $rightname          = 'plugin_releases_rollbacks';
 
 
 
@@ -113,7 +113,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       }
    }
    static function canCreate() {
-      return Session::haveRightsOr('ticket', [UPDATE,CREATE]);
+      return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
    }
 
    /**

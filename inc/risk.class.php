@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginReleasesRisk extends CommonDBTM {
 
    public $dohistory = true;
-   static $rightname = 'plugin_releases_releases';
+   static $rightname = 'plugin_releases_risks';
    protected $usenotepad = true;
    static $types = [];
 

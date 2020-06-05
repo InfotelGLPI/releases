@@ -47,7 +47,7 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
       return _n('Risk type', 'Risk types', $nb, 'release');
    }
 
-   static $rightname = 'plugin_releases_releases';
+   static $rightname = 'plugin_releases_risks';
    var $can_be_translated = true;
 
    /**
@@ -158,7 +158,7 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
    }
 
    static function canCreate() {
-      return Session::haveRight('ticket', UPDATE);
+      return Session::haveRight(static::$rightname, UPDATE);
    }
 
    /**

@@ -44,7 +44,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
    public $dohistory          = true;
    public $can_be_translated  = true;
 
-   static $rightname          = 'plugin_releases_risksTemplate';
+   static $rightname          = 'plugin_releases_risks';
 
 
 

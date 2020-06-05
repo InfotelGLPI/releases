@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginReleasesRollback extends CommonDBTM {
 
    public $dohistory = true;
-   static $rightname = 'plugin_releases_releases';
+   static $rightname = 'plugin_releases_rollbacks';
    protected $usenotepad = true;
    static $types = [];
 
