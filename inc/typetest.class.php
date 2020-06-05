@@ -47,7 +47,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       return _n('Test type', 'Test types', $nb, 'release');
    }
 
-   static $rightname = 'ticket';
+   static $rightname = 'plugin_releases_releases';
    var $can_be_translated = true;
 
    /**
@@ -171,7 +171,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('ticket', READ);
+      return Session::haveRight(static::$rightname, READ);
    }
 
 

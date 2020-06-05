@@ -49,7 +49,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
    static public $itemtype_2   = 'PluginReleasesRelease';
    static public $items_id_2   = 'plugin_releases_releases_id';
 
-   static $rightname                   = 'ticket';
+   static $rightname                   = 'plugin_releases_releases';
 
    static function getTypeName($nb = 0) {
       return _n('Link Release/Change', 'Links Release/Change', $nb,'releases');
@@ -224,7 +224,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
    }
 
    static function canCreate() {
-      return Session::haveRight('ticket', UPDATE);
+      return Session::haveRight(static::$rightname, UPDATE);
    }
 
 
@@ -239,7 +239,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('ticket', READ);
+      return Session::haveRight(static::$rightname, READ);
    }
 }
 

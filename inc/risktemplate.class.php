@@ -44,7 +44,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
    public $dohistory          = true;
    public $can_be_translated  = true;
 
-   static $rightname          = 'ticket';
+   static $rightname          = 'plugin_releases_risksTemplate';
 
 
 
@@ -107,7 +107,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
       }
    }
    static function canCreate() {
-      return Session::haveRightsOr('ticket', [UPDATE,CREATE]);
+      return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
    }
 
    /**
@@ -120,7 +120,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('ticket', READ);
+      return Session::haveRight(static::$rightname, READ);
    }
    public function showForm($ID, $options = []) {
       global $CFG_GLPI, $DB;

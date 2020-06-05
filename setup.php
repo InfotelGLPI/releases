@@ -30,9 +30,9 @@
 // Init the hooks of the plugins -Needed
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
-
+if(Session::haveRight('plugin_releases_use',1)){
    $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
-//   $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleaseProfile', 'initProfile'];
+   $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
 
    $PLUGIN_HOOKS['use_rules']['releases'] = ['RuleMailCollector'];
    $PLUGIN_HOOKS['add_css']['releases'][] = "css/styles.css";
@@ -42,16 +42,17 @@ function plugin_init_releases() {
 
    if (Session::getLoginUserID()) {
 
-      $PLUGIN_HOOKS['menu_toadd']['releases']          = ['helpdesk' => 'PluginReleasesRelease'];
+      $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
 
-      Plugin::registerClass('PluginReleaseProfile',
-                            ['addtabon' => 'Profile']);
+      Plugin::registerClass('PluginReleasesProfile',
+         ['addtabon' => 'Profile']);
    }
    Plugin::registerClass('PluginReleasesRelease',
       ['addtabon' => ['Change']]);
    Plugin::registerClass(PluginReleasesDeployTask::class, [
       'planning_types' => true
    ]);
+}
    $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeployTask', 'populatePlanning'];
    $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeployTask', 'displayPlanningItem'];
    $plugin = new Plugin();

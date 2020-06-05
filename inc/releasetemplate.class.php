@@ -44,7 +44,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    public $dohistory          = true;
    public $can_be_translated  = true;
 
-   static $rightname          = 'ticket';
+   static $rightname          = 'plugin_releases_releasesTemplate';
 
 
 
@@ -201,7 +201,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
    }
    static function canCreate() {
-      return Session::haveRightsOr('ticket', [UPDATE,CREATE]);
+      return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
    }
 
    /**
@@ -214,7 +214,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('ticket', READ);
+      return Session::haveRight(static::$rightname, READ);
    }
 
    function prepareInputForAdd($input) {
@@ -286,11 +286,11 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Non-working hour','releases') . "</td>";
-      echo "<td colspan='2'>";
-      echo "</td >";
       echo "<td >";
       Dropdown::showYesNo("hour_type",$this->getField('hour_type'));
       echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td >";
 //      echo "<td>" . __('Communication','releases') . "</td>";
 //      echo "<td >";
 //      Dropdown::showYesNo("communication",$this->getField('communication'));

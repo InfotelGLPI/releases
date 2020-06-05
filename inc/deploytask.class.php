@@ -37,7 +37,7 @@ if (!defined('GLPI_ROOT')) {
 class PluginReleasesDeployTask extends CommonDBTM {
 
    public $dohistory = true;
-   static $rightname = 'ticket';
+   static $rightname = 'plugin_releases_releases';
    protected $usenotepad = true;
    static $types = [];
 

@@ -44,7 +44,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
    public $dohistory          = true;
    public $can_be_translated  = true;
 
-   static $rightname          = 'ticket';
+   static $rightname          = 'plugin_releases_rollbacksTemplate';
 
 
 
@@ -126,7 +126,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('ticket', READ);
+      return Session::haveRight(static::$rightname, READ);
    }
    function showForm($ID, $options = []) {
       global $CFG_GLPI, $DB;

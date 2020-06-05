@@ -47,7 +47,7 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
       return _n('Deploy task type', 'Deploy task types', $nb, 'releases');
    }
 
-   static $rightname = 'ticket';
+   static $rightname = 'plugin_releases_releases';
    var $can_be_translated = true;
 
    /**
@@ -142,7 +142,7 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
 
 
    static function canCreate() {
-      return Session::haveRight('ticket', UPDATE);
+      return Session::haveRight(static::$rightname, UPDATE);
    }
 
    /**
@@ -155,7 +155,7 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
     * @return booleen
     **/
    static function canView() {
-      return Session::haveRight('ticket', READ);
+      return Session::haveRight(static::$rightname, READ);
    }
 
 

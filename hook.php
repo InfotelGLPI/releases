@@ -46,8 +46,8 @@ function plugin_releases_install() {
    }
 
 
-//   PluginReleasesProfile::initProfile();
-//   PluginReleasesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+   PluginReleasesProfile::initProfile();
+   PluginReleasesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 //
 //   PluginReleasesNotificationTargetTask::install100();
 
@@ -126,7 +126,7 @@ function plugin_releases_getDatabaseRelations() {
 function plugin_releases_getDropdown() {
 
    $plugin = new Plugin();
-
+ 
    if ($plugin->isActivated("releases")) {
       return [PluginReleasesDeploytasktemplate::getType() => PluginReleasesDeploytasktemplate::getTypeName(2),
             PluginReleasesTesttemplate::getType() => PluginReleasesTesttemplate::getTypeName(2),
