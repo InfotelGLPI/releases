@@ -1135,7 +1135,9 @@ class PluginReleasesRelease extends CommonDBTM {
 
 
       $task  = new $obj();
+
       $canadd_task = $task->can(-1, CREATE);
+
       $taskClass = $obj;
 
       // javascript function for add and edit items

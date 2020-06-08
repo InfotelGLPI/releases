@@ -96,6 +96,10 @@ class PluginReleasesRollback extends CommonDBTM {
          $self = new self();
          if(self::canView()){
             $self->showScripts($item);
+         }else{
+            echo "<div class='center'><br><br>";
+            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
          }
 //         if(self::canCreate()) {
 //            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
