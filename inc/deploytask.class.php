@@ -744,7 +744,7 @@ class PluginReleasesDeployTask extends CommonDBTM {
          $val["users_id"] . "'";
       $user = new User();
       $user->getFromDB($val["users_id"]);
-      $html .= ">" .$user->getRawName() . "</a>";
+      $html .= ">" .$user->getFriendlyName() . "</a>";
 
       $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
       if ($val["end"]) {

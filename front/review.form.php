@@ -43,7 +43,7 @@ if (isset($_POST["add"])) {
 
    $newID = $release->add($_POST);
    if ($_SESSION['glpibackcreated']) {
-      Html::redirect($task->getFormURL() . "?id=" . $newID);
+      Html::redirect($release->getFormURL() . "?id=" . $newID);
    }
    Html::back();
 } else if (isset($_POST["delete"])) {
