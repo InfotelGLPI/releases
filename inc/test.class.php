@@ -199,10 +199,13 @@ class PluginReleasesTest extends CommonDBTM {
       }
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
-      echo "<td style='vertical-align: middle' colspan='4'>";
-      echo "<div class='fa-label'>
-            <i class='fas fa-reply fa-fw'
-               title='"._n('Task template', 'Task templates', 2)."'></i>";
+      echo "<td>";
+      echo  _n('Test template', 'Test templates', 1);
+      echo "</td>";
+      echo "<td style='vertical-align: middle' >";
+//      echo "<div class='fa-label'>
+//            <i class='fas fa-reply fa-fw'
+//               title='"._n('Task template', 'Task templates', 2)."'></i>";
       PluginReleasesTesttemplate::dropdown(['value'     => '',
          'entity'    => $this->getEntityID(),
          'rand'      => $rand_template,
@@ -239,8 +242,8 @@ class PluginReleasesTest extends CommonDBTM {
          }
       ');
       echo "</td>";
-//      echo "<td>";
-//      echo "</td>";
+      echo "<td colspan='2'>";
+      echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";

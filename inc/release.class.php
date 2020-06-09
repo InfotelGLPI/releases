@@ -863,11 +863,13 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Pre-production planned run date','releases') . "</td>";
       echo "<td >";
-      Html::showDateField("date_preproduction",["value"=>$this->getField('date_preproduction')]);
+      $date_preprod =  Html::convDateTime($this->getField('date_preproduction'));
+      Html::showDateField("date_preproduction",["value"=>$date_preprod]);
       echo "</td>";
       echo "<td>" . __('Production planned run date','releases') . "</td>";
       echo "<td >";
-      Html::showDateField("date_production",["value"=>$this->getField('date_production')]);
+      $date_prod =  Html::convDateTime($this->getField('date_production'));
+      Html::showDateField("date_production",["value"=>$date_prod]);
       echo "</td>";
 
       echo "</tr>";
@@ -940,6 +942,8 @@ class PluginReleasesRelease extends CommonDBTM {
 //      Change::dropdown([
 ////            'used' => $used,
 //         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
+         echo "</td>";
+         echo "<td colspan='2'>";
          echo "</td>";
          echo "</tr>";
       }

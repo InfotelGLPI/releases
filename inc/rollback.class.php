@@ -196,11 +196,13 @@ class PluginReleasesRollback extends CommonDBTM {
       }
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
-
-      echo "<td style='vertical-align: middle' colspan='4'>";
-      echo "<div class='fa-label'>
-            <i class='fas fa-reply fa-fw'
-               title='"._n('Task template', 'Task templates', 2)."'></i>";
+      echo "<td>";
+      echo _n('Rollback template', 'Rollback templates', 2);
+      echo "</td>";
+      echo "<td style='vertical-align: middle' >";
+//      echo "<div class='fa-label'>
+//            <i class='fas fa-reply fa-fw'
+//               title='".."'></i>";
       PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
          'entity'    => $this->getEntityID(),
          'rand'      => $rand_template,
@@ -230,6 +232,8 @@ class PluginReleasesRollback extends CommonDBTM {
             });
          }
       ');
+      echo "</td>";
+      echo "<td colspan='2'>";
       echo "</td>";
 //      echo "<td>";
 //      echo "</td>";

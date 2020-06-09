@@ -71,15 +71,15 @@ if(Session::haveRight('plugin_releases_use',1)){
 function plugin_version_releases() {
 
    return [
-      'name'           => __('Release', 'releases'),
+      'name'           => __('Releases', 'releases'),
       'version'        => '1.0.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>, Alban Lesellier",
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
-      'minGlpiVersion' => '9.4',// For compatibility / no install in version < 9.3
+      'minGlpiVersion' => '9.5',// For compatibility / no install in version < 9.3
       'requirements'   => [
          'glpi'   => [
-            'min' => '9.4',
+            'min' => '9.5',
             'max' => '9.6.'
 //            'plugins' => ['manageentities']
          ]
