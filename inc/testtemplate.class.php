@@ -57,11 +57,11 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
       return [
          ['name'  => 'plugin_releases_typetests_id',
-            'label' => __('Type test','Type tests', 'releases'),
+            'label' => _n('Type test','Type tests',1, 'releases'),
             'type'  => 'dropdownTests',
          ],
          ['name'  => 'plugin_releases_risks_id',
-            'label' => __('Risk','Risks', 'releases'),
+            'label' => _n('Risk','Risks', 1,'releases'),
             'type'  => 'dropdownRisks',
          ],
          ['name'  => 'content',

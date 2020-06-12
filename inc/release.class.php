@@ -61,6 +61,7 @@ class PluginReleasesRelease extends CommonDBTM {
    const REVIEW = 15; // reviewed
    const CLOSE = 16; // closed
 
+   static $typeslinkable = ["Computer" => "Computer","Appliance" => "Appliance" ];
 
 
 
@@ -325,6 +326,7 @@ class PluginReleasesRelease extends CommonDBTM {
       $this->addDefaultFormTab($ong);
       $this->addStandardTab(PluginReleasesChange_Release::getType(), $ong, $options);
       $this->addStandardTab(KnowbaseItem_Item::getType(), $ong, $options);
+      $this->addStandardTab(PluginReleasesRelease_Item::getType(), $ong, $options);
       $this->addStandardTab(PluginReleasesRisk::getType(), $ong, $options);
       $this->addStandardTab(PluginReleasesTest::getType(), $ong, $options);
       $this->addStandardTab(PluginReleasesRollback::getType(), $ong, $options);
@@ -521,26 +523,26 @@ class PluginReleasesRelease extends CommonDBTM {
 
             self::NEWRELEASE => _x('status', 'New'),
             self::RELEASEDEFINITION => __( 'Release area defined','releases'),
-            self::DATEDEFINITION  => __('Date defined', 'releases'),
+            self::DATEDEFINITION  => __('Dates defined', 'releases'),
             self::CHANGEDEFINITION  => __('Changes defined','releases'),
             self::RISKDEFINITION   => __('Risks defined', 'releases'),
             self::TESTDEFINITION   => __('Tests defined', 'releases'),
             self::ROLLBACKDEFINITION   => __('Rollbacks defined', 'releases'),
             self::FINALIZE   => __('Finalized', 'releases'),
             self::REVIEW   => __('Reviewed', 'releases'),
-            self::CLOSE   => _x('status','Close')];
+            self::CLOSE   => _x('status','Closed')];
       }else{
          $tab = [
             self::NEWRELEASE => _x('status', 'New'),
             self::RELEASEDEFINITION => __( 'Release area defined','releases'),
-            self::DATEDEFINITION  => __('Date defined', 'releases'),
+            self::DATEDEFINITION  => __('Dates defined', 'releases'),
             self::CHANGEDEFINITION  => __('Changes defined','releases'),
             self::RISKDEFINITION   => __('Risks defined', 'releases'),
             self::TESTDEFINITION   => __('Tests defined', 'releases'),
             self::ROLLBACKDEFINITION   => __('Rollbacks defined', 'releases'),
             self::FINALIZE   => __('Finalized', 'releases'),
             self::REVIEW   => __('Reviewed', 'releases'),
-            self::CLOSE   => _x('status','Close')];
+            self::CLOSE   => _x('status','Closed')];
       }
 
 
@@ -983,34 +985,30 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __('Risk','releases');
+      echo _n('Risk','Risks', 2,'releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("risk_state"));
       echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
       echo "<td>";
 
-      echo __('Test','releases');
+      echo _n('Test','Tests',2,'releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("test_state"));
       echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
+
       echo "<td>";
-      echo __('Rollback','releases');
+      echo _n('Rollback','Rollbacks',2,'releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("rollback_state"));
       echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
+
       echo "<td>";
-      echo __('Deploy Task','releases');
+      echo _n('Deploy Task','Deploy Tasks',2,'releases');
       echo "</td>";
-      echo "<td>";
+      echo "<td class='left'>";
       $dtF = self::countForItem($ID,PluginReleasesDeployTask::class,1);
       $dtT = self::countForItem($ID ,PluginReleasesDeployTask::class);
       if($dtT !=0 ){
@@ -1101,19 +1099,28 @@ class PluginReleasesRelease extends CommonDBTM {
 
        }
 
-      }
-      function getField($field) {
+   }
 
-         if($field == "content"){
-            return $this->fields["service_shutdown_details"];
-         }else{
-            return parent::getField($field);
-         }
-         if (array_key_exists($field, $this->fields)) {
-            return $this->fields[$field];
-         }
-         return NOT_AVAILABLE;
+   function getField($field) {
+
+      if($field == "content"){
+         return $this->fields["service_shutdown_details"];
+      }else{
+         return parent::getField($field);
       }
+      if (array_key_exists($field, $this->fields)) {
+         return $this->fields[$field];
+      }
+      return NOT_AVAILABLE;
+   }
+
+   function getNameAlert(){
+      return $this->fields["name"];
+   }
+
+   function getContentAlert(){
+      return $this->fields["service_shutdown_details"];
+   }
 
 
 
@@ -1691,6 +1698,26 @@ class PluginReleasesRelease extends CommonDBTM {
 //      Html::closeForm();
    }
 
+   function getLinkedItems() {
+      global $DB;
+
+      $iterator = $DB->request([
+         'SELECT' => ['itemtype', 'items_id'],
+         'FROM'   => 'glpi_plugin_releases_releases_items',
+         'WHERE'  => ['plugin_releases_releases_id' => $this->getID()]
+      ]);
+
+      $tab = [];
+      while ($data = $iterator->next()) {
+         $tab[$data['itemtype']][$data['items_id']] = $data['items_id'];
+      }
+      return $tab;
+   }
+
+   static function showListForItem(CommonDBTM $item, $withtemplate = 0) {
+      //TODO to display release link to other items
+      //Use showListForItem in problem or change for example
+   }
    /**
     * @return array
     */
@@ -1718,6 +1745,7 @@ class PluginReleasesRelease extends CommonDBTM {
 
       return $menu;
    }
+
 
    static function getIcon() {
       return "fas fa-tags";
