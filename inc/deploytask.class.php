@@ -72,45 +72,45 @@ class PluginReleasesDeployTask extends CommonDBTM {
 
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-
-      if ($item->getType() == self::getType()) {
-        return self::getTypeName(2);
-      } else if ($item->getType() == PluginReleasesRelease::getType()){
-         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
-      }
-
-      return '';
-   }
-   static function countForItem(CommonDBTM $item) {
-      $dbu = new DbUtils();
-      $table = CommonDBTM::getTable(PluginReleasesDeployTask::class);
-      return $dbu->countElementsInTable($table,
-         ["plugin_releases_releases_id" => $item->getID()]);
-   }
-
-
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
-      if ($item->getType() == PluginReleasesRelease::getType()) {
-         $self = new self();
-         if(self::canView()){
-            $self->showScripts($item);
-         }else{
-            echo "<div class='center'><br><br>";
-            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
-         }
-
-      }
-
-   }
-   function defineTabs($options = []) {
-
-      $ong = [];
-      $this->addDefaultFormTab($ong);
-      return $ong;
-   }
+//   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+//
+//      if ($item->getType() == self::getType()) {
+//        return self::getTypeName(2);
+//      } else if ($item->getType() == PluginReleasesRelease::getType()){
+//         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
+//      }
+//
+//      return '';
+//   }
+//   static function countForItem(CommonDBTM $item) {
+//      $dbu = new DbUtils();
+//      $table = CommonDBTM::getTable(PluginReleasesDeployTask::class);
+//      return $dbu->countElementsInTable($table,
+//         ["plugin_releases_releases_id" => $item->getID()]);
+//   }
+//
+//
+//   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+//      global $CFG_GLPI;
+//      if ($item->getType() == PluginReleasesRelease::getType()) {
+//         $self = new self();
+//         if(self::canView()){
+//            $self->showScripts($item);
+//         }else{
+//            echo "<div class='center'><br><br>";
+//            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+//            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
+//         }
+//
+//      }
+//
+//   }
+//   function defineTabs($options = []) {
+//
+//      $ong = [];
+//      $this->addDefaultFormTab($ong);
+//      return $ong;
+//   }
 /**
 * Type than could be linked to a Rack
 *
@@ -623,24 +623,24 @@ class PluginReleasesDeployTask extends CommonDBTM {
       }
 
       $who       = $parm['who'];
-      $who_group = $parm['who_group'];
+      $who_group = $parm['whogroup'];
       $begin     = $parm['begin'];
       $end       = $parm['end'];
       // Get items to print
       $ASSIGN = "";
 
-      if ($who_group === "mine") {
-         if (count($_SESSION["glpigroups"])) {
-            $groups = implode("','", $_SESSION['glpigroups']);
-            $ASSIGN = " `glpi_plugin_releases_deploytasks`.`users_id_tech` IN (SELECT DISTINCT `users_id`
-                                    FROM `glpi_groups_users`
-                                    WHERE `groups_id` IN ('$groups'))
-                                          AND ";
-         } else { // Only personal ones
-            $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id_tech` = '$who'
-                     AND ";
-         }
-      } else {
+//      if ($who_group === "mine") {
+//         if (count($_SESSION["glpigroups"])) {
+//            $groups = implode("','", $_SESSION['glpigroups']);
+//            $ASSIGN = " `glpi_plugin_releases_deploytasks`.`users_id_tech` IN (SELECT DISTINCT `users_id`
+//                                    FROM `glpi_groups_users`
+//                                    WHERE `groups_id` IN ('$groups'))
+//                                          AND ";
+//         } else { // Only personal ones
+//            $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id_tech` = '$who'
+//                     AND ";
+//         }
+//      } else {
          if ($who > 0) {
             $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id_tech` = '$who'
                      AND ";
@@ -651,7 +651,7 @@ class PluginReleasesDeployTask extends CommonDBTM {
                                     WHERE `groups_id` = '$who_group')
                                           AND ";
          }
-      }
+//      }
       if (empty($ASSIGN)) {
          $ASSIGN = "`glpi_plugin_releases_deploytasks`.`users_id` IN (SELECT DISTINCT `glpi_profiles_users`.`users_id`
                                  FROM `glpi_profiles`

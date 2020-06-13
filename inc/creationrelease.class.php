@@ -34,95 +34,51 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginReleasesCreationRelease
  */
-class PluginReleasesCreationRelease extends CommonDBTM {
-
-   public $dohistory = true;
-   static $rightname = 'plugin_releases_releases';
-   protected $usenotepad = true;
-   static $types = [];
-
-
-   /**
-    * @param int $nb
-    *
-    * @return translated
-    */
-   static function getTypeName($nb = 0) {
-
-      return _n('Release', 'Releases', $nb, 'releases');
-   }
-   static function getMenuName($nb = 1) {
-      return __('Release', 'releases');
-   }
-
-
-
-
-
-
-
-
-
-
-   function initShowForm($ID, $options = []){
-
-
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-   }
-
-   function closeShowForm($options){
-      $this->showFormButtons($options);
-   }
-
-   function showForm($ID, $options = []) {
-
-      $this->initShowForm($ID,$options);
-
-      $this->coreShowForm($ID,$options);
-      $this->closeShowForm($options);
-
-      return true;
-   }
-
-   function displayMenu($ID, $options = []) {
-      echo "<div class='center'>";
-      echo "<table class='tab_cadre'>";
-      echo "<tr  class='tab_bg_1'>";
-      echo "<th>" . __("Release","releases") . "</th>";
-      echo "</tr>";
-      echo "<tr  class='tab_bg_1'>";
-      echo "<td class='center b' >";
-      $item = new PluginReleasesReleasetemplate();
-      $dbu = new DbUtils();
-      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      PluginReleasesReleasetemplate::dropdown(["name"=>"releasetemplates_id"]+$condition);
-      $url = PluginReleasesRelease::getFormURL();
-      echo "<a  id='link' href='$url'>";
-      $url = $url."?template_id=";
-      $script = "
-      var link = function (id,linkurl) {
-         var link = linkurl+id;
-         $(\"a#link\").attr(\"href\", link);
-      };
-      $(\"select[name='releasetemplates_id']\").change(function() {
-         link($(\"select[name='releasetemplates_id']\").val(),'$url');
-         });";
-
-
-      echo Html::scriptBlock('$(document).ready(function() {'.$script.'});');
-            echo "<br/><br/>";
-      echo __("Create a release", 'releases');
-      echo "</a>";
-
-      //      echo "<tr class='tab_bg_1'>";
-      //      $this->displayItemMenuCMDB(__("Configure links", 'cmdb'), "typelink.php", "iconTypelink.png");
-      //      $this->displayItemMenuCMDB(__("Display Baseline", 'cmdb'), "baseline.php", "iconBaseline.png");
-      //      echo "</tr>";
-      echo "</table>";
-      echo "</div>";
-   }
-
-}
+//class PluginReleasesCreationRelease extends CommonDBTM {
+//
+//   public $dohistory = true;
+//   static $rightname = 'plugin_releases_releases';
+//   protected $usenotepad = true;
+//   static $types = [];
+//
+//
+//   /**
+//    * @param int $nb
+//    *
+//    * @return translated
+//    */
+//   static function getTypeName($nb = 0) {
+//
+//      return _n('Release', 'Releases', $nb, 'releases');
+//   }
+//   static function getMenuName($nb = 1) {
+//      return __('Release', 'releases');
+//   }
+//
+//
+//   function initShowForm($ID, $options = []){
+//
+//
+//      $this->initForm($ID, $options);
+//      $this->showFormHeader($options);
+//
+//   }
+//
+//   function closeShowForm($options){
+//      $this->showFormButtons($options);
+//   }
+//
+//   function showForm($ID, $options = []) {
+//
+//      $this->initShowForm($ID,$options);
+//
+//      $this->coreShowForm($ID,$options);
+//      $this->closeShowForm($options);
+//
+//      return true;
+//   }
+//
+//
+//
+//}
 

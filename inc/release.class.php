@@ -35,36 +35,34 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginReleasesRelease
  */
-class PluginReleasesRelease extends CommonDBTM {
+class PluginReleasesRelease extends CommonITILObject {
 
-   public $dohistory = true;
-   static $rightname = 'plugin_releases_releases';
+   public    $dohistory  = true;
+   static    $rightname  = 'plugin_releases_releases';
    protected $usenotepad = true;
-   static $types = [];
+   static    $types      = [];
 
    // STATUS
-   const TODO = 1; // todo
-   const DONE = 2; // done
+   const TODO       = 1; // todo
+   const DONE       = 2; // done
    const PROCESSING = 3; // processing
-   const WAITING = 4; // waiting
-   const LATE = 5; // late
-   const DEF = 6; // default
+   const WAITING    = 4; // waiting
+   const LATE       = 5; // late
+   const DEF        = 6; // default
 
-   const NEWRELEASE = 7;
-   const RELEASEDEFINITION = 8; // default
-   const DATEDEFINITION = 9; // date definition
-   const CHANGEDEFINITION = 10; // changes defenition
-   const RISKDEFINITION = 11; // risks definition
-   const TESTDEFINITION = 12; // tests definition
+   const NEWRELEASE         = 7;
+   const RELEASEDEFINITION  = 8; // default
+   const DATEDEFINITION     = 9; // date definition
+   const CHANGEDEFINITION   = 10; // changes defenition
+   const RISKDEFINITION     = 11; // risks definition
+   const TESTDEFINITION     = 12; // tests definition
    const ROLLBACKDEFINITION = 13; // rollbacks definition
-   const FINALIZE = 14; // finalized
-   const REVIEW = 15; // reviewed
-   const CLOSE = 16; // closed
+   const FINALIZE           = 14; // finalized
+   const REVIEW             = 15; // reviewed
+   const CLOSED             = 16; // closed
 
-   static $typeslinkable = ["Computer" => "Computer","Appliance" => "Appliance" ];
-
-
-
+   static $typeslinkable = ["Computer"  => "Computer",
+                            "Appliance" => "Appliance"];
 
    /**
     * @param int $nb
@@ -76,19 +74,91 @@ class PluginReleasesRelease extends CommonDBTM {
       return _n('Release', 'Releases', $nb, 'releases');
    }
 
-   static function countForItem($ID,$class,$state = 0) {
-      $dbu = new DbUtils();
+   static function countForItem($ID, $class, $state = 0) {
+      $dbu   = new DbUtils();
       $table = CommonDBTM::getTable($class);
-      if($state){
+      if ($state) {
          return $dbu->countElementsInTable($table,
-            ["plugin_releases_releases_id" => $ID,"state"=>2]);
+                                           ["plugin_releases_releases_id" => $ID, "state" => 2]);
       }
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releases_id" => $ID]);
+                                        ["plugin_releases_releases_id" => $ID]);
    }
 
 
-   //TODO
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+
+      if (static::canView()) {
+         switch ($item->getType()) {
+            case __CLASS__ :
+               $timeline    = $item->getTimelineItems();
+               $nb_elements = count($timeline);
+
+               $ong = [
+                  1 => __("Processing release", 'releases') . " <sup class='tab_nb'>$nb_elements</sup>",
+               ];
+               //TODO create own class - for own tab position
+               if ($item->canUpdate()) {
+                  $ong[2] = __("Finalization", 'releases');
+               }
+
+               return $ong;
+            case "Change" :
+               return self::createTabEntry(self::getTypeName(2), self::countItemForAChange($item));
+         }
+      }
+      return '';
+   }
+
+
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+
+      switch ($item->getType()) {
+         case __CLASS__ :
+            switch ($tabnum) {
+               case 1 :
+                  echo "<div class='timeline_box'>";
+                  $rand = mt_rand();
+                  $item->showTimelineForm($rand);
+                  $item->showTimeline($rand);
+                  echo "</div>";
+                  break;
+               case 2 :
+                  $item->showFinalisationTabs($item->getID());
+                  break;
+            }
+            break;
+         case "Change" :
+            PluginReleasesChange_Release::showReleaseFromChange($item);
+            break;
+      }
+      return true;
+   }
+
+   static function countItemForAChange($item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(PluginReleasesChange_Release::class);
+      return $dbu->countElementsInTable($table,
+                                        ["changes_id" => $item->getID()]);
+   }
+
+   function defineTabs($options = []) {
+
+      $ong = [];
+      $this->defineDefaultObjectTabs($ong, $options);
+      $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
+      $this->addStandardTab('Document_Item', $ong, $options);
+      $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
+      $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
+      if ($this->hasImpactTab()) {
+         $this->addStandardTab('Impact', $ong, $options);
+      }
+      $this->addStandardTab('PluginReleasesReview', $ong, $options);
+      $this->addStandardTab('Notepad', $ong, $options);
+      $this->addStandardTab('Log', $ong, $options);
+      return $ong;
+   }
+
    /**
     * @return array
     */
@@ -97,368 +167,76 @@ class PluginReleasesRelease extends CommonDBTM {
       $tab = [];
 
       $tab[] = [
-         'id' => 'common',
+         'id'   => 'common',
          'name' => self::getTypeName(2)
       ];
 
       $tab[] = [
-         'id' => '1',
-         'table' => $this->getTable(),
-         'field' => 'name',
-         'name' => __('name'),
-         'datatype' => 'itemlink',
+         'id'            => '1',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('name'),
+         'datatype'      => 'itemlink',
          'itemlink_type' => $this->getType()
       ];
       $tab[] = [
-         'id' => '2',
-         'table' => $this->getTable(),
-         'field' => 'release_area',
-         'name' => __('Release Area','releases'),
+         'id'            => '2',
+         'table'         => $this->getTable(),
+         'field'         => 'content',
+         'name'          => __('Description'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'text',
+         'htmltext'      => true
       ];
       $tab[] = [
-         'id' => '3',
-         'table' => $this->getTable(),
-         'field' => 'date_preproduction',
-         'name' =>  __('Pre-production run date','releases'),
+         'id'            => '3',
+         'table'         => $this->getTable(),
+         'field'         => 'date_preproduction',
+         'name'          => __('Pre-production run date', 'releases'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'date'
       ];
       $tab[] = [
-         'id' => '4',
-         'table' => $this->getTable(),
-         'field' => 'is_recursive',
-         'name' =>  __('Number of risk','releases'),
+         'id'            => '4',
+         'table'         => $this->getTable(),
+         'field'         => 'is_recursive',
+         'name'          => __('Number of risks', 'releases'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'date'
       ];
       $tab[] = [
-         'id' => '5',
-         'table' => $this->getTable(),
-         'field' => 'name',
-         'name' =>  __('Number of test','releases'),
+         'id'            => '5',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('Number of tests', 'releases'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id' => '6',
-         'table' => $this->getTable(),
-         'field' => 'service_shutdown',
-         'name' =>  __('Number of task','releases'),
+         'id'            => '6',
+         'table'         => $this->getTable(),
+         'field'         => 'service_shutdown',
+         'name'          => __('Number of tasks', 'releases'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id' => '7',
-         'table' => $this->getTable(),
-         'field' => 'state',
-         'name' =>  __('Status'),
+         'id'            => '7',
+         'table'         => $this->getTable(),
+         'field'         => 'status',
+         'name'          => __('Status'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id' => '8',
-         'table' => $this->getTable(),
-         'field' => 'date_production',
-         'name' =>  __('Production run date','releases'),
+         'id'            => '8',
+         'table'         => $this->getTable(),
+         'field'         => 'date_production',
+         'name'          => __('Production run date', 'releases'),
          'massiveaction' => false,
-         'datatype' => 'specific'
+         'datatype'      => 'date'
       ];
       return $tab;
-
-   }
-
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-
-      if ($item->getType() == self::getType()) {
-        return __("Finalization",'releases');
-      }
-      if ($item->getType() == Change::getType()) {
-         return self::createTabEntry(self::getTypeName(2), self::countItemForAChange($item));
-
-      }
-
-      return '';
-   }
-
-   static function countItemForAChange($item){
-      $dbu = new DbUtils();
-      $table = CommonDBTM::getTable(PluginReleasesChange_Release::class);
-      return $dbu->countElementsInTable($table,
-         ["changes_id" => $item->getID()]);
-   }
-
-
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI,$DB;
-      if ($item->getType() == self::getType()) {
-         $self = new self();
-         $self->showFinalisationTabs($item->getID());
-      }
-      if ($item->getType() == Change::getType()) {
-         $change_release = new PluginReleasesChange_Release();
-//         if($change_release->getFromDBByCrit(['changes_id'=>$item->getID()])){
-//            $release = new self();
-//            $release->showForm($change_release->getField("plugin_releases_releases_id"),["changestabs"=>1]);
-//
-//         }else{
-            $self = new self();
-            $self->showCreateRelease($item);
-//         }
-         $ID = $item->getID();
-         $canedit = PluginReleasesRelease::canUpdate();
-         $rand = mt_rand();
-
-         $iterator = $DB->request([
-            'SELECT' => [
-                           'glpi_plugin_releases_changes_releases.id AS linkid',
-                           'glpi_plugin_releases_releases.*'
-                         ],
-            'DISTINCT' => true,
-            'FROM' => 'glpi_plugin_releases_changes_releases',
-            'LEFT JOIN' => [
-               'glpi_plugin_releases_releases' => [
-                  'ON' => [
-                     'glpi_plugin_releases_changes_releases' => 'plugin_releases_releases_id',
-                     'glpi_plugin_releases_releases' => 'id'
-                  ]
-               ]
-            ],
-            'WHERE' => [
-               'glpi_plugin_releases_changes_releases.changes_id' => $ID,
-            ],
-            'ORDERBY' => [
-               'glpi_plugin_releases_releases.name'
-            ]
-         ]);
-
-         $changes = [];
-         $used = [];
-         $numrows = count($iterator);
-         while ($data = $iterator->next()) {
-            $changes[$data['id']] = $data;
-
-         }
-         $i = 0;
-         $row_num = 1;
-         if ($canedit && $numrows) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-               'container' => 'mass' . __CLASS__ . $rand];
-            Html::showMassiveActions($massiveactionparams);
-         }
-         echo "<table class='tab_cadre_fixehov'>";
-         echo "<tr class='noHover'><th colspan='6'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
-         echo "</tr>";
-         if ($numrows) {
-            echo "<tr  class='tab_bg_1'>";
-            if ($canedit && $numrows) {
-
-               echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
-            }
-
-            echo "<th>" . __('Name') . "</th>";
-            echo "<th>" . __('Status') . "</th>";
-            echo "<th>" . __('Release Area','releases') . "</th>";
-            echo "<th>" . __('Pre-production planned date','releases') . "</th>";
-            echo "<th>" .  __('Service shutdown','releases') . "</th>";
-            echo "</tr>";
-            foreach ($changes as $idc => $d){
-
-               Session::addToNavigateListItems(self::getType(), $d["id"]);
-               $i++;
-               $row_num++;
-               echo "<tr class='tab_bg_1 center'>";
-               echo "<td width='10'>";
-               if ($canedit) {
-                  Html::showMassiveActionCheckBox(__CLASS__, $d["id"]);
-               }
-               echo "</td>";
-
-               echo "<td class='center'>";
-               echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/front/release.form.php?id=" . $idc . "'>";
-               echo $d["name"];
-               if ($_SESSION["glpiis_ids_visible"] || empty($d["name"])) {
-                  echo " (" . $idc . ")";
-               }
-               echo "</a></td>";
-               echo "<td >";
-               $var = "<span class='status'>";
-               $var .=  self::getStatusIcon($d["state"]);
-               $var .= self::getStatus($d["state"]);
-               $var .= "</span>";
-               echo $var;
-               echo "</td >";
-               echo "<td >";
-               echo Html::resume_text(Html::Clean($d["release_area"]));
-               echo "</td >";
-               echo "<td >";
-               echo Html::convDate($d["date_preproduction"]);
-               echo "</td >";
-               echo "<td >";
-               $tab =[1=>__("Yes"),0=>__("No")];
-               echo $tab[$d["service_shutdown"]];
-               echo "</td >";
-               echo "</tr>";
-            }
-//            echo "<th>" . __('User') . "</th>";
-//            echo "<th>" . __('Group') . "</th>";
-//
-//            echo "<th>" . __('Task type', 'presales') . "</th>";
-
-         }
-         echo "</table>";
-         if ($canedit && $numrows) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-         }
-
-      }
-
-
-
-   }
-   function defineTabs($options = []) {
-
-      $ong = [];
-      $this->addDefaultFormTab($ong);
-      $this->addStandardTab(PluginReleasesChange_Release::getType(), $ong, $options);
-      $this->addStandardTab(KnowbaseItem_Item::getType(), $ong, $options);
-      $this->addStandardTab(PluginReleasesRelease_Item::getType(), $ong, $options);
-      $this->addStandardTab(PluginReleasesRisk::getType(), $ong, $options);
-      $this->addStandardTab(PluginReleasesTest::getType(), $ong, $options);
-      $this->addStandardTab(PluginReleasesRollback::getType(), $ong, $options);
-      $this->addStandardTab(PluginReleasesDeployTask::getType(), $ong, $options);
-      $this->addStandardTab(self::getType(), $ong, $options);
-      $this->addStandardTab(PluginReleasesReview::getType(), $ong, $options);
-      return $ong;
-   }
-
-   /**
-    * @param datas $input
-    *
-    * @return datas
-    */
-   function prepareInputForAdd($input) {
-
-      if ((isset($input['target']) && empty($input['target'])) || !isset($input['target']) ) {
-         $input['target'] = [];
-      }
-       $input['target'] = json_encode($input['target']);
-      if(!empty($input["date_preproduction"]) && $input["date_preproduction"] !="0000-00-00 00:00:00"  && !empty($input["date_production"]) && $input["date_production"] !="0000-00-00 00:00:00" && $input["state"]<self::DATEDEFINITION  ){
-
-         $input['state'] = self::DATEDEFINITION;
-
-      }else if (!empty($input["release_area"])  &&  $input["state"]<self::RELEASEDEFINITION  ){
-
-         $input['state'] = self::RELEASEDEFINITION;
-
-      }
-      return $input;
-   }
-
-
-
-   /**
-    * Actions done after the ADD of the item in the database
-    *
-    * @return void
-    **/
-   function post_addItem() {
-      global $DB;
-      if(isset($this->input["releasetemplates_id"])){
-         $template = new PluginReleasesReleasetemplate();
-         $template->getFromDB($this->input["releasetemplates_id"]);
-         $tests= json_decode($template->getField("tests"));
-         $rollbacks= json_decode($template->getField("rollbacks"));
-         $tasks= json_decode($template->getField("tasks"));
-         $risks = [];
-         $releaseTest = new PluginReleasesTest();
-         $testTemplate = new PluginReleasesTesttemplate();
-         $releaseTask = new PluginReleasesDeployTask();
-         $taskTemplate = new PluginReleasesDeploytasktemplate();
-         $releaseRollback = new PluginReleasesRollback();
-         $rollbackTemplate = new PluginReleasesRollbacktemplate();
-         $releaseRisk = new PluginReleasesRisk();
-         $riskTemplate = new PluginReleasesRisktemplate();
-
-         foreach ($tests as $test ){
-            if($testTemplate->getFromDB($test)){
-               $input = $testTemplate->fields;
-               $input["plugin_releases_releases_id"] = $this->getID();
-               if($riskTemplate->getFromDB($input["plugin_releases_risks_id"])){
-                  if(array_key_exists($input["plugin_releases_risks_id"],$risks)){
-                     $input["plugin_releases_risks_id"] = $risks[$input["plugin_releases_risks_id"]];
-                  }else {
-                     $inputRisk = $riskTemplate->fields;
-                     $inputRisk["plugin_releases_releases_id"] = $this->getID();
-                     unset($inputRisk["id"]);
-                     $idRisk = $releaseRisk->add($inputRisk);
-                     $risks[$input["plugin_releases_risks_id"]] = $idRisk;
-                     $input["plugin_releases_risks_id"] = $idRisk;
-                  }
-               }else{
-                  $input["plugin_releases_risks_id"] = 0;
-               }
-               unset($input["id"]);
-               $releaseTest->add($input);
-            }
-         }
-         foreach ($tasks as $task ){
-            if($taskTemplate->getFromDB($task)){
-               $input = $taskTemplate->fields;
-               $input["plugin_releases_releases_id"] = $this->getID();
-               if($riskTemplate->getFromDB($input["plugin_releases_risks_id"])){
-                  if(array_key_exists($input["plugin_releases_risks_id"],$risks)){
-                     $input["plugin_releases_risks_id"] = $risks[$input["plugin_releases_risks_id"]];
-                  }else {
-                     $inputRisk = $riskTemplate->fields;
-                     $inputRisk["plugin_releases_releases_id"] = $this->getID();
-                     unset($inputRisk["id"]);
-                     $idRisk = $releaseRisk->add($inputRisk);
-                     $risks[$input["plugin_releases_risks_id"]] = $idRisk;
-                     $input["plugin_releases_risks_id"] = $idRisk;
-                  }
-               }else{
-                  $input["plugin_releases_risks_id"] = 0;
-               }
-               unset($input["id"]);
-               $releaseTask->add($input);
-            }
-         }
-         foreach ($rollbacks as $rollback ){
-            if($rollbackTemplate->getFromDB($rollback)){
-               $input = $rollbackTemplate->fields;
-               $input["plugin_releases_releases_id"] = $this->getID();
-               unset($input["id"]);
-               $releaseRollback->add($input);
-            }
-         }
-
-      }
-      if(isset($this->input["changes"])) {
-
-
-         foreach ($this->input["changes"] as $change) {
-            $release_change = new PluginReleasesChange_Release();
-            $vals = [];
-            $vals["changes_id"] = $change;
-            $vals["plugin_releases_releases_id"] = $this->getID();
-            $release_change->add($vals);
-         }
-      }
-//      $query = "INSERT INTO `glpi_plugin_release_globalstatues`
-//                             ( `plugin_release_releases_id`,`itemtype`, `state`)
-//                      VALUES (".$this->fields['id'].",'". PluginReleasesRisk::getType()."', 0),
-//                      (".$this->fields['id'].",'". PluginReleasesTest::getType()."', 0),
-//                      (".$this->fields['id'].",'". PluginReleasesRelease::getType()."', 0),
-//                      (".$this->fields['id'].",'". PluginReleasesDeployTask::getType()."', 0),
-//                      (".$this->fields['id'].",'PluginReleaseDate', 0),
-//                      (".$this->fields['id'].",'". PluginReleasesRollback::getType()."', 0)
-//                      ;";
-//      $DB->queryOrDie($query, "statues creation");
 
    }
 
@@ -479,27 +257,147 @@ class PluginReleasesRelease extends CommonDBTM {
          $values = [$field => $values];
       }
       switch ($field) {
-         case 'state':
+         case 'status':
             $var = "<span class='status'>";
-            $var .=  self::getStatusIcon($values["state"]);
-            $var .= self::getStatus($values["state"]);
+            $var .= self::getStatusIcon($values["status"]);
+            $var .= self::getStatus($values["status"]);
             $var .= "</span>";
             return $var;
             break;
-         case 'name':
-            return self::countForItem($options["raw_data"]["id"],PluginReleasesTest::class,1).' / '.self::countForItem($options["raw_data"]["id"],PluginReleasesTest::class);
-            break;
-         case 'is_recursive':
-            return self::countForItem($options["raw_data"]["id"],PluginReleasesRisk::class);
-            break;
          case 'service_shutdown':
-            return self::countForItem($options["raw_data"]["id"],PluginReleasesDeployTask::class,1).' / '.self::countForItem($options["raw_data"]["id"],PluginReleasesDeployTask::class);
-            break;
-         case 'release_area':
-            return Html::resume_text(Html::clean($values["release_area"]));
+            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeployTask::class, 1) . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeployTask::class);
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
+   }
+
+   /**
+    * @param datas $input
+    *
+    * @return datas
+    */
+   function prepareInputForAdd($input) {
+
+      if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
+         $input['target'] = [];
+      }
+      $input['target'] = json_encode($input['target']);
+      if (!empty($input["date_preproduction"])
+          && $input["date_preproduction"] != NULL
+          && !empty($input["date_production"])
+          && $input["date_production"] != NULL
+          && $input["status"] < self::DATEDEFINITION) {
+
+         $input['status'] = self::DATEDEFINITION;
+
+      } else if (!empty($input["content"]) && $input["status"] < self::RELEASEDEFINITION) {
+
+         $input['status'] = self::RELEASEDEFINITION;
+
+      }
+      return $input;
+   }
+
+
+   /**
+    * Actions done after the ADD of the item in the database
+    *
+    * @return void
+    **/
+   function post_addItem() {
+      global $DB;
+      if (isset($this->input["releasetemplates_id"])) {
+         $template = new PluginReleasesReleasetemplate();
+         $template->getFromDB($this->input["releasetemplates_id"]);
+         $tests            = json_decode($template->getField("tests"));
+         $rollbacks        = json_decode($template->getField("rollbacks"));
+         $tasks            = json_decode($template->getField("tasks"));
+         $risks            = [];
+         $releaseTest      = new PluginReleasesTest();
+         $testTemplate     = new PluginReleasesTesttemplate();
+         $releaseTask      = new PluginReleasesDeployTask();
+         $taskTemplate     = new PluginReleasesDeploytasktemplate();
+         $releaseRollback  = new PluginReleasesRollback();
+         $rollbackTemplate = new PluginReleasesRollbacktemplate();
+         $releaseRisk      = new PluginReleasesRisk();
+         $riskTemplate     = new PluginReleasesRisktemplate();
+
+         foreach ($tests as $test) {
+            if ($testTemplate->getFromDB($test)) {
+               $input                                = $testTemplate->fields;
+               $input["plugin_releases_releases_id"] = $this->getID();
+               if ($riskTemplate->getFromDB($input["plugin_releases_risks_id"])) {
+                  if (array_key_exists($input["plugin_releases_risks_id"], $risks)) {
+                     $input["plugin_releases_risks_id"] = $risks[$input["plugin_releases_risks_id"]];
+                  } else {
+                     $inputRisk                                = $riskTemplate->fields;
+                     $inputRisk["plugin_releases_releases_id"] = $this->getID();
+                     unset($inputRisk["id"]);
+                     $idRisk                                    = $releaseRisk->add($inputRisk);
+                     $risks[$input["plugin_releases_risks_id"]] = $idRisk;
+                     $input["plugin_releases_risks_id"]         = $idRisk;
+                  }
+               } else {
+                  $input["plugin_releases_risks_id"] = 0;
+               }
+               unset($input["id"]);
+               $releaseTest->add($input);
+            }
+         }
+         foreach ($tasks as $task) {
+            if ($taskTemplate->getFromDB($task)) {
+               $input                                = $taskTemplate->fields;
+               $input["plugin_releases_releases_id"] = $this->getID();
+               if ($riskTemplate->getFromDB($input["plugin_releases_risks_id"])) {
+                  if (array_key_exists($input["plugin_releases_risks_id"], $risks)) {
+                     $input["plugin_releases_risks_id"] = $risks[$input["plugin_releases_risks_id"]];
+                  } else {
+                     $inputRisk                                = $riskTemplate->fields;
+                     $inputRisk["plugin_releases_releases_id"] = $this->getID();
+                     unset($inputRisk["id"]);
+                     $idRisk                                    = $releaseRisk->add($inputRisk);
+                     $risks[$input["plugin_releases_risks_id"]] = $idRisk;
+                     $input["plugin_releases_risks_id"]         = $idRisk;
+                  }
+               } else {
+                  $input["plugin_releases_risks_id"] = 0;
+               }
+               unset($input["id"]);
+               $releaseTask->add($input);
+            }
+         }
+         foreach ($rollbacks as $rollback) {
+            if ($rollbackTemplate->getFromDB($rollback)) {
+               $input                                = $rollbackTemplate->fields;
+               $input["plugin_releases_releases_id"] = $this->getID();
+               unset($input["id"]);
+               $releaseRollback->add($input);
+            }
+         }
+
+      }
+      if (isset($this->input["changes"])) {
+
+
+         foreach ($this->input["changes"] as $change) {
+            $release_change                      = new PluginReleasesChange_Release();
+            $vals                                = [];
+            $vals["changes_id"]                  = $change;
+            $vals["plugin_releases_releases_id"] = $this->getID();
+            $release_change->add($vals);
+         }
+      }
+      //      $query = "INSERT INTO `glpi_plugin_release_globalstatues`
+      //                             ( `plugin_release_releases_id`,`itemtype`, `status`)
+      //                      VALUES (".$this->fields['id'].",'". PluginReleasesRisk::getType()."', 0),
+      //                      (".$this->fields['id'].",'". PluginReleasesTest::getType()."', 0),
+      //                      (".$this->fields['id'].",'". PluginReleasesRelease::getType()."', 0),
+      //                      (".$this->fields['id'].",'". PluginReleasesDeployTask::getType()."', 0),
+      //                      (".$this->fields['id'].",'PluginReleaseDate', 0),
+      //                      (".$this->fields['id'].",'". PluginReleasesRollback::getType()."', 0)
+      //                      ;";
+      //      $DB->queryOrDie($query, "statues creation");
+
    }
 
    /**
@@ -512,39 +410,38 @@ class PluginReleasesRelease extends CommonDBTM {
    static function getAllStatusArray($releasestatus = false) {
 
       // To be overridden by class
-      if($releasestatus){
+      if ($releasestatus) {
          $tab = [
-            self::TODO => __( 'To do'),
-            self::DONE => __( 'Done'),
-            self::PROCESSING  => __('In progress', 'releases'),
-            self::WAITING  => __('waiting','releases'),
-            self::LATE   => __('Late', 'releases'),
-            self::DEF   => __('Default', 'releases'),
+            self::TODO       => __('To do'),
+            self::DONE       => __('Done'),
+            self::PROCESSING => __('In progress', 'releases'),
+            self::WAITING    => __('waiting', 'releases'),
+            self::LATE       => __('Late', 'releases'),
+            self::DEF        => __('Default', 'releases'),
 
-            self::NEWRELEASE => _x('status', 'New'),
-            self::RELEASEDEFINITION => __( 'Release area defined','releases'),
-            self::DATEDEFINITION  => __('Dates defined', 'releases'),
-            self::CHANGEDEFINITION  => __('Changes defined','releases'),
-            self::RISKDEFINITION   => __('Risks defined', 'releases'),
-            self::TESTDEFINITION   => __('Tests defined', 'releases'),
-            self::ROLLBACKDEFINITION   => __('Rollbacks defined', 'releases'),
-            self::FINALIZE   => __('Finalized', 'releases'),
-            self::REVIEW   => __('Reviewed', 'releases'),
-            self::CLOSE   => _x('status','Closed')];
-      }else{
+            self::NEWRELEASE         => _x('status', 'New'),
+            self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
+            self::DATEDEFINITION     => __('Dates defined', 'releases'),
+            self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
+            self::RISKDEFINITION     => __('Risks defined', 'releases'),
+            self::TESTDEFINITION     => __('Tests defined', 'releases'),
+            self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
+            self::FINALIZE           => __('Finalized', 'releases'),
+            self::REVIEW             => __('Reviewed', 'releases'),
+            self::CLOSED             => _x('status', 'Closed')];
+      } else {
          $tab = [
-            self::NEWRELEASE => _x('status', 'New'),
-            self::RELEASEDEFINITION => __( 'Release area defined','releases'),
-            self::DATEDEFINITION  => __('Dates defined', 'releases'),
-            self::CHANGEDEFINITION  => __('Changes defined','releases'),
-            self::RISKDEFINITION   => __('Risks defined', 'releases'),
-            self::TESTDEFINITION   => __('Tests defined', 'releases'),
-            self::ROLLBACKDEFINITION   => __('Rollbacks defined', 'releases'),
-            self::FINALIZE   => __('Finalized', 'releases'),
-            self::REVIEW   => __('Reviewed', 'releases'),
-            self::CLOSE   => _x('status','Closed')];
+            self::NEWRELEASE         => _x('status', 'New'),
+            self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
+            self::DATEDEFINITION     => __('Dates defined', 'releases'),
+            self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
+            self::RISKDEFINITION     => __('Risks defined', 'releases'),
+            self::TESTDEFINITION     => __('Tests defined', 'releases'),
+            self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
+            self::FINALIZE           => __('Finalized', 'releases'),
+            self::REVIEW             => __('Reviewed', 'releases'),
+            self::CLOSED             => _x('status', 'Closed')];
       }
-
 
 
       return $tab;
@@ -553,9 +450,9 @@ class PluginReleasesRelease extends CommonDBTM {
    /**
     * Get status icon
     *
+    * @return string
     * @since 9.3
     *
-    * @return string
     */
    public static function getStatusIcon($status) {
       $class = static::getStatusClass($status);
@@ -566,13 +463,13 @@ class PluginReleasesRelease extends CommonDBTM {
    /**
     * Get ITIL object status Name
     *
-    * @since 0.84
+    * @param integer $value status ID
+    **@since 0.84
     *
-    * @param integer $value     status ID
-    **/
+    */
    static function getStatus($value) {
 
-      $tab  = static::getAllStatusArray(true);
+      $tab = static::getAllStatusArray(true);
       // Return $value if not defined
       return (isset($tab[$value]) ? $tab[$value] : $value);
    }
@@ -580,9 +477,9 @@ class PluginReleasesRelease extends CommonDBTM {
    /**
     * Get status class
     *
+    * @return string
     * @since 9.3
     *
-    * @return string
     */
    public static function getStatusClass($status) {
       $class = null;
@@ -594,7 +491,7 @@ class PluginReleasesRelease extends CommonDBTM {
             break;
          case self::DONE :
             $class = 'circle';
-//            $solid = false;
+            //            $solid = false;
             break;
          case self::PROCESSING :
             $class = 'circle';
@@ -604,7 +501,7 @@ class PluginReleasesRelease extends CommonDBTM {
             break;
          case self::LATE :
             $class = 'circle';
-//            $solid = false;
+            //            $solid = false;
             break;
          case self::DEF :
             $class = 'circle';
@@ -644,7 +541,7 @@ class PluginReleasesRelease extends CommonDBTM {
             $class = 'circle';
             $solid = false;
             break;
-         case self::CLOSE :
+         case self::CLOSED :
             $class = 'circle';
             break;
 
@@ -657,16 +554,16 @@ class PluginReleasesRelease extends CommonDBTM {
 
       return $class == null
          ? ''
-         : 'releasestatus ' . ($solid ? 'fas fa-' : 'far fa-') . $class.
-         " ".self::getStatusKey($status);
+         : 'releasestatus ' . ($solid ? 'fas fa-' : 'far fa-') . $class .
+           " " . self::getStatusKey($status);
    }
 
    /**
     * Get status key
     *
+    * @return string
     * @since 9.3
     *
-    * @return string
     */
    public static function getStatusKey($status) {
       $key = '';
@@ -677,7 +574,6 @@ class PluginReleasesRelease extends CommonDBTM {
          case self::TODO :
             $key = 'todo';
             break;
-
          case self::WAITING :
             $key = 'waiting';
             break;
@@ -717,7 +613,7 @@ class PluginReleasesRelease extends CommonDBTM {
          case self::REVIEW :
             $key = 'review';
             break;
-         case self::CLOSE :
+         case self::CLOSED :
             $key = 'closerelease';
             break;
 
@@ -733,29 +629,32 @@ class PluginReleasesRelease extends CommonDBTM {
     */
    function prepareInputForUpdate($input) {
 
-      if ((isset($input['target']) && empty($input['target']))||!isset($input['target'])) {
+      if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
          $input['target'] = [];
       }
       $input['target'] = json_encode($input['target']);
-      if(!empty($input["date_preproduction"])  && !empty($input["date_production"]) && $input["state"]<self::DATEDEFINITION  ){
+      if (!empty($input["date_preproduction"])
+          && !empty($input["date_production"])
+          && $input["status"] < self::DATEDEFINITION) {
 
-         $input['state'] = self::DATEDEFINITION;
+         $input['status'] = self::DATEDEFINITION;
 
-      }else if (!empty($input["release_area"])  &&  $input["state"]<self::RELEASEDEFINITION  ){
+      } else if (!empty($input["content"])
+                 && $input["status"] < self::RELEASEDEFINITION) {
 
-         $input['state'] = self::RELEASEDEFINITION;
+         $input['status'] = self::RELEASEDEFINITION;
 
       }
       return $input;
    }
 
    /**
-* Type than could be linked to a Rack
-*
-* @param $all boolean, all type, or only allowed ones
-*
-* @return array of types
-* */
+    * Type than could be linked to a Rack
+    *
+    * @param $all boolean, all type, or only allowed ones
+    *
+    * @return array of types
+    * */
    static function getTypes($all = false) {
 
       if ($all) {
@@ -778,7 +677,7 @@ class PluginReleasesRelease extends CommonDBTM {
       return $types;
    }
 
-   function initShowForm($ID, $options = []){
+   function initShowForm($ID, $options = []) {
 
 
       $this->initForm($ID, $options);
@@ -786,51 +685,53 @@ class PluginReleasesRelease extends CommonDBTM {
 
    }
 
-   function closeShowForm($options){
+   function closeShowForm($options) {
       $this->showFormButtons($options);
    }
 
    function showForm($ID, $options = []) {
-      global $DB,$CFG_GLPI;
-     // echo "<div style='display: inline-flex;'>";
-      $this->initShowForm($ID,$options);
+      global $DB, $CFG_GLPI;
+      // echo "<div style='display: inline-flex;'>";
+      $this->initShowForm($ID, $options);
 
-      $this->coreShowForm($ID,$options);
+      $this->coreShowForm($ID, $options);
       $this->closeShowForm($options);
-     /* $var = '<div id="workflow" class="workflow"></div>';
+      /* $var = '<div id="workflow" class="workflow"></div>';
 
 
-      echo $var;
-      Ajax::updateItem("workflow",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/workflow.php",
-         ["id"=>$ID]);
-      echo "</div>";*/
+       echo $var;
+       Ajax::updateItem("workflow",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/workflow.php",
+          ["id"=>$ID]);
+       echo "</div>";*/
 
       return true;
    }
-   function prepareField($template_id){
-      $template= new PluginReleasesReleasetemplate();
+
+   function prepareField($template_id) {
+      $template = new PluginReleasesReleasetemplate();
       $template->getFromDB($template_id);
 
-      foreach ($this->fields as $key => $field){
-         if($key!="id"){
+      foreach ($this->fields as $key => $field) {
+         if ($key != "id") {
             $this->fields[$key] = $template->getField($key);
          }
       }
    }
+
    function coreShowForm($ID, $options = []) {
       global $CFG_GLPI, $DB;
-      if(isset($options["template_id"])&&$options["template_id"]>0){
+      if (isset($options["template_id"]) && $options["template_id"] > 0) {
          $this->prepareField($options["template_id"]);
-         echo  Html::hidden("releasetemplates_id",["value"=>$options["template_id"]]);
+         echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
       }
       $select_changes = [];
-      if(isset($options["changes_id"])){
+      if (isset($options["changes_id"])) {
          $select_changes = [$options["changes_id"]];
-         if((isset($options["template_id"])&&$options["template_id"]=0 )|| !isset($options["template_id"])){
+         if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
             $c = new Change();
-            if($c->getFromDB($options["changes_id"])){
-               $this->fields["name"] = $c->getField("name");
-               $this->fields["release_area"] = $c->getField("content");
+            if ($c->getFromDB($options["changes_id"])) {
+               $this->fields["name"]        = $c->getField("name");
+               $this->fields["content"]     = $c->getField("content");
                $this->fields["entities_id"] = $c->getField("entities_id");
             }
 
@@ -839,131 +740,138 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name",["value"=>$this->getField('name')]);
-     
+      echo Html::input("name", ["value" => $this->getField('name')]);
+
       echo "</td>";
       echo "<td>";
-      if(isset($options["changestabs"])){
-         echo "<a href='".$this->getFormURL()."?id=$ID'>";
-         echo __('Go to the release',"releases");
+      if (isset($options["changestabs"])) {
+         echo "<a href='" . $this->getFormURL() . "?id=$ID'>";
+         echo __('Go to the release', "releases");
          echo "</a>";
       }
       echo "</td>";
       echo "<td>";
-      Dropdown::showFromArray('state',self::getAllStatusArray(false),['value'=>$this->getField('state')]);
-//      echo self::getStatus($this->getField('state'));
+      Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->getField('status')]);
+      //      echo self::getStatus($this->getField('status'));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Release area','releases') . "</td>";
+      echo "<td>" . __('Release area', 'releases') . "</td>";
       echo "<td colspan='3'>";
-       Html::textarea(["name"=>"release_area","enable_richtext"=>true,"value"=>$this->getField('release_area')]);
+      Html::textarea(["name"            => "content",
+                      "enable_richtext" => true,
+                      "value"           => $this->getField('content')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Pre-production planned run date','releases') . "</td>";
+      echo "<td>" . __('Pre-production planned run date', 'releases') . "</td>";
       echo "<td >";
-      $date_preprod =  Html::convDateTime($this->getField('date_preproduction'));
-      Html::showDateField("date_preproduction",["value"=>$date_preprod]);
+      Html::showDateField("date_preproduction", ["value" => $this->getField('date_preproduction')]);
       echo "</td>";
-      echo "<td>" . __('Production planned run date','releases') . "</td>";
+      echo "<td>" . __('Production planned run date', 'releases') . "</td>";
       echo "<td >";
-      $date_prod =  Html::convDateTime($this->getField('date_production'));
-      Html::showDateField("date_production",["value"=>$date_prod]);
+      Html::showDateField("date_production", ["value" => $this->getField('date_production')]);
       echo "</td>";
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Location') . "</td>";
       echo "<td >";
-      Dropdown::show(Location::getType(),["name"=>"locations_id","value"=>$this->getField('locations_id')]);
+      Dropdown::show(Location::getType(), ["name"  => "locations_id",
+                                           "value" => $this->getField('locations_id')]);
       echo "</td>";
-      echo "<td>" . __('Service shutdown','releases') . "</td>";
+      echo "<td>" . __('Service shutdown', 'releases') . "</td>";
       echo "<td >";
-      Dropdown::showYesNo("service_shutdown",$this->getField('service_shutdown'));
+      Dropdown::showYesNo("service_shutdown", $this->getField('service_shutdown'));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Service shutdown details','releases') . "</td>";
+      echo "<td>" . __('Service shutdown details', 'releases') . "</td>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"=>"service_shutdown_details","enable_richtext"=>true,"value"=>$this->getField('service_shutdown_details')]);
+      Html::textarea(["name"            => "service_shutdown_details",
+                      "enable_richtext" => true,
+                      "value"           => $this->getField('service_shutdown_details')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hour','releases') . "</td>";
+      echo "<td>" . __('Non-working hour', 'releases') . "</td>";
       echo "<td >";
-      Dropdown::showYesNo("hour_type",$this->getField('hour_type'));
+      Dropdown::showYesNo("hour_type", $this->getField('hour_type'));
       echo "</td>";
-      echo "<td>" . __('Communication','releases') . "</td>";
+      echo "<td>" . __('Communication', 'releases') . "</td>";
       echo "<td >";
-      Dropdown::showYesNo("communication",$this->getField('communication'));
+      Dropdown::showYesNo("communication", $this->getField('communication'));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Communication type','releases') . "</td>";
+      echo "<td>" . __('Communication type', 'releases') . "</td>";
       echo "<td >";
-      $types   = ['Entity'=>'Entity', 'Group'=>'Group', 'Profile'=>'Profile', 'User'=>'User','Location'=>'Location'];
-      $addrand = Dropdown::showItemTypes('communication_type', $types,["id"=>"communication_type","value"=>$this->getField('communication_type')]);
+      $types   = ['Entity'   => 'Entity',
+                  'Group'    => 'Group',
+                  'Profile'  => 'Profile',
+                  'User'     => 'User',
+                  'Location' => 'Location'];
+      $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->getField('communication_type')]);
       echo "</td>";
       $targets = [];
       $targets = json_decode($this->getField('target'));
-//      $targets = $this->getField('target');
-      echo "<td>" ._n('Target', 'Targets',
-            Session::getPluralNumber()) . "</td>";
+      //      $targets = $this->getField('target');
+      echo "<td>" . _n('Target', 'Targets',
+                       Session::getPluralNumber()) . "</td>";
 
 
       echo "<td id='targets'>";
 
 
       echo "</td>";
-      Ajax::updateItem( "targets",
-         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-         ['type' => $this->getField('communication_type'),'current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
-      Ajax::updateItemOnSelectEvent("dropdown_communication_type".$addrand, "targets",
-         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-         ['type' => '__VALUE__','current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
+      Ajax::updateItem("targets",
+                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                       ['type' => $this->getField('communication_type'), 'current_type' => $this->getField('communication_type'), 'values' => $targets], true);
+      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
+                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                                    ['type' => '__VALUE__', 'current_type' => $this->getField('communication_type'), 'values' => $targets], true);
       echo "</tr>";
-      if($ID==""){
+      if ($ID == "") {
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
          echo __('Associate changes');
          echo "</td>";
          echo "<td>";
-         $change = new Change();
-         $changes = $change->find(['entities_id' => $_SESSION['glpiactive_entity'],'status'=>Change::getNotSolvedStatusArray()]);
-         $list = [];
-         foreach ($changes as $ch){
+         $change  = new Change();
+         $changes = $change->find(['entities_id' => $_SESSION['glpiactive_entity'], 'status' => Change::getNotSolvedStatusArray()]);
+         $list    = [];
+         foreach ($changes as $ch) {
             $list[$ch["id"]] = $ch["name"];
          }
-         Dropdown::showFromArray("changes",$list,["multiple"=>true,"values"=>$select_changes]);
-//      Change::dropdown([
-////            'used' => $used,
-//         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
+         Dropdown::showFromArray("changes", $list, ["multiple" => true, "values" => $select_changes]);
+         //      Change::dropdown([
+         ////            'used' => $used,
+         //         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
          echo "</td>";
          echo "<td colspan='2'>";
          echo "</td>";
          echo "</tr>";
       }
-      if($ID !=""){
+      if ($ID != "") {
          echo "<tr  class='tab_bg_1'>";
          echo "<td colspan='4'>";
          echo " <div class=\"container-fluid\">
                               <ul class=\"list-unstyled multi-steps\">";
 
 
-         for ($i=7;$i<=16;$i++) {
+         for ($i = 7; $i <= 16; $i++) {
             $class = "";
-//
-//            if ($value["ranking"] < $ranking) {
-////                     $class = "class = active2";
-//
-//            } else
-               if ($this->getField("state") == $i-1) {
+            //
+            //            if ($value["ranking"] < $ranking) {
+            ////                     $class = "class = active2";
+            //
+            //            } else
+            if ($this->getField("status") == $i - 1) {
                $class = "class = current";
                $class = "class = is-active";
             }
@@ -978,71 +886,69 @@ class PluginReleasesRelease extends CommonDBTM {
       return true;
    }
 
-   function showFinalisationTabs($ID){
+   function showFinalisationTabs($ID) {
       global $CFG_GLPI;
       $this->getFromDB($ID);
 
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Risk','Risks', 2,'releases');
+      echo _n('Risk', 'Risks', 2, 'releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("risk_state"));
       echo "</td>";
       echo "<td>";
 
-      echo _n('Test','Tests',2,'releases');
+      echo _n('Test', 'Tests', 2, 'releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("test_state"));
       echo "</td>";
 
       echo "<td>";
-      echo _n('Rollback','Rollbacks',2,'releases');
+      echo _n('Rollback', 'Rollbacks', 2, 'releases');
       echo "</td>";
       echo "<td>";
       echo self::getStateItem($this->getField("rollback_state"));
       echo "</td>";
 
       echo "<td>";
-      echo _n('Deploy Task','Deploy Tasks',2,'releases');
+      echo _n('Deploy Task', 'Deploy Tasks', 2, 'releases');
       echo "</td>";
       echo "<td class='left'>";
-      $dtF = self::countForItem($ID,PluginReleasesDeployTask::class,1);
-      $dtT = self::countForItem($ID ,PluginReleasesDeployTask::class);
-      if($dtT !=0 ){
-         $pourcentage = $dtF/$dtT *100;
-      }else{
+      $dtF = self::countForItem($ID, PluginReleasesDeployTask::class, 1);
+      $dtT = self::countForItem($ID, PluginReleasesDeployTask::class);
+      if ($dtT != 0) {
+         $pourcentage = $dtF / $dtT * 100;
+      } else {
          $pourcentage = 0;
       }
 
-      echo "<div class=\"progress-circle\" data-value=\"".round($pourcentage)."\">
+      echo "<div class=\"progress-circle\" data-value=\"" . round($pourcentage) . "\">
              <div class=\"progress-masque\">
                  <div class=\"progress-barre\"></div>
                  <div class=\"progress-sup50\"></div>
              </div>
             </div>";
 
-//      echo $dtF;
-//      echo "/";
-//      echo $dtT;
+      //      echo $dtF;
+      //      echo "/";
+      //      echo $dtT;
       echo "</td>";
       echo "</tr>";
 
 
-
-
       echo "</table>";
-      $allfinish =  $this->getField("risk_state") && ($dtT == $dtF) && $this->getField("test_state") && $this->getField("rollback_state");
-      $text = "";
-      if(!$allfinish){
+      $allfinish = $this->getField("risk_state") && ($dtT == $dtF) && $this->getField("test_state") && $this->getField("rollback_state");
+      $text      = "";
+      if (!$allfinish) {
 
-         $text.= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> '.__("Care all steps are not finish !").'</span>';
-         $text.= "<br>";
-         $text.= "<br>";
+         $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !") . '</span>';
+         $text .= "<br>";
+         $text .= "<br>";
       }
-      if($this->getField('state')<self::FINALIZE) {
+      if ($this->getField('status') < self::FINALIZE) {
          echo '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
          echo Html::scriptBlock(
@@ -1051,13 +957,13 @@ class PluginReleasesRelease extends CommonDBTM {
 
          });");
          //TODO
-         echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>".$text.__("production run date","releases").Html::showDateField("date_production",[ "id"=>"date_production","maybeempty"=>false,"display"=>false]) . "</div>";
-         $srcImg = "fas fa-info-circle";
-         $color = "forestgreen";
+         echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+         $srcImg     = "fas fa-info-circle";
+         $color      = "forestgreen";
          $alertTitle = _n("Information", "Informations", 1);
 
          echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . "finalize" . " \";");
-         echo Html::scriptBlock( "$( '#alert-message' ).dialog({
+         echo Html::scriptBlock("$( '#alert-message' ).dialog({
         autoOpen: false,
         height: " . 200 . ",
         width: " . 300 . ",
@@ -1077,8 +983,8 @@ class PluginReleasesRelease extends CommonDBTM {
                var date = $(\"[name = 'date_production']\").val();
                console.log(date);
                $.ajax({
-                  url:  '".$CFG_GLPI['root_doc']."/plugins/releases/ajax/finalize.php',
-                  data: {'id' : ".$this->getID().",'date' : date},
+                  url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
+                  data: {'id' : " . $this->getID() . ",'date' : date},
                   success: function() {
                      document.location.reload();
                   }
@@ -1093,19 +999,17 @@ class PluginReleasesRelease extends CommonDBTM {
       },
       
     })");
-    
-    
 
 
-       }
+      }
 
    }
 
    function getField($field) {
 
-      if($field == "content"){
+      if ($field == "content") {
          return $this->fields["service_shutdown_details"];
-      }else{
+      } else {
          return parent::getField($field);
       }
       if (array_key_exists($field, $this->fields)) {
@@ -1114,55 +1018,48 @@ class PluginReleasesRelease extends CommonDBTM {
       return NOT_AVAILABLE;
    }
 
-   function getNameAlert(){
+   function getNameAlert() {
       return $this->fields["name"];
    }
 
-   function getContentAlert(){
+   function getContentAlert() {
       return $this->fields["service_shutdown_details"];
    }
 
 
-
-
-
-   public static function getStateItem($state){
-      switch ($state){
+   public static function getStateItem($state) {
+      switch ($state) {
          case 0:
-//            return __("Waiting","releases");
+            //            return __("Waiting","releases");
             return "<span><i class=\"fas fa-4x fa-hourglass-half\"></i></span>";
             break;
          case 1:
-//            return __("Done");
+            //            return __("Done");
             return "<span><i class=\"fas fa-4x fa-check\"></i></span>";
             break;
       }
    }
 
-   function showTimelineForm($rand,$obj) {
+   function showTimelineForm($rand) {
 
       global $CFG_GLPI;
 
+      $taskClass = new PluginReleasesRisk();
 
-
-      $task  = new $obj();
-
-      $canadd_task = $task->can(-1, CREATE);
-
-      $taskClass = $obj;
+      $canadd_task = $taskClass->can(-1, CREATE);
 
       // javascript function for add and edit items
-      $objType = self::getType();
+      $objType    = self::getType();
       $foreignKey = self::getForeignKeyField();
 
       echo "<script type='text/javascript' >
       function change_task_state(tasks_id, target,type) {
-         $.post('".$CFG_GLPI["root_doc"]."/plugins/releases/ajax/updateState.php',
+         $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php',
                 {'action':     'change_task_state',
                   'tasks_id':   tasks_id,
                   'type': type,
                   'parenttype': '$objType',
-                  '$foreignKey': ".$this->fields['id']."
+                  '$foreignKey': " . $this->fields['id'] . "
                 })
                 .done(function(response) {
                                   $(target).removeClass('state_1 state_2')
@@ -1179,7 +1076,7 @@ class PluginReleasesRelease extends CommonDBTM {
 
       function viewEditSubitem" . $this->fields['id'] . "$rand(e, itemtype, items_id, o, domid) {
                domid = (typeof domid === 'undefined')
-                         ? 'viewitem".$this->fields['id'].$rand."'
+                         ? 'viewitem" . $this->fields['id'] . $rand . "'
                          : domid;
                var target = e.target || window.event.srcElement;
                if (target.nodeName == 'a') return;
@@ -1197,11 +1094,11 @@ class PluginReleasesRelease extends CommonDBTM {
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('".$CFG_GLPI["root_doc"]."/plugins/releases/ajax/viewsubitem.php',
+                                                 .load('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitem.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
-                                                        '$foreignKey': ".$this->fields['id'].",
+                                                        '$foreignKey': " . $this->fields['id'] . ",
                                                         'id'        : items_id
                                                        });
       };
@@ -1214,17 +1111,17 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<script type='text/javascript' >\n";
       echo "function viewAddSubitem" . $this->fields['id'] . "$rand(itemtype) {\n";
       $params = ['action'     => 'viewsubitem',
-         'type'       => 'itemtype',
-         'parenttype' => $objType,
-         $foreignKey => $this->fields['id'],
-         'id'         => -1];
+                 'type'       => 'itemtype',
+                 'parenttype' => $objType,
+                 $foreignKey  => $this->fields['id'],
+                 'id'         => -1];
       if (isset($_GET['load_kb_sol'])) {
          $params['load_kb_sol'] = $_GET['load_kb_sol'];
       }
 
       $out = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-         $CFG_GLPI["root_doc"]."/plugins/releases/ajax/viewsubitem.php",
-         $params, "", false);
+                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitem.php",
+                                    $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
       echo "$('#approbation_form$rand').remove()";
       echo "};";
@@ -1237,13 +1134,12 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<ul class='timeline_choices'>";
 
       if ($canadd_task) {
-         echo "<h2>"._sx('button', 'Add')." : </h2>";
+         echo "<h2>" . _sx('button', 'Add') . " : </h2>";
       }
       if ($canadd_task) {
-         $class = $obj::getCssClass();
-         echo "<li class='$class' onclick='".
-            "javascript:viewAddSubitem".$this->fields['id']."$rand(\"$taskClass\");'>"
-            ."<i class='far fa-check-square'></i>".$obj::getTypeName(1)."</li>";
+         echo "<li class='risks' onclick='" .
+              "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"PluginReleasesRisk\");'>"
+              . "<i class='far fa-check-square'></i>" . PluginReleasesRisk::getTypeName(2) . "</li>";
       }
       Plugin::doHook('timeline_actions', ['item' => $this, 'rand' => $rand]);
 
@@ -1255,24 +1151,23 @@ class PluginReleasesRelease extends CommonDBTM {
       echo "<div class='ajax_box' id='viewitem" . $this->fields['id'] . "$rand'></div>\n";
    }
 
-   function showTimeLine($rand,$obj){
+   function showTimeLine($rand) {
       global $DB, $CFG_GLPI, $autolink_options;
 
-      $objType = self::getType();
-      $user              = new User();
-      $group             = new Group();
-      $pics_url          = $CFG_GLPI['root_doc']."/pics/timeline";
-      $timeline          = $this->getTimelineItems($obj);
+      $objType  = self::getType();
+      $user     = new User();
+      $group    = new Group();
+      $pics_url = $CFG_GLPI['root_doc'] . "/pics/timeline";
+      $timeline = $this->getTimelineItems();
 
       $autolink_options['strip_protocols'] = false;
-
 
 
       echo "<div class='timeline_history'>";
       $timeline_index = 0;
       foreach ($timeline as $item) {
-         $options = [ 'parent' => $this,
-            'rand' => $rand
+         $options = ['parent' => $this,
+                     'rand'   => $rand
          ];
          if ($obj = getItemForItemtype($item['type'])) {
             $obj->fields = $item['item'];
@@ -1295,44 +1190,44 @@ class PluginReleasesRelease extends CommonDBTM {
 
          // set item position depending on field timeline_position
          $user_position = 'left'; // default position
-//         if (isset($item_i['timeline_position'])) {
-//            switch ($item_i['timeline_position']) {
-//               case self::TIMELINE_LEFT:
-//                  $user_position = 'left';
-//                  break;
-//               case self::TIMELINE_MIDLEFT:
-//                  $user_position = 'left middle';
-//                  break;
-//               case self::TIMELINE_MIDRIGHT:
-//                  $user_position = 'right middle';
-//                  break;
-//               case self::TIMELINE_RIGHT:
-//                  $user_position = 'right';
-//                  break;
-//            }
-//         }
+         //         if (isset($item_i['timeline_position'])) {
+         //            switch ($item_i['timeline_position']) {
+         //               case self::TIMELINE_LEFT:
+         //                  $user_position = 'left';
+         //                  break;
+         //               case self::TIMELINE_MIDLEFT:
+         //                  $user_position = 'left middle';
+         //                  break;
+         //               case self::TIMELINE_MIDRIGHT:
+         //                  $user_position = 'right middle';
+         //                  break;
+         //               case self::TIMELINE_RIGHT:
+         //                  $user_position = 'right';
+         //                  break;
+         //            }
+         //         }
 
 
          echo "<div class='h_item $user_position'>";
 
          echo "<div class='h_info'>";
 
-         echo "<div class='h_date'><i class='far fa-clock'></i>".Html::convDateTime($date)."</div>";
+         echo "<div class='h_date'><i class='far fa-clock'></i>" . Html::convDateTime($date) . "</div>";
          if ($item_i['users_id'] !== false) {
             echo "<div class='h_user'>";
             if (isset($item_i['users_id']) && ($item_i['users_id'] != 0)) {
                $user->getFromDB($item_i['users_id']);
 
                echo "<div class='tooltip_picture_border'>";
-               echo "<img class='user_picture' alt=\"".__s('Picture')."\" src='".
-                  User::getThumbnailURLForPicture($user->fields['picture'])."'>";
+               echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='" .
+                    User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
                echo "</div>";
 
                echo "<span class='h_user_name'>";
                $userdata = getUserName($item_i['users_id'], 2);
-               echo $user->getLink()."&nbsp;";
+               echo $user->getLink() . "&nbsp;";
                echo Html::showToolTip($userdata["comment"],
-                  ['link' => $userdata['link']]);
+                                      ['link' => $userdata['link']]);
                echo "</span>";
             } else {
                echo __("Requester");
@@ -1343,22 +1238,22 @@ class PluginReleasesRelease extends CommonDBTM {
          echo "</div>"; //h_info
 
          $domid = "viewitem{$item['type']}{$item_i['id']}";
-         if ($item['type'] == $objType.'Validation' && isset($item_i['status'])) {
+         if ($item['type'] == $objType . 'Validation' && isset($item_i['status'])) {
             $domid .= $item_i['status'];
          }
          $randdomid = $domid . $rand;
-         $domid = Toolbox::slugify($domid);
+         $domid     = Toolbox::slugify($domid);
 
-         $fa = null;
+         $fa    = null;
          $class = "h_content";
-         if($item['type'] != "Document_Item"){
+         if ($item['type'] != "Document_Item") {
             $class .= " {$item['type']::getCssClass()}";
-         }else{
-            $class .= " ".$item['type'];
+         } else {
+            $class .= " " . $item['type'];
          }
 
 
-//         $class .= " {$item_i['state']}";
+         //         $class .= " {$item_i['state']}";
 
 
          echo "<div class='$class' id='$domid' data-uid='$randdomid'>";
@@ -1372,30 +1267,30 @@ class PluginReleasesRelease extends CommonDBTM {
          echo "<div class='displayed_content'>";
          echo "<div class='h_controls'>";
          if (!in_array($item['type'], ['Document_Item', 'Assign'])
-            && $item_i['can_edit']
+             && $item_i['can_edit']
          ) {
             // merge/split icon
 
             // edit item
-            echo "<span class='far fa-edit control_item' title='".__('Edit')."'";
-            echo "onclick='javascript:viewEditSubitem".$this->fields['id']."$rand(event, \"".$item['type']."\", ".$item_i['id'].", this, \"$randdomid\")'";
+            echo "<span class='far fa-edit control_item' title='" . __('Edit') . "'";
+            echo "onclick='javascript:viewEditSubitem" . $this->fields['id'] . "$rand(event, \"" . $item['type'] . "\", " . $item_i['id'] . ", this, \"$randdomid\")'";
             echo "></span>";
          }
 
          // show "is_private" icon
          if (isset($item_i['is_private']) && $item_i['is_private']) {
             echo "<span class='private'><i class='fas fa-lock control_item' title='" . __s('Private') .
-               "'></i><span class='sr-only'>".__('Private')."</span></span>";
+                 "'></i><span class='sr-only'>" . __('Private') . "</span></span>";
          }
 
          echo "</div>";
          if (isset($item_i['requesttypes_id'])
-            && file_exists("$pics_url/".$item_i['requesttypes_id'].".png")) {
-            echo "<img src='$pics_url/".$item_i['requesttypes_id'].".png' class='h_requesttype' />";
+             && file_exists("$pics_url/" . $item_i['requesttypes_id'] . ".png")) {
+            echo "<img src='$pics_url/" . $item_i['requesttypes_id'] . ".png' class='h_requesttype' />";
          }
 
          if (isset($item_i['content'])) {
-            $content = "<h2>".$item_i['name']."  </h2>".$item_i['content'];
+            $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
             $content = Toolbox::getHtmlToDisplay($content);
             $content = autolink($content, false);
 
@@ -1407,13 +1302,13 @@ class PluginReleasesRelease extends CommonDBTM {
             echo "<div class='item_content $long_text'>";
             echo "<p>";
             if (isset($item_i['state'])) {
-               $onClick = "onclick='change_task_state(".$item_i['id'].", this,\"".$item['type']."\")'";
+               $onClick = "onclick='change_task_state(" . $item_i['id'] . ", this,\"" . $item['type'] . "\")'";
                if (!$item_i['can_edit']) {
                   $onClick = "style='cursor: not-allowed;'";
                }
-               echo "<span class='state state_".$item_i['state']."'
+               echo "<span class='state state_" . $item_i['state'] . "'
                            $onClick
-                           title='".Planning::getState($item_i['state'])."'>";
+                           title='" . Planning::getState($item_i['state']) . "'>";
                echo "</span>";
             }
             echo "</p>";
@@ -1432,22 +1327,27 @@ class PluginReleasesRelease extends CommonDBTM {
 
          echo "<div class='b_right'>";
 
-         if (isset($item_i['plugin_releases_typedeploytasks_id']) && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
-            echo Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id'])."<br>";
+         if (isset($item_i['plugin_releases_typedeploytasks_id'])
+             && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
+            echo Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id']) . "<br>";
          }
-         if (isset($item_i['plugin_releases_typerisks_id']) && !empty($item_i['plugin_releases_typerisks_id'])) {
-            echo Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id'])."<br>";
+         if (isset($item_i['plugin_releases_typerisks_id'])
+             && !empty($item_i['plugin_releases_typerisks_id'])) {
+            echo Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id']) . "<br>";
          }
-         if (isset($item_i['plugin_releases_typetests_id']) && !empty($item_i['plugin_releases_typetests_id'])) {
-            echo Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id'])."<br>";
+         if (isset($item_i['plugin_releases_typetests_id'])
+             && !empty($item_i['plugin_releases_typetests_id'])) {
+            echo Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id']) . "<br>";
          }
-         if (isset($item_i['plugin_releases_risks_id']) && !empty($item_i['plugin_releases_risks_id'])) {
-            echo __("Associated with")." ";
-            echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id'])."<br>";
+         if (isset($item_i['plugin_releases_risks_id'])
+             && !empty($item_i['plugin_releases_risks_id'])) {
+            echo __("Associated with") . " ";
+            echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id']) . "<br>";
          }
 
 
-         if (isset($item_i['actiontime']) && !empty($item_i['actiontime'])) {
+         if (isset($item_i['actiontime'])
+             && !empty($item_i['actiontime'])) {
             echo "<span class='actiontime'>";
             echo Html::timestampToString($item_i['actiontime'], false);
             echo "</span>";
@@ -1461,18 +1361,19 @@ class PluginReleasesRelease extends CommonDBTM {
          }
 
 
-         if (isset($item_i['users_id_editor']) && $item_i['users_id_editor'] > 0) {
-            echo "<div class='users_id_editor' id='users_id_editor_".$item_i['users_id_editor']."'>";
+         if (isset($item_i['users_id_editor'])
+             && $item_i['users_id_editor'] > 0) {
+            echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
             $user->getFromDB($item_i['users_id_editor']);
             $userdata = getUserName($item_i['users_id_editor'], 2);
-            if(isset($item_i['date_mod']))
-            echo sprintf(
-               __('Last edited on %1$s by %2$s'),
-               Html::convDateTime($item_i['date_mod']),
-               $user->getLink()
-            );
+            if (isset($item_i['date_mod']))
+               echo sprintf(
+                  __('Last edited on %1$s by %2$s'),
+                  Html::convDateTime($item_i['date_mod']),
+                  $user->getLink()
+               );
             echo Html::showToolTip($userdata["comment"],
-               ['link' => $userdata['link']]);
+                                   ['link' => $userdata['link']]);
             echo "</div>";
          }
 
@@ -1485,19 +1386,19 @@ class PluginReleasesRelease extends CommonDBTM {
                if (empty($filename)) {
                   $filename = $item_i['name'];
                }
-               if (file_exists(GLPI_ROOT."/pics/icones/$ext-dist.png")) {
-                  echo $CFG_GLPI['root_doc']."/pics/icones/$ext-dist.png";
+               if (file_exists(GLPI_ROOT . "/pics/icones/$ext-dist.png")) {
+                  echo $CFG_GLPI['root_doc'] . "/pics/icones/$ext-dist.png";
                } else {
                   echo "$pics_url/file.png";
                }
                echo "'/>&nbsp;";
 
-               echo "<a href='".$CFG_GLPI['root_doc']."/front/document.send.php?docid=".$item_i['id']
-                  ."&PluginReleasesRelease=".$this->getID()."' target='_blank'>$filename";
+               echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
+                    . "&PluginReleasesRelease=" . $this->getID() . "' target='_blank'>$filename";
                if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
                   echo "<div class='timeline_img_preview'>";
-                  echo "<img src='".$CFG_GLPI['root_doc']."/front/document.send.php?docid=".$item_i['id']
-                     ."&PluginReleasesRelease=".$this->getID()."&context=timeline'/>";
+                  echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
+                       . "&PluginReleasesRelease=" . $this->getID() . "&context=timeline'/>";
                   echo "</div>";
                }
                echo "</a>";
@@ -1506,21 +1407,21 @@ class PluginReleasesRelease extends CommonDBTM {
                echo "<a href='{$item_i['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
             }
             if (!empty($item_i['mime'])) {
-               echo "&nbsp;(".$item_i['mime'].")";
+               echo "&nbsp;(" . $item_i['mime'] . ")";
             }
             echo "<span class='buttons'>";
-            echo "<a href='".Document::getFormURLWithID($item_i['id'])."' class='edit_document fa fa-eye pointer' title='".
-               _sx("button", "Show")."'>";
+            echo "<a href='" . Document::getFormURLWithID($item_i['id']) . "' class='edit_document fa fa-eye pointer' title='" .
+                 _sx("button", "Show") . "'>";
             echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
 
             $doc = new Document();
             $doc->getFromDB($item_i['id']);
             if ($doc->can($item_i['id'], UPDATE)) {
-               echo "<a href='".static::getFormURL().
-                  "?delete_document&documents_id=".$item_i['id'].
-                  "&PluginReleasesRelease=".$this->getID()."' class='delete_document fas fa-trash-alt pointer' title='".
-                  _sx("button", "Delete permanently")."'>";
-               echo "<span class='sr-only'>" . _sx('button', 'Delete permanently')  . "</span></a>";
+               echo "<a href='" . static::getFormURL() .
+                    "?delete_document&documents_id=" . $item_i['id'] .
+                    "&PluginReleasesRelease=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
+                    _sx("button", "Delete permanently") . "'>";
+               echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
             }
             echo "</span>";
          }
@@ -1536,76 +1437,66 @@ class PluginReleasesRelease extends CommonDBTM {
    }
 
 
-   function getTimelineItems($obj) {
+   function getTimelineItems() {
 
-      $objType = self::getType();
+      $objType    = self::getType();
       $foreignKey = self::getForeignKeyField();
 
       $timeline = [];
 
-      $user = new User();
-
-
-
-      $item              = new $obj;
-
+      //      $item = new PluginReleasesRisk();
+      $obj = new PluginReleasesRisk();
 
       //checks rights
       $restrict_fup = $restrict_task = [];
 
 
-      if ($item->maybePrivate() && !Session::haveRight("task", CommonITILTask::SEEPRIVATE)) {
+      if ($obj->maybePrivate() && !Session::haveRight("task", CommonITILTask::SEEPRIVATE)) {
          $restrict_task = [
             'OR' => [
-               'is_private'   => 0,
-               'users_id'     => Session::getLoginUserID()
+               'is_private' => 0,
+               'users_id'   => Session::getLoginUserID()
             ]
          ];
       }
 
 
-      if ($item->canview()) {
-         $tasks = $item->find([$foreignKey => $this->getID()] + $restrict_task );
+      if ($obj->canview() && $obj == "PluginReleasesDeployTask") {
+         $tasks = $obj->find([$foreignKey => $this->getID()] + $restrict_task);
          foreach ($tasks as $tasks_id => $task) {
-            $item->getFromDB($tasks_id);
-            $task['can_edit']                           = $item->canUpdateItem();
-            $rand = mt_rand();
-            if(isset($task['date_creation'])){
-               $timeline["task".$item->getField('level')."$tasks_id".$rand] = ['type' => $obj,
-                  'item' => $task,
+            $obj->getFromDB($tasks_id);
+            $task['can_edit'] = $obj->canUpdateItem();
+            $rand             = mt_rand();
+            if (isset($task['date_creation'])) {
+               $timeline["task" . $obj->getField('level') . "$tasks_id" . $rand] = ['type' => $obj,
+                                                                                    'item' => $task,
                ];
-            }else{
-               $timeline["task".$item->getField('level')."$tasks_id".$rand] = ['type' => $obj,
-                  'item' => $task,
+            } else {
+               $timeline["task" . $obj->getField('level') . "$tasks_id" . $rand] = ['type' => $obj,
+                                                                                    'item' => $task,
                ];
             }
-            $i =0;
-            if($obj == "PluginReleasesDeployTask") {
+            $i = 0;
 
+            $document_item_obj = new Document_Item();
+            $document_obj      = new Document();
+            $document_items    = $document_item_obj->find(['itemtype' => $obj, 'items_id' => $tasks_id]);
+            foreach ($document_items as $document_item) {
+               $document_obj->getFromDB($document_item['documents_id']);
 
-               $document_item_obj = new Document_Item();
-               $document_obj = new Document();
-               $document_items = $document_item_obj->find(['itemtype' => $obj, 'items_id' => $tasks_id]);
-               foreach ($document_items as $document_item) {
-                  $document_obj->getFromDB($document_item['documents_id']);
+               $itemd = $document_obj->fields;
+               // #1476 - set date_mod and owner to attachment ones
+               $itemd['date_mod'] = $document_item['date_mod'];
+               $itemd['users_id'] = $document_item['users_id'];
 
-                  $itemd = $document_obj->fields;
-                  // #1476 - set date_mod and owner to attachment ones
-                  $itemd['date_mod'] = $document_item['date_mod'];
-                  $itemd['users_id'] = $document_item['users_id'];
+               $itemd['timeline_position'] = $document_item['timeline_position'];
 
-                  $itemd['timeline_position'] = $document_item['timeline_position'];
-
-                  $timeline["task".$item->getField('level')."$tasks_id".$rand.$i]
-                     = ['type' => 'Document_Item', 'item' => $itemd];
-                  $i++;
-               }
+               $timeline["task" . $obj->getField('level') . "$tasks_id" . $rand . $i]
+                  = ['type' => 'Document_Item', 'item' => $itemd];
+               $i++;
             }
-
-
          }
       }
-
 
 
       //reverse sort timeline items by key (date)
@@ -1625,10 +1516,10 @@ class PluginReleasesRelease extends CommonDBTM {
    static function dropdownStateItem($name, $value = '', $display = true, $options = []) {
 
       $values = [static::TODO => __('To do'),
-         static::DONE => __('Done')];
+                 static::DONE => __('Done')];
 
       return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
-         'display' => $display], $options));
+                                                                  'display' => $display], $options));
    }
 
    /**
@@ -1641,42 +1532,49 @@ class PluginReleasesRelease extends CommonDBTM {
     **/
    static function dropdownState($name, $value = '', $display = true, $options = []) {
 
-      $values = [static::TODO => __('To do'),
-         static::DONE => __('Done'),
-         static::PROCESSING => __('Processing'),
-         static::WAITING => __("Waiting"),
-         static::LATE => __("Late"),
-         static::DEF => __("Default"),
-         ];
+      $values = [static::TODO       => __('To do'),
+                 static::DONE       => __('Done'),
+                 static::PROCESSING => __('Processing'),
+                 static::WAITING    => __("Waiting"),
+                 static::LATE       => __("Late"),
+                 static::DEF        => __("Default"),
+      ];
 
       return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
-         'display' => $display], $options));
+                                                                  'display' => $display], $options));
    }
 
-   function showStateItem($field = "",$text = "",$state){
+   function showStateItem($field = "", $text = "", $state) {
       global $CFG_GLPI;
 
-      echo "<div colspan='4' class='center'>".$text ."</div>";
+      echo "<div colspan='4' class='center'>" . $text . "</div>";
       echo "<div id='fakeupdate'></div>";
 
       echo "<div class='center'>";
       $rand = mt_rand();
-      Dropdown::showYesNo($field,$this->getField($field),-1,["rand"=>$rand]);
-      $params = ['value'=>"__VALUE__","field"=>$field,"plugin_releases_releases_id"=>$this->getID(),'state'=>$state];
-      Ajax::updateItemOnSelectEvent("dropdown_$field$rand","fakeupdate",$CFG_GLPI["root_doc"]."/plugins/releases/ajax/changeitemstate.php",$params);
+      Dropdown::showYesNo($field, $this->getField($field), -1, ["rand" => $rand]);
+      $params = ['value'                       => "__VALUE__",
+                 "field"                       => $field,
+                 "plugin_releases_releases_id" => $this->getID(),
+                 'state'                       => $state];
+      Ajax::updateItemOnSelectEvent("dropdown_$field$rand", "fakeupdate", $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeitemstate.php", $params);
 
       echo "</div>";
 
    }
-   function showCreateRelease($item){
 
-      $item_t = new PluginReleasesReleasetemplate();
-      $dbu = new DbUtils();
+   static function showCreateRelease($item) {
+
+      $item_t    = new PluginReleasesReleasetemplate();
+      $dbu       = new DbUtils();
       $condition = $dbu->getEntitiesRestrictCriteria($item_t->getTable());
-      PluginReleasesReleasetemplate::dropdown(["comments"=>false,"addicon"=>false,"emptylabel"=>__("From this change","releases"),"name"=>"releasetemplates_id"]+$condition);
+      PluginReleasesReleasetemplate::dropdown(["comments"   => false,
+                                               "addicon"    => false,
+                                               "emptylabel" => __("From this change", "releases"),
+                                               "name"       => "releasetemplates_id"] + $condition);
       $url = PluginReleasesRelease::getFormURL();
-      echo "<a  id='link' href='$url?changes_id=".$item->getID()."'>";
-      $url = $url."?changes_id=".$item->getID()."&template_id=";
+      echo "<a  id='link' href='$url?changes_id=" . $item->getID() . "'>";
+      $url    = $url . "?changes_id=" . $item->getID() . "&template_id=";
       $script = "
       var link = function (id,linkurl) {
          var link = linkurl+id;
@@ -1687,58 +1585,81 @@ class PluginReleasesRelease extends CommonDBTM {
          });";
 
 
-      echo Html::scriptBlock('$(document).ready(function() {'.$script.'});');
+      echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
       echo "<br/><br/>";
       echo __("Create a release", 'releases');
       echo "</a>";
-//      echo "<form name='form' method='post' action='".$this->getFormURL()."'  enctype=\"multipart/form-data\">";
-//      echo Html::hidden("changes_id",["value"=>$item->getID()]);
-////      echo '<a class="vsubmit"> '.__("Create a releases from this change",'release').'</a>';
-//      echo Html::submit(__("Create a release from this change",'releases'), ['name' => 'createRelease']);
-//      Html::closeForm();
+      //      echo "<form name='form' method='post' action='".$this->getFormURL()."'  enctype=\"multipart/form-data\">";
+      //      echo Html::hidden("changes_id",["value"=>$item->getID()]);
+      ////      echo '<a class="vsubmit"> '.__("Create a releases from this change",'release').'</a>';
+      //      echo Html::submit(__("Create a release from this change",'releases'), ['name' => 'createRelease']);
+      //      Html::closeForm();
    }
 
-   function getLinkedItems() {
+   function getLinkedItems(bool $addNames = true): array {
       global $DB;
 
-      $iterator = $DB->request([
-         'SELECT' => ['itemtype', 'items_id'],
-         'FROM'   => 'glpi_plugin_releases_releases_items',
-         'WHERE'  => ['plugin_releases_releases_id' => $this->getID()]
-      ]);
+      $assets = $DB->request([
+                                'SELECT' => ['itemtype', 'items_id'],
+                                'FROM'   => 'glpi_plugin_releases_releases_items',
+                                'WHERE'  => ['plugin_releases_releases_id' => $this->getID()]
+                             ]);
 
-      $tab = [];
-      while ($data = $iterator->next()) {
-         $tab[$data['itemtype']][$data['items_id']] = $data['items_id'];
+      $assets = iterator_to_array($assets);
+
+      if ($addNames) {
+         foreach ($assets as $key => $asset) {
+            if (!class_exists($asset['itemtype'])) {
+               //ignore if class does not exists (maybe a plugin)
+               continue;
+            }
+            /** @var CommonDBTM $item */
+            $item = new $asset['itemtype'];
+            $item->getFromDB($asset['items_id']);
+
+            // Add name
+            $assets[$key]['name'] = $item->fields['name'];
+         }
       }
-      return $tab;
+
+      return $assets;
    }
 
-   static function showListForItem(CommonDBTM $item, $withtemplate = 0) {
-      //TODO to display release link to other items
-      //Use showListForItem in problem or change for example
+   /**
+    * Should impact tab be displayed? Check if there is a valid linked item
+    *
+    * @return boolean
+    */
+   protected function hasImpactTab() {
+      foreach ($this->getLinkedItems() as $linkedItem) {
+         $class = $linkedItem['itemtype'];
+         if (Impact::isEnabled($class) && Session::getCurrentInterface() === "central") {
+            return true;
+         }
+      }
+      return false;
    }
+
    /**
     * @return array
     */
    static function getMenuContent() {
 
-      $menu['title'] = self::getMenuName(2);
-      $menu['page'] = self::getSearchURL(false);
+      $menu['title']           = self::getMenuName(2);
+      $menu['page']            = self::getSearchURL(false);
       $menu['links']['search'] = self::getSearchURL(false);
 
       $menu['links']['template'] = "/plugins/releases/front/releasetemplate.php";
-      $menu['icon']            = static::getIcon();
+      $menu['icon']              = static::getIcon();
       if (self::canCreate()) {
-         $dbu = new DbUtils();
-         $template = new PluginReleasesReleasetemplate();
+         $dbu       = new DbUtils();
+         $template  = new PluginReleasesReleasetemplate();
          $condition = $dbu->getEntitiesRestrictCriteria($template->getTable());
          $templates = $template->find($condition);
-         if(empty($templates)){
+         if (empty($templates)) {
             $menu['links']['add'] = self::getFormURL(false);
-         }else{
-            $temp = new PluginReleasesReleasetemplate();
-            $menu['links']['add'] = PluginReleasesCreationRelease::getSearchURL(false);
+         } else {
+            $menu['links']['add'] = PluginReleasesReleasetemplate::getSearchURL(false);
          }
       }
 
@@ -1751,5 +1672,8 @@ class PluginReleasesRelease extends CommonDBTM {
       return "fas fa-tags";
    }
 
+   static function getDefaultValues($entity = 0) {
+      // TODO: Implement getDefaultValues() method.
+   }
 }
 

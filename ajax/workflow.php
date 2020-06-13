@@ -109,7 +109,7 @@ if (isset($_POST["id"])) {
             width: "auto"
          });
          $("#done'.$step.'").click(function () {
-              var state = 1;
+              var status = 1;
               var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
               var data = {state,plugin_releases_releases_id,itemtype};
@@ -136,7 +136,7 @@ if (isset($_POST["id"])) {
               }
           });
          $("#todo'.$step.'").click(function () {
-              var state = 0;
+              var status = 0;
               var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
               var data = {state,plugin_releases_releases_id,itemtype};
@@ -163,7 +163,7 @@ if (isset($_POST["id"])) {
               }
           });
          $("#inprogress'.$step.'").click(function () {
-              var state = 2;
+              var status = 2;
               var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
               var data = {state,plugin_releases_releases_id,itemtype};
@@ -190,7 +190,7 @@ if (isset($_POST["id"])) {
               }
           });
          $("#waiting'.$step.'").click(function () {
-              var state = 3;
+              var status = 3;
               var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
               var data = {state,plugin_releases_releases_id,itemtype};
@@ -217,7 +217,7 @@ if (isset($_POST["id"])) {
               }
           });
          $("#late'.$step.'").click(function () {
-              var state = 4;
+              var status = 4;
               var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
               var data = {state,plugin_releases_releases_id,itemtype};
@@ -244,7 +244,7 @@ if (isset($_POST["id"])) {
               }
           });
          $("#default'.$step.'").click(function () {
-              var state = 5;
+              var status = 5;
               var plugin_releases_releases_id = '.$ID.';
               var itemtype = "'.$step.'";
               var data = {state,plugin_releases_releases_id,itemtype};

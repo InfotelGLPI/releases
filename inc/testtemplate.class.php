@@ -46,8 +46,6 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
    static $rightname          = 'plugin_releases_tests';
 
-
-
    static function getTypeName($nb = 0) {
       return _n('Test template', 'Test templates', $nb,'releases');
    }
@@ -112,6 +110,8 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
       }
    }
+
+
    static function canCreate() {
       return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
    }
@@ -129,12 +129,16 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       return Session::haveRight(static::$rightname, READ);
    }
 
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool|void
+    */
    function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-
-
 
       $rand_text       = mt_rand();
       $rand_name      = mt_rand();

@@ -30,36 +30,38 @@
 // Init the hooks of the plugins -Needed
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
-if(Session::haveRight('plugin_releases_use',1)){
-   $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
-   $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
 
-   $PLUGIN_HOOKS['use_rules']['releases'] = ['RuleMailCollector'];
-   $PLUGIN_HOOKS['add_css']['releases'][] = "css/styles.css";
-   Html::requireJs('tinymce');
-//   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_ticket.css";
-//   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_main.css";
+   if (Session::haveRight('plugin_releases_use', READ)) {
+      $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
+      $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
 
-   if (Session::getLoginUserID()) {
+      //TODO check if used
+      $PLUGIN_HOOKS['use_rules']['releases'] = ['RuleMailCollector'];
+      $PLUGIN_HOOKS['add_css']['releases'][] = "css/styles.css";
+      Html::requireJs('tinymce');
+      //   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_ticket.css";
+      //   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_main.css";
 
-      $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
+      if (Session::getLoginUserID()) {
 
-      Plugin::registerClass('PluginReleasesProfile',
-         ['addtabon' => 'Profile']);
+         $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
+
+         Plugin::registerClass('PluginReleasesProfile',
+                               ['addtabon' => 'Profile']);
+      }
+      Plugin::registerClass('PluginReleasesRelease',
+                            ['addtabon' => ['Change']]);
+      Plugin::registerClass(PluginReleasesDeployTask::class, [
+         'planning_types' => true
+      ]);
    }
-   Plugin::registerClass('PluginReleasesRelease',
-      ['addtabon' => ['Change']]);
-   Plugin::registerClass(PluginReleasesDeployTask::class, [
-      'planning_types' => true
-   ]);
-}
    $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeployTask', 'populatePlanning'];
    $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeployTask', 'displayPlanningItem'];
-   $plugin = new Plugin();
-   if($plugin->isInstalled("mydashboard")){
-      if($plugin->isActivated("mydashboard")){
+   $plugin                                        = new Plugin();
+   if ($plugin->isInstalled("mydashboard")) {
+      if ($plugin->isActivated("mydashboard")) {
          Plugin::registerClass('PluginMydashboardAlert',
-            ['addtabon' => ['PluginReleasesRelease']]);
+                               ['addtabon' => ['PluginReleasesRelease']]);
       }
    }
 }
@@ -78,10 +80,9 @@ function plugin_version_releases() {
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
       'minGlpiVersion' => '9.5',// For compatibility / no install in version < 9.3
       'requirements'   => [
-         'glpi'   => [
+         'glpi' => [
             'min' => '9.5',
-            'max' => '9.6.'
-//            'plugins' => ['manageentities']
+            'max' => '9.6'
          ]
       ]
    ];
@@ -93,8 +94,9 @@ function plugin_version_releases() {
  * @return bool
  */
 function plugin_releases_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.3', 'lt') || version_compare(GLPI_VERSION, '9.6', 'ge')) {
-      echo __('This plugin requires GLPI >= 9.3');
+   if (version_compare(GLPI_VERSION, '9.5', 'lt')
+       || version_compare(GLPI_VERSION, '9.6', 'ge')) {
+      echo __('This plugin requires GLPI >= 9.5');
       return false;
    }
 

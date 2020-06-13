@@ -56,8 +56,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    function getAdditionalFields() {
 
       return [
-         ['name'  => 'release_area',
-            'label' => __('Release Area', 'release'),
+         ['name'  => 'content',
+            'label' => __('Description', 'release'),
             'type'  => 'textarea',
             'rows' => 10],
          ['name'  => 'date_preproduction',
@@ -127,8 +127,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $dbu = new DbUtils();
 
       switch ($field['type']) {
-         case 'state' :
-            PluginReleasesRelease::dropdownStateItem("state", $this->fields["state"]);
+         case 'status' :
+            PluginReleasesRelease::dropdownStateItem("status", $this->fields["status"]);
             break;
          case 'dropdownRollbacks' :
             $item = new PluginReleasesRollbacktemplate();
@@ -251,7 +251,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Release area','releases') . "</td>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"=>"release_area","enable_richtext"=>true,"value"=>$this->getField('release_area')]);
+      Html::textarea(["name"=>"content",
+                      "enable_richtext"=>true,
+                      "value"=>$this->getField('content')]);
       echo "</td>";
       echo "</tr>";
 
@@ -299,7 +301,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 //      echo "</td>";
       echo "</tr>";
       $dbu = new DbUtils();
-      echo "<tr>";
+      echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo _n('Test','Tests', 2,'release');
 
@@ -348,7 +350,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
       echo "</td>";
       echo "</tr>";
-      echo "<tr>";
+      echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo  _n('Deploy Task','Deploy Tasks',2, 'release');
       echo "</td>";
@@ -399,5 +401,36 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 //      echo "</tr>";
       $this->showFormButtons($options);
       return true;
+   }
+
+   function displayMenu($ID, $options = []) {
+      echo "<div class='center'>";
+      echo "<table class='tab_cadre'>";
+      echo "<tr  class='tab_bg_1'>";
+      echo "<th>" . __("Release","releases") . "</th>";
+      echo "</tr>";
+      echo "<tr  class='tab_bg_1'>";
+      echo "<td class='center b' >";
+      $dbu = new DbUtils();
+      $condition = $dbu->getEntitiesRestrictCriteria($this->getTable());
+      self::dropdown(["name"=>"releasetemplates_id"]+$condition);
+      $url = self::getFormURL();
+      echo "<a  id='link' href='$url'>";
+      $url = $url."?template_id=";
+      $script = "
+      var link = function (id,linkurl) {
+         var link = linkurl+id;
+         $(\"a#link\").attr(\"href\", link);
+      };
+      $(\"select[name='releasetemplates_id']\").change(function() {
+         link($(\"select[name='releasetemplates_id']\").val(),'$url');
+         });";
+
+      echo Html::scriptBlock('$(document).ready(function() {'.$script.'});');
+      echo "<br/><br/>";
+      echo __("Create a release", 'releases');
+      echo "</a>";
+      echo "</table>";
+      echo "</div>";
    }
 }

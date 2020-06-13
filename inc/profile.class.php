@@ -40,14 +40,14 @@ class PluginReleasesProfile extends Profile {
 
    /**
     * @param CommonGLPI $item
-    * @param int $withtemplate
+    * @param int        $withtemplate
     *
     * @return string|translated
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile'
-         && $item->getField('interface') != 'helpdesk'
+          && $item->getField('interface') != 'helpdesk'
       ) {
          return __('Releases', 'releases');
       }
@@ -57,19 +57,19 @@ class PluginReleasesProfile extends Profile {
 
    /**
     * @param CommonGLPI $item
-    * @param int $tabnum
-    * @param int $withtemplate
+    * @param int        $tabnum
+    * @param int        $withtemplate
     *
     * @return bool
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType() == 'Profile') {
-         $ID = $item->getID();
+         $ID   = $item->getID();
          $prof = new self();
 
          self::addDefaultProfileInfos($ID,
-            ['plugin_releases_use' => 0]);
+                                      ['plugin_releases_use' => 0]);
          $prof->showForm($ID);
       }
       return true;
@@ -81,15 +81,15 @@ class PluginReleasesProfile extends Profile {
    static function createFirstAccess($ID) {
       //85
       self::addDefaultProfileInfos($ID,
-         [
-            'plugin_releases_releases' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_tests' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_risks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_rollbacks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_tasks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-            'plugin_releases_use' => 1
+                                   [
+                                      'plugin_releases_releases'  => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+                                      'plugin_releases_tests'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+                                      'plugin_releases_risks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+                                      'plugin_releases_rollbacks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+                                      'plugin_releases_tasks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
+                                      'plugin_releases_use'       => 1
 
-         ], true);
+                                   ], true);
    }
 
    /**
@@ -100,18 +100,18 @@ class PluginReleasesProfile extends Profile {
     * @internal param $profile
     */
    static function addDefaultProfileInfos($profiles_id, $rights, $drop_existing = false) {
-      $dbu = new DbUtils();
+      $dbu          = new DbUtils();
       $profileRight = new ProfileRight();
       foreach ($rights as $right => $value) {
          if ($dbu->countElementsInTable('glpi_profilerights',
-               ["profiles_id" => $profiles_id, "name" => $right]) && $drop_existing) {
+                                        ["profiles_id" => $profiles_id, "name" => $right]) && $drop_existing) {
             $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
          }
          if (!$dbu->countElementsInTable('glpi_profilerights',
-            ["profiles_id" => $profiles_id, "name" => $right])) {
+                                         ["profiles_id" => $profiles_id, "name" => $right])) {
             $myright['profiles_id'] = $profiles_id;
-            $myright['name'] = $right;
-            $myright['rights'] = $value;
+            $myright['name']        = $right;
+            $myright['rights']      = $value;
             $profileRight->add($myright);
 
             //Add right to the current session
@@ -123,7 +123,7 @@ class PluginReleasesProfile extends Profile {
    /**
     * Show profile form
     *
-    * @param int $profiles_id
+    * @param int  $profiles_id
     * @param bool $openform
     * @param bool $closeform
     *
@@ -135,7 +135,7 @@ class PluginReleasesProfile extends Profile {
 
       echo "<div class='firstbloc'>";
       if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-         && $openform
+          && $openform
       ) {
          $profile = new Profile();
          echo "<form method='post' action='" . $profile->getFormURL() . "'>";
@@ -145,9 +145,9 @@ class PluginReleasesProfile extends Profile {
       $profile->getFromDB($profiles_id);
       if ($profile->getField('interface') == 'central') {
          $rights = $this->getAllRights();
-         $profile->displayRightsChoiceMatrix($rights, ['canedit' => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title' => __('General')]);
+         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
+                                                       'default_class' => 'tab_bg_2',
+                                                       'title'         => __('General')]);
       }
 
       echo "<table class='tab_cadre_fixehov'>";
@@ -157,13 +157,13 @@ class PluginReleasesProfile extends Profile {
       echo "<tr class='tab_bg_2'>";
       echo "<td width='20%'>" . __('Use plugin', 'releases') . "</td>";
       echo "<td colspan='5'>";
-      Html::showCheckbox(['name' => '_plugin_releases_use',
-         'checked' => $effective_rights['plugin_releases_use']]);
+      Html::showCheckbox(['name'    => '_plugin_releases_use',
+                          'checked' => $effective_rights['plugin_releases_use']]);
       echo "</td></tr>\n";
       echo "</table>";
 
       if ($canedit
-         && $closeform
+          && $closeform
       ) {
          echo "<div class='center'>";
          echo Html::hidden('id', ['value' => $profiles_id]);
@@ -182,37 +182,37 @@ class PluginReleasesProfile extends Profile {
    static function getAllRights($all = false) {
       $rights = array(
          array('itemtype' => PluginReleasesRelease::getType(),
-            'label' => PluginReleasesRelease::getTypeName(2),
-            'field' => 'plugin_releases_releases'
+               'label'    => PluginReleasesRelease::getTypeName(2),
+               'field'    => 'plugin_releases_releases'
          ),
          array('itemtype' => PluginReleasesTest::getType(),
-            'label' => PluginReleasesTest::getTypeName(2),
-            'field' => 'plugin_releases_tests'
+               'label'    => PluginReleasesTest::getTypeName(2),
+               'field'    => 'plugin_releases_tests'
          ),
          array('itemtype' => PluginReleasesRisk::getType(),
-            'label' => PluginReleasesRisk::getTypeName(2),
-            'field' => 'plugin_releases_risks'
+               'label'    => PluginReleasesRisk::getTypeName(2),
+               'field'    => 'plugin_releases_risks'
          ),
          array('itemtype' => PluginReleasesRollback::getType(),
-            'label' => PluginReleasesRollback::getTypeName(2),
-            'field' => 'plugin_releases_rollbacks'
+               'label'    => PluginReleasesRollback::getTypeName(2),
+               'field'    => 'plugin_releases_rollbacks'
          ),
          array('itemtype' => PluginReleasesDeploytask::getType(),
-            'label' => PluginReleasesDeploytask::getTypeName(2),
-            'field' => 'plugin_releases_tasks'
+               'label'    => PluginReleasesDeploytask::getTypeName(2),
+               'field'    => 'plugin_releases_tasks'
          ),
-//         array('itemtype' => PluginReleasesRelease::getType(),
-//            'label' => PluginReleasesRelease::getTypeName(2),
-//            'field' => 'plugin_releases_releases'
-//         )
+         //         array('itemtype' => PluginReleasesRelease::getType(),
+         //            'label' => PluginReleasesRelease::getTypeName(2),
+         //            'field' => 'plugin_releases_releases'
+         //         )
          //TODO continuer les droits
       );
 
 
       if ($all) {
          $rights[] = ['itemtype' => PluginReleasesRelease::getType(),
-            'label' => __('Use plugin', 'releases'),
-            'field' => 'plugin_releases_use'];
+                      'label'    => __('Use plugin', 'releases'),
+                      'field'    => 'plugin_releases_use'];
       }
 
       return $rights;
@@ -250,11 +250,11 @@ class PluginReleasesProfile extends Profile {
    static function initProfile() {
       global $DB;
       $profile = new self();
-      $dbu = new DbUtils();
+      $dbu     = new DbUtils();
       //Add new rights in glpi_profilerights table
       foreach ($profile->getAllRights(true) as $data) {
          if ($dbu->countElementsInTable("glpi_profilerights",
-               ["name" => $data['field']]) == 0) {
+                                        ["name" => $data['field']]) == 0) {
             ProfileRight::addProfileRights([$data['field']]);
          }
       }

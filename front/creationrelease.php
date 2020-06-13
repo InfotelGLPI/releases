@@ -35,7 +35,7 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-$item = new PluginReleasesCreationRelease();
+$item = new PluginReleasesReleasetemplate();
 
 Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
 $item->displayMenu("");

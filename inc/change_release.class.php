@@ -43,17 +43,18 @@ class PluginReleasesChange_Release extends CommonDBRelation {
 
 
    // From CommonDBRelation
-   static public $itemtype_1   = 'Change';
-   static public $items_id_1   = 'changes_id';
+   static public $itemtype_1 = 'Change';
+   static public $items_id_1 = 'changes_id';
 
-   static public $itemtype_2   = 'PluginReleasesRelease';
-   static public $items_id_2   = 'plugin_releases_releases_id';
+   static public $itemtype_2 = 'PluginReleasesRelease';
+   static public $items_id_2 = 'plugin_releases_releases_id';
 
-   static $rightname                   = 'plugin_releases_releases';
+   static $rightname = 'plugin_releases_releases';
 
    static function getTypeName($nb = 0) {
-      return _n('Link Release/Change', 'Links Release/Change', $nb,'releases');
+      return _n('Link Release/Change', 'Links Release/Change', $nb, 'releases');
    }
+
    /**
     * @since 0.85
     *
@@ -64,10 +65,10 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       if (static::canView()) {
          $nb = 0;
          switch ($item->getType()) {
-             case 'PluginReleasesRelease' :
+            case 'PluginReleasesRelease' :
                if ($_SESSION['glpishow_count_on_tabs']) {
                   $nb = countElementsInTable('glpi_plugin_releases_changes_releases',
-                     ['plugin_releases_releases_id' => $item->getID()]);
+                                             ['plugin_releases_releases_id' => $item->getID()]);
                }
                return self::createTabEntry(Change::getTypeName(Session::getPluralNumber()), $nb);
          }
@@ -102,43 +103,43 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       }
 
       $canedit = $release->canEdit($ID);
-      $rand = mt_rand();
+      $rand    = mt_rand();
 
       $iterator = $DB->request([
-         'SELECT' => [
-                        'glpi_plugin_releases_changes_releases.id AS linkid',
-                        'glpi_changes.*'
-                     ],
-         'DISTINCT' => true,
-         'FROM' => 'glpi_plugin_releases_changes_releases',
-         'LEFT JOIN' => [
-            'glpi_changes' => [
-               'ON' => [
-                  'glpi_plugin_releases_changes_releases' => 'changes_id',
-                  'glpi_changes' => 'id'
-               ]
-            ]
-         ],
-         'WHERE' => [
-            'glpi_plugin_releases_changes_releases.plugin_releases_releases_id' => $ID,
-         ],
-         'ORDERBY' => [
-            'glpi_changes.name'
-         ]
-      ]);
+                                  'SELECT'    => [
+                                     'glpi_plugin_releases_changes_releases.id AS linkid',
+                                     'glpi_changes.*'
+                                  ],
+                                  'DISTINCT'  => true,
+                                  'FROM'      => 'glpi_plugin_releases_changes_releases',
+                                  'LEFT JOIN' => [
+                                     'glpi_changes' => [
+                                        'ON' => [
+                                           'glpi_plugin_releases_changes_releases' => 'changes_id',
+                                           'glpi_changes'                          => 'id'
+                                        ]
+                                     ]
+                                  ],
+                                  'WHERE'     => [
+                                     'glpi_plugin_releases_changes_releases.plugin_releases_releases_id' => $ID,
+                                  ],
+                                  'ORDERBY'   => [
+                                     'glpi_changes.name'
+                                  ]
+                               ]);
 
       $changes = [];
-      $used = [];
+      $used    = [];
       $numrows = count($iterator);
-//      $change_release = new self();
-//      $all = $change_release->find();
-//      foreach ($all as $one){
-//         $used[$one['changes_id']] = $one['changes_id'];
-//      }
+      //      $change_release = new self();
+      //      $all = $change_release->find();
+      //      foreach ($all as $one){
+      //         $used[$one['changes_id']] = $one['changes_id'];
+      //      }
 
 
       while ($data = $iterator->next()) {
-            $changes[$data['id']] = $data;
+         $changes[$data['id']] = $data;
 
       }
       $statues = Change::getNotSolvedStatusArray();
@@ -152,8 +153,8 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "<tr class='tab_bg_2'><td>";
          echo "<input type='hidden' name='plugin_releases_releases_id' value='$ID'>";
          Change::dropdown([
-//            'used' => $used,
-            'entity' => $release->getEntityID(),'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
+                             //            'used' => $used,
+                             'entity' => $release->getEntityID(), 'condition' => ['status' => Change::getNotSolvedStatusArray()]]);
          echo "</td><td class='center'>";
          echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
          echo "</td><td>";
@@ -167,7 +168,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       if ($canedit && $numrows) {
          Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
          $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-            'container' => 'mass' . __CLASS__ . $rand];
+                                 'container'     => 'mass' . __CLASS__ . $rand];
          Html::showMassiveActions($massiveactionparams);
       }
 
@@ -179,15 +180,15 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          Session::initNavigateListItems('Change',
             //TRANS : %1$s is the itemtype name,
             //        %2$s is the name of the item (used for headings of a list)
-            sprintf(__('%1$s = %2$s'), Ticket::getTypeName(1),
-               $release->fields["name"]));
+                                        sprintf(__('%1$s = %2$s'), Ticket::getTypeName(1),
+                                                $release->fields["name"]));
 
          $i = 0;
          foreach ($changes as $data) {
             Session::addToNavigateListItems('Change', $data["id"]);
-            Change::showShort($data['id'], ['row_num' => $i,
-               'type_for_massiveaction' => __CLASS__,
-               'id_for_massiveaction' => $data['linkid']]);
+            Change::showShort($data['id'], ['row_num'                => $i,
+                                            'type_for_massiveaction' => __CLASS__,
+                                            'id_for_massiveaction'   => $data['linkid']]);
             $i++;
          }
          Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . __CLASS__ . $rand);
@@ -205,28 +206,28 @@ class PluginReleasesChange_Release extends CommonDBRelation {
 
    function post_addItem() {
       $release = new PluginReleasesRelease();
-      if($release->getFromDB($this->getField("plugin_releases_releases_id"))){
-         if($release->getField("state")<PluginReleasesRelease::CHANGEDEFINITION){
-            $update["id"] = $release->getID();
-            $update["state"] = PluginReleasesRelease::CHANGEDEFINITION;
+      if ($release->getFromDB($this->getField("plugin_releases_releases_id"))) {
+         if ($release->getField("status") < PluginReleasesRelease::CHANGEDEFINITION) {
+            $update["id"]     = $release->getID();
+            $update["status"] = PluginReleasesRelease::CHANGEDEFINITION;
             $release->update($update);
          }
       }
 
    }
+
    /**
     * Actions done after the PURGE of the item in the database
     *
     * @return void
     **/
    function post_purgeItem() {
-    //TODO
+      //TODO
    }
 
    static function canCreate() {
       return Session::haveRight(static::$rightname, UPDATE);
    }
-
 
 
    /**
@@ -240,6 +241,116 @@ class PluginReleasesChange_Release extends CommonDBRelation {
     **/
    static function canView() {
       return Session::haveRight(static::$rightname, READ);
+   }
+
+   static function showReleaseFromChange($item) {
+      global $CFG_GLPI, $DB;
+
+      PluginReleasesRelease::showCreateRelease($item);
+
+      $ID      = $item->getID();
+      $canedit = PluginReleasesRelease::canUpdate();
+      $rand    = mt_rand();
+
+      $iterator = $DB->request([
+                                  'SELECT'    => [
+                                     'glpi_plugin_releases_changes_releases.id AS linkid',
+                                     'glpi_plugin_releases_releases.*'
+                                  ],
+                                  'DISTINCT'  => true,
+                                  'FROM'      => 'glpi_plugin_releases_changes_releases',
+                                  'LEFT JOIN' => [
+                                     'glpi_plugin_releases_releases' => [
+                                        'ON' => [
+                                           'glpi_plugin_releases_changes_releases' => 'plugin_releases_releases_id',
+                                           'glpi_plugin_releases_releases'         => 'id'
+                                        ]
+                                     ]
+                                  ],
+                                  'WHERE'     => [
+                                     'glpi_plugin_releases_changes_releases.changes_id' => $ID,
+                                  ],
+                                  'ORDERBY'   => [
+                                     'glpi_plugin_releases_releases.name'
+                                  ]
+                               ]);
+
+      $changes = [];
+      $used    = [];
+      $numrows = count($iterator);
+      while ($data = $iterator->next()) {
+         $changes[$data['id']] = $data;
+
+      }
+      $i       = 0;
+      $row_num = 1;
+      if ($canedit && $numrows) {
+         Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+         $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
+                                 'container'     => 'mass' . __CLASS__ . $rand];
+         Html::showMassiveActions($massiveactionparams);
+      }
+      echo "<table class='tab_cadre_fixehov'>";
+      echo "<tr class='noHover'><th colspan='6'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
+      echo "</tr>";
+      if ($numrows) {
+         echo "<tr  class='tab_bg_1'>";
+         if ($canedit && $numrows) {
+
+            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+         }
+
+         echo "<th>" . __('Name') . "</th>";
+         echo "<th>" . __('Status') . "</th>";
+         echo "<th>" . __('Release Area', 'releases') . "</th>";
+         echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
+         echo "<th>" . __('Service shutdown', 'releases') . "</th>";
+         echo "</tr>";
+         foreach ($changes as $idc => $d) {
+
+            Session::addToNavigateListItems(self::getType(), $d["id"]);
+            $i++;
+            $row_num++;
+            echo "<tr class='tab_bg_1 center'>";
+            echo "<td width='10'>";
+            if ($canedit) {
+               Html::showMassiveActionCheckBox(__CLASS__, $d["id"]);
+            }
+            echo "</td>";
+
+            echo "<td class='center'>";
+            echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/front/release.form.php?id=" . $idc . "'>";
+            echo $d["name"];
+            if ($_SESSION["glpiis_ids_visible"] || empty($d["name"])) {
+               echo " (" . $idc . ")";
+            }
+            echo "</a></td>";
+            echo "<td >";
+            $var = "<span class='status'>";
+            $var .= PluginReleasesRelease::getStatusIcon($d["status"]);
+            $var .= PluginReleasesRelease::getStatus($d["status"]);
+            $var .= "</span>";
+            echo $var;
+            echo "</td >";
+            echo "<td >";
+            echo Html::resume_text(Html::Clean($d["content"]));
+            echo "</td >";
+            echo "<td >";
+            echo Html::convDate($d["date_preproduction"]);
+            echo "</td >";
+            echo "<td >";
+            $tab = [1 => __("Yes"), 0 => __("No")];
+            echo $tab[$d["service_shutdown"]];
+            echo "</td >";
+            echo "</tr>";
+         }
+      }
+      echo "</table>";
+      if ($canedit && $numrows) {
+         $massiveactionparams['ontop'] = false;
+         Html::showMassiveActions($massiveactionparams);
+         Html::closeForm();
+      }
    }
 }
 

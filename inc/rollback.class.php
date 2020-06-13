@@ -72,48 +72,48 @@ class PluginReleasesRollback extends CommonDBTM {
 
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-
-      if ($item->getType() == self::getType()) {
-        return self::getTypeName(2);
-      } else if ($item->getType() == PluginReleasesRelease::getType()){
-         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
-      }
-
-      return '';
-   }
-   static function countForItem(CommonDBTM $item) {
-      $dbu = new DbUtils();
-      $table = CommonDBTM::getTable(PluginReleasesRollback::class);
-      return $dbu->countElementsInTable($table,
-         ["plugin_releases_releases_id" => $item->getID()]);
-   }
-
-
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
-      if ($item->getType() == PluginReleasesRelease::getType()) {
-         $self = new self();
-         if(self::canView()){
-            $self->showScripts($item);
-         }else{
-            echo "<div class='center'><br><br>";
-            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
-         }
-//         if(self::canCreate()) {
-//            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
-//               'target' => $CFG_GLPI['root_doc'] . "/plugins/release/front/rollback.form.php"]);
+//   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+//
+//      if ($item->getType() == self::getType()) {
+//        return self::getTypeName(2);
+//      } else if ($item->getType() == PluginReleasesRelease::getType()){
+//         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
+//      }
+//
+//      return '';
+//   }
+//   static function countForItem(CommonDBTM $item) {
+//      $dbu = new DbUtils();
+//      $table = CommonDBTM::getTable(PluginReleasesRollback::class);
+//      return $dbu->countElementsInTable($table,
+//         ["plugin_releases_releases_id" => $item->getID()]);
+//   }
+//
+//
+//   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+//      global $CFG_GLPI;
+//      if ($item->getType() == PluginReleasesRelease::getType()) {
+//         $self = new self();
+//         if(self::canView()){
+//            $self->showScripts($item);
+//         }else{
+//            echo "<div class='center'><br><br>";
+//            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+//            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
 //         }
-      }
-
-   }
-   function defineTabs($options = []) {
-
-      $ong = [];
-      $this->addDefaultFormTab($ong);
-      return $ong;
-   }
+////         if(self::canCreate()) {
+////            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
+////               'target' => $CFG_GLPI['root_doc'] . "/plugins/release/front/rollback.form.php"]);
+////         }
+//      }
+//
+////   }
+//   function defineTabs($options = []) {
+//
+//      $ong = [];
+//      $this->addDefaultFormTab($ong);
+//      return $ong;
+//   }
 /**
 * Type than could be linked to a Rack
 *

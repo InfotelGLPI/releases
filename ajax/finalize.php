@@ -41,7 +41,7 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"]) ) {
    $release = new PluginReleasesRelease();
    $val = [];
    $val['id'] = $_REQUEST["id"];
-   $val['state'] = PluginReleasesRelease::FINALIZE;
+   $val['status'] = PluginReleasesRelease::FINALIZE;
    $release->update($val);
 
    $review = new PluginReleasesReview();
