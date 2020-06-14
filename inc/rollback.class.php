@@ -82,13 +82,13 @@ class PluginReleasesRollback extends CommonDBTM {
 //
 //      return '';
 //   }
-//   static function countForItem(CommonDBTM $item) {
-//      $dbu = new DbUtils();
-//      $table = CommonDBTM::getTable(PluginReleasesRollback::class);
-//      return $dbu->countElementsInTable($table,
-//         ["plugin_releases_releases_id" => $item->getID()]);
-//   }
-//
+   static function countForItem(CommonDBTM $item) {
+      $dbu = new DbUtils();
+      $table = CommonDBTM::getTable(PluginReleasesRollback::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releases_id" => $item->getID()]);
+   }
+
 //
 //   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 //      global $CFG_GLPI;
@@ -173,27 +173,7 @@ class PluginReleasesRollback extends CommonDBTM {
 
 
       echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_releases_releases_id'])) {
-
-
-         echo "<td hidden>" . _n('Release', 'Releases', 1, 'release') . "</td>";
-         $rand = mt_rand();
-
-         echo "<td hidden>";
-         Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-               'value' => $options["plugin_releases_releases_id"],
-               'rand' => $rand]);
-         echo "</td>";
-      } else {
-         echo "<td>" . _n('Release', 'Releases', 1, 'release') . "</td>";
-         $rand = mt_rand();
-
-         echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-            'value' => $this->fields["plugin_releases_releases_id"]]);
-         echo "</td>";
-      }
+      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
@@ -276,8 +256,8 @@ class PluginReleasesRollback extends CommonDBTM {
 
       echo "<div class='timeline_box'>";
       $rand = mt_rand();
-      $release->showTimelineForm($rand,self::class);
-      $release->showTimeLine($rand,self::class);
+//      $release->showTimelineForm($rand,self::class);
+//      $release->showTimeLine($rand,self::class);
       $release->showStateItem("rollback_state",__("All rollbacks are defined ?","release"),PluginReleasesRelease::ROLLBACKDEFINITION);
       echo "</div>";
 

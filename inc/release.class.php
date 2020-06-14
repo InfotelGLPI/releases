@@ -55,11 +55,12 @@ class PluginReleasesRelease extends CommonITILObject {
    const DATEDEFINITION     = 9; // date definition
    const CHANGEDEFINITION   = 10; // changes defenition
    const RISKDEFINITION     = 11; // risks definition
-   const TESTDEFINITION     = 12; // tests definition
-   const ROLLBACKDEFINITION = 13; // rollbacks definition
-   const FINALIZE           = 14; // finalized
-   const REVIEW             = 15; // reviewed
-   const CLOSED             = 16; // closed
+   const ROLLBACKDEFINITION = 12; // rollbacks definition
+   const TASKDEFINITION     = 13; // tests definition
+   const TESTDEFINITION     = 14; // tests definition
+   const FINALIZE           = 15; // finalized
+   const REVIEW             = 16; // reviewed
+   const CLOSED             = 17; // closed
 
    static $typeslinkable = ["Computer"  => "Computer",
                             "Appliance" => "Appliance"];
@@ -73,6 +74,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       return _n('Release', 'Releases', $nb, 'releases');
    }
+
 
    static function countForItem($ID, $class, $state = 0) {
       $dbu   = new DbUtils();
@@ -202,7 +204,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'field'         => 'is_recursive',
          'name'          => __('Number of risks', 'releases'),
          'massiveaction' => false,
-         'datatype'      => 'date'
+         'datatype'      => 'specific'
       ];
       $tab[] = [
          'id'            => '5',
@@ -265,7 +267,7 @@ class PluginReleasesRelease extends CommonITILObject {
             return $var;
             break;
          case 'service_shutdown':
-            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeployTask::class, 1) . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeployTask::class);
+            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class, 1) . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
@@ -315,7 +317,7 @@ class PluginReleasesRelease extends CommonITILObject {
          $risks            = [];
          $releaseTest      = new PluginReleasesTest();
          $testTemplate     = new PluginReleasesTesttemplate();
-         $releaseTask      = new PluginReleasesDeployTask();
+         $releaseTask      = new PluginReleasesDeploytask();
          $taskTemplate     = new PluginReleasesDeploytasktemplate();
          $releaseRollback  = new PluginReleasesRollback();
          $rollbackTemplate = new PluginReleasesRollbacktemplate();
@@ -392,7 +394,7 @@ class PluginReleasesRelease extends CommonITILObject {
       //                      VALUES (".$this->fields['id'].",'". PluginReleasesRisk::getType()."', 0),
       //                      (".$this->fields['id'].",'". PluginReleasesTest::getType()."', 0),
       //                      (".$this->fields['id'].",'". PluginReleasesRelease::getType()."', 0),
-      //                      (".$this->fields['id'].",'". PluginReleasesDeployTask::getType()."', 0),
+      //                      (".$this->fields['id'].",'". PluginReleasesDeploytask::getType()."', 0),
       //                      (".$this->fields['id'].",'PluginReleaseDate', 0),
       //                      (".$this->fields['id'].",'". PluginReleasesRollback::getType()."', 0)
       //                      ;";
@@ -424,8 +426,9 @@ class PluginReleasesRelease extends CommonITILObject {
             self::DATEDEFINITION     => __('Dates defined', 'releases'),
             self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
             self::RISKDEFINITION     => __('Risks defined', 'releases'),
-            self::TESTDEFINITION     => __('Tests defined', 'releases'),
             self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
+            self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
+            self::TESTDEFINITION     => __('Tests in progress', 'releases'),
             self::FINALIZE           => __('Finalized', 'releases'),
             self::REVIEW             => __('Reviewed', 'releases'),
             self::CLOSED             => _x('status', 'Closed')];
@@ -436,8 +439,9 @@ class PluginReleasesRelease extends CommonITILObject {
             self::DATEDEFINITION     => __('Dates defined', 'releases'),
             self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
             self::RISKDEFINITION     => __('Risks defined', 'releases'),
-            self::TESTDEFINITION     => __('Tests defined', 'releases'),
             self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
+            self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
+            self::TESTDEFINITION     => __('Tests in progress', 'releases'),
             self::FINALIZE           => __('Finalized', 'releases'),
             self::REVIEW             => __('Reviewed', 'releases'),
             self::CLOSED             => _x('status', 'Closed')];
@@ -529,6 +533,10 @@ class PluginReleasesRelease extends CommonITILObject {
             $class = 'circle';
             $solid = false;
             break;
+         case self::TASKDEFINITION :
+            $class = 'circle';
+            $solid = false;
+            break;
          case self::ROLLBACKDEFINITION :
             $class = 'circle';
             $solid = false;
@@ -604,6 +612,9 @@ class PluginReleasesRelease extends CommonITILObject {
          case self::TESTDEFINITION :
             $key = 'testdef';
             break;
+         case self::TASKDEFINITION :
+            $key = 'taskdef';
+            break;
          case self::ROLLBACKDEFINITION :
             $key = 'rollbackdef';
             break;
@@ -677,36 +688,6 @@ class PluginReleasesRelease extends CommonITILObject {
       return $types;
    }
 
-   function initShowForm($ID, $options = []) {
-
-
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-   }
-
-   function closeShowForm($options) {
-      $this->showFormButtons($options);
-   }
-
-   function showForm($ID, $options = []) {
-      global $DB, $CFG_GLPI;
-      // echo "<div style='display: inline-flex;'>";
-      $this->initShowForm($ID, $options);
-
-      $this->coreShowForm($ID, $options);
-      $this->closeShowForm($options);
-      /* $var = '<div id="workflow" class="workflow"></div>';
-
-
-       echo $var;
-       Ajax::updateItem("workflow",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/workflow.php",
-          ["id"=>$ID]);
-       echo "</div>";*/
-
-      return true;
-   }
-
    function prepareField($template_id) {
       $template = new PluginReleasesReleasetemplate();
       $template->getFromDB($template_id);
@@ -718,8 +699,9 @@ class PluginReleasesRelease extends CommonITILObject {
       }
    }
 
-   function coreShowForm($ID, $options = []) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI, $DB;
+
       if (isset($options["template_id"]) && $options["template_id"] > 0) {
          $this->prepareField($options["template_id"]);
          echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
@@ -737,19 +719,37 @@ class PluginReleasesRelease extends CommonITILObject {
 
          }
       }
+
+      if ($ID > 0) {
+         $this->check($ID, READ);
+      } else {
+         // Create item
+         $this->check(-1, CREATE, $options);
+      }
+
+      if (!$this->isNewItem()) {
+         $options['formtitle'] = sprintf(
+            __('%1$s - ID %2$d'),
+            $this->getTypeName(1),
+            $ID
+         );
+         //set ID as already defined
+         $options['noid'] = true;
+      }
+
+      if (!isset($options['template_preview'])) {
+         $options['template_preview'] = 0;
+      }
+
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
+
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
       echo Html::input("name", ["value" => $this->getField('name')]);
-
       echo "</td>";
-      echo "<td>";
-      if (isset($options["changestabs"])) {
-         echo "<a href='" . $this->getFormURL() . "?id=$ID'>";
-         echo __('Go to the release', "releases");
-         echo "</a>";
-      }
-      echo "</td>";
+      echo "<td>" . __('Status') . "</td>";
       echo "<td>";
       Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->getField('status')]);
       //      echo self::getStatus($this->getField('status'));
@@ -863,8 +863,7 @@ class PluginReleasesRelease extends CommonITILObject {
          echo " <div class=\"container-fluid\">
                               <ul class=\"list-unstyled multi-steps\">";
 
-
-         for ($i = 7; $i <= 16; $i++) {
+         for ($i = 7; $i <= 17; $i++) {
             $class = "";
             //
             //            if ($value["ranking"] < $ranking) {
@@ -872,16 +871,18 @@ class PluginReleasesRelease extends CommonITILObject {
             //
             //            } else
             if ($this->getField("status") == $i - 1) {
-               $class = "class = current";
-               $class = "class = is-active";
+               //               $class = "class='current'";
+               $class = "class='is-active'";
             }
             $name = self::getStatus($i);
             echo "<li $class>" . $name . "</li>";
          }
-         echo " </ul>    </div>";
+         echo " </ul></div>";
          echo "</td>";
          echo "</tr>";
       }
+
+      $this->showFormButtons($options);
 
       return true;
    }
@@ -917,8 +918,8 @@ class PluginReleasesRelease extends CommonITILObject {
       echo _n('Deploy Task', 'Deploy Tasks', 2, 'releases');
       echo "</td>";
       echo "<td class='left'>";
-      $dtF = self::countForItem($ID, PluginReleasesDeployTask::class, 1);
-      $dtT = self::countForItem($ID, PluginReleasesDeployTask::class);
+      $dtF = self::countForItem($ID, PluginReleasesDeploytask::class, 1);
+      $dtT = self::countForItem($ID, PluginReleasesDeploytask::class);
       if ($dtT != 0) {
          $pourcentage = $dtF / $dtT * 100;
       } else {
@@ -1040,37 +1041,76 @@ class PluginReleasesRelease extends CommonITILObject {
       }
    }
 
+   /**
+    * Displays the form at the top of the timeline.
+    * Includes buttons to add items to the timeline, new item form, and approbation form.
+    *
+    * @param integer $rand random value used by JavaScript function names
+    *
+    * @return void
+    * @since 9.4.0
+    *
+    */
    function showTimelineForm($rand) {
-
       global $CFG_GLPI;
 
-      $taskClass = new PluginReleasesRisk();
+      $objType    = static::getType();
+      $foreignKey = static::getForeignKeyField();
 
-      $canadd_task = $taskClass->can(-1, CREATE);
+      //check sub-items rights
+      $tmp       = [$foreignKey => $this->getID()];
+      $riskClass = "PluginReleasesRisk";
+      $risk      = new $riskClass;
+      $risk->getEmpty();
+      $risk->fields['itemtype'] = $objType;
+      $risk->fields['items_id'] = $this->getID();
+
+
+      $rollbackClass = "PluginReleasesRollback";
+      $rollback      = new $rollbackClass;
+      $rollback->getEmpty();
+      $rollback->fields['itemtype'] = $objType;
+      $rollback->fields['items_id'] = $this->getID();
+
+      $taskClass = "PluginReleasesDeploytask";
+      $task      = new $taskClass;
+      $task->getEmpty();
+      $task->fields['itemtype'] = $objType;
+      $task->fields['items_id'] = $this->getID();
+
+      $testClass = "PluginReleasesTest";
+      $test      = new $testClass;
+      $test->getEmpty();
+      $test->fields['itemtype'] = $objType;
+      $test->fields['items_id'] = $this->getID();
+
+      $canadd_risk = $risk->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
+                                                               array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray()));
+
+      $canadd_rollback = $rollback->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
+                                                                       array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray()));
+
+      $canadd_task = $task->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
+                                                               array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray()));
+
+      $canadd_test = $test->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $this->getSolvedStatusArray());
 
       // javascript function for add and edit items
       $objType    = self::getType();
       $foreignKey = self::getForeignKeyField();
 
       echo "<script type='text/javascript' >
-      function change_task_state(tasks_id, target,type) {
-         $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/updateState.php',
+      function change_task_state(tasks_id, target) {
+         $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
                 {'action':     'change_task_state',
                   'tasks_id':   tasks_id,
-                  'type': type,
                   'parenttype': '$objType',
                   '$foreignKey': " . $this->fields['id'] . "
                 })
                 .done(function(response) {
-                                  $(target).removeClass('state_1 state_2')
+                  $(target).removeClass('state_1 state_2')
                            .addClass('state_'+response.state)
                            .attr('title', response.label);
-                })
-                .fail(function( jqXHR, textStatus, errorThrown ){
-                  console.log('erreur');
-                  console.log(jqXHR);
-                  console.log(textStatus);
-                  console.log(errorThrown);
                 });
       }
 
@@ -1094,7 +1134,7 @@ class PluginReleasesRelease extends CommonITILObject {
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitem.php',
+                                                 .load('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
@@ -1104,7 +1144,7 @@ class PluginReleasesRelease extends CommonITILObject {
       };
       </script>";
 
-      if (!$canadd_task) {
+      if (!$canadd_risk && !$canadd_rollback && !$canadd_task && !$canadd_test && !$this->canReopen()) {
          return false;
       }
 
@@ -1115,35 +1155,59 @@ class PluginReleasesRelease extends CommonITILObject {
                  'parenttype' => $objType,
                  $foreignKey  => $this->fields['id'],
                  'id'         => -1];
-      if (isset($_GET['load_kb_sol'])) {
-         $params['load_kb_sol'] = $_GET['load_kb_sol'];
-      }
-
-      $out = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/viewsubitem.php",
-                                    $params, "", false);
+      $out    = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
+                                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php",
+                                       $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
-      echo "$('#approbation_form$rand').remove()";
       echo "};";
-
-
       echo "</script>\n";
 
       //show choices
       echo "<div class='timeline_form'>";
+      echo "<div class='filter_timeline_release'>";
       echo "<ul class='timeline_choices'>";
 
-      if ($canadd_task) {
-         echo "<h2>" . _sx('button', 'Add') . " : </h2>";
+      $release = new $objType();
+      $release->getFromDB($this->getID());
+
+      echo "<li class='risk'>";
+      echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
+           "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
+      if ($canadd_risk) {
+         echo "<i class='fas fa-plus-circle' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
-      if ($canadd_task) {
-         echo "<li class='risks' onclick='" .
-              "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"PluginReleasesRisk\");'>"
-              . "<i class='far fa-check-square'></i>" . PluginReleasesRisk::getTypeName(2) . "</li>";
+
+      echo "<i class='fas fa-chevron-right' style='margin-right: 10px;'></i>";
+
+      echo "<li class='rollback'>";
+      echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
+           "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
+      if ($canadd_rollback) {
+         echo "<i class='fas fa-plus-circle' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
-      Plugin::doHook('timeline_actions', ['item' => $this, 'rand' => $rand]);
+
+      echo "<i class='fas fa-chevron-right' style='margin-right: 10px;'></i>";
+
+
+      echo "<li class='task'>";
+      echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
+           "'><i class='fas fa-check-square'></i>" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
+      if ($canadd_task) {
+         echo "<i class='fas fa-plus-circle'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+      }
+
+      echo "<i class='fas fa-chevron-right' style='margin-right: 10px;'></i>";
+
+      echo "<li class='test'>";
+      echo "<a href='#' data-type='test' title='" . $testClass::getTypeName(2) .
+           "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
+      if ($canadd_test) {
+         echo "<i class='fas fa-plus-circle' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-left: -5px;'></i>";
+      }
 
       echo "</ul>"; // timeline_choices
+      echo "</div>";
+
       echo "<div class='clear'>&nbsp;</div>";
 
       echo "</div>"; //end timeline_form
@@ -1151,24 +1215,71 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<div class='ajax_box' id='viewitem" . $this->fields['id'] . "$rand'></div>\n";
    }
 
-   function showTimeLine($rand) {
-      global $DB, $CFG_GLPI, $autolink_options;
 
-      $objType  = self::getType();
+   /**
+    * Displays the timeline filter buttons
+    *
+    * @return void
+    * @since 9.4.0
+    *
+    */
+   function filterTimeline() {
+
+      echo "<div class='filter_timeline'>";
+      echo "<h3>" . __("Timeline filter") . " : </h3>";
+      echo "<ul>";
+
+      $riskClass = "PluginReleasesRisk";
+      echo "<li><a href='#' class='fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
+           "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
+      $rollbackClass = "PluginReleasesRollback";
+      echo "<li><a href='#' class='fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
+           "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
+      $taskClass = "PluginReleasesDeploytask";
+      echo "<li><a href='#' class='fas fa-check-square pointer' data-type='task' title='" . $taskClass::getTypeName(2) .
+           "'><span class='sr-only'>" . $taskClass::getTypeName(2) . "</span></a></li>";
+      $testClass = "PluginReleasesTest";
+      echo "<li><a href='#' class='fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
+           "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
+      echo "<li><a href='#' class='fa fa-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
+           "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
+      echo "</ul>";
+      echo "</div>";
+
+      echo "<script type='text/javascript'>$(function() {filter_timeline();});</script>";
+      echo "<script type='text/javascript'>$(function() {filter_timeline_release();});</script>";
+   }
+
+   /**
+    * Displays the timeline of items for this ITILObject
+    *
+    * @param integer $rand random value used by div
+    *
+    * @return void
+    * @since 9.4.0
+    *
+    */
+   function showTimeLine($rand) {
+      global $CFG_GLPI, $autolink_options;
+
       $user     = new User();
-      $group    = new Group();
       $pics_url = $CFG_GLPI['root_doc'] . "/pics/timeline";
       $timeline = $this->getTimelineItems();
 
       $autolink_options['strip_protocols'] = false;
 
+      $objType    = static::getType();
+      $foreignKey = static::getForeignKeyField();
 
+      //display timeline
       echo "<div class='timeline_history'>";
+
+      static::showTimelineHeader();
+
       $timeline_index = 0;
+
       foreach ($timeline as $item) {
-         $options = ['parent' => $this,
-                     'rand'   => $rand
-         ];
+
          if ($obj = getItemForItemtype($item['type'])) {
             $obj->fields = $item['item'];
          } else {
@@ -1226,8 +1337,10 @@ class PluginReleasesRelease extends CommonITILObject {
                echo "<span class='h_user_name'>";
                $userdata = getUserName($item_i['users_id'], 2);
                echo $user->getLink() . "&nbsp;";
-               echo Html::showToolTip($userdata["comment"],
-                                      ['link' => $userdata['link']]);
+               echo Html::showToolTip(
+                  $userdata["comment"],
+                  ['link' => $userdata['link']]
+               );
                echo "</span>";
             } else {
                echo __("Requester");
@@ -1237,20 +1350,13 @@ class PluginReleasesRelease extends CommonITILObject {
 
          echo "</div>"; //h_info
 
-         $domid = "viewitem{$item['type']}{$item_i['id']}";
-         if ($item['type'] == $objType . 'Validation' && isset($item_i['status'])) {
-            $domid .= $item_i['status'];
-         }
+         $domid     = "viewitem{$item['type']}{$item_i['id']}";
          $randdomid = $domid . $rand;
          $domid     = Toolbox::slugify($domid);
 
          $fa    = null;
          $class = "h_content";
-         if ($item['type'] != "Document_Item") {
-            $class .= " {$item['type']::getCssClass()}";
-         } else {
-            $class .= " " . $item['type'];
-         }
+         $class .= " {$item['type']::getCssClass()}";
 
 
          //         $class .= " {$item_i['state']}";
@@ -1266,8 +1372,8 @@ class PluginReleasesRelease extends CommonITILObject {
          }
          echo "<div class='displayed_content'>";
          echo "<div class='h_controls'>";
-         if (!in_array($item['type'], ['Document_Item', 'Assign'])
-             && $item_i['can_edit']
+         if ($item_i['can_edit']
+             && !in_array($this->fields['status'], $this->getClosedStatusArray())
          ) {
             // merge/split icon
 
@@ -1277,18 +1383,7 @@ class PluginReleasesRelease extends CommonITILObject {
             echo "></span>";
          }
 
-         // show "is_private" icon
-         if (isset($item_i['is_private']) && $item_i['is_private']) {
-            echo "<span class='private'><i class='fas fa-lock control_item' title='" . __s('Private') .
-                 "'></i><span class='sr-only'>" . __('Private') . "</span></span>";
-         }
-
          echo "</div>";
-         if (isset($item_i['requesttypes_id'])
-             && file_exists("$pics_url/" . $item_i['requesttypes_id'] . ".png")) {
-            echo "<img src='$pics_url/" . $item_i['requesttypes_id'] . ".png' class='h_requesttype' />";
-         }
-
          if (isset($item_i['content'])) {
             $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
             $content = Toolbox::getHtmlToDisplay($content);
@@ -1314,7 +1409,9 @@ class PluginReleasesRelease extends CommonITILObject {
             echo "</p>";
 
             echo "<div class='rich_text_container'>";
-            echo Html::setRichTextContent('', $content, '', true);
+            $richtext = Html::setRichTextContent('', $content, '', true);
+            $richtext = Html::replaceImagesByGallery($richtext);
+            echo $richtext;
             echo "</div>";
 
             if (!empty($long_text)) {
@@ -1345,7 +1442,6 @@ class PluginReleasesRelease extends CommonITILObject {
             echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id']) . "<br>";
          }
 
-
          if (isset($item_i['actiontime'])
              && !empty($item_i['actiontime'])) {
             echo "<span class='actiontime'>";
@@ -1359,7 +1455,6 @@ class PluginReleasesRelease extends CommonITILObject {
             echo Html::convDateTime($item_i["end"]);
             echo "</span>";
          }
-
 
          if (isset($item_i['users_id_editor'])
              && $item_i['users_id_editor'] > 0) {
@@ -1378,53 +1473,6 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
          echo "</div>"; // b_right
-         if ($item['type'] == 'Document_Item') {
-            if ($item_i['filename']) {
-               $filename = $item_i['filename'];
-               $ext      = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-               echo "<img src='";
-               if (empty($filename)) {
-                  $filename = $item_i['name'];
-               }
-               if (file_exists(GLPI_ROOT . "/pics/icones/$ext-dist.png")) {
-                  echo $CFG_GLPI['root_doc'] . "/pics/icones/$ext-dist.png";
-               } else {
-                  echo "$pics_url/file.png";
-               }
-               echo "'/>&nbsp;";
-
-               echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
-                    . "&PluginReleasesRelease=" . $this->getID() . "' target='_blank'>$filename";
-               if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
-                  echo "<div class='timeline_img_preview'>";
-                  echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
-                       . "&PluginReleasesRelease=" . $this->getID() . "&context=timeline'/>";
-                  echo "</div>";
-               }
-               echo "</a>";
-            }
-            if ($item_i['link']) {
-               echo "<a href='{$item_i['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
-            }
-            if (!empty($item_i['mime'])) {
-               echo "&nbsp;(" . $item_i['mime'] . ")";
-            }
-            echo "<span class='buttons'>";
-            echo "<a href='" . Document::getFormURLWithID($item_i['id']) . "' class='edit_document fa fa-eye pointer' title='" .
-                 _sx("button", "Show") . "'>";
-            echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
-
-            $doc = new Document();
-            $doc->getFromDB($item_i['id']);
-            if ($doc->can($item_i['id'], UPDATE)) {
-               echo "<a href='" . static::getFormURL() .
-                    "?delete_document&documents_id=" . $item_i['id'] .
-                    "&PluginReleasesRelease=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
-                    _sx("button", "Delete permanently") . "'>";
-               echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
-            }
-            echo "</span>";
-         }
 
          echo "</div>"; // displayed_content
          echo "</div>"; //end h_content
@@ -1432,8 +1480,9 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "</div>"; //end  h_info
 
          $timeline_index++;
-      } // end foreach timeline
-      echo "</div>";
+      }
+      // end timeline
+      echo "</div>"; // h_item $user_position
    }
 
 
@@ -1444,60 +1493,80 @@ class PluginReleasesRelease extends CommonITILObject {
 
       $timeline = [];
 
-      //      $item = new PluginReleasesRisk();
-      $obj = new PluginReleasesRisk();
+      $riskClass     = 'PluginReleasesRisk';
+      $risk_obj      = new $riskClass;
+      $rollbackClass = 'PluginReleasesRollback';
+      $rollback_obj  = new $rollbackClass;
+      $taskClass     = 'PluginReleasesDeploytask';
+      $task_obj      = new $taskClass;
+      $testClass     = 'PluginReleasesTest';
+      $test_obj      = new $testClass;
 
       //checks rights
-      $restrict_fup = $restrict_task = [];
+      $restrict_risk = $restrict_rollback = $restrict_task = $restrict_test = [];
+      //      $restrict_risk['itemtype'] = static::getType();
+      //      $restrict_risk['items_id'] = $this->getID();
 
-
-      if ($obj->maybePrivate() && !Session::haveRight("task", CommonITILTask::SEEPRIVATE)) {
-         $restrict_task = [
-            'OR' => [
-               'is_private' => 0,
-               'users_id'   => Session::getLoginUserID()
-            ]
-         ];
-      }
-
-
-      if ($obj->canview() && $obj == "PluginReleasesDeployTask") {
-         $tasks = $obj->find([$foreignKey => $this->getID()] + $restrict_task);
-         foreach ($tasks as $tasks_id => $task) {
-            $obj->getFromDB($tasks_id);
-            $task['can_edit'] = $obj->canUpdateItem();
-            $rand             = mt_rand();
-            if (isset($task['date_creation'])) {
-               $timeline["task" . $obj->getField('level') . "$tasks_id" . $rand] = ['type' => $obj,
-                                                                                    'item' => $task,
-               ];
-            } else {
-               $timeline["task" . $obj->getField('level') . "$tasks_id" . $rand] = ['type' => $obj,
-                                                                                    'item' => $task,
-               ];
-            }
-            $i = 0;
-
-            $document_item_obj = new Document_Item();
-            $document_obj      = new Document();
-            $document_items    = $document_item_obj->find(['itemtype' => $obj, 'items_id' => $tasks_id]);
-            foreach ($document_items as $document_item) {
-               $document_obj->getFromDB($document_item['documents_id']);
-
-               $itemd = $document_obj->fields;
-               // #1476 - set date_mod and owner to attachment ones
-               $itemd['date_mod'] = $document_item['date_mod'];
-               $itemd['users_id'] = $document_item['users_id'];
-
-               $itemd['timeline_position'] = $document_item['timeline_position'];
-
-               $timeline["task" . $obj->getField('level') . "$tasks_id" . $rand . $i]
-                  = ['type' => 'Document_Item', 'item' => $itemd];
-               $i++;
-            }
+      //add risks to timeline
+      if ($risk_obj->canview()) {
+         $risks = $risk_obj->find([$foreignKey => $this->getID()] + $restrict_risk, ['date_mod DESC', 'id DESC']);
+         //TODO add date field ?
+         foreach ($risks as $risks_id => $risk) {
+            $risk_obj->getFromDB($risks_id);
+            $risk['can_edit']                                   = $risk_obj->canUpdateItem();
+            $timeline[$risk['date_mod'] . "_risk_" . $risks_id] = ['type'     => $riskClass,
+                                                                   'item'     => $risk,
+                                                                   'itiltype' => 'Risk'];
          }
       }
 
+      if ($rollback_obj->canview()) {
+         $rollbacks = $rollback_obj->find([$foreignKey => $this->getID()] + $restrict_rollback, ['date_mod DESC', 'id DESC']);
+         //TODO add date field ?
+         foreach ($rollbacks as $rollbacks_id => $rollback) {
+            $rollback_obj->getFromDB($rollbacks_id);
+            $rollback['can_edit']                                       = $rollback_obj->canUpdateItem();
+            $timeline[$risk['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
+                                                                           'item'     => $rollback,
+                                                                           'itiltype' => 'Rollback'];
+         }
+      }
+
+      if ($task_obj->canview()) {
+         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task);
+         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['name DESC', 'id DESC']);
+         foreach ($tasks as $tasks_id => $task) {
+            $task_obj->getFromDB($tasks_id);
+            $task['can_edit']                                                      = $task_obj->canUpdateItem();
+            $rand                                                                  = mt_rand();
+            $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type'     => $taskClass,
+                                                                                      'item'     => $task,
+                                                                                      'itiltype' => 'Task'];
+            //            if (isset($task['date_creation'])) {
+            //
+            //               $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type' => $task_obj,
+            //                                                                                         'item' => $task,
+            //               ];
+            //            } else {
+            //               $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type' => $task_obj,
+            //                                                                                         'item' => $task,
+            //               ];
+            //            }
+            $i = 0;
+         }
+      }
+
+      if ($test_obj->canview()) {
+         $tests = $test_obj->find([$foreignKey => $this->getID()] + $restrict_test, ['date_mod DESC', 'id DESC']);
+         //TODO add date field ?
+         foreach ($tests as $tests_id => $test) {
+            $test_obj->getFromDB($tests_id);
+            $test['can_edit']                                   = $test_obj->canUpdateItem();
+            $timeline[$risk['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
+                                                                   'item'     => $test,
+                                                                   'itiltype' => 'test'];
+         }
+      }
 
       //reverse sort timeline items by key (date)
       ksort($timeline);

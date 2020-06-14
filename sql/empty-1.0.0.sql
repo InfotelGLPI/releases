@@ -60,8 +60,10 @@ CREATE TABLE `glpi_plugin_releases_risks` (
    `plugin_releases_typerisks_id` int(11) NOT NULL default '0',
    `name` varchar(255) collate utf8_unicode_ci default NULL,
    `users_id` int(11) NOT NULL DEFAULT '0',
-  `users_id_editor` int(11) NOT NULL DEFAULT '0',
+   `users_id_editor` int(11) NOT NULL DEFAULT '0',
    `content` text collate utf8_unicode_ci,
+   `date_mod` TIMESTAMP NULL DEFAULT NULL,
+   `date_creation` TIMESTAMP NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -72,11 +74,11 @@ CREATE TABLE `glpi_plugin_releases_typetests` (
    `entities_id` int(11) NOT NULL default '0',
    `name` varchar(255) collate utf8_unicode_ci default NULL,
    `comment` text collate utf8_unicode_ci,
-    `plugin_releases_typetests_id` int(11)    NOT NULL                  DEFAULT '0',
-    `completename`                  text COLLATE utf8_unicode_ci,
-    `level`                         int(11)    NOT NULL                  DEFAULT '0',
-    `ancestors_cache`               longtext COLLATE utf8_unicode_ci,
-    `sons_cache`                    longtext COLLATE utf8_unicode_ci,
+   `plugin_releases_typetests_id` int(11)    NOT NULL                  DEFAULT '0',
+   `completename`                  text COLLATE utf8_unicode_ci,
+   `level`                         int(11)    NOT NULL                  DEFAULT '0',
+   `ancestors_cache`               longtext COLLATE utf8_unicode_ci,
+   `sons_cache`                    longtext COLLATE utf8_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -107,10 +109,10 @@ CREATE TABLE `glpi_plugin_releases_typedeploytasks` (
    `name` varchar(255) collate utf8_unicode_ci default NULL,
    `comment` text collate utf8_unicode_ci,
    `plugin_releases_typedeploytasks_id` int(11)    NOT NULL                  DEFAULT '0',
-    `completename`                  text COLLATE utf8_unicode_ci,
-    `level`                         int(11)    NOT NULL                  DEFAULT '0',
-    `ancestors_cache`               longtext COLLATE utf8_unicode_ci,
-    `sons_cache`                    longtext COLLATE utf8_unicode_ci,
+   `completename`                  text COLLATE utf8_unicode_ci,
+   `level`                         int(11)    NOT NULL                  DEFAULT '0',
+   `ancestors_cache`               longtext COLLATE utf8_unicode_ci,
+   `sons_cache`                    longtext COLLATE utf8_unicode_ci,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

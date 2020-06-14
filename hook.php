@@ -65,7 +65,7 @@ function plugin_releases_uninstall() {
       PluginReleasesTypeDeployTask::getTable(),
       PluginReleasesTypeRisk::getTable(),
       PluginReleasesTypeTest::getTable(),
-      PluginReleasesDeployTask::getTable(),
+      PluginReleasesDeploytask::getTable(),
       PluginReleasesTest::getTable(),
       PluginReleasesRisk::getTable(),
       PluginReleasesRollback::getTable(),

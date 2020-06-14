@@ -35,12 +35,11 @@ function plugin_init_releases() {
       $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
       $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
 
-      //TODO check if used
-      $PLUGIN_HOOKS['use_rules']['releases'] = ['RuleMailCollector'];
+      $PLUGIN_HOOKS["javascript"]['releases']     = ["/plugins/releases/js/releases.js"];
+      $PLUGIN_HOOKS['add_javascript']['releases'] = 'js/releases.js';
       $PLUGIN_HOOKS['add_css']['releases'][] = "css/styles.css";
+
       Html::requireJs('tinymce');
-      //   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_ticket.css";
-      //   $PLUGIN_HOOKS['add_css']['release'][] = "css/style_bootstrap_main.css";
 
       if (Session::getLoginUserID()) {
 
@@ -51,12 +50,12 @@ function plugin_init_releases() {
       }
       Plugin::registerClass('PluginReleasesRelease',
                             ['addtabon' => ['Change']]);
-      Plugin::registerClass(PluginReleasesDeployTask::class, [
+      Plugin::registerClass(PluginReleasesDeploytask::class, [
          'planning_types' => true
       ]);
    }
-   $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeployTask', 'populatePlanning'];
-   $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeployTask', 'displayPlanningItem'];
+   $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeploytask', 'populatePlanning'];
+   $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeploytask', 'displayPlanningItem'];
    $plugin                                        = new Plugin();
    if ($plugin->isInstalled("mydashboard")) {
       if ($plugin->isActivated("mydashboard")) {

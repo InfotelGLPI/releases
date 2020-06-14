@@ -83,12 +83,12 @@ class PluginReleasesTest extends CommonDBTM {
 //
 //      return '';
 //   }
-//   static function countForItem(CommonDBTM $item) {
-//      $dbu = new DbUtils();
-//      $table = CommonDBTM::getTable(PluginReleasesTest::class);
-//      return $dbu->countElementsInTable($table,
-//         ["plugin_releases_releases_id" => $item->getID()]);
-//   }
+   static function countForItem(CommonDBTM $item) {
+      $dbu = new DbUtils();
+      $table = CommonDBTM::getTable(PluginReleasesTest::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releases_id" => $item->getID()]);
+   }
 //
 //
 //   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
@@ -175,29 +175,7 @@ class PluginReleasesTest extends CommonDBTM {
       $rand_type      = mt_rand();
       $rand_risk      = mt_rand();
 
-      echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_releases_releases_id'])) {
-
-
-         echo "<td hidden>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
-         $rand = mt_rand();
-
-         echo "<td hidden>";
-         Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-               'value' => $options["plugin_releases_releases_id"],
-               'rand' => $rand]);
-         echo "</td>";
-      } else {
-         echo "<td>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
-         $rand = mt_rand();
-
-         echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-            'value' => $this->fields["plugin_releases_releases_id"]]);
-         echo "</td>";
-      }
-      echo "</tr>";
+      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo  _n('Test template', 'Test templates', 1);
@@ -311,9 +289,9 @@ class PluginReleasesTest extends CommonDBTM {
 
    function showScripts(PluginReleasesRelease $release) {
       echo "<div class='timeline_box'>";
-      $rand = mt_rand();
-      $release->showTimelineForm($rand,self::class);
-      $release->showTimeLine($rand,self::class);
+//      $rand = mt_rand();
+//      $release->showTimelineForm($rand,self::class);
+//      $release->showTimeLine($rand,self::class);
       $release->showStateItem("test_state",__("All tests are defined ?","releases"),PluginReleasesRelease::TESTDEFINITION);
 
       echo "</div>";

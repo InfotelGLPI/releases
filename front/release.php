@@ -35,9 +35,9 @@ Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleas
 $release = new PluginReleasesRelease();
 
 if ($release->canView()) {
-   Html::compileScss(["file"=>"../css/style.scss"]);
-     echo Html::Scss("../css/style.scss");
-      Search::show(PluginReleasesRelease::getType());
+   //   Html::compileScss(["file"=>"../css/style.scss"]);
+   //     echo Html::Scss("../css/style.scss");
+   Search::show(PluginReleasesRelease::getType());
 
 } else {
    Html::displayRightError();

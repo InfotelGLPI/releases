@@ -36,7 +36,7 @@ if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
 }
 
-$release = New PluginReleasesDeployTask();
+$release = New PluginReleasesDeploytask();
 
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);

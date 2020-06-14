@@ -35,13 +35,9 @@ if (!defined('GLPI_ROOT')) {
  * Class PluginReleasesRisk
  */
 class PluginReleasesRisk extends CommonDBTM {
-
-   public $dohistory = true;
-   static $rightname = 'plugin_releases_risks';
-   protected $usenotepad = true;
-   static $types = [];
-
-
+   
+   static    $rightname  = 'plugin_releases_risks';
+   
    /**
     * @param int $nb
     *
@@ -51,17 +47,18 @@ class PluginReleasesRisk extends CommonDBTM {
 
       return _n('Risk', 'Risks', $nb, 'releases');
    }
+
    /**
     *
     * @return css class
     */
    static function getCssClass() {
-
       return "risk";
    }
 
 
    //TODO
+
    /**
     * @return array
     */
@@ -72,159 +69,85 @@ class PluginReleasesRisk extends CommonDBTM {
 
    }
 
-//   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-//
-//      if ($item->getType() == self::getType()) {
-//        return self::getTypeName(2);
-//      } else if ($item->getType() == PluginReleasesRelease::getType()){
-//         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
-//      }
-//
-//      return '';
-//   }
-//   static function countForItem(CommonDBTM $item) {
-//      $dbu = new DbUtils();
-//      $table = CommonDBTM::getTable(PluginReleasesRisk::class);
-//      return $dbu->countElementsInTable($table,
-//         ["plugin_releases_releases_id" => $item->getID()]);
-//   }
-//
-//
-//   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-//      global $CFG_GLPI;
-//      if ($item->getType() == PluginReleasesRelease::getType()) {
-//         $self = new self();
-//         if(self::canView()){
-//            $self->showScripts($item);
-//         }else{
-//            echo "<div class='center'><br><br>";
-//            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-//            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
-//         }
-////         if(self::canCreate()) {
-////            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
-////               'target' => $CFG_GLPI['root_doc'] . "/plugins/release/front/risk.form.php"]);
-////         }
-//      }
-//
-//   }
+   //   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+   //
+   //      if ($item->getType() == self::getType()) {
+   //        return self::getTypeName(2);
+   //      } else if ($item->getType() == PluginReleasesRelease::getType()){
+   //         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
+   //      }
+   //
+   //      return '';
+   //   }
+      static function countForItem(CommonDBTM $item) {
+         $dbu = new DbUtils();
+         $table = CommonDBTM::getTable(PluginReleasesRisk::class);
+         return $dbu->countElementsInTable($table,
+            ["plugin_releases_releases_id" => $item->getID()]);
+      }
+   //
+   //
+   //   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+   //      global $CFG_GLPI;
+   //      if ($item->getType() == PluginReleasesRelease::getType()) {
+   //         $self = new self();
+   //         if(self::canView()){
+   //            $self->showScripts($item);
+   //         }else{
+   //            echo "<div class='center'><br><br>";
+   //            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
+   //            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
+   //         }
+   ////         if(self::canCreate()) {
+   ////            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
+   ////               'target' => $CFG_GLPI['root_doc'] . "/plugins/release/front/risk.form.php"]);
+   ////         }
+   //      }
+   //
+   //   }
 
    function prepareInputForAdd($input) {
 
-      $input =  parent::prepareInputForAdd($input);
+      $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
 
       return $input;
    }
+
    function prepareInputForUpdate($input) {
       // update last editor if content change
       if (isset($input['update'])
-         && ($uid = Session::getLoginUserID())) { // Change from task form
+          && ($uid = Session::getLoginUserID())) { // Change from task form
          $input["users_id_editor"] = $uid;
       }
       return $input;
    }
-   function defineTabs($options = []) {
 
-      $ong = [];
-      $this->addDefaultFormTab($ong);
-      return $ong;
-   }
-/**
-* Type than could be linked to a Rack
-*
-* @param $all boolean, all type, or only allowed ones
-*
-* @return array of types
-* */
-   static function getTypes($all = false) {
+   function showForm($ID, $options = []) {
+      global $CFG_GLPI;
 
-      if ($all) {
-         return self::$types;
-      }
-
-      // Only allowed types
-      $types = self::$types;
-
-      foreach ($types as $key => $type) {
-         if (!class_exists($type)) {
-            continue;
-         }
-
-         $item = new $type();
-         if (!$item->canView()) {
-            unset($types[$key]);
-         }
-      }
-      return $types;
-   }
-
-   function initShowForm($ID, $options = []){
-
+      $rand_template = mt_rand();
+      $rand_text     = mt_rand();
+      $rand_name     = mt_rand();
+      $rand_type     = mt_rand();
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
-   }
-
-   function closeShowForm($options){
-      $this->showFormButtons($options);
-   }
-
-   function showForm($ID, $options = []) {
-
-      $this->initShowForm($ID,$options);
-
-      $this->coreShowForm($ID,$options);
-      $this->closeShowForm($options);
-
-      return true;
-   }
-
-   function coreShowForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
-      $rand_template   = mt_rand();
-      $rand_text       = mt_rand();
-      $rand_name      = mt_rand();
-      $rand_type      = mt_rand();
-
-      echo "<tr class='tab_bg_1'>";
-      if (isset($options['plugin_releases_releases_id'])) {
-
-
-         echo "<td hidden>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
-         $rand = mt_rand();
-
-         echo "<td hidden>";
-         Dropdown::show(PluginReleasesRelease::getType(),
-            ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-               'value' => $options["plugin_releases_releases_id"],
-               'rand' => $rand]);
-         echo "</td>";
-      } else {
-         echo "<td>" . _n('Release', 'Releases', 1, 'releases') . "</td>";
-         $rand = mt_rand();
-
-         echo "<td>";
-         Dropdown::show(PluginReleasesRelease::getType(), ['name' => "plugin_releases_releases_id", 'id' => "plugin_releases_releases_id",
-            'value' => $this->fields["plugin_releases_releases_id"]]);
-         echo "</td>";
-      }
-      echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo  _n('Risk template', 'Risk templates', 1);
+      echo _n('Risk template', 'Risk templates', 1);
       echo "</td>";
       echo "<td style='vertical-align: middle' >";
-//      echo
-//         "<div class='fa-label'>
-//            <i class='fas fa-reply fa-fw'
-//               title='"._n('Task template', 'Task templates', 2)."'></i>";
+      //      echo
+      //         "<div class='fa-label'>
+      //            <i class='fas fa-reply fa-fw'
+      //               title='"._n('Task template', 'Task templates', 2)."'></i>";
       PluginReleasesRisktemplate::dropdown(['value'     => '',
-         'entity'    => $this->getEntityID(),
-         'rand'      => $rand_template,
-         'on_change' => 'tasktemplate_update(this.value)']);
+                                            'entity'    => $this->getEntityID(),
+                                            'rand'      => $rand_template,
+                                            'on_change' => 'tasktemplate_update(this.value)']);
       echo "</div>";
       echo Html::scriptBlock('
          function tasktemplate_update(value) {
@@ -241,12 +164,12 @@ class PluginReleasesRisk extends CommonDBTM {
                   : parseInt(data.plugin_releases_typerisks_id);
 
                // set textarea content
-               $("#content'.$rand_text.'").html(data.content);
+               $("#content' . $rand_text . '").html(data.content);
                // set name
-               $("#name'.$rand_name.'").val(data.name);
-               $("#dropdown_plugin_releases_typerisks_id'.$rand_type.'").trigger("setValue", plugin_releases_typerisks_id);
+               $("#name' . $rand_name . '").val(data.name);
+               $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
                // set also tinmyce (if enabled)
-               if (tasktinymce = tinymce.get("content'.$rand_text.'")) {
+               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
                   tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
                }
                
@@ -256,12 +179,12 @@ class PluginReleasesRisk extends CommonDBTM {
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
-//      echo "<td>";
-//      echo "</td>";
+      //      echo "<td>";
+      //      echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __("Risk type",'releases');
+      echo __("Risk type", 'releases');
       echo "</td>";
 
       echo "<td>";
@@ -270,48 +193,48 @@ class PluginReleasesRisk extends CommonDBTM {
       } else {
          $value = $this->fields["plugin_releases_typerisks_id"];
       }
-      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name' => "plugin_releases_typerisks_id",
-         'value' => $value,'rand'=>$rand_type]);
+      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name'  => "plugin_releases_typerisks_id",
+                                                         'value' => $value, 'rand' => $rand_type]);
       echo "</td>";
 
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name'),'rand'=>$rand_name]);
+      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
+      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       echo "</td>";
-
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Description') . "</td>";
       echo "<td colspan='3'>";
-//       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
+      //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
       $content_id = "content$rand_text";
       $cols       = 100;
       $rows       = 10;
       Html::textarea(['name'              => 'content',
-         'value'             => $this->fields["content"],
-         'rand'              => $rand_text,
-         'editor_id'         => $content_id,
-         'enable_fileupload' => false,
-         'enable_richtext'   => true,
-         'cols'              => $cols,
-         'rows'              => $rows]);
+                      'value'             => $this->fields["content"],
+                      'rand'              => $rand_text,
+                      'editor_id'         => $content_id,
+                      'enable_fileupload' => false,
+                      'enable_richtext'   => true,
+                      'cols'              => $cols,
+                      'rows'              => $rows]);
       echo "</td>";
       echo "</tr>";
+
+      $this->showFormButtons($options);
 
       return true;
    }
 
    function showScripts(PluginReleasesRelease $release) {
       echo "<div class='timeline_box'>";
-      $rand = mt_rand();
-      $release->showTimelineForm($rand,self::class);
-      $release->showTimeLine($rand,self::class);
-      $release->showStateItem("risk_state",__("All risks are defined ?","release"),PluginReleasesRelease::RISKDEFINITION);
-
+//      $rand = mt_rand();
+//      $release->showTimelineForm($rand, self::class);
+//      $release->showTimeLine($rand, self::class);
+      $release->showStateItem("risk_state", __("All risks are defined ?", "release"), PluginReleasesRelease::RISKDEFINITION);
       echo "</div>";
 
    }
-
 }
 

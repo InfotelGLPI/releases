@@ -59,8 +59,8 @@ if (isset($_POST["id"])) {
          }else if($line["itemtype"] == PluginReleasesTest::getType()){
             $vals[PluginReleasesTest::getType()] = PluginReleasesRelease::getStatusKey($line["state"]);
             $tests = PluginReleasesRelease::getStatusKey($line["state"]);
-         }else if($line["itemtype"] == PluginReleasesDeployTask::getType()) {
-            $vals[PluginReleasesDeployTask::getType()] = PluginReleasesRelease::getStatusKey($line["state"]);
+         }else if($line["itemtype"] == PluginReleasesDeploytask::getType()) {
+            $vals[PluginReleasesDeploytask::getType()] = PluginReleasesRelease::getStatusKey($line["state"]);
             $tasks = PluginReleasesRelease::getStatusKey($line["state"]);
          }else if($line["itemtype"] == PluginReleasesRollback::getType()) {
             $vals[PluginReleasesRollback::getType()] = PluginReleasesRelease::getStatusKey($line["state"]);
@@ -69,7 +69,7 @@ if (isset($_POST["id"])) {
       }
    }
 
-   $steps = [PluginReleasesRelease::getType(),'PluginReleaseDate', PluginReleasesRisk::getType(),PluginReleasesTest::getType(),PluginReleasesDeployTask::getType(),PluginReleasesRollback::getType()];
+   $steps = [PluginReleasesRelease::getType(),'PluginReleaseDate', PluginReleasesRisk::getType(),PluginReleasesTest::getType(),PluginReleasesDeploytask::getType(),PluginReleasesRollback::getType()];
    $var = '<div class=" title header center">WorkFlow</div><ul id="progress">
                    <li><div id="PluginReleasesRelease" class="node workflowstatus '.$releasedef.'"></div><p>'.__("Release definition","releases").'</p></li>
                    <li><div class="divider workflowstatus '.$datec.'"></div></li>
@@ -79,7 +79,7 @@ if (isset($_POST["id"])) {
                    <li><div class="divider workflowstatus '.$tests.'"></div></li>
                    <li><div id="PluginReleasesTest" class="node workflowstatus '.$tests.'"></div><p>'.__("Tests definition","releases").'</p></li>
                    <li><div class="divider workflowstatus '.$tasks.'"></div></li>
-                   <li><div id="PluginReleasesDeployTask" class="node  workflowstatus '.$tasks.'"></div><p>'.__("Tasks definition","releases").'</p></li>
+                   <li><div id="PluginReleasesDeploytask" class="node  workflowstatus '.$tasks.'"></div><p>'.__("Tasks definition","releases").'</p></li>
                    <li><div class="divider workflowstatus '.$rollback.'"></div></li>
                    <li><div id="PluginReleasesRollback" class="node workflowstatus '.$rollback.'"></div><p>'.__("Rollbacks definition","releases").'</p></li>
                    <!-- Modal -->     
@@ -296,13 +296,13 @@ if (isset($_POST["id"])) {
                         $(\"#modalPluginReleaseTest\").dialog(\"open\");
                    }
 });
-               $( \"#PluginReleasesDeployTask\" ).click(function() {
+               $( \"#PluginReleasesDeploytask\" ).click(function() {
                  if( $( \"#PluginReleasesTest\").hasClass('done')){
                         $(\"#modalPluginReleaseDeployTask\").dialog(\"open\");
                    }
                });
                $( \"#PluginReleasesRollback\" ).click(function() {
-                 if( $( \"#PluginReleasesDeployTask\").hasClass('done')){
+                 if( $( \"#PluginReleasesDeploytask\").hasClass('done')){
                         $(\"#modalPluginReleaseRollback\").dialog(\"open\");
                    }
                });

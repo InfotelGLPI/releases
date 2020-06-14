@@ -32,9 +32,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class PluginReleasesDeployTask
+ * Class PluginReleasesDeploytask
  */
-class PluginReleasesDeployTask extends CommonDBTM {
+class PluginReleasesDeploytask extends CommonDBTM {
 
    public $dohistory = true;
    static $rightname = 'plugin_releases_tasks';
@@ -82,13 +82,13 @@ class PluginReleasesDeployTask extends CommonDBTM {
 //
 //      return '';
 //   }
-//   static function countForItem(CommonDBTM $item) {
-//      $dbu = new DbUtils();
-//      $table = CommonDBTM::getTable(PluginReleasesDeployTask::class);
-//      return $dbu->countElementsInTable($table,
-//         ["plugin_releases_releases_id" => $item->getID()]);
-//   }
-//
+   static function countForItem(CommonDBTM $item) {
+      $dbu = new DbUtils();
+      $table = CommonDBTM::getTable(PluginReleasesDeploytask::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releases_id" => $item->getID()]);
+   }
+
 //
 //   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 //      global $CFG_GLPI;
@@ -208,7 +208,7 @@ class PluginReleasesDeployTask extends CommonDBTM {
       echo "</td>";
       echo "<td >".__("Previous task","releases")."</td>";
       echo "<td>";
-      Dropdown::show(PluginReleasesDeployTask::getType(),["condition"=>["plugin_releases_releases_id"=> $options['plugin_releases_releases_id'],"NOT"=>["id"=>$this->getID()]],"value"=> $this->fields["plugin_releases_deploytasks_id"]]);
+      Dropdown::show(PluginReleasesDeploytask::getType(),["condition"=>["plugin_releases_releases_id"=> $options['plugin_releases_releases_id'],"NOT"=>["id"=>$this->getID()]],"value"=> $this->fields["plugin_releases_deploytasks_id"]]);
       echo "</td>";
       echo "</tr>";
 
