@@ -119,35 +119,19 @@ class PluginReleasesReview extends CommonDBTM {
       $release->update($val);
    }
 
-   function initShowForm($ID, $options = []) {
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-   }
-
-   function closeShowForm($options) {
-      $this->showFormButtons($options);
-   }
-
    function showForm($ID, $options = []) {
-
-      $this->initShowForm($ID, $options);
-      $this->coreShowForm($ID, $options);
-      $this->closeShowForm($options);
-
-      return true;
-   }
-
-   function coreShowForm($ID, $options = []) {
       global $CFG_GLPI;
 
       $this->getFromDB($ID);
+
+      $this->initForm($ID, $options);
+      $this->showFormHeader($options);
 
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       $rand = mt_rand();
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __("Real date release", 'releases');
+      echo __("Real production run date", 'releases');
       echo "</td>";
 
       echo "<td>";
@@ -164,7 +148,7 @@ class PluginReleasesReview extends CommonDBTM {
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Incident') . "</td>";
+      echo "<td>" . __('Incidents during process', 'releases') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("incident", $this->getField("incident"));
       echo "</td>";
@@ -249,6 +233,8 @@ class PluginReleasesReview extends CommonDBTM {
 
       echo "</td>";
       echo "</tr>";
+
+      $this->showFormButtons($options);
 
       return true;
    }

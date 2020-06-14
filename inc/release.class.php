@@ -887,6 +887,7 @@ class PluginReleasesRelease extends CommonITILObject {
       return true;
    }
 
+   //TODO create own class for own tab
    function showFinalisationTabs($ID) {
       global $CFG_GLPI;
       $this->getFromDB($ID);
@@ -901,11 +902,6 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</td>";
       echo "<td>";
 
-      echo _n('Test', 'Tests', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo self::getStateItem($this->getField("test_state"));
-      echo "</td>";
 
       echo "<td>";
       echo _n('Rollback', 'Rollbacks', 2, 'releases');
@@ -937,11 +933,22 @@ class PluginReleasesRelease extends CommonITILObject {
       //      echo "/";
       //      echo $dtT;
       echo "</td>";
+
+      echo "<td>";
+      echo _n('Test', 'Tests', 2, 'releases');
+      echo "</td>";
+      echo "<td>";
+      echo self::getStateItem($this->getField("test_state"));
+      echo "</td>";
+
       echo "</tr>";
 
 
       echo "</table>";
-      $allfinish = $this->getField("risk_state") && ($dtT == $dtF) && $this->getField("test_state") && $this->getField("rollback_state");
+      $allfinish = $this->getField("risk_state")
+                   && ($dtT == $dtF)
+                   && $this->getField("test_state")
+                   && $this->getField("rollback_state");
       $text      = "";
       if (!$allfinish) {
 
@@ -1006,6 +1013,13 @@ class PluginReleasesRelease extends CommonITILObject {
 
    }
 
+   /**
+    * Return a field Value if exists
+    *
+    * @param string $field field name
+    *
+    * @return mixed value of the field / false if not exists
+    **/
    function getField($field) {
 
       if ($field == "content") {
@@ -1019,15 +1033,26 @@ class PluginReleasesRelease extends CommonITILObject {
       return NOT_AVAILABLE;
    }
 
+   /**
+    * @return mixed
+    */
    function getNameAlert() {
       return $this->fields["name"];
    }
 
+   /**
+    * @return mixed
+    */
    function getContentAlert() {
       return $this->fields["service_shutdown_details"];
    }
 
 
+   /**
+    * @param $state
+    *
+    * @return string
+    */
    public static function getStateItem($state) {
       switch ($state) {
          case 0:
@@ -1632,6 +1657,7 @@ class PluginReleasesRelease extends CommonITILObject {
                                                                   'display' => $display], $options));
    }
 
+   //TODO replace by update objects - tests...
    function showStateItem($field = "", $text = "", $state) {
       global $CFG_GLPI;
 

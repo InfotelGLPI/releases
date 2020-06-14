@@ -118,7 +118,7 @@ class PluginReleasesRollback extends CommonDBTM {
    }
 
    //TODO
-   //   Post_update for change release status ?
+   //   Post_update for change release status ? rollback_state ?
 
    /**
     * @param       $ID

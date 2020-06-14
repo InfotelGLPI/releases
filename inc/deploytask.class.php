@@ -213,7 +213,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
    }
 
    //TODO
-   //   Post_update for change release status ?
+   //   Post_update for change release status ? deploytask_state to be created ?
 
    /**
     * @param       $ID

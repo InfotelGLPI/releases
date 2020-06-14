@@ -134,7 +134,7 @@ class PluginReleasesTest extends CommonDBTM {
    }
 
    //TODO
-   //   Post_update for change release status ?
+   //   Post_update for change release status ? test_state ?
 
    /**
     * @param       $ID
