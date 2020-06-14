@@ -1100,10 +1100,11 @@ class PluginReleasesRelease extends CommonITILObject {
       $foreignKey = self::getForeignKeyField();
 
       echo "<script type='text/javascript' >
-      function change_task_state(tasks_id, target) {
+      function change_task_state(items_id, target, itemtype) {
          $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
                 {'action':     'change_task_state',
-                  'tasks_id':   tasks_id,
+                  'items_id':   items_id,
+                  'itemtype':   itemtype,
                   'parenttype': '$objType',
                   '$foreignKey': " . $this->fields['id'] . "
                 })
@@ -1148,8 +1149,12 @@ class PluginReleasesRelease extends CommonITILObject {
          return false;
       }
 
-      echo "<script type='text/javascript' >\n";
-      echo "function viewAddSubitem" . $this->fields['id'] . "$rand(itemtype) {\n";
+      echo "<script type='text/javascript' >\n
+//      $(document).ready(function() {
+//                $('.ajax_box').show();
+//      });
+      function viewAddSubitem" . $this->fields['id'] . "$rand(itemtype) {\n";
+
       $params = ['action'     => 'viewsubitem',
                  'type'       => 'itemtype',
                  'parenttype' => $objType,
@@ -1159,7 +1164,9 @@ class PluginReleasesRelease extends CommonITILObject {
                                        $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php",
                                        $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
-      echo "};";
+      echo "};
+      ";
+
       echo "</script>\n";
 
       //show choices
@@ -1174,37 +1181,60 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
            "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
       if ($canadd_risk) {
-         echo "<i class='fas fa-plus-circle' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
-      echo "<i class='fas fa-chevron-right' style='margin-right: 10px;'></i>";
+      $style = "color:firebrick;";
+      $fa = "fa-times-circle";
+      if ($riskClass::countForItem($release) == $riskClass::countDoneForItem($release)) {
+         $style = "color:forestgreen;";
+         $fa = "fa-check-circle";
+      }
+      echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='rollback'>";
       echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
       if ($canadd_rollback) {
-         echo "<i class='fas fa-plus-circle' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
-      echo "<i class='fas fa-chevron-right' style='margin-right: 10px;'></i>";
-
+      $style = "color:firebrick;";
+      $fa = "fa-times-circle";
+      if ($rollbackClass::countForItem($release) == $rollbackClass::countDoneForItem($release)) {
+         $style = "color:forestgreen;";
+         $fa = "fa-check-circle";
+      }
+      echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='task'>";
       echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
            "'><i class='fas fa-check-square'></i>" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
-         echo "<i class='fas fa-plus-circle'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+         echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
-      echo "<i class='fas fa-chevron-right' style='margin-right: 10px;'></i>";
+      $style = "color:firebrick;";
+      $fa = "fa-times-circle";
+      if ($taskClass::countForItem($release) == $taskClass::countDoneForItem($release)) {
+         $style = "color:forestgreen;";
+         $fa = "fa-check-circle";
+      }
+      echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='test'>";
       echo "<a href='#' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
       if ($canadd_test) {
-         echo "<i class='fas fa-plus-circle' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-left: -5px;'></i>";
+         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
-
+      $style = "color:firebrick;";
+      $fa = "fa-times-circle";
+      if ($testClass::countForItem($release) == $testClass::countDoneForItem($release)) {
+         $style = "color:forestgreen;";
+         $fa = "fa-check-circle";
+      }
+      echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
       echo "</ul>"; // timeline_choices
       echo "</div>";
 
@@ -1533,8 +1563,8 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       if ($task_obj->canview()) {
-         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task);
-         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['name DESC', 'id DESC']);
+         //         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task);
+         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level DESC']);
          foreach ($tasks as $tasks_id => $task) {
             $task_obj->getFromDB($tasks_id);
             $task['can_edit']                                                      = $task_obj->canUpdateItem();
@@ -1542,17 +1572,6 @@ class PluginReleasesRelease extends CommonITILObject {
             $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type'     => $taskClass,
                                                                                       'item'     => $task,
                                                                                       'itiltype' => 'Task'];
-            //            if (isset($task['date_creation'])) {
-            //
-            //               $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type' => $task_obj,
-            //                                                                                         'item' => $task,
-            //               ];
-            //            } else {
-            //               $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type' => $task_obj,
-            //                                                                                         'item' => $task,
-            //               ];
-            //            }
-            $i = 0;
          }
       }
 

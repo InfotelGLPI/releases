@@ -35,16 +35,17 @@ if (!defined('GLPI_ROOT')) {
  * Class PluginReleasesRisk
  */
 class PluginReleasesRisk extends CommonDBTM {
-   
-   static    $rightname  = 'plugin_releases_risks';
-   
+
+   static $rightname = 'plugin_releases_risks';
+   const TODO = 1; // todo
+   const DONE = 2; // done
+
    /**
     * @param int $nb
     *
     * @return translated
     */
    static function getTypeName($nb = 0) {
-
       return _n('Risk', 'Risks', $nb, 'releases');
    }
 
@@ -56,55 +57,30 @@ class PluginReleasesRisk extends CommonDBTM {
       return "risk";
    }
 
-
-   //TODO
-
    /**
-    * @return array
+    * @param \CommonDBTM $item
+    *
+    * @return int
     */
-   function rawSearchOptions() {
-
-      $tab = [];
-      return $tab;
-
+   static function countForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(PluginReleasesRisk::class);
+      return $dbu->countElementsInTable($table,
+                                        ["plugin_releases_releases_id" => $item->getID()]);
    }
 
-   //   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-   //
-   //      if ($item->getType() == self::getType()) {
-   //        return self::getTypeName(2);
-   //      } else if ($item->getType() == PluginReleasesRelease::getType()){
-   //         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
-   //      }
-   //
-   //      return '';
-   //   }
-      static function countForItem(CommonDBTM $item) {
-         $dbu = new DbUtils();
-         $table = CommonDBTM::getTable(PluginReleasesRisk::class);
-         return $dbu->countElementsInTable($table,
-            ["plugin_releases_releases_id" => $item->getID()]);
-      }
-   //
-   //
-   //   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-   //      global $CFG_GLPI;
-   //      if ($item->getType() == PluginReleasesRelease::getType()) {
-   //         $self = new self();
-   //         if(self::canView()){
-   //            $self->showScripts($item);
-   //         }else{
-   //            echo "<div class='center'><br><br>";
-   //            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-   //            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
-   //         }
-   ////         if(self::canCreate()) {
-   ////            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
-   ////               'target' => $CFG_GLPI['root_doc'] . "/plugins/release/front/risk.form.php"]);
-   ////         }
-   //      }
-   //
-   //   }
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countDoneForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+                                        ["plugin_releases_releases_id" => $item->getID(),
+                                         "state"                       => self::DONE]);
+   }
 
    function prepareInputForAdd($input) {
 
@@ -123,6 +99,9 @@ class PluginReleasesRisk extends CommonDBTM {
       }
       return $input;
    }
+
+   //TODO
+   //   Post_update for change release status ?
 
    function showForm($ID, $options = []) {
       global $CFG_GLPI;
@@ -225,16 +204,6 @@ class PluginReleasesRisk extends CommonDBTM {
       $this->showFormButtons($options);
 
       return true;
-   }
-
-   function showScripts(PluginReleasesRelease $release) {
-      echo "<div class='timeline_box'>";
-//      $rand = mt_rand();
-//      $release->showTimelineForm($rand, self::class);
-//      $release->showTimeLine($rand, self::class);
-      $release->showStateItem("risk_state", __("All risks are defined ?", "release"), PluginReleasesRelease::RISKDEFINITION);
-      echo "</div>";
-
    }
 }
 

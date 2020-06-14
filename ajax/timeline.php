@@ -49,15 +49,15 @@ $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 
 switch ($_REQUEST['action']) {
    case "change_task_state":
-      if (!isset($_REQUEST['tasks_id'])) {
+      if (!isset($_REQUEST['items_id'])) {
          exit();
       }
+      $objClass = $_REQUEST['itemtype'];
+      $obj = new $objClass;
+      $obj->getFromDB(intval($_REQUEST['items_id']));
 
-      $taskClass = "PluginReleasesDeploytask";
-      $task = new $taskClass;
-      $task->getFromDB(intval($_REQUEST['tasks_id']));
-      if (!in_array($task->fields['state'], [0, Planning::INFO])) {
-         $new_state = ($task->fields['state'] == Planning::DONE)
+      if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
+         $new_state = ($obj->fields['state'] == Planning::DONE)
                            ? Planning::TODO
                            : Planning::DONE;
          $new_label = Planning::getState($new_state);
@@ -66,8 +66,8 @@ switch ($_REQUEST['action']) {
             'label'  => $new_label
          ]);
 
-         $task->update([
-            'id'         => intval($_REQUEST['tasks_id']),
+         $obj->update([
+            'id'         => intval($_REQUEST['items_id']),
             $foreignKey => intval($_REQUEST[$foreignKey]),
             'state'      => $new_state
          ]);

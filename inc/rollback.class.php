@@ -36,11 +36,9 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginReleasesRollback extends CommonDBTM {
 
-   public $dohistory = true;
    static $rightname = 'plugin_releases_rollbacks';
-   protected $usenotepad = true;
-   static $types = [];
-
+   const TODO = 1; // todo
+   const DONE = 2; // done
 
    /**
     * @param int $nb
@@ -51,126 +49,92 @@ class PluginReleasesRollback extends CommonDBTM {
 
       return _n('Rollback', 'Rollbacks', $nb, 'release');
    }
+
    /**
     *
     * @return css class
     */
    static function getCssClass() {
-
       return "rollback";
    }
 
 
-   //TODO
    /**
-    * @return array
+    * @param \CommonDBTM $item
+    *
+    * @return int
     */
-   function rawSearchOptions() {
-
-      $tab = [];
-      return $tab;
-
-   }
-
-//   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
-//
-//      if ($item->getType() == self::getType()) {
-//        return self::getTypeName(2);
-//      } else if ($item->getType() == PluginReleasesRelease::getType()){
-//         return self::createTabEntry(self::getTypeName(2), self::countForItem($item));
-//      }
-//
-//      return '';
-//   }
    static function countForItem(CommonDBTM $item) {
-      $dbu = new DbUtils();
-      $table = CommonDBTM::getTable(PluginReleasesRollback::class);
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releases_id" => $item->getID()]);
+                                        ["plugin_releases_releases_id" => $item->getID()]);
    }
 
-//
-//   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-//      global $CFG_GLPI;
-//      if ($item->getType() == PluginReleasesRelease::getType()) {
-//         $self = new self();
-//         if(self::canView()){
-//            $self->showScripts($item);
-//         }else{
-//            echo "<div class='center'><br><br>";
-//            echo Html::image($CFG_GLPI["root_doc"] . "/pics/warning.png", ['alt' => __('Warning')]);
-//            echo "<br><br><span class='b'>".__("You don't have permission to perform this action.")."</span></div>";
-//         }
-////         if(self::canCreate()) {
-////            $self->showForm("", ['plugin_release_releases_id' => $item->getField('id'),
-////               'target' => $CFG_GLPI['root_doc'] . "/plugins/release/front/rollback.form.php"]);
-////         }
-//      }
-//
-////   }
-//   function defineTabs($options = []) {
-//
-//      $ong = [];
-//      $this->addDefaultFormTab($ong);
-//      return $ong;
-//   }
-/**
-* Type than could be linked to a Rack
-*
-* @param $all boolean, all type, or only allowed ones
-*
-* @return array of types
-* */
-   static function getTypes($all = false) {
-
-      if ($all) {
-         return self::$types;
-      }
-
-      // Only allowed types
-      $types = self::$types;
-
-      foreach ($types as $key => $type) {
-         if (!class_exists($type)) {
-            continue;
-         }
-
-         $item = new $type();
-         if (!$item->canView()) {
-            unset($types[$key]);
-         }
-      }
-      return $types;
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countDoneForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+                                        ["plugin_releases_releases_id" => $item->getID(),
+                                         "state"                       => self::DONE]);
    }
 
-   function initShowForm($ID, $options = []){
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
+   function prepareInputForAdd($input) {
 
+      $input = parent::prepareInputForAdd($input);
+
+      $input["users_id"] = Session::getLoginUserID();
+
+      return $input;
+   }
+
+
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
+   function prepareInputForUpdate($input) {
+      // update last editor if content change
+      if (isset($input['update'])
+          && ($uid = Session::getLoginUserID())) { // Change from task form
+         $input["users_id_editor"] = $uid;
+      }
+      return $input;
+   }
+
+   //TODO
+   //   Post_update for change release status ?
+
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
+   function showForm($ID, $options = []) {
+      global $CFG_GLPI;
+
+      $rand_template = mt_rand();
+      $rand_text     = mt_rand();
+      $rand_name     = mt_rand();
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-
-   }
-
-   function closeShowForm($options){
-      $this->showFormButtons($options);
-   }
-
-   function showForm($ID, $options = []) {
-
-      $this->initShowForm($ID,$options);
-
-      $this->coreShowForm($ID,$options);
-      $this->closeShowForm($options);
-
-      return true;
-   }
-
-   function coreShowForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
-      $rand_template   = mt_rand();
-      $rand_text       = mt_rand();
-      $rand_name      = mt_rand();
-
 
       echo "<tr class='tab_bg_1'>";
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
@@ -180,13 +144,13 @@ class PluginReleasesRollback extends CommonDBTM {
       echo _n('Rollback template', 'Rollback templates', 2);
       echo "</td>";
       echo "<td style='vertical-align: middle' >";
-//      echo "<div class='fa-label'>
-//            <i class='fas fa-reply fa-fw'
-//               title='".."'></i>";
+      //      echo "<div class='fa-label'>
+      //            <i class='fas fa-reply fa-fw'
+      //               title='".."'></i>";
       PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
-         'entity'    => $this->getEntityID(),
-         'rand'      => $rand_template,
-         'on_change' => 'tasktemplate_update(this.value)']);
+                                                'entity'    => $this->getEntityID(),
+                                                'rand'      => $rand_template,
+                                                'on_change' => 'tasktemplate_update(this.value)']);
       echo "</div>";
       echo Html::scriptBlock('
          function tasktemplate_update(value) {
@@ -201,11 +165,11 @@ class PluginReleasesRollback extends CommonDBTM {
                
 
                // set textarea content
-               $("#content'.$rand_text.'").html(data.content);
+               $("#content' . $rand_text . '").html(data.content);
                // set name
-               $("#name'.$rand_name.'").val(data.name);
+               $("#name' . $rand_name . '").val(data.name);
                // set also tinmyce (if enabled)
-               if (tasktinymce = tinymce.get("content'.$rand_text.'")) {
+               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
                   tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
                }
                
@@ -215,16 +179,15 @@ class PluginReleasesRollback extends CommonDBTM {
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
-//      echo "<td>";
-//      echo "</td>";
+      //      echo "<td>";
+      //      echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
 
 
-
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name",["id"=>"name".$rand_name,"value"=>$this->getField('name'),  'rand'      => $rand_name,]);
+      echo Html::input("name", ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]);
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
@@ -234,50 +197,24 @@ class PluginReleasesRollback extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Description') . "</td>";
       echo "<td colspan='3'>";
-//       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
+      //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
       $content_id = "content$rand_text";
       $cols       = 100;
       $rows       = 10;
       Html::textarea(['name'              => 'content',
-         'value'             => $this->fields["content"],
-         'rand'              => $rand_text,
-         'editor_id'         => $content_id,
-         'enable_fileupload' => false,
-         'enable_richtext'   => true,
-         'cols'              => $cols,
-         'rows'              => $rows]);
+                      'value'             => $this->fields["content"],
+                      'rand'              => $rand_text,
+                      'editor_id'         => $content_id,
+                      'enable_fileupload' => false,
+                      'enable_richtext'   => true,
+                      'cols'              => $cols,
+                      'rows'              => $rows]);
       echo "</td>";
       echo "</tr>";
 
+      $this->showFormButtons($options);
+
       return true;
    }
-
-   function showScripts(PluginReleasesRelease $release) {
-
-      echo "<div class='timeline_box'>";
-      $rand = mt_rand();
-//      $release->showTimelineForm($rand,self::class);
-//      $release->showTimeLine($rand,self::class);
-      $release->showStateItem("rollback_state",__("All rollbacks are defined ?","release"),PluginReleasesRelease::ROLLBACKDEFINITION);
-      echo "</div>";
-
-   }
-   function prepareInputForAdd($input) {
-
-      $input =  parent::prepareInputForAdd($input);
-
-      $input["users_id"] = Session::getLoginUserID();
-
-      return $input;
-   }
-   function prepareInputForUpdate($input) {
-      // update last editor if content change
-      if (isset($input['update'])
-         && ($uid = Session::getLoginUserID())) { // Change from task form
-         $input["users_id_editor"] = $uid;
-      }
-      return $input;
-   }
-
 }
 

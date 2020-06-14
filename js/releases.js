@@ -9,7 +9,7 @@ var filter_timeline_release = function() {
       $('.filter_timeline_release li a').removeClass('h_active');
       $('.h_item').removeClass('h_hidden');
       $('.h_item').addClass('h_hidden');
-
+      // $('.ajax_box').hide();
       //activate clicked element
       _this.toggleClass('h_active');
 
@@ -22,6 +22,5 @@ var filter_timeline_release = function() {
       $(active_classnames.join(', ')).each(function(){
          $(this).parent().removeClass('h_hidden');
       });
-
    });
 };
