@@ -208,7 +208,7 @@ class PluginReleasesProfile extends Profile {
          //TODO continuer les droits
       );
 
-
+      //TODO drop this right
       if ($all) {
          $rights[] = ['itemtype' => PluginReleasesRelease::getType(),
                       'label'    => __('Use plugin', 'releases'),

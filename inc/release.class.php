@@ -56,15 +56,19 @@ class PluginReleasesRelease extends CommonITILObject {
    const CHANGEDEFINITION   = 10; // changes defenition
    const RISKDEFINITION     = 11; // risks definition
    const ROLLBACKDEFINITION = 12; // rollbacks definition
-   const TASKDEFINITION     = 13; // tests definition
+   const TASKDEFINITION     = 13; // tasks definition
    const TESTDEFINITION     = 14; // tests definition
    const FINALIZE           = 15; // finalized
    const REVIEW             = 16; // reviewed
    const CLOSED             = 17; // closed
 
+   //TODO Add more objects
    static $typeslinkable = ["Computer"  => "Computer",
                             "Appliance" => "Appliance"];
 
+
+   //TODO Add actors
+   //TODO Add PluginReleaseFollowup
    /**
     * @param int $nb
     *
@@ -126,6 +130,7 @@ class PluginReleasesRelease extends CommonITILObject {
                   echo "</div>";
                   break;
                case 2 :
+                  //TODO Drop to own class / tab
                   $item->showFinalisationTabs($item->getID());
                   break;
             }
@@ -297,6 +302,8 @@ class PluginReleasesRelease extends CommonITILObject {
          $input['status'] = self::RELEASEDEFINITION;
 
       }
+
+      //TODO add parent prepare
       return $input;
    }
 
@@ -414,6 +421,7 @@ class PluginReleasesRelease extends CommonITILObject {
       // To be overridden by class
       if ($releasestatus) {
          $tab = [
+            //TODO Used ?
             self::TODO       => __('To do'),
             self::DONE       => __('Done'),
             self::PROCESSING => __('In progress', 'releases'),
@@ -656,6 +664,7 @@ class PluginReleasesRelease extends CommonITILObject {
          $input['status'] = self::RELEASEDEFINITION;
 
       }
+      //TODO add parent prepare
       return $input;
    }
 
@@ -1193,7 +1202,7 @@ class PluginReleasesRelease extends CommonITILObject {
       ";
 
       echo "</script>\n";
-
+//TODO on launch - display only risks and hide new form on click object
       //show choices
       echo "<div class='timeline_form'>";
       echo "<div class='filter_timeline_release'>";
@@ -1565,7 +1574,6 @@ class PluginReleasesRelease extends CommonITILObject {
       //add risks to timeline
       if ($risk_obj->canview()) {
          $risks = $risk_obj->find([$foreignKey => $this->getID()] + $restrict_risk, ['date_mod DESC', 'id DESC']);
-         //TODO add date field ?
          foreach ($risks as $risks_id => $risk) {
             $risk_obj->getFromDB($risks_id);
             $risk['can_edit']                                   = $risk_obj->canUpdateItem();
@@ -1577,7 +1585,6 @@ class PluginReleasesRelease extends CommonITILObject {
 
       if ($rollback_obj->canview()) {
          $rollbacks = $rollback_obj->find([$foreignKey => $this->getID()] + $restrict_rollback, ['date_mod DESC', 'id DESC']);
-         //TODO add date field ?
          foreach ($rollbacks as $rollbacks_id => $rollback) {
             $rollback_obj->getFromDB($rollbacks_id);
             $rollback['can_edit']                                       = $rollback_obj->canUpdateItem();
@@ -1602,7 +1609,6 @@ class PluginReleasesRelease extends CommonITILObject {
 
       if ($test_obj->canview()) {
          $tests = $test_obj->find([$foreignKey => $this->getID()] + $restrict_test, ['date_mod DESC', 'id DESC']);
-         //TODO add date field ?
          foreach ($tests as $tests_id => $test) {
             $test_obj->getFromDB($tests_id);
             $test['can_edit']                                   = $test_obj->canUpdateItem();
