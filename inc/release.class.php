@@ -1242,8 +1242,8 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='task'>";
-      echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
-           "'><i class='fas fa-check-square'></i>" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
+      echo "<a href='#' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
+           "'><i class='fas fa-check-square'></i>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
@@ -1300,8 +1300,8 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<li><a href='#' class='fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
       $taskClass = "PluginReleasesDeploytask";
-      echo "<li><a href='#' class='fas fa-check-square pointer' data-type='task' title='" . $taskClass::getTypeName(2) .
-           "'><span class='sr-only'>" . $taskClass::getTypeName(2) . "</span></a></li>";
+      echo "<li><a href='#' class='fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
+           "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
       $testClass = "PluginReleasesTest";
       echo "<li><a href='#' class='fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";

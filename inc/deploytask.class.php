@@ -47,7 +47,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Deploy task', 'Deploy tasks', $nb, 'releases');
+      return _n('Release deploy task', 'Release deploy tasks', $nb, 'releases');
    }
 
    /**
@@ -237,9 +237,9 @@ class PluginReleasesDeploytask extends CommonDBTM {
 
       if (isset($options['parent']) && !empty($options['parent'])) {
          $item = $options['parent'];
+         $fkfield = $item::getForeignKeyField();
       }
-
-      $fkfield = $item::getForeignKeyField();
+      //TODO error from loading from planning (no parent ?)
 
       if ($ID > 0) {
          $this->check($ID, READ);
@@ -641,22 +641,23 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $result = $DB->query($query);
 
       if ($DB->numrows($result) > 0) {
-         for ($i = 0; $data = $DB->fetch_array($result); $i++) {
+         for ($i = 0; $data = $DB->fetchArray($result); $i++) {
 
-            $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_release";
+            $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_releases";
             $output[$key]['color']            = $parm['color'];
             $output[$key]['event_type_color'] = $parm['event_type_color'];
             $output[$key]["id"]               = $data["id"];
-            $output[$key]["users_id"]         = $data["users_id_tech"];
+            $output[$key]["users_id_tech"]    = $data["users_id_tech"];
             $output[$key]["begin"]            = $data["begin"];
             $output[$key]["end"]              = $data["end"];
             $output[$key]["name"]             = $data["name"];
-
-            $output[$key]["content"]  = Html::resume_text($data["content"], $CFG_GLPI["cut"]);
-            $output[$key]["itemtype"] = 'PluginReleasesDeploytask';
-            $output[$key]["url"]      = $CFG_GLPI["root_doc"] . "/plugins/releases/front/task.form.php?id=" . $data['id'];;
+            $output[$key]["editable"]         = true;
+            $output[$key]["content"]          = Html::resume_text($data["content"], $CFG_GLPI["cut"]);
+            $output[$key]["itemtype"]         = 'PluginReleasesDeploytask';
+            $output[$key]["url"]              = $CFG_GLPI["root_doc"] . "/plugins/releases/front/deploytask.form.php?id=" . $data['id'];;
          }
       }
+
       return $output;
    }
 
@@ -673,7 +674,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $html = "";
 
       $rand = mt_rand();
-      $html .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/resources/front/task.form.php?id=" . $val["id"] . "'";
+      $html .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/front/deploytask.form.php?id=" . $val["id"] . "'";
 
       $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
                onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
@@ -697,17 +698,17 @@ class PluginReleasesDeploytask extends CommonDBTM {
             break;
       }
 
-      if ($val["users_id"] && $who == 0) {
+      if ($val["users_id_tech"] && $who == 0) {
          $dbu  = new DbUtils();
-         $html .= " - " . __('User') . " " . $dbu->getUserName($val["users_id"]);
+         $html .= " - " . __('User') . " " . $dbu->getUserName($val["users_id_tech"]);
       }
       $html .= "</a><br>";
 
       $html .= User::getTypeName(1) .
                " : <a href='" . User::getFormURL() . "?id=" .
-               $val["users_id"] . "'";
+               $val["users_id_tech"] . "'";
       $user = new User();
-      $user->getFromDB($val["users_id"]);
+      $user->getFromDB($val["users_id_tech"]);
       $html .= ">" . $user->getFriendlyName() . "</a>";
 
       $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
@@ -719,13 +720,11 @@ class PluginReleasesDeploytask extends CommonDBTM {
       //            $val["type"] . "<br>";
       //      }
       if ($val["content"]) {
-         $html .= "<strong>" . __('Description') . "</strong> : " . $val["content"];
+         $html .= "<strong>" . __('Description') . "</strong> : " . Html::clean($val["content"]);
       }
       $html .= "</div>";
 
       return $html;
    }
-
-
 }
 

@@ -46,7 +46,7 @@ if (isset($_POST["id"])) {
    $result = $DB->query($query);
    $vals    = [];
    if ($DB->numrows($result) >= 1) {
-      while ($line = $DB->fetch_assoc($result)) {
+      while ($line = $DB->fetchAssoc($result)) {
          if($line["itemtype"] == PluginReleasesRelease::getType()) {
             $vals[PluginReleasesRelease::getType()] = PluginReleasesRelease::getStatusKey($line["state"]);
             $releasedef = PluginReleasesRelease::getStatusKey($line["state"]);

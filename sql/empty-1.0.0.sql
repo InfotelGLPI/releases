@@ -156,7 +156,6 @@ CREATE TABLE `glpi_plugin_releases_deploytasks` (
   `date_creation` TIMESTAMP NULL DEFAULT NULL,
   `plugin_releases_deploytasktemplates_id` int(11) NOT NULL DEFAULT '0',
   `timeline_position` tinyint(1) NOT NULL DEFAULT '0',
-  `is_private` tinyint(1) NOT NULL DEFAULT '0',
   `plugin_releases_deploytasks_id` int(11) NOT NULL default 0,
   `level` int(11) NOT NULL default 0,
    PRIMARY KEY  (`id`),
