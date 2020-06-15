@@ -212,8 +212,10 @@ class PluginReleasesDeploytask extends CommonDBTM {
               && (strtotime($input["begin"]) < strtotime($input["end"])));
    }
 
+
    //TODO
    //   Post_update for change release status ? deploytask_state to be created ?
+
 
    /**
     * @param       $ID

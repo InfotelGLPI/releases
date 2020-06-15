@@ -31,7 +31,7 @@
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
-   if (Session::haveRight('plugin_releases_use', READ)) {
+
       $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
       $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
 
@@ -53,7 +53,7 @@ function plugin_init_releases() {
       Plugin::registerClass(PluginReleasesDeploytask::class, [
          'planning_types' => true
       ]);
-   }
+
    $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeploytask', 'populatePlanning'];
    $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeploytask', 'displayPlanningItem'];
    $plugin                                        = new Plugin();

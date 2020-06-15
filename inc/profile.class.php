@@ -69,7 +69,12 @@ class PluginReleasesProfile extends Profile {
          $prof = new self();
 
          self::addDefaultProfileInfos($ID,
-                                      ['plugin_releases_use' => 0]);
+                                      [ 'plugin_releases_releases'  =>0,
+                                         'plugin_releases_tests'     => 0,
+                                         'plugin_releases_risks'     => 0,
+                                         'plugin_releases_rollbacks' => 0,
+                                         'plugin_releases_tasks'     => 0
+                                      ]);
          $prof->showForm($ID);
       }
       return true;
@@ -86,8 +91,7 @@ class PluginReleasesProfile extends Profile {
                                       'plugin_releases_tests'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
                                       'plugin_releases_risks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
                                       'plugin_releases_rollbacks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                      'plugin_releases_tasks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                      'plugin_releases_use'       => 1
+                                      'plugin_releases_tasks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE
 
                                    ], true);
    }
@@ -150,18 +154,6 @@ class PluginReleasesProfile extends Profile {
                                                        'title'         => __('General')]);
       }
 
-      echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr class='tab_bg_1'><th colspan='4'>" . __('Plugin Usage', 'releases') . "</th></tr>\n";
-
-      $effective_rights = ProfileRight::getProfileRights($profiles_id, ['plugin_releases_use']);
-      echo "<tr class='tab_bg_2'>";
-      echo "<td width='20%'>" . __('Use plugin', 'releases') . "</td>";
-      echo "<td colspan='5'>";
-      Html::showCheckbox(['name'    => '_plugin_releases_use',
-                          'checked' => $effective_rights['plugin_releases_use']]);
-      echo "</td></tr>\n";
-      echo "</table>";
-
       if ($canedit
           && $closeform
       ) {
@@ -208,12 +200,7 @@ class PluginReleasesProfile extends Profile {
          //TODO continuer les droits
       );
 
-      //TODO drop this right
-      if ($all) {
-         $rights[] = ['itemtype' => PluginReleasesRelease::getType(),
-                      'label'    => __('Use plugin', 'releases'),
-                      'field'    => 'plugin_releases_use'];
-      }
+
 
       return $rights;
    }

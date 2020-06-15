@@ -78,11 +78,12 @@ function plugin_releases_uninstall() {
    }
 
    $tables_glpi = ["glpi_displaypreferences",
-                   "glpi_notepads",
                    "glpi_savedsearches",
                    "glpi_logs",
-                   "glpi_documents_items"];
-   //TODO add others (notepads, knowbase..)
+                   "glpi_documents_items",
+                   "glpi_notepads",
+                   "glpi_knowbaseitems_items"
+   ];
    foreach ($tables_glpi as $table_glpi) {
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginRelease%';");
    }
@@ -105,9 +106,82 @@ function plugin_releases_uninstall() {
 function plugin_releases_getDatabaseRelations() {
 
    $plugin = new Plugin();
-   //TODO
+
    if ($plugin->isActivated("releases")) {
-      return [];
+      return [
+            "glpi_entities" => [
+                           "glpi_plugin_releases_deploytasks"=>"entities_id",
+                           "glpi_plugin_releases_deploytasktemplates"=>"entities_id",
+                           "glpi_plugin_releases_releases"=>"entities_id",
+                           "glpi_plugin_releases_releasetemplates"=>"entities_id",
+                           "glpi_plugin_releases_reviews"=>"entities_id",
+                           "glpi_plugin_releases_risks"=>"entities_id",
+                           "glpi_plugin_releases_risktemplates"=>"entities_id",
+                           "glpi_plugin_releases_rollbacks"=>"entities_id",
+                           "glpi_plugin_releases_rollbacktemplates"=>"entities_id",
+                           "glpi_plugin_releases_tests"=>"entities_id",
+                           "glpi_plugin_releases_testtemplates"=>"entities_id",
+                           "glpi_plugin_releases_typedeploytasks"=>"entities_id",
+                           "glpi_plugin_releases_typerisks"=>"entities_id",
+                           "glpi_plugin_releases_typetests"=>"entities_id"
+                           ],
+            "glpi_plugin_releases_releases"=>[
+                           "glpi_plugin_releases_deploytasks"=>"plugin_releases_releases_id",
+                           "glpi_plugin_releases_releases_items"=>"plugin_releases_releases_id",
+                           "glpi_plugin_releases_changes_releases"=>"plugin_releases_releases_id",
+                           "glpi_plugin_releases_reviews"=>"plugin_releases_releases_id",
+                           "glpi_plugin_releases_risks"=>"plugin_releases_releases_id",
+                           "glpi_plugin_releases_rollbacks"=>"plugin_releases_releases_id",
+                           "glpi_plugin_releases_tests"=>"plugin_releases_releases_id"
+                           ],
+            "glpi_changes"=>[
+                           "glpi_plugin_releases_changes_releases"=>"changes_id"
+
+            ],
+            "glpi_plugin_releases_risks"=>[
+                           "glpi_plugin_releases_deploytasks"=>"plugin_releases_risks_id",
+                           "glpi_plugin_releases_tests"=>"plugin_releases_risks_id"
+            ],
+            "glpi_plugin_releases_risktemplates"=>[
+                           "glpi_plugin_releases_deploytasktemplates"=>"plugin_releases_risks_id",
+                           "glpi_plugin_releases_testtemplates"=>"plugin_releases_risks_id"
+            ],
+            "glpi_plugin_releases_typedeploytasks"=>[
+                           "glpi_plugin_releases_deploytasks"=>"plugin_releases_typedeploytasks_id",
+                           "glpi_plugin_releases_deploytasktemplates"=>"plugin_releases_typedeploytasks_id",
+                           "glpi_plugin_releases_typedeploytasks"=>"plugin_releases_typedeploytasks_id"
+            ],
+            "glpi_plugin_releases_typerisks"=>[
+                           "glpi_plugin_releases_risks"=>"plugin_releases_typerisks_id",
+                           "glpi_plugin_releases_typerisks"=>"plugin_releases_typerisks_id",
+                           "glpi_plugin_releases_risktemplates"=>"plugin_releases_typerisks_id"
+            ],
+            "glpi_plugin_releases_typetests"=>[
+                           "glpi_plugin_releases_tests"=>"plugin_releases_typetests_id",
+                           "glpi_plugin_releases_typetests"=>"plugin_releases_typetests_id",
+                           "glpi_plugin_releases_testtemplates"=>"plugin_releases_typetests_id"
+            ],
+         "glpi_users"=>[
+            "glpi_plugin_releases_deploytasks"=>"users_id",
+            "glpi_plugin_releases_deploytasks"=>"users_id_editor",
+            "glpi_plugin_releases_deploytasks"=>"users_id_tech",
+            "glpi_plugin_releases_deploytasktemplates"=>"users_id",
+            "glpi_plugin_releases_deploytasktemplates"=>"users_id_editor",
+            "glpi_plugin_releases_deploytasktemplates"=>"users_id_tech",
+            "glpi_plugin_releases_risks"=>"users_id",
+            "glpi_plugin_releases_risks"=>"users_id_editor",
+            "glpi_plugin_releases_rollbacks"=>"users_id",
+            "glpi_plugin_releases_rollbacks"=>"users_id_editor",
+            "glpi_plugin_releases_tests"=>"users_id",
+            "glpi_plugin_releases_tests"=>"users_id_editor",
+
+         ],
+
+
+
+
+
+      ];
    } else {
       return [];
    }
