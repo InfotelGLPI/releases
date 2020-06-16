@@ -310,3 +310,38 @@ CREATE TABLE `glpi_plugin_releases_releases_items` (
   UNIQUE KEY `unicity` (`plugin_releases_releases_id`,`itemtype`,`items_id`),
   KEY `item` (`itemtype`,`items_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_releases_groups_releases`;
+CREATE TABLE `glpi_plugin_releases_groups_releases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releases_id` int(11) NOT NULL DEFAULT '0',
+  `groups_id` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releases_id`,`type`,`groups_id`),
+  KEY `group` (`groups_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_releases_releases_users`;
+CREATE TABLE `glpi_plugin_releases_releases_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releases_id` int(11) NOT NULL DEFAULT '0',
+  `users_id` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releases_id`,`type`,`users_id`),
+  KEY `group` (`users_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_releases_suppliers_releases`;
+CREATE TABLE `glpi_plugin_releases_suppliers_releases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releases_id` int(11) NOT NULL DEFAULT '0',
+  `suppliers_id` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '1',
+  `use_notification` tinyint(1) NOT NULL DEFAULT '1',
+  `alternative_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releases_id`,`type`,`suppliers_id`),
+  KEY `group` (`suppliers_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

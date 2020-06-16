@@ -107,7 +107,8 @@ class PluginReleasesRelease_Item extends CommonDBRelation{
 
          echo "<tr class='tab_bg_1'><td>";
          $types = [];
-         foreach (PluginReleasesRelease::$typeslinkable as $key => $val) {
+//         foreach (PluginReleasesRelease::$typeslinkable as $key => $val) {
+         foreach ($release->getAllTypesForHelpdesk() as $key => $val) {
             $types[] = $key;
          }
          Dropdown::showSelectItemFromItemtypes(['itemtypes'
