@@ -70,6 +70,7 @@ function plugin_releases_uninstall() {
       PluginReleasesRisk::getTable(),
       PluginReleasesRollback::getTable(),
       PluginReleasesDeploytasktemplate::getTable(),
+      //TODO drop this table if not used
       'glpi_plugin_releases_globalstatues'
    ];
 
@@ -84,11 +85,13 @@ function plugin_releases_uninstall() {
                    "glpi_notepads",
                    "glpi_knowbaseitems_items"
    ];
+   //TODO can add release to tickets & add in uninstall "glpi_items_tickets",
+
    foreach ($tables_glpi as $table_glpi) {
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginRelease%';");
    }
 
-
+   //TODO add drop profiles & menu in session ?
    //Delete rights associated with the plugin
    //   $profileRight = new ProfileRight();
    //   foreach (PluginReleaseProfile::getAllRights(true) as $right) {
