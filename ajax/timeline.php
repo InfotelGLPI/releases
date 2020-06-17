@@ -93,8 +93,13 @@ switch ($_REQUEST['action']) {
          if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
             ObjectLock::setReadOnlyProfile( );
          }
-
+         if($item->getType() == "ITILFollowup"){
+            $item->fields["itemtype"] = $parent->getType();
+            $item->fields["items_id"] = $_REQUEST["id"];
+         }
          $parent::showSubForm($item, $_REQUEST["id"], ['parent' => $parent,
+                                                      "itemtype" => $parent->getType(),
+                                                      "items_id" => $parent->getID(),
                                                       $foreignKey => $_REQUEST[$foreignKey]]);
       } else {
          echo __('Access denied');

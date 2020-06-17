@@ -6,10 +6,10 @@ var filter_timeline_release = function() {
       event.preventDefault();
       var _this = $(this);
       //hide all elements in timeline
-      $('.filter_timeline_release li a').removeClass('h_active');
+      $('.filterEle').removeClass('h_active');
       $('.h_item').removeClass('h_hidden');
       $('.h_item').addClass('h_hidden');
-      // $('.ajax_box').hide();
+      $('.ajax_box').empty();
       //activate clicked element
       _this.toggleClass('h_active');
 
@@ -17,8 +17,8 @@ var filter_timeline_release = function() {
       var active_classnames = [];
       $('.filter_timeline_release .h_active').each(function() {
          active_classnames.push(".h_content."+$(this).data('type'));
+         $("a[data-type='"+$(this).data('type')+"'].filterEle").addClass('h_active');
       });
-
       $(active_classnames.join(', ')).each(function(){
          $(this).parent().removeClass('h_hidden');
       });

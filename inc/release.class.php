@@ -70,8 +70,7 @@ class PluginReleasesRelease extends CommonITILObject {
 //                            "Appliance" => "Appliance"];
 
 
-   //TODO Add actors
-   //TODO Add PluginReleaseFollowup
+
    /**
     * @param int $nb
     *
@@ -1196,7 +1195,6 @@ class PluginReleasesRelease extends CommonITILObject {
          $( '#alert-message' ).dialog( 'open' );
 
          });");
-         //TODO
          echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
          $srcImg     = "fas fa-info-circle";
          $color      = "forestgreen";
@@ -1425,7 +1423,6 @@ class PluginReleasesRelease extends CommonITILObject {
       ";
 
       echo "</script>\n";
-//TODO on launch - display only risks and hide new form on click object
       //show choices
       echo "<div class='timeline_form'>";
       echo "<div class='filter_timeline_release'>";
@@ -1450,11 +1447,13 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='rollback'>";
-      echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
+      echo "<a href='#'  data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
       if ($canadd_rollback) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
+
+
 
       $style = "color:firebrick;";
       $fa = "fa-times-circle";
@@ -1465,7 +1464,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='task'>";
-      echo "<a href='#' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
+      echo "<a href='#'   data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
            "'><i class='fas fa-check-square'></i>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
@@ -1480,7 +1479,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='test'>";
-      echo "<a href='#' data-type='test' title='" . $testClass::getTypeName(2) .
+      echo "<a href='#'  data-type='test' title='" . $testClass::getTypeName(2) .
            "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
       if ($canadd_test) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
@@ -1492,6 +1491,13 @@ class PluginReleasesRelease extends CommonITILObject {
          $fa = "fa-check-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
+
+      echo "<li class='followup'>".
+         "<a href='#'  data-type='ITILFollowup' title='".__("Followup")."'>"
+         . "<i class='far fa-comment'></i>".__("Followup")."</a></li>";
+      if ($canadd_test) {
+         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"ITILFollowup\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+      }
       echo "</ul>"; // timeline_choices
       echo "</div>";
 
@@ -1517,18 +1523,20 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<ul>";
 
       $riskClass = "PluginReleasesRisk";
-      echo "<li><a href='#' class='fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
+      echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
            "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
       $rollbackClass = "PluginReleasesRollback";
-      echo "<li><a href='#' class='fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
+      echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
       $taskClass = "PluginReleasesDeploytask";
-      echo "<li><a href='#' class='fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
+      echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
            "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
       $testClass = "PluginReleasesTest";
-      echo "<li><a href='#' class='fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
+      echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
-      echo "<li><a href='#' class='fa fa-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
+      echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __('Followup') .
+         "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
+      echo "<li><a href='#' class=' filterEle fa fa-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
            "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
       echo "</ul>";
       echo "</div>";
@@ -1587,7 +1595,12 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
          // set item position depending on field timeline_position
-         $user_position = 'left'; // default position
+         if($item['itiltype'] == "Followup"){
+            $user_position = 'right';
+         }else{
+            $user_position = 'left'; // default position
+         }
+
          //         if (isset($item_i['timeline_position'])) {
          //            switch ($item_i['timeline_position']) {
          //               case self::TIMELINE_LEFT:
@@ -1643,7 +1656,16 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $fa    = null;
          $class = "h_content";
-         $class .= " {$item['type']::getCssClass()}";
+         if($item['itiltype'] == "Followup"){
+            if (isset($item['itiltype'])) {
+               $class .= " ITIL{$item['itiltype']}";
+            } else {
+               $class .= " {$item['type']}";
+            }
+         }else{
+            $class .= " {$item['type']::getCssClass()}";
+         }
+
 
 
          //         $class .= " {$item_i['state']}";
@@ -1672,7 +1694,12 @@ class PluginReleasesRelease extends CommonITILObject {
 
          echo "</div>";
          if (isset($item_i['content'])) {
-            $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
+            if (isset($item_i["name"])){
+               $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
+            }else{
+               $content =  $item_i['content'];
+            }
+
             $content = Toolbox::getHtmlToDisplay($content);
             $content = autolink($content, false);
 
@@ -1768,6 +1795,18 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $timeline_index++;
       }
+      echo Html::scriptBlock("$(document).ready(function (){
+                                        $('.filter_timeline_release li a').removeClass('h_active');
+                                        $('.h_item').removeClass('h_hidden');
+                                       $('.h_item').addClass('h_hidden');
+                                      $(\"a[data-type='risk']\").addClass('h_active');
+                                       $('.ajax_box').empty();
+                                       //activate clicked element
+                                       //find active classname
+                                       $(\"a[data-type='risk'].filterEle\").addClass('h_active');
+                                       $(\".h_content.risk\").parent().removeClass('h_hidden');
+
+                                    });");
       // end timeline
       echo "</div>"; // h_item $user_position
    }
@@ -1793,7 +1832,37 @@ class PluginReleasesRelease extends CommonITILObject {
       $restrict_risk = $restrict_rollback = $restrict_task = $restrict_test = [];
       //      $restrict_risk['itemtype'] = static::getType();
       //      $restrict_risk['items_id'] = $this->getID();
+      $user = new User();
 
+      $fupClass           = 'ITILFollowup';
+      $followup_obj       = new $fupClass;
+
+
+
+      //checks rights
+      $restrict_fup = $restrict_task = [];
+      if (!Session::haveRight("followup", ITILFollowup::SEEPRIVATE)) {
+         $restrict_fup = [
+            'OR' => [
+               'is_private'   => 0,
+               'users_id'     => Session::getLoginUserID()
+            ]
+         ];
+      }
+
+      $restrict_fup['itemtype'] = static::getType();
+      $restrict_fup['items_id'] = $this->getID();
+//add followups to timeline
+      if ($followup_obj->canview()) {
+         $followups = $followup_obj->find(['items_id' => $this->getID()] + $restrict_fup, ['date DESC', 'id DESC']);
+         foreach ($followups as $followups_id => $followup) {
+            $followup_obj->getFromDB($followups_id);
+            $followup['can_edit'] = $followup_obj->canUpdateItem();;
+            $timeline[$followup['date'] . "_followup_" . $followups_id] = ['type' => $fupClass,
+               'item' => $followup,
+               'itiltype' => 'Followup'];
+         }
+      }
       //add risks to timeline
       if ($risk_obj->canview()) {
          $risks = $risk_obj->find([$foreignKey => $this->getID()] + $restrict_risk, ['date_mod DESC', 'id DESC']);
@@ -2024,6 +2093,43 @@ class PluginReleasesRelease extends CommonITILObject {
          return true;
       }
       return false;
+   }
+
+   /**
+    * is the current user could reopen the current change
+    *
+    * @since 9.4.0
+    *
+    * @return boolean
+    */
+   function canReopen() {
+      return Session::haveRight('plugin_releases_releases', CREATE)
+         && in_array($this->fields["status"], $this->getClosedStatusArray());
+   }
+
+   /**
+    * Get the ITIL object closed status list
+    *
+    * @since 0.83
+    *
+    * @return array
+    **/
+   static function getClosedStatusArray() {
+
+
+      $tab = [self::CLOSED,self::REVIEW];
+      return $tab;
+   }
+
+   /**
+    * Get the ITIL object closed, solved or waiting status list
+    *
+    * @since 9.4.0
+    *
+    * @return array
+    */
+   static function getReopenableStatusArray() {
+      return [self::CLOSED, self::WAITING];
    }
 }
 
