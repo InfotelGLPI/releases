@@ -105,10 +105,6 @@ class PluginReleasesRelease extends CommonITILObject {
                $ong = [
                   1 => __("Processing release", 'releases') . " <sup class='tab_nb'>$nb_elements</sup>",
                ];
-               //TODO create own class - for own tab position
-               if ($item->canUpdate()) {
-                  $ong[2] = __("Finalization", 'releases');
-               }
 
                return $ong;
             case "Change" :
@@ -131,10 +127,7 @@ class PluginReleasesRelease extends CommonITILObject {
                   $item->showTimeline($rand);
                   echo "</div>";
                   break;
-               case 2 :
-                  //TODO Drop to own class / tab
-                  $item->showFinalisationTabs($item->getID());
-                  break;
+
             }
             break;
          case "Change" :
@@ -159,9 +152,11 @@ class PluginReleasesRelease extends CommonITILObject {
       $this->addStandardTab('Document_Item', $ong, $options);
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
       $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
+
       if ($this->hasImpactTab()) {
          $this->addStandardTab('Impact', $ong, $options);
       }
+      $this->addStandardTab('PluginReleasesFinalization', $ong, $options);
       $this->addStandardTab('PluginReleasesReview', $ong, $options);
       $this->addStandardTab('Notepad', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
@@ -1118,130 +1113,6 @@ class PluginReleasesRelease extends CommonITILObject {
       return true;
    }
 
-   //TODO create own class for own tab
-   function showFinalisationTabs($ID) {
-      global $CFG_GLPI;
-      $this->getFromDB($ID);
-
-      echo "<table class='tab_cadre_fixe' id='mainformtable'>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo _n('Risk', 'Risks', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo self::getStateItem($this->getField("risk_state"));
-      echo "</td>";
-      echo "<td>";
-
-
-      echo "<td>";
-      echo _n('Rollback', 'Rollbacks', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo self::getStateItem($this->getField("rollback_state"));
-      echo "</td>";
-
-      echo "<td>";
-      echo _n('Deploy Task', 'Deploy Tasks', 2, 'releases');
-      echo "</td>";
-      echo "<td class='left'>";
-      $dtF = self::countForItem($ID, PluginReleasesDeploytask::class, 1);
-      $dtT = self::countForItem($ID, PluginReleasesDeploytask::class);
-      if ($dtT != 0) {
-         $pourcentage = $dtF / $dtT * 100;
-      } else {
-         $pourcentage = 0;
-      }
-
-      echo "<div class=\"progress-circle\" data-value=\"" . round($pourcentage) . "\">
-             <div class=\"progress-masque\">
-                 <div class=\"progress-barre\"></div>
-                 <div class=\"progress-sup50\"></div>
-             </div>
-            </div>";
-
-      //      echo $dtF;
-      //      echo "/";
-      //      echo $dtT;
-      echo "</td>";
-
-      echo "<td>";
-      echo _n('Test', 'Tests', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo self::getStateItem($this->getField("test_state"));
-      echo "</td>";
-
-      echo "</tr>";
-
-
-      echo "</table>";
-      $allfinish = $this->getField("risk_state")
-                   && ($dtT == $dtF)
-                   && $this->getField("test_state")
-                   && $this->getField("rollback_state");
-      $text      = "";
-      if (!$allfinish) {
-
-         $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !") . '</span>';
-         $text .= "<br>";
-         $text .= "<br>";
-      }
-      if ($this->getField('status') < self::FINALIZE) {
-         echo '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
-
-         echo Html::scriptBlock(
-            "$('#finalize').click(function(){
-         $( '#alert-message' ).dialog( 'open' );
-
-         });");
-         echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-         $srcImg     = "fas fa-info-circle";
-         $color      = "forestgreen";
-         $alertTitle = _n("Information", "Informations", 1);
-
-         echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . "finalize" . " \";");
-         echo Html::scriptBlock("$( '#alert-message' ).dialog({
-        autoOpen: false,
-        height: " . 200 . ",
-        width: " . 300 . ",
-        modal: true,
-        open: function (){
-         $(this)
-            .parent()
-            .children('.ui-dialog-titlebar')
-            .html(mTitle);
-      },
-        buttons: {
-         'ok': function() {
-            if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
-        
-              $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
-            }else{  
-               var date = $(\"[name = 'date_production']\").val();
-               console.log(date);
-               $.ajax({
-                  url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
-                  data: {'id' : " . $this->getID() . ",'date' : date},
-                  success: function() {
-                     document.location.reload();
-                  }
-               });
-               
-            }
-         
-         },
-         'cancel': function() {
-               $( this ).dialog( 'close' );
-          }
-      },
-      
-    })");
-
-
-      }
-
-   }
 
    /**
     * Return a field Value if exists
@@ -1955,25 +1826,25 @@ class PluginReleasesRelease extends CommonITILObject {
                                                                   'display' => $display], $options));
    }
 
-   //TODO replace by update objects - tests...
-   function showStateItem($field = "", $text = "", $state) {
-      global $CFG_GLPI;
-
-      echo "<div colspan='4' class='center'>" . $text . "</div>";
-      echo "<div id='fakeupdate'></div>";
-
-      echo "<div class='center'>";
-      $rand = mt_rand();
-      Dropdown::showYesNo($field, $this->getField($field), -1, ["rand" => $rand]);
-      $params = ['value'                       => "__VALUE__",
-                 "field"                       => $field,
-                 "plugin_releases_releases_id" => $this->getID(),
-                 'state'                       => $state];
-      Ajax::updateItemOnSelectEvent("dropdown_$field$rand", "fakeupdate", $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeitemstate.php", $params);
-
-      echo "</div>";
-
-   }
+//   //TODO replace by update objects - tests...
+//   function showStateItem($field = "", $text = "", $state) {
+//      global $CFG_GLPI;
+//
+//      echo "<div colspan='4' class='center'>" . $text . "</div>";
+//      echo "<div id='fakeupdate'></div>";
+//
+//      echo "<div class='center'>";
+//      $rand = mt_rand();
+//      Dropdown::showYesNo($field, $this->getField($field), -1, ["rand" => $rand]);
+//      $params = ['value'                       => "__VALUE__",
+//                 "field"                       => $field,
+//                 "plugin_releases_releases_id" => $this->getID(),
+//                 'state'                       => $state];
+//      Ajax::updateItemOnSelectEvent("dropdown_$field$rand", "fakeupdate", $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeitemstate.php", $params);
+//
+//      echo "</div>";
+//
+//   }
 
    static function showCreateRelease($item) {
 
