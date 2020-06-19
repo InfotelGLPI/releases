@@ -39,7 +39,7 @@ class PluginReleasesTest extends CommonDBTM {
    static $rightname = 'plugin_releases_tests';
    const TODO = 1; // todo
    const DONE = 2; // done
-   const FAIL = 3; // done
+   const FAIL = 3; // fail
 
 
    //TODO How to see fails tests

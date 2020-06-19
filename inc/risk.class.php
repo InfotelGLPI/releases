@@ -206,12 +206,17 @@ class PluginReleasesRisk extends CommonDBTM {
          }
       ');
       echo "</td>";
-      echo "<td>";
-      echo __("create a test from this risk","releases");
-      echo "</td>";
-      echo "<td>";
-      Html::showCheckbox(["name" => "create_test"]);
-      echo "</td>";
+      if($ID == ""){
+         echo "<td>";
+         echo __("create a test from this risk","releases");
+         echo "</td>";
+         echo "<td>";
+         Html::showCheckbox(["name" => "create_test"]);
+         echo "</td>";
+      }else{
+         echo "<td colspan='2'></td>";
+      }
+
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";

@@ -38,7 +38,7 @@ if (!isset($_REQUEST['action'])) {
    exit;
 }
 
-if ($_REQUEST['action'] == 'change_task_state') {
+if ($_REQUEST['action'] == 'change_task_state' || $_REQUEST['action'] == 'done_fail' ) {
    header("Content-Type: application/json; charset=UTF-8");
 } else {
    header("Content-Type: text/html; charset=UTF-8");
@@ -106,5 +106,30 @@ switch ($_REQUEST['action']) {
       }
 
       Html::ajaxFooter();
+      break;
+   case "done_fail":
+      if (!isset($_REQUEST['items_id'])) {
+         exit();
+      }
+      $objClass = $_REQUEST['itemtype'];
+      $obj = new $objClass;
+      $obj->getFromDB(intval($_REQUEST['items_id']));
+
+      if($_REQUEST["newStatus"] == $obj->fields['state'] ){
+         $new_state = PluginReleasesTest::TODO;
+      }else{
+         $new_state = $_REQUEST["newStatus"];
+      }
+
+      echo json_encode([
+         'state'  => $new_state
+      ]);
+
+      $obj->update([
+         'id'         => intval($_REQUEST['items_id']),
+         $foreignKey => intval($_REQUEST[$foreignKey]),
+         'state'      => $new_state
+      ]);
+
       break;
 }

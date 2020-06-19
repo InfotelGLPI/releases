@@ -7,6 +7,7 @@ CREATE TABLE `glpi_plugin_releases_releases` (
   `content` longtext COLLATE utf8_unicode_ci,
   `date_preproduction` TIMESTAMP NULL DEFAULT NULL,
   `date_production` TIMESTAMP NULL DEFAULT NULL,
+  `begin_waiting_date` TIMESTAMP NULL DEFAULT NULL,
   `service_shutdown` tinyint(1) NOT NULL default '0',
   `service_shutdown_details` longtext COLLATE utf8_unicode_ci,
   `hour_type` tinyint(1) NOT NULL default '0',

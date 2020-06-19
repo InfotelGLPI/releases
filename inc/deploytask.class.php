@@ -39,6 +39,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
    static $rightname = 'plugin_releases_tasks';
    const TODO = 1; // todo
    const DONE = 2; // done
+   const FAIL = 3; // fail
 
    /**
     * @param int $nb

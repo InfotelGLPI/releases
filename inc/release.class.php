@@ -406,7 +406,7 @@ class PluginReleasesRelease extends CommonITILObject {
       //                      (".$this->fields['id'].",'". PluginReleasesRollback::getType()."', 0)
       //                      ;";
       //      $DB->queryOrDie($query, "statues creation");
-
+      parent::post_addItem();
    }
 
    /**
@@ -922,6 +922,21 @@ class PluginReleasesRelease extends CommonITILObject {
       if (isset($options["template_id"]) && $options["template_id"] > 0) {
          $this->prepareField($options["template_id"]);
          echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
+      }else{
+         $default_values = self::getDefaultValues();
+
+         // Restore saved value or override with page parameter
+         $saved = $this->restoreInput();
+
+         foreach ($default_values as $name => $value) {
+            if (!isset($this->fields[$name])) {
+               if (isset($saved[$name])) {
+                  $this->fields[$name] = $saved[$name];
+               } else {
+                  $this->fields[$name] = $value;
+               }
+            }
+         }
       }
       $select_changes = [];
       if (isset($options["changes_id"])) {
@@ -972,7 +987,13 @@ class PluginReleasesRelease extends CommonITILObject {
       //      echo self::getStatus($this->getField('status'));
       echo "</td>";
       echo "</tr>";
-
+      if ($ID) {
+         echo "<tr  class='tab_bg_1'>";
+         echo "<td colspan='4'>";
+         $this->showActorsPartForm($ID, $options);
+         echo "</td>";
+         echo "</tr>";
+      }
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Release area', 'releases') . "</td>";
       echo "<td colspan='3'>";
@@ -1075,13 +1096,7 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "</tr>";
       }
 
-      if ($ID) {
-         echo "<tr  class='tab_bg_1'>";
-         echo "<td colspan='4'>";
-         $this->showActorsPartForm($ID, $options);
-         echo "</td>";
-         echo "</tr>";
-      }
+
 
       if ($ID != "") {
          echo "<tr  class='tab_bg_1'>";
@@ -1123,11 +1138,6 @@ class PluginReleasesRelease extends CommonITILObject {
     **/
    function getField($field) {
 
-      if ($field == "content") {
-         return $this->fields["service_shutdown_details"];
-      } else {
-         return parent::getField($field);
-      }
       if (array_key_exists($field, $this->fields)) {
          return $this->fields[$field];
       }
@@ -1238,6 +1248,30 @@ class PluginReleasesRelease extends CommonITILObject {
                   $(target).removeClass('state_1 state_2')
                            .addClass('state_'+response.state)
                            .attr('title', response.label);
+                });
+      }
+      function done_fail(items_id, target, itemtype,newStatus) {
+      console.log('salut');
+         $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
+                {'action':     'done_fail',
+                  'items_id':   items_id,
+                  'itemtype':   itemtype,
+                  'parenttype': '$objType',
+                  '$foreignKey': " . $this->fields['id'] . ",
+                  'newStatus': newStatus 
+                })
+                .done(function(response) {
+                console.log('done '+response.state)
+                $(target).parent().children().css('color','gray');//add gray to done and fail
+                          
+                if(response.state == 2){
+//                console.log($(target).parent().children('i[data-type=\"done\"]'));
+                   $(target).parent().children('i[data-type=\"done\"]').css('color','forestgreen');//green to done
+                }else if (response.state == 3){
+//                console.log($(target).parent().children('i[data-type=\"fail\"]'));
+                   $(target).parent().children('i[data-type=\"fail\"]').css('color','firebrick');//red to fail
+                }
+                  
                 });
       }
 
@@ -1582,14 +1616,57 @@ class PluginReleasesRelease extends CommonITILObject {
             echo "<div class='item_content $long_text'>";
             echo "<p>";
             if (isset($item_i['state'])) {
-               $onClick = "onclick='change_task_state(" . $item_i['id'] . ", this,\"" . $item['type'] . "\")'";
-               if (!$item_i['can_edit']) {
-                  $onClick = "style='cursor: not-allowed;'";
-               }
-               echo "<span class='state state_" . $item_i['state'] . "'
+
+               if($item['type'] == PluginReleasesTest::getType() || $item['type'] == pluginReleasesDeploytask::getType()){
+                  $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",2)'";
+                  $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",3)'";
+                  if (!$item_i['can_edit']) {
+                     $onClick = "style='cursor: not-allowed;'";
+                  }
+                  if($item_i['state'] == 1){
+                     echo "<span>";
+                     $style = "color:gray;";
+                     $fa = "fa-times-circle fa-2x";
+                     echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
+                     $style = "color:gray;";
+                     $fa = "fa-check-circle fa-2x";
+
+                     echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
+                     echo "</span>";
+                  }else if($item_i['state'] == 2){
+                     echo "<span>";
+                     $style = "color:gray;";
+                     $fa = "fa-times-circle fa-2x";
+                     echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
+                     $style = "color:forestgreen;";
+                     $fa = "fa-check-circle fa-2x";
+
+                     echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
+                     echo "</span>";
+                  }else{
+                     echo "<span>";
+                     $style = "color:firebrick;";
+                     $fa = "fa-times-circle fa-2x";
+                     echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
+                     $style = "color:gray;";
+                     $fa = "fa-check-circle fa-2x";
+
+                     echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
+                     echo "</span>";
+                  }
+               }else{
+                  $onClick = "onclick='change_task_state(" . $item_i['id'] . ", this,\"" . $item['type'] . "\")'";
+                  if (!$item_i['can_edit']) {
+                     $onClick = "style='cursor: not-allowed;'";
+                  }
+                  echo "<span class='state state_" . $item_i['state'] . "'
                            $onClick
                            title='" . Planning::getState($item_i['state']) . "'>";
-               echo "</span>";
+                  echo "</span>";
+               }
+
+
+
             }
             echo "</p>";
 
@@ -1956,7 +2033,61 @@ class PluginReleasesRelease extends CommonITILObject {
    }
 
    static function getDefaultValues($entity = 0) {
-      // TODO: Implement getDefaultValues() method.
+      global $CFG_GLPI;
+
+      if (is_numeric(Session::getLoginUserID(false))) {
+         $users_id_requester = Session::getLoginUserID();
+         $users_id_assign    = Session::getLoginUserID();
+         // No default requester if own ticket right = tech and update_ticket right to update requester
+//         if (Session::haveRightsOr(self::$rightname, [UPDATE, self::OWN]) && !$_SESSION['glpiset_default_requester']) {
+//            $users_id_requester = 0;
+//         }
+         if (!$_SESSION['glpiset_default_tech']) {
+            $users_id_assign = 0;
+         }
+         $entity      = $_SESSION['glpiactive_entity'];
+         $requesttype = $_SESSION['glpidefault_requesttypes_id'];
+      } else {
+         $users_id_requester = 0;
+         $users_id_assign    = 0;
+         $requesttype        = $CFG_GLPI['default_requesttypes_id'];
+      }
+      $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $entity, '', 1);
+      // Set default values...
+      return  ['_users_id_requester'       => $users_id_requester,
+         '_users_id_requester_notif' => ['use_notification'  => [$default_use_notif],
+            'alternative_email' => ['']],
+         '_groups_id_requester'      => 0,
+         '_users_id_assign'          =>  $users_id_assign,
+         '_users_id_assign_notif'    => ['use_notification'  => [$default_use_notif],
+            'alternative_email' => ['']],
+         '_groups_id_assign'         => 0,
+         '_users_id_observer'        => 0,
+         '_users_id_observer_notif'  => ['use_notification'  => [$default_use_notif],
+            'alternative_email' => ['']],
+         '_groups_id_observer'       => 0,
+         '_link'                     => ['tickets_id_2' => '',
+            'link'         => ''],
+         '_suppliers_id_assign'      => 0,
+         '_suppliers_id_assign_notif' => ['use_notification'  => [$default_use_notif],
+            'alternative_email' => ['']],
+         'name'                      => '',
+         'content'                   => '',
+         'date_preproduction'                      => null,
+         'date_production'                      => null,
+         'entities_id'               => $entity,
+         'status'                    => self::NEWRELEASE,
+         'service_shutdown'          => false,
+         'service_shutdown_details'  =>'',
+         'hour_type'                 => 0,
+         'communication'             =>false,
+         'communication_type'        =>false,
+         'target'                    => [],
+         'locations_id'              =>0,
+         'risk_state'                =>0,
+         'test_state'                =>0,
+         'rollback_state'                =>0,
+         ];
    }
 
    static function isAllowedStatus($old,$new){
