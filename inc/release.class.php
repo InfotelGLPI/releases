@@ -418,29 +418,7 @@ class PluginReleasesRelease extends CommonITILObject {
     **/
    static function getAllStatusArray($releasestatus = false) {
 
-      // To be overridden by class
-      if ($releasestatus) {
-         $tab = [
-            //TODO Used ?
-            self::TODO       => __('To do'),
-            self::DONE       => __('Done'),
-            self::PROCESSING => __('In progress', 'releases'),
-            self::WAITING    => __('waiting', 'releases'),
-            self::LATE       => __('Late', 'releases'),
-            self::DEF        => __('Default', 'releases'),
 
-            self::NEWRELEASE         => _x('status', 'New'),
-            self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
-            self::DATEDEFINITION     => __('Dates defined', 'releases'),
-            self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
-            self::RISKDEFINITION     => __('Risks defined', 'releases'),
-            self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
-            self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
-            self::TESTDEFINITION     => __('Tests in progress', 'releases'),
-            self::FINALIZE           => __('Finalized', 'releases'),
-            self::REVIEW             => __('Reviewed', 'releases'),
-            self::CLOSED             => _x('status', 'Closed')];
-      } else {
          $tab = [
             self::NEWRELEASE         => _x('status', 'New'),
             self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
@@ -453,7 +431,7 @@ class PluginReleasesRelease extends CommonITILObject {
             self::FINALIZE           => __('Finalized', 'releases'),
             self::REVIEW             => __('Reviewed', 'releases'),
             self::CLOSED             => _x('status', 'Closed')];
-      }
+
 
 
       return $tab;
@@ -1903,25 +1881,6 @@ class PluginReleasesRelease extends CommonITILObject {
                                                                   'display' => $display], $options));
    }
 
-//   //TODO replace by update objects - tests...
-//   function showStateItem($field = "", $text = "", $state) {
-//      global $CFG_GLPI;
-//
-//      echo "<div colspan='4' class='center'>" . $text . "</div>";
-//      echo "<div id='fakeupdate'></div>";
-//
-//      echo "<div class='center'>";
-//      $rand = mt_rand();
-//      Dropdown::showYesNo($field, $this->getField($field), -1, ["rand" => $rand]);
-//      $params = ['value'                       => "__VALUE__",
-//                 "field"                       => $field,
-//                 "plugin_releases_releases_id" => $this->getID(),
-//                 'state'                       => $state];
-//      Ajax::updateItemOnSelectEvent("dropdown_$field$rand", "fakeupdate", $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeitemstate.php", $params);
-//
-//      echo "</div>";
-//
-//   }
 
    static function showCreateRelease($item) {
 

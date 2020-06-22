@@ -222,15 +222,6 @@ CREATE TABLE `glpi_plugin_releases_reviews` (
    PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `glpi_plugin_releases_globalstatues`;
-CREATE TABLE `glpi_plugin_releases_globalstatues` (
-   `id` int(11) NOT NULL auto_increment,
-   `entities_id` int(11) NOT NULL default '0',
-   `plugin_releases_releases_id` int(11) NOT NULL default '0',
-   `itemtype` varchar(255) DEFAULT NULL,
-   `state` int(11) NOT NULL default '0',
-   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_releases_releasetemplates`;
 CREATE TABLE `glpi_plugin_releases_releasetemplates` (

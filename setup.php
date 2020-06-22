@@ -31,9 +31,11 @@
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
+   $_SESSION["glpiactiveprofile"]["helpdesk_item_type"]["PluginReleaseRelease"] = PluginReleasesRelease::getType();
 
       $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
       $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
+      $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
 
       $PLUGIN_HOOKS["javascript"]['releases']     = ["/plugins/releases/js/releases.js"];
       $PLUGIN_HOOKS['add_javascript']['releases'] = 'js/releases.js';

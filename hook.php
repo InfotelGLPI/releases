@@ -70,8 +70,6 @@ function plugin_releases_uninstall() {
       PluginReleasesRisk::getTable(),
       PluginReleasesRollback::getTable(),
       PluginReleasesDeploytasktemplate::getTable(),
-      //TODO drop this table if not used
-      'glpi_plugin_releases_globalstatues'
    ];
 
    foreach ($tables as $table) {
@@ -83,12 +81,12 @@ function plugin_releases_uninstall() {
                    "glpi_logs",
                    "glpi_documents_items",
                    "glpi_notepads",
+                   "glpi_items_tickets",
                    "glpi_knowbaseitems_items"
    ];
-   //TODO can add release to tickets & add in uninstall "glpi_items_tickets",
 
    foreach ($tables_glpi as $table_glpi) {
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginRelease%';");
+      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginReleases%';");
    }
 
    //TODO add drop profiles & menu in session ?
@@ -212,6 +210,19 @@ function plugin_releases_getDropdown() {
    } else {
       return [];
    }
+}
+
+/**
+ * @param $types
+ *
+ * @return mixed
+ */
+function plugin_releases_AssignToTicket($types) {
+   if (Session::haveRight("plugin_releases_releases", "1") && isset($_REQUEST["_itemtype"]) && $_REQUEST["_itemtype"] == "Ticket") {
+      $types['PluginReleasesRelease'] = PluginReleasesRelease::getTypeName(2);
+   }
+
+   return $types;
 }
 
 

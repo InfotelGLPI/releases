@@ -41,8 +41,6 @@ class PluginReleasesTest extends CommonDBTM {
    const DONE = 2; // done
    const FAIL = 3; // fail
 
-
-   //TODO How to see fails tests
    /**
     * @param int $nb
     *
