@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Tasklists plugin 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-26 15:53+0200\n"
-"PO-Revision-Date: 2020-06-26 16:06+0200\n"
+"POT-Creation-Date: 2020-06-26 16:08+0200\n"
+"PO-Revision-Date: 2020-06-26 16:29+0200\n"
 "Last-Translator: Amandine Manceau, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/tsmr/teams/79675/"
 "fr_FR/)\n"
@@ -19,12 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.2.3\n"
 
-#: setup.php:76 inc/profile.class.php:52
-msgid "Releases"
-msgstr "Mises en production"
-
-#: front/change_release.form.php:48 inc/release.class.php:81
-#: inc/releasetemplate.class.php:470
+#: setup.php:76 front/change_release.form.php:48 inc/profile.class.php:52
+#: inc/release.class.php:81 inc/releasetemplate.class.php:470
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Mise en production"
@@ -281,6 +277,9 @@ msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] "Type de tâche de déploiement"
 msgstr[1] "Types de tâche"
+
+#~ msgid "Releases"
+#~ msgstr "Mises en production"
 
 #~ msgid "Release Area"
 #~ msgstr "Périmètre de la mise en production"
