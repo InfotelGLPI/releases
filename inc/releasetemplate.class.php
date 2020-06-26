@@ -136,7 +136,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             'type'  => 'textarea',
             'rows' => 10],
          ['name'  => 'hour_type',
-            'label' => __('Non working hour', 'release'),
+            'label' => __('Non-working hour', 'release'),
             'type'  => 'bool',
          ],
          ['name'  => 'tests',
@@ -148,7 +148,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             'type'  => 'dropdownRollbacks',
          ],
          ['name'  => 'tasks',
-            'label' => _n('Deploy Task','Deploy Tasks',2, 'release'),
+            'label' => _n('Deploy task','Deploy tasks',2, 'release'),
             'type'  => 'dropdownTasks',
          ],
       ];
@@ -412,7 +412,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo  _n('Deploy Task','Deploy Tasks',2, 'release');
+      echo  _n('Deploy task','Deploy tasks',2, 'release');
       echo "</td>";
       echo "<td>";
             $item = new PluginReleasesDeploytasktemplate();

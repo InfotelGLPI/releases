@@ -302,7 +302,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
 
          echo "<th>" . __('Name') . "</th>";
          echo "<th>" . __('Status') . "</th>";
-         echo "<th>" . __('Release Area', 'releases') . "</th>";
+         echo "<th>" . __('Release area', 'releases') . "</th>";
          echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
          echo "<th>" . __('Service shutdown', 'releases') . "</th>";
          echo "</tr>";

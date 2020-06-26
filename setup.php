@@ -73,7 +73,7 @@ function plugin_init_releases() {
 function plugin_version_releases() {
 
    return [
-      'name'           => __('Releases', 'releases'),
+      'name'           => _n('Release', 'Releases', 2, 'releases'),
       'version'        => '1.0.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>, Alban Lesellier",

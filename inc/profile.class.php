@@ -49,7 +49,7 @@ class PluginReleasesProfile extends Profile {
       if ($item->getType() == 'Profile'
           && $item->getField('interface') != 'helpdesk'
       ) {
-         return __('Releases', 'releases');
+         return _n('Release', 'Releases', 2, 'releases');
       }
       return '';
    }

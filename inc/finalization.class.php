@@ -125,7 +125,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       echo "</td>";
 
       echo "<td>";
-      echo _n('Deploy Task', 'Deploy Tasks', 2, 'releases');
+      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
       echo "</td>";
       echo "<td class='left'>";
       $dtF = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, 1);
