@@ -15,6 +15,7 @@ CREATE TABLE `glpi_plugin_releases_releases` (
   `communication_type` varchar(255) NOT NULL default 'ALL',
   `target` longtext COLLATE utf8_unicode_ci,
   `status` int(11) NOT NULL default '7',
+  `users_id_lastupdater` int(11) NOT NULL,
   `locations_id` int(11) NOT NULL default '0',
   `risk_state` tinyint(1) NOT NULL default '0',
   `rollback_state` tinyint(1) NOT NULL default '0',
@@ -163,10 +164,12 @@ CREATE TABLE `glpi_plugin_releases_deploytasks` (
    KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `glpi_plugin_releases_deploytasktemplates`;
 CREATE TABLE `glpi_plugin_releases_deploytasktemplates` (
   `id` int(11) NOT NULL auto_increment,
   `entities_id` int(11) NOT NULL default '0',
   `name` varchar(255) collate utf8_unicode_ci default NULL,
+  `plugin_releases_releasetemplates_id` int(11) NOT NULL DEFAULT '0',
   `plugin_releases_typedeploytasks_id` int(11) NOT NULL DEFAULT '0',
   `plugin_releases_risks_id` int(11) NOT NULL default '0',
   `state` int(11) NOT NULL DEFAULT '1',
@@ -178,13 +181,12 @@ CREATE TABLE `glpi_plugin_releases_deploytasktemplates` (
   `users_id_tech` int(11) NOT NULL DEFAULT '0',
   `groups_id_tech` int(11) NOT NULL DEFAULT '0',
   `content` longtext COLLATE utf8_unicode_ci,
-  `comment` longtext COLLATE utf8_unicode_ci,
   `actiontime` int(11) NOT NULL DEFAULT '0',
   `date_mod` TIMESTAMP NULL DEFAULT NULL,
   `date_creation` TIMESTAMP NULL DEFAULT NULL,
   `plugin_releases_deploytasktemplates_id` int(11) NOT NULL DEFAULT '0',
   `timeline_position` tinyint(1) NOT NULL DEFAULT '0',
-  `is_private` tinyint(1) NOT NULL DEFAULT '0',
+  `level` int(11) NOT NULL default 0,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -234,6 +236,7 @@ CREATE TABLE `glpi_plugin_releases_releasetemplates` (
   `date_production` TIMESTAMP NULL DEFAULT NULL,
   `service_shutdown` tinyint(1) NOT NULL default '0',
   `service_shutdown_details` longtext COLLATE utf8_unicode_ci,
+  `locations_id` int(11) NOT NULL default '0',
   `hour_type` tinyint(1) NOT NULL default '0',
   `communication` tinyint(1) NOT NULL default '0',
   `communication_type` varchar(255) NOT NULL default 'ALL',
@@ -259,13 +262,20 @@ CREATE TABLE `glpi_plugin_releases_releasetemplates` (
 
 DROP TABLE IF EXISTS `glpi_plugin_releases_testtemplates`;
 CREATE TABLE `glpi_plugin_releases_testtemplates` (
-   `id` int(11) NOT NULL auto_increment,
+    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
+   `plugin_releases_releasetemplates_id` int(11) NOT NULL default '0',
    `plugin_releases_typetests_id` int(11) NOT NULL default '0',
    `plugin_releases_risks_id` int(11) NOT NULL default '0',
+   `state` int(11) NOT NULL DEFAULT '1',
    `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `users_id` int(11) NOT NULL DEFAULT '0',
+   `users_id_editor` int(11) NOT NULL DEFAULT '0',
+-- `users_id_tech` int(11) NOT NULL DEFAULT '0',
+-- `groups_id_tech` int(11) NOT NULL DEFAULT '0',
    `content` longtext COLLATE utf8_unicode_ci,
+   `date_mod` TIMESTAMP NULL DEFAULT NULL,
+   `date_creation` TIMESTAMP NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -274,9 +284,15 @@ DROP TABLE IF EXISTS `glpi_plugin_releases_risktemplates`;
 CREATE TABLE `glpi_plugin_releases_risktemplates` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
+   `plugin_releases_releasetemplates_id` int(11) NOT NULL default '0',
    `plugin_releases_typerisks_id` int(11) NOT NULL default '0',
+   `state` int(11) NOT NULL DEFAULT '1',
    `name` varchar(255) collate utf8_unicode_ci default NULL,
+   `users_id` int(11) NOT NULL DEFAULT '0',
+   `users_id_editor` int(11) NOT NULL DEFAULT '0',
    `content` text collate utf8_unicode_ci,
+   `date_mod` TIMESTAMP NULL DEFAULT NULL,
+   `date_creation` TIMESTAMP NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -285,9 +301,18 @@ DROP TABLE IF EXISTS `glpi_plugin_releases_rollbacktemplates`;
 CREATE TABLE `glpi_plugin_releases_rollbacktemplates` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
+   `plugin_releases_releasetemplates_id` int(11) NOT NULL default '0',
    `name` varchar(255) collate utf8_unicode_ci default NULL,
-   `comment` text collate utf8_unicode_ci,
+   `state` int(11) NOT NULL DEFAULT '1',
+--    `comment` text collate utf8_unicode_ci,
+   `users_id` int(11) NOT NULL DEFAULT '0',
+   `users_id_editor` int(11) NOT NULL DEFAULT '0',
+--    `users_id_tech` int(11) NOT NULL DEFAULT '0',
+--    `groups_id_tech` int(11) NOT NULL DEFAULT '0',
    `content` longtext COLLATE utf8_unicode_ci,
+   `plugin_releases_rollbacktemplates_id` int(11) NOT NULL DEFAULT '0',
+   `date_mod` TIMESTAMP NULL DEFAULT NULL,
+   `date_creation` TIMESTAMP NULL DEFAULT NULL,
    PRIMARY KEY  (`id`),
    KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

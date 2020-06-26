@@ -145,6 +145,12 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       $rand_type      = mt_rand();
       $rand_risk      = mt_rand();
 
+      echo "<tr class='tab_bg_1' hidden>";
+      echo "<td colspan='4'>";
+      $foreignKey = $options['itemtype']::getForeignKeyField();
+      echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
+      echo "</td>";
+      echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo __("Test type",'releases');
@@ -174,7 +180,7 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       echo "<td>";
 
       Dropdown::show(PluginReleasesRisktemplate::getType(), ['rand'=>$rand_risk,'name' => "plugin_releases_risks_id",
-         'value' =>  $this->fields["plugin_releases_risks_id"]]);
+         'value' =>  $this->fields["plugin_releases_risks_id"],"condition"=>["plugin_releases_releasetemplates_id"=>$this->fields[$foreignKey]]]);
       echo "</td>";
       echo "<td colspan='2'></td>";
       echo "</tr>";
@@ -196,5 +202,24 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       echo "</td>";
       echo "</tr>";
       $this->showFormButtons($options);
+   }
+
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releasetemplates_id" => $item->getID()]);
+   }
+   /**
+    *
+    * @return css class
+    */
+   static function getCssClass() {
+      return "test";
    }
 }

@@ -109,7 +109,7 @@ class PluginReleasesRisk extends CommonDBTM {
          $inputRelease["risk_state"] = 0;
          $release->update($inputRelease);
       }
-      if($this->input["create_test"]== 1){
+      if(isset($this->input["create_test"]) && $this->input["create_test"]== 1){
          $test = new PluginReleasesTest();
          $inputTest = [];
          $inputTest["entities_id"] = $this->fields["entities_id"];

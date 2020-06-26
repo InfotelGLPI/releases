@@ -306,6 +306,12 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       if (isset($this->fields["state"])) {
          $rowspan++;
       }
+      echo "<tr class='tab_bg_1' hidden>";
+      echo "<td colspan='4'>";
+      $foreignKey = $options['itemtype']::getForeignKeyField();
+      echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
+      echo "</td>";
+      echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td class='fa-label'>
          <span>".__('Name')."</span>&nbsp;";
@@ -314,7 +320,11 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       echo Html::input("name",["id"=>"name".$rand_name,"rand"=>$rand_name,"value"=>$this->getField('name')]);
 
       echo "</td>";
-      echo "<td colspan='2'></td>";
+//      echo "<td colspan='2'></td>";
+      echo "<td >" . __("Previous task", "releases") . "</td>";
+      echo "<td>";
+      Dropdown::show(PluginReleasesDeploytasktemplate::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $options['plugin_releases_releasetemplates_id'], "NOT" => ["id" => $this->getID()]], "value" => $this->fields["plugin_releases_deploytasktemplates_id"]]);
+      echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -363,7 +373,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       echo "<div class='fa-label'>
          <span>".__('Risk')."</span>&nbsp;";
       Dropdown::show(PluginReleasesRisktemplate::getType(), ['name' => "plugin_releases_risks_id",
-         'value' =>  $this->fields["plugin_releases_risks_id"]]);
+         'value' =>  $this->fields["plugin_releases_risks_id"],"condition"=>["plugin_releases_releasetemplates_id"=>$this->fields[$foreignKey]]]);
       echo "</div>";
 
       if (isset($this->fields["state"])) {
@@ -466,5 +476,78 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
       return true;
 
+   }
+
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releasetemplates_id" => $item->getID()]);
+   }
+
+   /**
+    *
+    * @return css class
+    */
+   static function getCssClass() {
+      return "task";
+   }
+
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
+   function prepareInputForAdd($input) {
+
+      $input = parent::prepareInputForAdd($input);
+
+      $input["users_id"] = Session::getLoginUserID();
+
+      if ($input["plugin_releases_deploytasktemplates_id"] != 0) {
+         $task = new self();
+         $task->getFromDB($input["plugin_releases_deploytasktemplates_id"]);
+         $input["level"] = $task->getField("level") + 1;
+      }
+
+
+      return $input;
+   }
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
+   function prepareInputForUpdate($input) {
+
+      Toolbox::manageBeginAndEndPlanDates($input['plan']);
+
+      if (isset($input["plugin_releases_deploytasktemplates_id"]) && $input["plugin_releases_deploytasktemplates_id"] != 0) {
+         $task = new self();
+         $task->getFromDB($input["plugin_releases_deploytasktemplates_id"]);
+         $input["level"] = $task->getField("level") + 1;
+      }
+
+      // update last editor if content change
+      if (isset($input['update'])
+         && ($uid = Session::getLoginUserID())) { // Change from task form
+         $input["users_id_editor"] = $uid;
+      }
+
+
+
+
+
+
+      return $input;
    }
 }

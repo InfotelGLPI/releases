@@ -31,7 +31,6 @@
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
-   $_SESSION["glpiactiveprofile"]["helpdesk_item_type"]["PluginReleaseRelease"] = PluginReleasesRelease::getType();
 
       $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
       $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];

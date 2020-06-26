@@ -138,7 +138,12 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       echo "<tr class='tab_bg_1'>";
 
 
-
+      echo "<tr class='tab_bg_1' hidden>";
+      echo "<td colspan='4'>";
+      $foreignKey = $options['itemtype']::getForeignKeyField();
+      echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
+      echo "</td>";
+      echo "</tr>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
       echo Html::input("name",["id"=>"name".$rand_name,"value"=>$this->getField('name'),  'rand'      => $rand_name,]);
@@ -167,5 +172,25 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       echo "</tr>";
 
       $this->showFormButtons($options);
+   }
+
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releasetemplates_id" => $item->getID()]);
+   }
+
+   /**
+    *
+    * @return css class
+    */
+   static function getCssClass() {
+      return "rollback";
    }
 }

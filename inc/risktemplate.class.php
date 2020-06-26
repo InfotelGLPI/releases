@@ -130,6 +130,12 @@ class PluginReleasesRisktemplate extends CommonDropdown {
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
+      echo "<tr class='tab_bg_1' hidden>";
+      echo "<td colspan='4'>";
+      $foreignKey = $options['itemtype']::getForeignKeyField();
+      echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
+      echo "</td>";
+      echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
       echo __("Risk type",'releases');
@@ -173,4 +179,22 @@ class PluginReleasesRisktemplate extends CommonDropdown {
       $this->showFormButtons($options);
    }
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releasetemplates_id" => $item->getID()]);
+   }
+   /**
+    *
+    * @return css class
+    */
+   static function getCssClass() {
+      return "risk";
+   }
 }
