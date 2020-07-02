@@ -64,6 +64,8 @@ class PluginReleasesRelease extends CommonITILObject {
    const FINALIZE           = 15; // finalized
    const REVIEW             = 16; // reviewed
    const CLOSED             = 17; // closed
+   const TESTFAIL           = 18;
+   const TASKFAIL           = 19;
 
 
 //   static $typeslinkable = ["Computer"  => "Computer",
@@ -380,10 +382,13 @@ class PluginReleasesRelease extends CommonITILObject {
          $rollbackTemplate = new PluginReleasesRollbacktemplate();
          $releaseRisk      = new PluginReleasesRisk();
          $riskTemplate     = new PluginReleasesRisktemplate();
+         $itemLinkTemplate = new PluginReleasesReleasetemplate_Item();
+         $itemLink = new PluginReleasesRelease_Item();
          $risks            = $riskTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
          $tests            = $testTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
          $rollbacks        = $rollbackTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
          $tasks            = $taskTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()],["ASC"=> "level"]);
+         $items            = $itemLinkTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
          $corresRisks = [];
          $corresTests = [];
          $corresRollbacks = [];
@@ -426,8 +431,14 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($rollback["date_creation"]);
             unset($rollback["state"]);
             $old_id = $rollback["id"];
-            unset($test["id"]);
-            $corresRollbacks[$old_id] = $releaseTest->add($rollback);
+            unset($rollback["id"]);
+            $corresRollbacks[$old_id] = $releaseRollback->add($rollback);
+         }
+         foreach ($items as $item){
+            $item["plugin_releases_releases_id"] = $this->getID();
+            unset($item["id"]);
+            $itemLink->add($item);
+
          }
 
       }
@@ -492,7 +503,6 @@ class PluginReleasesRelease extends CommonITILObject {
     **/
    static function getAllStatusArray($releasestatus = false) {
 
-
          $tab = [
             self::NEWRELEASE         => _x('status', 'New'),
             self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
@@ -505,8 +515,6 @@ class PluginReleasesRelease extends CommonITILObject {
             self::FINALIZE           => __('Finalized', 'releases'),
             self::REVIEW             => __('Reviewed', 'releases'),
             self::CLOSED             => _x('status', 'Closed')];
-
-
 
       return $tab;
    }
@@ -1042,13 +1050,7 @@ class PluginReleasesRelease extends CommonITILObject {
       //      echo self::getStatus($this->getField('status'));
       echo "</td>";
       echo "</tr>";
-      if ($ID) {
-         echo "<tr  class='tab_bg_1'>";
-         echo "<td colspan='4'>";
-         $this->showActorsPartForm($ID, $options);
-         echo "</td>";
-         echo "</tr>";
-      }
+
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Release area', 'releases') . "</td>";
       echo "<td colspan='3'>";
@@ -1069,19 +1071,39 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</td>";
 
       echo "</tr>";
+
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Location') . "</td>";
       echo "<td >";
       Dropdown::show(Location::getType(), ["name"  => "locations_id",
                                            "value" => $this->getField('locations_id')]);
       echo "</td>";
-      echo "<td>" . __('Service shutdown', 'releases') . "</td>";
-      echo "<td >";
-      Dropdown::showYesNo("service_shutdown", $this->getField('service_shutdown'));
-      echo "</td>";
+      echo "<td colspan='2'></td>";
       echo "</tr>";
+      if ($ID) {
+         echo "<tr  class='tab_bg_1'>";
+         echo "<td colspan='4'>";
+         $this->showActorsPartForm($ID, $options);
+         echo "</td>";
+         echo "</tr>";
+      }
 
       echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Service shutdown', 'releases') . "</td>";
+      echo "<td >";
+      $rand=mt_rand();
+      Dropdown::showYesNo("service_shutdown", $this->getField('service_shutdown'),-1,["rand"=>$rand]);
+      echo "</td>";
+      echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
+      echo "</tr>";
+      $hidden = "";
+      if($this->getField('service_shutdown') == 0){
+         $hidden = "hidden='true";
+      }
+
+      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden>";
+      Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand","fakeupdate",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php",["value"=>'__VALUE__']);
+
       echo "<td>" . __('Service shutdown details', 'releases') . "</td>";
       echo "<td colspan='3'>";
       Html::textarea(["name"            => "service_shutdown_details",
@@ -2168,6 +2190,25 @@ class PluginReleasesRelease extends CommonITILObject {
     */
    static function getReopenableStatusArray() {
       return [self::CLOSED, self::WAITING];
+   }
+
+
+   static function failOrNot($itemtype,$items_id){
+      $self = new self();
+      $self->getFromDB($items_id);
+      return $itemtype::countFailForItem($self);
+   }
+   /**
+    * Displays the timeline header (filters)
+    *
+    * @since 9.4.0
+    *
+    * @return void
+    */
+   function showTimelineHeader() {
+
+      echo "<h2>".__("Release actions details",'releases')." : </h2>";
+      $this->filterTimeline();
    }
 }
 

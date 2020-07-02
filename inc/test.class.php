@@ -85,6 +85,19 @@ class PluginReleasesTest extends CommonDBTM {
                                          "state"                       => self::DONE]);
    }
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countFailForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releases_id" => $item->getID(),
+            "state"                       => self::FAIL]);
+   }
+
 
    /**
     * Prepare input datas for adding the item
@@ -192,7 +205,7 @@ class PluginReleasesTest extends CommonDBTM {
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Test template', 'Test templates', 1);
+      echo _n('Test template', 'Test templates', 1,'releases');
       echo "</td>";
       echo "<td style='vertical-align: middle' >";
       //      echo "<div class='fa-label'>

@@ -85,6 +85,19 @@ class PluginReleasesDeploytask extends CommonDBTM {
    }
 
    /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countFailForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+         ["plugin_releases_releases_id" => $item->getID(),
+            "state"                       => self::FAIL]);
+   }
+
+   /**
     * Prepare input datas for adding the item
     *
     * @param array $input datas used to add the item
@@ -311,7 +324,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       echo "<td style='vertical-align: middle'>";
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
-               title='" . _n('Task template', 'Task templates', 2) . "'></i>";
+               title='" . _n('Task template', 'Task templates', 1,'releases') . "'></i>";
       PluginReleasesDeploytasktemplate::dropdown(['value'     => $this->fields['plugin_releases_deploytasktemplates_id'],
                                                   'entity'    => $this->getEntityID(),
                                                   'rand'      => $rand_template,

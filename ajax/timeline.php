@@ -120,6 +120,26 @@ switch ($_REQUEST['action']) {
       }else{
          $new_state = $_REQUEST["newStatus"];
       }
+      //TODO add something to put the release in fail state in case of fail state
+      $release = new PluginReleasesRelease();
+      $release->getFromDB($obj->fields["plugin_releases_releases_id"]);
+      if(PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(),$obj->fields["plugin_releases_releases_id"])){
+         $release->update(['id'=>$release->getID(),'state'=>PluginReleasesRelease::TASKFAIL]);
+      }else if (PluginReleasesRelease::failOrNot(new PluginReleasesTest(),$obj->fields["plugin_releases_releases_id"])){
+         $release->update(['id'=>$release->getID(),'state'=>PluginReleasesRelease::TESTFAIL]);
+      }
+
+      if(!PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(),$obj->fields["plugin_releases_releases_id"]) && !PluginReleasesRelease::failOrNot(new PluginReleasesTest(),$obj->fields["plugin_releases_releases_id"])){
+         if($release->getField("state") ==PluginReleasesRelease::TESTFAIL || $release->getField("state") ==PluginReleasesRelease::TASKFAIL ){
+            if(PluginReleasesTest::countDoneForItem() != 0){
+               $release->update(['id'=>$release->getID(),'state'=>PluginReleasesRelease::TESTDEFINITION]);
+            }else if(PluginReleasesDeploytask::countDoneForItem() != 0){
+               $release->update(['id'=>$release->getID(),'state'=>PluginReleasesRelease::TASKDEFINITION]);
+            }else{
+               $release->update(['id'=>$release->getID(),'state'=>PluginReleasesRelease::ROLLBACKDEFINITION]);
+            }
+         }
+      }
 
       echo json_encode([
          'state'  => $new_state

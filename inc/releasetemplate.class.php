@@ -49,7 +49,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
 
    static function getTypeName($nb = 0) {
-      return _n('Release template', 'Release templates', $nb,'release');
+      return _n('Release template', 'Release templates', $nb,'releases');
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -104,6 +104,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $this->addStandardTab(self::getType(), $ong, $options);
       $this->addDefaultFormTab($ong);
 //      $this->defineDefaultObjectTabs($ong, $options);
+      $this->addStandardTab('PluginReleasesReleasetemplate_Item', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
 
@@ -1094,11 +1095,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     */
    function showTimelineHeader() {
 
-      echo "<h2>".__("Actions historical")." : </h2>";
+      echo "<h2>".__("Release actions details",'releases')." : </h2>";
       $this->filterTimeline();
    }
    function canAddFollowups() {
     return Session::haveRightsOr("plugin_releases_releases",[CREATE,UPDATE]);
    }
+
 
 }

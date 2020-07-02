@@ -328,6 +328,17 @@ CREATE TABLE `glpi_plugin_releases_releases_items` (
   KEY `item` (`itemtype`,`items_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+DROP TABLE IF EXISTS `glpi_plugin_releases_releasetemplates_items`;
+CREATE TABLE `glpi_plugin_releases_releasetemplates_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releasetemplates_id` int(11) NOT NULL DEFAULT '0',
+  `itemtype` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `items_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releasetemplates_id`,`itemtype`,`items_id`),
+  KEY `item` (`itemtype`,`items_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 DROP TABLE IF EXISTS `glpi_plugin_releases_groups_releases`;
 CREATE TABLE `glpi_plugin_releases_groups_releases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

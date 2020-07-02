@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Tasklists plugin 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-26 16:08+0200\n"
-"PO-Revision-Date: 2020-06-26 16:29+0200\n"
+"POT-Creation-Date: 2020-07-01 16:43+0200\n"
+"PO-Revision-Date: 2020-07-02 13:12+0200\n"
 "Last-Translator: Amandine Manceau, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/tsmr/teams/79675/"
 "fr_FR/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 
 #: setup.php:76 front/change_release.form.php:48 inc/profile.class.php:52
-#: inc/release.class.php:81 inc/releasetemplate.class.php:470
+#: inc/release.class.php:83 inc/releasetemplate.class.php:470
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Mise en production"
@@ -32,7 +32,7 @@ msgid_plural "Links Release/Change"
 msgstr[0] "Lien Mise en production/Changement"
 msgstr[1] "Liens Mise en production/Changement"
 
-#: inc/change_release.class.php:305 inc/release.class.php:1053
+#: inc/change_release.class.php:305 inc/release.class.php:1052
 #: inc/releasetemplate.class.php:312
 msgid "Release area"
 msgstr "Périmètre de la mise en production"
@@ -41,7 +41,7 @@ msgstr "Périmètre de la mise en production"
 msgid "Pre-production planned date"
 msgstr "Date planifiée de mise en pré production"
 
-#: inc/change_release.class.php:307 inc/release.class.php:1078
+#: inc/change_release.class.php:307 inc/release.class.php:1077
 #: inc/releasetemplate.class.php:131 inc/releasetemplate.class.php:338
 msgid "Service shutdown"
 msgstr "Arrêt du service"
@@ -52,9 +52,15 @@ msgid_plural "Release deploy tasks"
 msgstr[0] "Tâche de déploiement d'une mise en production"
 msgstr[1] "Tâches de déploiement d'une mise en production"
 
-#: inc/deploytask.class.php:285 inc/deploytasktemplate.class.php:324
+#: inc/deploytask.class.php:298 inc/deploytasktemplate.class.php:324
 msgid "Previous task"
 msgstr "Tâche précédente"
+
+#: inc/deploytask.class.php:327
+msgid "Task template"
+msgid_plural "Task templates"
+msgstr[0] "Gabarit de tâche"
+msgstr[1] "Gabarits de tâche"
 
 #: inc/deploytasktemplate.class.php:52
 msgid "Deploy Task template"
@@ -84,9 +90,9 @@ msgid_plural "Rollbacks"
 msgstr[0] "Rollback"
 msgstr[1] "Rollbacks"
 
-#: inc/finalization.class.php:128 inc/release.class.php:1426
-#: inc/release.class.php:1427 inc/release.class.php:1491
-#: inc/release.class.php:1492 inc/releasetemplate.class.php:151
+#: inc/finalization.class.php:128 inc/release.class.php:1425
+#: inc/release.class.php:1426 inc/release.class.php:1490
+#: inc/release.class.php:1491 inc/releasetemplate.class.php:151
 #: inc/releasetemplate.class.php:415 inc/releasetemplate.class.php:713
 #: inc/releasetemplate.class.php:714 inc/releasetemplate.class.php:835
 #: inc/releasetemplate.class.php:836
@@ -110,97 +116,97 @@ msgstr "Finaliser"
 msgid "production run date"
 msgstr "date de mise en production"
 
-#: inc/release.class.php:106 inc/releasetemplate.class.php:65
+#: inc/release.class.php:108 inc/releasetemplate.class.php:65
 msgid "Processing release"
 msgstr "Traitement de la mise en production"
 
-#: inc/release.class.php:207 inc/releasetemplate.class.php:123
+#: inc/release.class.php:209 inc/releasetemplate.class.php:123
 msgid "Pre-production run date"
 msgstr "Date de mise en pré production"
 
-#: inc/release.class.php:215
+#: inc/release.class.php:217
 msgid "Number of risks"
 msgstr "Nombre de risques"
 
-#: inc/release.class.php:223
+#: inc/release.class.php:225
 msgid "Number of tests"
 msgstr "Nombre de tests"
 
-#: inc/release.class.php:231
+#: inc/release.class.php:233
 msgid "Number of tasks"
 msgstr "Nombre de tâches"
 
-#: inc/release.class.php:247 inc/releasetemplate.class.php:127
+#: inc/release.class.php:249 inc/releasetemplate.class.php:127
 msgid "Production run date"
 msgstr "Date de mise en production"
 
-#: inc/release.class.php:498
+#: inc/release.class.php:499
 msgid "Release area defined"
 msgstr "Périmètre de mise en production définie"
 
-#: inc/release.class.php:499
+#: inc/release.class.php:500
 msgid "Dates defined"
 msgstr "Dates définies"
 
-#: inc/release.class.php:500
+#: inc/release.class.php:501
 msgid "Changes defined"
 msgstr "Changements définis"
 
-#: inc/release.class.php:501
+#: inc/release.class.php:502
 msgid "Risks defined"
 msgstr "Risques définis"
 
-#: inc/release.class.php:502
+#: inc/release.class.php:503
 msgid "Rollbacks defined"
 msgstr "Rollbacks définis"
 
-#: inc/release.class.php:503
+#: inc/release.class.php:504
 msgid "Deployment tasks in progress"
 msgstr "Tâche de déploiement en cours"
 
-#: inc/release.class.php:504
+#: inc/release.class.php:505
 msgid "Tests in progress"
 msgstr "Test en cours"
 
-#: inc/release.class.php:505
+#: inc/release.class.php:506
 msgid "Finalized"
 msgstr "Finalisé"
 
-#: inc/release.class.php:506
+#: inc/release.class.php:507
 msgid "Reviewed"
 msgstr "Revue"
 
-#: inc/release.class.php:1062 inc/releasetemplate.class.php:321
+#: inc/release.class.php:1061 inc/releasetemplate.class.php:321
 msgid "Pre-production planned run date"
 msgstr "Date planifiée de mise en pré production"
 
-#: inc/release.class.php:1066 inc/releasetemplate.class.php:326
+#: inc/release.class.php:1065 inc/releasetemplate.class.php:326
 msgid "Production planned run date"
 msgstr "Date planifiée de mise en production"
 
-#: inc/release.class.php:1085 inc/releasetemplate.class.php:135
+#: inc/release.class.php:1084 inc/releasetemplate.class.php:135
 #: inc/releasetemplate.class.php:345
 msgid "Service shutdown details"
 msgstr "Détail de l'arrêt de service"
 
-#: inc/release.class.php:1094 inc/releasetemplate.class.php:139
+#: inc/release.class.php:1093 inc/releasetemplate.class.php:139
 #: inc/releasetemplate.class.php:352
 msgid "Non-working hour"
 msgstr "Heure non travaillée"
 
-#: inc/release.class.php:1098
+#: inc/release.class.php:1097
 msgid "Communication"
 msgstr "Communication"
 
-#: inc/release.class.php:1105
+#: inc/release.class.php:1104
 msgid "Communication type"
 msgstr "Type de communication"
 
-#: inc/release.class.php:1968
+#: inc/release.class.php:1967
 msgid "From this change"
 msgstr "A partir de ce changement"
 
-#: inc/release.class.php:1985 inc/releasetemplate.class.php:491
+#: inc/release.class.php:1984 inc/releasetemplate.class.php:491
 msgid "Create a release"
 msgstr "Créer une mise en production"
 
@@ -224,6 +230,10 @@ msgstr[1] "Revues"
 msgid "Real production run date"
 msgstr "Date de mise en production réelle"
 
+#: inc/review.class.php:144
+msgid "Conforming realization"
+msgstr "Réalisation conforme"
+
 #: inc/review.class.php:151
 msgid "Incidents during process"
 msgstr "Incident durant le traitement"
@@ -231,6 +241,12 @@ msgstr "Incident durant le traitement"
 #: inc/review.class.php:164
 msgid "Technical Support Document"
 msgstr "Document d'Architecture Technique"
+
+#: inc/risk.class.php:169 inc/risktemplate.class.php:52
+msgid "Risk template"
+msgid_plural "Risk templates"
+msgstr[0] "Gabarit de risque"
+msgstr[1] "Gabarits de risque"
 
 #: inc/risk.class.php:211
 msgid "create a test from this risk"
@@ -243,531 +259,31 @@ msgid_plural "Risk types"
 msgstr[0] "Type de risque"
 msgstr[1] "Types de risques"
 
-#: inc/risktemplate.class.php:52
-msgid "Risk template"
-msgid_plural "Risk templates"
-msgstr[0] "Gabarit de risque"
-msgstr[1] "Gabarits de risque"
-
-#: inc/rollbacktemplate.class.php:52
+#: inc/rollback.class.php:178 inc/rollbacktemplate.class.php:52
 msgid "Rollback template"
 msgid_plural "Rollback templates"
 msgstr[0] "Gabarit de rollback"
 msgstr[1] "Gabarits de rollback"
 
-#: inc/test.class.php:243 inc/testtemplate.class.php:58
+#: inc/test.class.php:208 inc/testtemplate.class.php:50
+msgid "Test template"
+msgid_plural "Test templates"
+msgstr[0] "Gabarit de test"
+msgstr[1] "Gabarits de test"
+
+#: inc/test.class.php:256 inc/testtemplate.class.php:58
 #: inc/testtemplate.class.php:156 inc/typetest.class.php:47
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Type de test"
 msgstr[1] "Types de tests"
 
-#: inc/test.class.php:264 inc/testtemplate.class.php:177
+#: inc/test.class.php:277 inc/testtemplate.class.php:177
 msgid "Associated risk"
 msgstr "Risque associé"
-
-#: inc/testtemplate.class.php:50
-msgid "Test template"
-msgid_plural "Test templates"
-msgstr[0] "Gabarit de test"
-msgstr[1] "Gabarits de test"
 
 #: inc/typedeploytask.class.php:47
 msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] "Type de tâche de déploiement"
 msgstr[1] "Types de tâche"
-
-#~ msgid "Releases"
-#~ msgstr "Mises en production"
-
-#~ msgid "Release Area"
-#~ msgstr "Périmètre de la mise en production"
-
-#~ msgid "Deploy Task"
-#~ msgid_plural "Deploy Tasks"
-#~ msgstr[0] "Tâche de déploiement"
-#~ msgstr[1] "Tâches de déploiement"
-
-#~ msgid "Type test"
-#~ msgid_plural "Type tests"
-#~ msgstr[0] "Type de "
-#~ msgstr[1] ""
-
-#~ msgid "Pre sales"
-#~ msgstr "Avant-ventes"
-
-#~ msgid "Please add this quotation line before adding another."
-#~ msgstr ""
-#~ "S'il vous plaît ajoutez cette ligne du devis avant d'en ajouter une autre."
-
-#~ msgid "Number"
-#~ msgstr "Nombre"
-
-#~ msgid "Buying price (in €)"
-#~ msgstr "Prix d'achat (en €)"
-
-#~ msgid "VAT"
-#~ msgstr "TVA"
-
-#~ msgid "No VAT"
-#~ msgstr "Pas de TVA"
-
-#~ msgid "Business"
-#~ msgid_plural "Businesses"
-#~ msgstr[0] "Affaire"
-#~ msgstr[1] "Affaires"
-
-#~ msgid "Reminder sent"
-#~ msgstr "Rappel envoyé"
-
-#~ msgid "Due date"
-#~ msgstr "Date d'échéance"
-
-#~ msgid "Send a reminder"
-#~ msgstr "Envoyer un rappel"
-
-#~ msgid "No current task available"
-#~ msgstr "Pas de tâche en cours disponible"
-
-#~ msgid "Please activate the plugin"
-#~ msgstr "S'il vous plaît activez le plugin"
-
-#~ msgid "Finish the creation"
-#~ msgstr "Terminer la création"
-
-#~ msgid "The business have been imported in GLPI."
-#~ msgstr "Cette affaire a été importée dans GLPI."
-
-#~ msgid "The business have been created."
-#~ msgstr "Cette affaire a été créée."
-
-#~ msgid "Task in kanban created"
-#~ msgstr "Tâche créée dans le kanban"
-
-#~ msgid "ERROR : Task not added in kanban"
-#~ msgstr "ERREUR : Tâche non ajoutée dans le kanban"
-
-#~ msgid "Notification sent"
-#~ msgstr "Notification envoyée"
-
-#~ msgid "Account"
-#~ msgid_plural "Accounts"
-#~ msgstr[0] "Compte"
-#~ msgstr[1] "Comptes"
-
-#~ msgid "Company name"
-#~ msgstr "Nom de l'entreprise"
-
-#~ msgid "continue >"
-#~ msgstr "continuer >"
-
-#~ msgid "Add quotation line template"
-#~ msgstr "Ajouter un gabarit de ligne de devis"
-
-#~ msgid "Empty for infinite"
-#~ msgstr "Vide pour infini"
-
-#~ msgid "Success probabilities"
-#~ msgstr "Probabilités de succès"
-
-#~ msgid "This business is win ?"
-#~ msgstr "Cette affaire est-elle gagnée ?"
-
-#~ msgid "This business is win"
-#~ msgstr "Cette affaire est gagnée"
-
-#~ msgid "Businesses win, ready to be import in GLPI"
-#~ msgstr "Les affaires gagnées, elles sont prêtes à être importées dans GLPI"
-
-#~ msgid "Finalize the business"
-#~ msgstr "Finaliser l'affaire"
-
-#~ msgid "No business to finalize"
-#~ msgstr "Pas d'affaire à finaliser"
-
-#~ msgid "Business name"
-#~ msgstr "Nom de l'affaire"
-
-#~ msgid "Contact name"
-#~ msgstr "Nom du contact"
-
-#~ msgid "Total price"
-#~ msgstr "Prix total"
-
-#~ msgid "Welcome to the wizard business"
-#~ msgstr "Bienvenue dans l'assistant de création d'affaire"
-
-#~ msgid "This wizard lets you create new business in Presales"
-#~ msgstr "Cette assistant vous permet de créer une affaire dans Avant-vente"
-
-#~ msgid "To begin, select template for business"
-#~ msgstr "Pour commencer, sélectionner le gabarit d'affaire"
-
-#~ msgctxt "button"
-#~ msgid "Next >"
-#~ msgstr "Suivant >"
-
-#~ msgid "Enter general information about the business"
-#~ msgstr "Entrez les informations générales à propos de l'affaire"
-
-#~ msgid "Enter information about quotation lines"
-#~ msgstr "Entrez les informations à propos des lignes de devis"
-
-#~ msgid "New quotation line"
-#~ msgstr "Nouvelle ligne de devis"
-
-#~ msgctxt "button"
-#~ msgid "Finish"
-#~ msgstr "Terminer"
-
-#~ msgid "Update this quotation line"
-#~ msgstr "Mettre à jour cette ligne de devis"
-
-#~ msgid "Add only the quotation line"
-#~ msgstr "Ajouter seulement cette ligne de devis"
-
-#~ msgid "Add another quotation line"
-#~ msgstr "Ajouter une nouvelle ligne de devis"
-
-#~ msgid "New Quotation Line"
-#~ msgstr "Nouvelle ligne de devis"
-
-#~ msgid "Without template business"
-#~ msgstr "Sans gabarit d'affaire"
-
-#~ msgid "Welcome to the wizard win business"
-#~ msgstr "Bienvenue dans l'assistant d'affaire gagnée"
-
-#~ msgid "This wizard lets you finalize a business to create a client in GLPI"
-#~ msgstr ""
-#~ "Cette assistant vous permet de finaliser une affaire afin de créer un "
-#~ "client dans GLPI"
-
-#~ msgid "No existing client was found"
-#~ msgstr "Pas de client existant trouvé"
-
-#~ msgid "An existing client was found"
-#~ msgstr "Un client existant a été trouvé"
-
-#~ msgid "Confirm the existing client"
-#~ msgstr "Confirmer le client existant"
-
-#~ msgid "Create a new client with presales information"
-#~ msgstr "Créer un nouveau client avec les informations de presales"
-
-#~ msgid "Civility"
-#~ msgstr "Civilité"
-
-#~ msgid "Missing contacts"
-#~ msgstr "Contacts manquants"
-
-#~ msgid "Man"
-#~ msgstr "Homme"
-
-#~ msgid "Woman"
-#~ msgstr "Femme"
-
-#~ msgid "Other"
-#~ msgstr "Autre"
-
-#~ msgid "Existing contacts"
-#~ msgstr "Contacts existants"
-
-#~ msgid "Confirm contact to add"
-#~ msgstr "Confirmer les contacts à ajouter"
-
-#~ msgid "Plugin setup"
-#~ msgstr "Configuration du plugin"
-
-#~ msgid "Options"
-#~ msgstr "Options"
-
-#~ msgid "Entity to save all objects"
-#~ msgstr "Entité pour sauvegarder tous les objets"
-
-#~ msgid "Entity to create client, contacts, contract,intervention"
-#~ msgstr "Entité pour créer les clients, contacts, contrats et interventions"
-
-#~ msgid "Kanban to create tasks"
-#~ msgstr "Kanban pour créer les tâches"
-
-#~ msgid "Status in the Kanban"
-#~ msgstr "Statut dans le Kanban"
-
-#~ msgid "Tasks list"
-#~ msgstr "Liste des tâches"
-
-#~ msgid "Businesses"
-#~ msgstr "Affaires"
-
-#~ msgid "Add task"
-#~ msgstr "Ajouter une tâche"
-
-#~ msgid "Presales"
-#~ msgstr "Avant-ventes"
-
-#~ msgid "Menu"
-#~ msgstr "Menu"
-
-#~ msgid "Current tasks"
-#~ msgstr "Tâches courantes"
-
-#~ msgid "Wizard to create new customer "
-#~ msgstr "Assistant pour créer un nouveau client "
-
-#~ msgid "New customer call"
-#~ msgstr "Appel d'un nouveau client"
-
-#~ msgid "Accounts/Contacts"
-#~ msgstr "Comptes/Contacts"
-
-#~ msgid "Add an account"
-#~ msgstr "Ajouter un compte"
-
-#~ msgid "Add a contact"
-#~ msgstr "Ajouter un contact"
-
-#~ msgid "List of accounts"
-#~ msgstr "Liste des comptes"
-
-#~ msgid "List of contacts"
-#~ msgstr "Liste des contacts"
-
-#~ msgid "Tasks"
-#~ msgstr "Tâches"
-
-#~ msgid "Add a task"
-#~ msgstr "Ajouter une tâche"
-
-#~ msgid "New business"
-#~ msgstr "Nouvelle affaire"
-
-#~ msgid "List of businesses"
-#~ msgstr "Liste des affaires"
-
-#~ msgid "Finalize businesses"
-#~ msgstr "Finaliser les affaires"
-
-#~ msgid "Client sent a reminder"
-#~ msgstr "Le client à émis un rappel"
-
-#~ msgid "Subject"
-#~ msgstr "Sujet"
-
-#~ msgid "Status in kanban"
-#~ msgstr "Statut dans le Kanban"
-
-#~ msgid "No task in tasklists"
-#~ msgstr "Pas de tâche dans liste des tâches"
-
-#~ msgid "Plugin Usage"
-#~ msgstr "Utilisation du plugin"
-
-#~ msgid "Use plugin"
-#~ msgstr "Utiliser le plugin"
-
-#~ msgid "Show Only Simplified Menu"
-#~ msgstr "Montrer le menu simplifié uniquement"
-
-#~ msgid "Quotation Line"
-#~ msgid_plural "Quotation Lines"
-#~ msgstr[0] "Ligne du devis"
-#~ msgstr[1] "Lignes du devis"
-
-#~ msgid "Reference"
-#~ msgstr "Référence"
-
-#~ msgid "Buying price"
-#~ msgstr "Prix d'achat"
-
-#~ msgid "Price  incl tax"
-#~ msgstr "Prix TTC"
-
-#~ msgid "All new quotation lines fields are not filled."
-#~ msgstr "Toutes les nouvelles lignes de devis ne sont pas remplies."
-
-#~ msgid "An error happend while saving the Quotation line."
-#~ msgstr "Une erreur est survenue durant la sauvegarde de la ligne de devis."
-
-#~ msgid "An error happend while updating the Quotation line."
-#~ msgstr "Une erreur est survenue durant la mise à jour de la ligne de devis."
-
-#~ msgid "Quotation line successfully updated."
-#~ msgstr "Ligne de devis mise à jour avec succès."
-
-#~ msgid "Quotation line successfully added."
-#~ msgstr "Ligne de devis ajoutée avec succès."
-
-#~ msgid "Quotation line saved in base"
-#~ msgstr "Ligne de devis sauvegardée en base"
-
-#~ msgid "Quotation line informations not updated in base"
-#~ msgstr ""
-#~ "Les informations de la ligne de devis n'ont pas été mises à jour en base"
-
-#~ msgid "All fields are not filled."
-#~ msgstr "Tous les champs ne sont pas remplis."
-
-#~ msgid "An error happend while saving the informations."
-#~ msgstr "Une erreur est survenue pendant la sauvegarde des informations."
-
-#~ msgid "An error happend while updating the informations."
-#~ msgstr "Une erreur est survenue pendant la mise à jour des informations."
-
-#~ msgid "All infomations successfully updated."
-#~ msgstr "Toutes les informations ont été mises à jour."
-
-#~ msgid "All informations successfully added."
-#~ msgstr "Toutes les informations ont été ajoutées."
-
-#~ msgid "All informations saved in base"
-#~ msgstr "Toutes les informations ont été sauvegardées en base"
-
-#~ msgid "All informations not updated in base"
-#~ msgstr "Les informations n'ont pas été mises à jour en base"
-
-#~ msgid "This action is irreversible, Continue ?"
-#~ msgstr "Cette action est irréversible, Continuer ?"
-
-#~ msgid "Task"
-#~ msgid_plural "Tasks"
-#~ msgstr[0] "Tâche"
-#~ msgstr[1] "Tâches"
-
-#~ msgid "Create a task in Kanban"
-#~ msgstr "Créer une tâche dans le Kanban"
-
-#~ msgid "Act on status ?"
-#~ msgstr "Agir sur le statut ?"
-
-#~ msgid "Amount of reminder"
-#~ msgstr "Nombre de  rappel"
-
-#~ msgid "Put the state on done"
-#~ msgstr "Mettre au statut  fait"
-
-#~ msgid "Create a task in Kanban ?"
-#~ msgstr "Créer une tâche dans le Kanban ?"
-
-#~ msgid "Kanban"
-#~ msgstr "Kanban"
-
-#~ msgid "See kanban"
-#~ msgstr "Voir le kanban"
-
-#~ msgid "Create a task in kanban"
-#~ msgstr "Créer une tâche dans le Kanban"
-
-#~ msgid "No kanban available"
-#~ msgstr "Pas de kanban disponible"
-
-#~ msgid "No kanban selected in configuration"
-#~ msgstr "Pas de kanban sélectionné dans la configuration"
-
-#~ msgid "Affect entity for create task"
-#~ msgstr "Affecter une entité pour une création de tâche"
-
-#~ msgid "Task name"
-#~ msgstr "Nom de tâche"
-
-#~ msgid "To display"
-#~ msgstr "A afficher"
-
-#~ msgid "It is recommended to use a png file of size 145px x 75px"
-#~ msgstr "Il est recommandé d'utiliser un fichier png de taille 145px x 75px"
-
-#~ msgid "Task type ordering"
-#~ msgstr "Ordonnancement des types de tâche"
-
-#~ msgid "No task type to organize"
-#~ msgstr "Pas de type de tâches à organiser"
-
-#~ msgid "New customer call wizard"
-#~ msgstr "Assistant d'appel de nouveaux clients"
-
-#~ msgid "Quotation"
-#~ msgid_plural "Quotations"
-#~ msgstr[0] "Devis"
-#~ msgstr[1] "Devis"
-
-#~ msgid "Quotation name"
-#~ msgstr "Nom de devis"
-
-#~ msgid "Quotations"
-#~ msgstr "Devis"
-
-#~ msgid "New quotation"
-#~ msgstr "Nouveau devis"
-
-#~ msgid "Show Only Menu"
-#~ msgstr "Montrer le menu uniquement"
-
-#~ msgid "Win quotation"
-#~ msgstr "Devis gagné"
-
-#~ msgid "Show menu"
-#~ msgstr "Montrer le menu"
-
-#~ msgid "This quotation is not win"
-#~ msgstr "Ce devis n'est pas gagné"
-
-#~ msgid "Price excluding taxes (in €)"
-#~ msgstr "Prix hors taxe (en €)"
-
-#~ msgid "Price excluding taxes"
-#~ msgstr "Prix hors taxe"
-
-#~ msgid "Amount"
-#~ msgstr "Montant"
-
-#~ msgid "Price"
-#~ msgstr "Prix"
-
-#~ msgid "Put the state on to do"
-#~ msgstr "Mettre au statut à faire"
-
-#~ msgid "List of opportunities"
-#~ msgstr "Listes des opportunités"
-
-#~ msgid "Finalize the opportunities"
-#~ msgstr "Finaliser les opportunités"
-
-#~ msgid "Opportunities"
-#~ msgstr "Opportunités"
-
-#~ msgid "Win opportunity"
-#~ msgstr "Opportunité gagnée"
-
-#~ msgid "New opportunity"
-#~ msgstr "Nouvelle opportunité"
-
-#~ msgid "Show Menu"
-#~ msgstr "Montrer le menu"
-
-#~ msgid "Finalize the opportunity"
-#~ msgstr "Finaliser l'opportunité"
-
-#~ msgid "Opportunity win"
-#~ msgstr "Opportunité gagnée"
-
-#, fuzzy
-#~| msgid "Context"
-#~| msgid_plural "Contexts"
-#~ msgid "Contact"
-#~ msgstr "Contexte"
-
-#~ msgid "Mark as done"
-#~ msgstr "Maquer comme fait"
-
-#~ msgctxt "visibility"
-#~ msgid "This user"
-#~ msgstr "Cet utilisateur"
-
-#~ msgctxt "visibility"
-#~ msgid "This user and this group"
-#~ msgstr "Cet utilisateur et ce groupe"
-
-#~ msgctxt "visibility"
-#~ msgid "All"
-#~ msgstr "Tout le monde"

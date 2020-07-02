@@ -166,7 +166,7 @@ class PluginReleasesRisk extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Risk template', 'Risk templates', 1);
+      echo _n('Risk template', 'Risk templates', 1,'releases');
       echo "</td>";
       echo "<td style='vertical-align: middle' >";
       //      echo

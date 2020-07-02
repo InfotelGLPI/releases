@@ -175,7 +175,7 @@ class PluginReleasesRollback extends CommonDBTM {
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Rollback template', 'Rollback templates', 2);
+      echo _n('Rollback template', 'Rollback templates', 1,'releases');
       echo "</td>";
       echo "<td style='vertical-align: middle' >";
       //      echo "<div class='fa-label'>

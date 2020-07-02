@@ -141,7 +141,7 @@ class PluginReleasesReview extends CommonDBTM {
       }
       Html::showDateField('real_date_release', ["value" => $this->getField('real_date_release'), 'canedit' => $canedit]);
       echo "</td>";
-      echo "<td>" . __('Conforming realization') . "</td>";
+      echo "<td>" . __('Conforming realization','releases') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("conforming_realization", $this->getField("conforming_realization"));
       echo "</td>";
