@@ -109,7 +109,9 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
-
+      $release = new PluginReleasesRelease();
+      $release->getFromDB($input["plugin_releases_releases_id"]);
+      $input["entities_id"] = $release->getField("entities_id");
       if ($input["plugin_releases_deploytasks_id"] != 0) {
          $task = new self();
          $task->getFromDB($input["plugin_releases_deploytasks_id"]);

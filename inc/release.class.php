@@ -64,8 +64,7 @@ class PluginReleasesRelease extends CommonITILObject {
    const FINALIZE           = 15; // finalized
    const REVIEW             = 16; // reviewed
    const CLOSED             = 17; // closed
-   const TESTFAIL           = 18;
-   const TASKFAIL           = 19;
+   const FAIL           = 18;
 
 
 //   static $typeslinkable = ["Computer"  => "Computer",
@@ -474,23 +473,24 @@ class PluginReleasesRelease extends CommonITILObject {
 
       $override_input['items_id'] = $this->getID();
       $override_input['itemtype'] = $this->getType();
-      foreach ($relations_classes as $classname) {
-         if (!is_a($classname, CommonDBConnexity::class, true)) {
-            Toolbox::logWarning(
-               sprintf(
-                  'Unable to clone elements of class %s as it does not extends "CommonDBConnexity"',
-                  $classname
-               )
-            );
-            continue;
-         }else{
-            $relation_items = $classname::getItemsAssociatedTo($template->getType(), $template->getID());
-            foreach ($relation_items as $relation_item) {
-               $newId = $relation_item->clone($override_input, 0);
+      if(isset($this->input["releasetemplates_id"])) {
+         foreach ($relations_classes as $classname) {
+            if (!is_a($classname, CommonDBConnexity::class, true)) {
+               Toolbox::logWarning(
+                  sprintf(
+                     'Unable to clone elements of class %s as it does not extends "CommonDBConnexity"',
+                     $classname
+                  )
+               );
+               continue;
+            } else {
+               $relation_items = $classname::getItemsAssociatedTo($template->getType(), $template->getID());
+               foreach ($relation_items as $relation_item) {
+                  $newId = $relation_item->clone($override_input, 0);
+               }
             }
+
          }
-
-
       }
    }
 
@@ -512,9 +512,10 @@ class PluginReleasesRelease extends CommonITILObject {
             self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
             self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
             self::TESTDEFINITION     => __('Tests in progress', 'releases'),
-            self::FINALIZE           => __('Finalized', 'releases'),
+            self::FINALIZE           => __('To Finalized', 'releases'),
             self::REVIEW             => __('Reviewed', 'releases'),
-            self::CLOSED             => _x('status', 'Closed')];
+            self::CLOSED             => _x('status', 'End','releases'),
+            self::FAIL               => __('Failed', 'releases')];
 
       return $tab;
    }
@@ -1002,25 +1003,28 @@ class PluginReleasesRelease extends CommonITILObject {
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-      if (isset($options["template_id"]) && $options["template_id"] > 0) {
-         $this->prepareField($options["template_id"]);
-         echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
-      }else{
-         $default_values = self::getDefaultValues();
+      $default_values = self::getDefaultValues();
 
-         // Restore saved value or override with page parameter
-         $saved = $this->restoreInput();
-
-         foreach ($default_values as $name => $value) {
-            if (!isset($this->fields[$name])) {
-               if (isset($saved[$name])) {
-                  $this->fields[$name] = $saved[$name];
-               } else {
-                  $this->fields[$name] = $value;
-               }
+      // Restore saved value or override with page parameter
+      $saved = $this->restoreInput();
+      $options['entities_id'] = Session::getActiveEntity();
+      foreach ($default_values as $name => $value) {
+         if (!isset($this->fields[$name])) {
+            if (isset($saved[$name])) {
+               $this->fields[$name] = $saved[$name];
+               $options[$name]= $saved[$name];
+            } else {
+               $this->fields[$name] = $value;
+               $options[$name] = $value;
             }
          }
       }
+      if (isset($options["template_id"]) && $options["template_id"] > 0) {
+         $this->prepareField($options["template_id"]);
+         echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
+      }
+
+
       $select_changes = [];
       if (isset($options["changes_id"])) {
          $select_changes = [$options["changes_id"]];
@@ -1080,13 +1084,13 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</td>";
       echo "<td colspan='2'></td>";
       echo "</tr>";
-      if ($ID) {
-         echo "<tr  class='tab_bg_1'>";
-         echo "<td colspan='4'>";
-         $this->showActorsPartForm($ID, $options);
-         echo "</td>";
-         echo "</tr>";
-      }
+
+      echo "<tr  class='tab_bg_1'>";
+      echo "<td colspan='4'>";
+      $this->showActorsPartForm($ID, $options);
+      echo "</td>";
+      echo "</tr>";
+
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Service shutdown', 'releases') . "</td>";
@@ -1096,24 +1100,25 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</td>";
       echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
       echo "</tr>";
+
       $hidden = "";
       if($this->getField('service_shutdown') == 0){
-         $hidden = "hidden='true";
+         $hidden = "hidden='true'";
       }
 
-      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden>";
+      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
       Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand","fakeupdate",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php",["value"=>'__VALUE__']);
 
       echo "<td>" . __('Service shutdown details', 'releases') . "</td>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"            => "service_shutdown_details",
+     Html::textarea(["name"            => "service_shutdown_details",
                       "enable_richtext" => true,
                       "value"           => $this->getField('service_shutdown_details')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hour', 'releases') . "</td>";
+      echo "<td>" . __('Non-working hours', 'releases') . "</td>";
       echo "<td >";
       Dropdown::showYesNo("hour_type", $this->getField('hour_type'));
       echo "</td>";
@@ -1819,16 +1824,23 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $timeline_index++;
       }
-      echo Html::scriptBlock("$(document).ready(function (){
+      if(isset($_SESSION["releases"][Session::getLoginUserID()])){
+         $catToLoad = $_SESSION["releases"][Session::getLoginUserID()];
+      }else{
+         $catToLoad = 'risk';
+      }
+
+      unset($_SESSION["releases"][Session::getLoginUserID()]);
+      echo Html::scriptBlock("$(document).ready(function (){        
                                         $('.filter_timeline_release li a').removeClass('h_active');
                                         $('.h_item').removeClass('h_hidden');
                                        $('.h_item').addClass('h_hidden');
-                                      $(\"a[data-type='risk']\").addClass('h_active');
+                                      $(\"a[data-type='$catToLoad']\").addClass('h_active');
                                        $('.ajax_box').empty();
                                        //activate clicked element
                                        //find active classname
-                                       $(\"a[data-type='risk'].filterEle\").addClass('h_active');
-                                       $(\".h_content.risk\").parent().removeClass('h_hidden');
+                                       $(\"a[data-type='$catToLoad'].filterEle\").addClass('h_active');
+                                       $(\".h_content.$catToLoad\").parent().removeClass('h_hidden');
 
                                     });");
       // end timeline

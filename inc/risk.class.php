@@ -87,8 +87,11 @@ class PluginReleasesRisk extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
+      $release = new PluginReleasesRelease();
+      $release->getFromDB($input["plugin_releases_releases_id"]);
+      $input["entities_id"] = $release->getField("entities_id");
 
-      $input = parent::prepareInputForUpdate($input);
+
       return $input;
    }
 
@@ -208,7 +211,7 @@ class PluginReleasesRisk extends CommonDBTM {
       echo "</td>";
       if($ID == ""){
          echo "<td>";
-         echo __("create a test from this risk","releases");
+         echo __("Create a test from this risk","releases");
          echo "</td>";
          echo "<td>";
          Html::showCheckbox(["name" => "create_test"]);

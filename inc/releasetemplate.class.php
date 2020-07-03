@@ -137,7 +137,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             'type'  => 'textarea',
             'rows' => 10],
          ['name'  => 'hour_type',
-            'label' => __('Non-working hour', 'release'),
+            'label' => __('Non-working hours', 'release'),
             'type'  => 'bool',
          ],
          ['name'  => 'tests',
@@ -350,7 +350,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hour','releases') . "</td>";
+      echo "<td>" . __('Non-working hours','releases') . "</td>";
       echo "<td >";
       Dropdown::showYesNo("hour_type",$this->getField('hour_type'));
       echo "</td>";

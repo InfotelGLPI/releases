@@ -96,6 +96,9 @@ class PluginReleasesRollback extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
+      $release = new PluginReleasesRelease();
+      $release->getFromDB($input["plugin_releases_releases_id"]);
+      $input["entities_id"] = $release->getField("entities_id");
 
       return $input;
    }

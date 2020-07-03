@@ -40,7 +40,7 @@ $release = New PluginReleasesDeploytask();
 
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);
-
+   $_SESSION['releases'][Session::getLoginUserID()] = 'task';
    $newID = $release->add($_POST);
 
    Html::back();

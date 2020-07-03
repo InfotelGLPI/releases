@@ -40,7 +40,7 @@ $release = New PluginReleasesRisk();
 
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);
-
+   $_SESSION['releases'][Session::getLoginUserID()] = 'risk';
    $newID = $release->add($_POST);
 
    Html::back();

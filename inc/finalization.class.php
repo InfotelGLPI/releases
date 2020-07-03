@@ -109,50 +109,103 @@ class PluginReleasesFinalization extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Risk', 'Risks', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo PluginReleasesRelease::getStateItem($release->getField("risk_state"));
-      echo "</td>";
-      echo "<td>";
-
-
-      echo "<td>";
-      echo _n('Rollback', 'Rollbacks', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo PluginReleasesRelease::getStateItem($release->getField("rollback_state"));
-      echo "</td>";
-
-      echo "<td>";
-      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
-      echo "</td>";
-      echo "<td class='left'>";
+//      echo _n('Risk', 'Risks', 2, 'releases');
+//      echo "</td>";
+//      echo "<td>";
+//      echo PluginReleasesRelease::getStateItem($release->getField("risk_state"));
+//      echo "</td>";
+//      echo "<td>";
+//
+//
+//      echo "<td>";
+//      echo _n('Rollback', 'Rollbacks', 2, 'releases');
+//      echo "</td>";
+//      echo "<td>";
+//      echo PluginReleasesRelease::getStateItem($release->getField("rollback_state"));
+//      echo "</td>";
+//
+//      echo "<td>";
+//      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
+//      echo "</td>";
+//      echo "<td class='left'>";
       $dtF = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, 1);
       $dtT = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
+      $dtFail = PluginReleasesDeploytask::countFailForItem($release);
       if ($dtT != 0) {
-         $pourcentage = $dtF / $dtT * 100;
+         $pourcentageTask = $dtF / $dtT * 100;
       } else {
-         $pourcentage = 0;
+         $pourcentageTask = 100;
       }
-
-      echo "<div class=\"progress-circle\" data-value=\"" . round($pourcentage) . "\">
-                <div class=\"progress-masque\">
-                    <div class=\"progress-barre\"></div>
-                    <div class=\"progress-sup50\"></div>
-                </div>
-               </div>";
-
-      //      echo $dtF;
-      //      echo "/";
-      //      echo $dtT;
-      echo "</td>";
-
-      echo "<td>";
-      echo _n('Test', 'Tests', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      echo PluginReleasesRelease::getStateItem($release->getField("test_state"));
+//
+      $tF = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, 1);
+      $tT = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
+      $tFail = PluginReleasesTest::countFailForItem($release);
+      if ($tT != 0) {
+         $pourcentageTest = $dtF / $dtT * 100;
+      } else {
+         $pourcentageTest = 100;
+      }
+//      echo "<div class=\"progress-circle\" data-value=\"" . round($pourcentage) . "\">
+//                <div class=\"progress-masque\">
+//                    <div class=\"progress-barre\"></div>
+//                    <div class=\"progress-sup50\"></div>
+//                </div>
+//               </div>";
+//
+//      //      echo $dtF;
+//      //      echo "/";
+//      //      echo $dtT;
+//      echo "</td>";
+//
+//      echo "<td>";
+//      echo _n('Test', 'Tests', 2, 'releases');
+//      echo "</td>";
+//      echo "<td>";
+//      echo PluginReleasesRelease::getStateItem($release->getField("test_state"));
+      echo "<section id=\"timeline\">
+  <article>
+    <div class=\"inner\" >
+      <span class=\"bulle riskBulle\">
+        ".PluginReleasesRelease::getStateItem($release->getField('risk_state'))."
+      </span>
+      <h2 class='risk'>The Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+    </div>
+  </article>
+  <article>
+    <div class=\"inner\">
+      <span class=\"bulle rollbackBulle\">
+        ".PluginReleasesRelease::getStateItem($release->getField("rollback_state"))."
+      </span>
+      <h2 class='rollback'>The Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+    </div>
+  </article>
+  <article>
+    <div class=\"inner\">
+      <span class=\"bulle taskBulle\">
+      <br>
+      <span class='percent '>
+        ".$pourcentageTask." %
+      </span>
+      </span>
+      <h2 class='task'>The Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+    </div>
+  </article>
+  <article>
+    <div class=\"inner\">
+      <span class=\"bulle testBulle\">
+        <br>
+        <span class='percent'>
+            ".$pourcentageTest." %
+        </span>
+      </span>
+      <h2 class='test'>The Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+    </div>
+  </article>
+</section>";
       echo "</td>";
 
       echo "</tr>";
