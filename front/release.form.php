@@ -28,7 +28,11 @@
  */
 
 include('../../../inc/includes.php');
+
 Session::checkLoginUser();
+
+use Glpi\Event;
+
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
 }
@@ -89,6 +93,36 @@ if (isset($_POST["add"])) {
       Html::redirect($release->getFormURL() . "?id=" . $newID);
    }
    Html::back();
+
+} else if (isset($_POST['addme_observer'])) {
+   $release->check($_POST['plugin_releases_releases_id'], READ);
+   $input = array_merge(Toolbox::addslashes_deep($release->fields), [
+      'plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
+      '_itil_observer' => [
+         '_type' => "user",
+         'users_id' => Session::getLoginUserID(),
+         'use_notification' => 1,
+      ]
+   ]);
+   $release->update($input);
+   Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
+      //TRANS: %s is the user login
+                    sprintf(__('%s adds an actor'), $_SESSION["glpiname"]));
+   Html::redirect(PluginReleasesRelease::getFormURLWithID($_POST['plugin_releases_releases_id']));
+
+} else if (isset($_POST['addme_assign'])) {
+   $release_user = new PluginReleasesRelease_User();
+
+   $release->check($_POST['plugin_releases_releases_id'], READ);
+   $input = ['plugin_releases_releases_id'       => $_POST['plugin_releases_releases_id'],
+             'users_id'         => Session::getLoginUserID(),
+             'use_notification' => 1,
+             'type'             => CommonITILActor::ASSIGN];
+   $release_user->add($input);
+   \Glpi\Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
+      //TRANS: %s is the user login
+              sprintf(__('%s adds an actor'), $_SESSION["glpiname"]));
+   Html::redirect(PluginReleasesRelease::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
 } else if (isset($_REQUEST['delete_document'])) {
 

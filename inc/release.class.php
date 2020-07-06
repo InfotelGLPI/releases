@@ -1209,9 +1209,9 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      $targets = [];
+
       $targets = json_decode($this->fields["target"]);
-      //      $targets = $this->fields["target"];
+
       echo "<th>" . _n('Target', 'Targets',
                        Session::getPluralNumber()) . "</th>";
 

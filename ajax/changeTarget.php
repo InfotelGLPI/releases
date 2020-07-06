@@ -36,7 +36,6 @@ if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
 
 Session::checkCentralAccess();
 
-
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
    $values = [];
    $data = [];
@@ -62,5 +61,8 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
       }
    }
 
-   Dropdown::showFromArray("target", $data, array('id'=> 'target','multiple' => true, 'values' => $values,"display" => true));
+   Dropdown::showFromArray("target", $data, ['id'=> 'target',
+                                             'multiple' => true,
+                                             'values' => (is_array($values)?$values:[]),
+                                             "display" => true]);
 }
