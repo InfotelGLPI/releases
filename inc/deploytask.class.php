@@ -273,7 +273,6 @@ class PluginReleasesDeploytask extends CommonDBTM {
       }
 
       $rand = mt_rand();
-      $this->showFormHeader($options);
 
       //      $canplan = (!$item->isStatusExists(CommonITILObject::PLANNED)
       //         || $item->isAllowedStatus($item->fields['status'], CommonITILObject::PLANNED));
