@@ -234,6 +234,24 @@ class PluginReleasesDeploytask extends CommonDBTM {
 
 
    /**
+    * Dropdown of deploytask & tests state
+    *
+    * @param $name   select name
+    * @param $value  default value (default '')
+    * @param $display  display of send string ? (true by default)
+    * @param $options  options
+    **/
+   static function dropdownStateTask($name, $value = '', $display = true, $options = []) {
+
+      $values = [static::TODO => __('To do'),
+                 static::DONE => __('Done'),
+                 static::FAIL => __('Fail', 'releases')];
+
+      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
+                                                                  'display' => $display], $options));
+   }
+
+   /**
     * @param       $ID
     * @param array $options
     *
@@ -412,7 +430,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
          echo "<div class='fa-label'>
             <i class='fas fa-tasks fa-fw'
                title='" . __('Status') . "'></i>";
-         PluginReleasesRelease::dropdownStateItem("state", $this->fields["state"], true, ['rand' => $rand_state]);
+         self::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
          echo "</div>";
       }
 

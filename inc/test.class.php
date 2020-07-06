@@ -94,8 +94,8 @@ class PluginReleasesTest extends CommonDBTM {
       $dbu   = new DbUtils();
       $table = CommonDBTM::getTable(self::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releases_id" => $item->getID(),
-            "state"                       => self::FAIL]);
+                                        ["plugin_releases_releases_id" => $item->getID(),
+                                         "state"                       => self::FAIL]);
    }
 
 
@@ -111,7 +111,7 @@ class PluginReleasesTest extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
-      $release = new PluginReleasesRelease();
+      $release           = new PluginReleasesRelease();
       $release->getFromDB($input["plugin_releases_releases_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
@@ -122,28 +122,28 @@ class PluginReleasesTest extends CommonDBTM {
     *
     */
    function post_addItem() {
-            parent::post_addItem();
+      parent::post_addItem();
 
-//      $input                                = [];
-//      $input["name"]                        = $this->fields["name"];
-//      $input["plugin_releases_risks_id"]    = $this->fields["plugin_releases_risks_id"];
-//      $input["content"]                     = $this->fields["content"];
-//      $input["plugin_releases_releases_id"] = $this->fields["plugin_releases_releases_id"];
-//      $input["users_id_tech"]               = $_SESSION['glpiID'];
-//      $task                                 = new PluginReleasesDeploytask();
-//      $task->add($input);
+      //      $input                                = [];
+      //      $input["name"]                        = $this->fields["name"];
+      //      $input["plugin_releases_risks_id"]    = $this->fields["plugin_releases_risks_id"];
+      //      $input["content"]                     = $this->fields["content"];
+      //      $input["plugin_releases_releases_id"] = $this->fields["plugin_releases_releases_id"];
+      //      $input["users_id_tech"]               = $_SESSION['glpiID'];
+      //      $task                                 = new PluginReleasesDeploytask();
+      //      $task->add($input);
 
-      $release = new PluginReleasesRelease();
-      $inputRelease = [];
-      $inputRelease["id"] =  $this->fields["plugin_releases_releases_id"];
-      if(self::countForItem($release) == self::countDoneForItem($release)){
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
+      $release            = new PluginReleasesRelease();
+      $inputRelease       = [];
+      $inputRelease["id"] = $this->fields["plugin_releases_releases_id"];
+      if (self::countForItem($release) == self::countDoneForItem($release)) {
+         $inputRelease               = [];
+         $inputRelease["id"]         = $release->getID();
          $inputRelease["test_state"] = 1;
          $release->update($inputRelease);
-      }else{
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
+      } else {
+         $inputRelease               = [];
+         $inputRelease["id"]         = $release->getID();
          $inputRelease["test_state"] = 0;
          $release->update($inputRelease);
       }
@@ -165,28 +165,28 @@ class PluginReleasesTest extends CommonDBTM {
           && ($uid = Session::getLoginUserID())) { // Change from task form
          $input["users_id_editor"] = $uid;
       }
-      $input= parent::prepareInputForUpdate($input);
+      $input = parent::prepareInputForUpdate($input);
       return $input;
    }
-
 
 
    function post_updateItem($history = 1) {
       $release = new PluginReleasesRelease();
       $release->getFromDB($this->getField("plugin_releases_releases_id"));
-      if(self::countForItem($release) == self::countDoneForItem($release)){
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
+      if (self::countForItem($release) == self::countDoneForItem($release)) {
+         $inputRelease               = [];
+         $inputRelease["id"]         = $release->getID();
          $inputRelease["test_state"] = 1;
          $release->update($inputRelease);
-      }else{
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
+      } else {
+         $inputRelease               = [];
+         $inputRelease["id"]         = $release->getID();
          $inputRelease["test_state"] = 0;
          $release->update($inputRelease);
       }
       parent::post_updateItem($history);
    }
+
    /**
     * @param       $ID
     * @param array $options
@@ -201,6 +201,7 @@ class PluginReleasesTest extends CommonDBTM {
       $rand_name     = mt_rand();
       $rand_type     = mt_rand();
       $rand_risk     = mt_rand();
+      $rand_state    = mt_rand();
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -208,7 +209,7 @@ class PluginReleasesTest extends CommonDBTM {
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Test template', 'Test templates', 1,'releases');
+      echo _n('Test template', 'Test templates', 1, 'releases');
       echo "</td>";
       echo "<td style='vertical-align: middle' >";
       //      echo "<div class='fa-label'>
@@ -279,13 +280,23 @@ class PluginReleasesTest extends CommonDBTM {
       echo "<td>";
       echo __("Associated risk", 'releases');
       echo "</td>";
-
       echo "<td>";
-
       Dropdown::show(PluginReleasesRisk::getType(), ['rand'  => $rand_risk, 'name' => "plugin_releases_risks_id", "condition" => ["plugin_releases_releases_id" => $options['plugin_releases_releases_id']],
                                                      'value' => $this->fields["plugin_releases_risks_id"]]);
       echo "</td>";
-      echo "<td colspan='2'></td>";
+      echo "<td>";
+      echo __('Status');
+      echo "</td>";
+
+      echo "<td>";
+      if (isset($this->fields["state"])) {
+         echo "<div class='fa-label'>
+            <i class='fas fa-tasks fa-fw'
+               title='" . __('Status') . "'></i>";
+         PluginReleasesDeploytask::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
+         echo "</div>";
+      }
+      echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Description') . "</td>";
