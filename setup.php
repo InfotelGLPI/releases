@@ -32,28 +32,30 @@ function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
 
 
-      $PLUGIN_HOOKS['csrf_compliant']['releases'] = true;
-      $PLUGIN_HOOKS['change_profile']['releases'] = ['PluginReleasesProfile', 'initProfile'];
-      $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
+   $PLUGIN_HOOKS['csrf_compliant']['releases']   = true;
+   $PLUGIN_HOOKS['change_profile']['releases']   = ['PluginReleasesProfile', 'initProfile'];
+   $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
 
-      $PLUGIN_HOOKS["javascript"]['releases']     = ["/plugins/releases/js/releases.js"];
-      $PLUGIN_HOOKS['add_javascript']['releases'] = 'js/releases.js';
-      $PLUGIN_HOOKS['add_css']['releases'][] = "css/styles.css";
+   $PLUGIN_HOOKS["javascript"]['releases']     = ["/plugins/releases/js/releases.js"];
+   $PLUGIN_HOOKS['add_javascript']['releases'] = 'js/releases.js';
+   $PLUGIN_HOOKS['add_css']['releases'][]      = "css/styles.css";
 
-      Html::requireJs('tinymce');
+   Html::requireJs('tinymce');
 
-      if (Session::getLoginUserID()) {
+   if (Session::getLoginUserID()) {
 
-         $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
+      $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
 
-         Plugin::registerClass('PluginReleasesProfile',
-                               ['addtabon' => 'Profile']);
-      }
-      Plugin::registerClass('PluginReleasesRelease',
-                            ['addtabon' => ['Change']]);
-      Plugin::registerClass(PluginReleasesDeploytask::class, [
-         'planning_types' => true
-      ]);
+      Plugin::registerClass('PluginReleasesProfile',
+                            ['addtabon' => 'Profile']);
+   }
+   Plugin::registerClass('PluginReleasesRelease',
+                         ['addtabon' => ['Change']]);
+   Plugin::registerClass('PluginReleasesRelease_Item',
+                         ['addtabon' => ['Change', 'User', 'Group', 'Supplier']]);
+   Plugin::registerClass(PluginReleasesDeploytask::class, [
+      'planning_types' => true
+   ]);
 
    $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeploytask', 'populatePlanning'];
    $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeploytask', 'displayPlanningItem'];
@@ -64,6 +66,9 @@ function plugin_init_releases() {
                                ['addtabon' => ['PluginReleasesRelease']]);
       }
    }
+
+   // End init, when all types are registered
+   $PLUGIN_HOOKS['post_init']['releases'] = 'plugin_releases_postinit';
 }
 
 // Get the name and the version of the plugin - Needed
