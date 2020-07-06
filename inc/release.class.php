@@ -2017,7 +2017,8 @@ class PluginReleasesRelease extends CommonITILObject {
    static function dropdownStateItem($name, $value = '', $display = true, $options = []) {
 
       $values = [static::TODO => __('To do'),
-                 static::DONE => __('Done')];
+                 static::DONE => __('Done'),
+                 static::FAIL => __('Failed', 'releases')];
 
       return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
                                                                   'display' => $display], $options));
