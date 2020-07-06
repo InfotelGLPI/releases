@@ -30,40 +30,43 @@
  * ---------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
-}
-
 /**
- * PluginReleasesGroup_Release Class
- *
  * @since 0.85
- *
- * Relation between Groups and Releases
- **/
-class PluginReleasesGroup_Release extends CommonITILActor {
+ */
 
-   // From CommonDBRelation
-   static public $itemtype_1 = 'PluginReleasesRelease';
-   static public $items_id_1 = 'plugin_releases_releases_id';
-   static public $itemtype_2 = 'Group';
-   static public $items_id_2 = 'groups_id';
+use Glpi\Event;
 
-
-   function post_addItem() {
-
-      switch ($this->input['type']) {  // Values from CommonITILObject::getSearchOptionsActors()
-         case CommonITILActor::REQUESTER:
-            $this->_force_log_option = 71;
-            break;
-         case CommonITILActor::OBSERVER:
-            $this->_force_log_option = 65;
-            break;
-         case CommonITILActor::ASSIGN:
-            $this->_force_log_option = 8;
-            break;
-      }
-      parent::post_addItem();
-      unset($this->_force_log_option);
-   }
+if (!defined('GLPI_ROOT')) {
+   include ('../../../inc/includes.php');
 }
+
+$link = new PluginReleasesRelease_Supplier();
+
+Session ::checkLoginUser();
+Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
+
+if (isset($_POST["update"])) {
+   $link->check($_POST["id"], UPDATE);
+
+   $link->update($_POST);
+   echo "<script type='text/javascript' >\n";
+   echo "window.parent.location.reload();";
+   echo "</script>";
+
+} else if (isset($_POST['delete'])) {
+   $link->check($_POST['id'], DELETE);
+   $link->delete($_POST);
+
+   Event::log($link->fields['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
+              sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]));
+   Html::redirect(PluginReleasesRelease::getFormURLWithID($link->fields['plugin_releases_releases_id']));
+
+} else if (isset($_GET["id"])) {
+   $link->showSupplierNotificationForm($_GET["id"]);
+} else {
+   Html::displayErrorAndDie('Lost');
+}
+
+Html::popFooter();
+
+

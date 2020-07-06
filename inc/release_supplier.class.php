@@ -35,11 +35,13 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Class Supplier_Ticket
+ * PluginReleasesRelease_Supplier Class
+ *
+ * Relation between Releases and Suppliers
  *
  * @since 0.84
- **/
-class PluginReleasesSupplier_Release extends CommonITILActor {
+**/
+class PluginReleasesRelease_Supplier extends CommonITILActor {
 
    // From CommonDBRelation
    static public $itemtype_1 = 'PluginReleasesRelease';
@@ -48,45 +50,4 @@ class PluginReleasesSupplier_Release extends CommonITILActor {
    static public $items_id_2 = 'suppliers_id';
 
 
-   /**
-    * @param $items_id
-    * @param $email
-    *
-    * @since 0.85
-    **/
-   function isSupplierEmail($items_id, $email) {
-      global $DB;
-
-      $iterator = $DB->request([
-         'FROM'      => $this->getTable(),
-         'LEFT JOIN' => [
-            'glpi_suppliers'  => [
-               'ON' => [
-                  $this->getTable() => 'suppliers_id',
-                  'glpi_suppliers'  => 'id'
-               ]
-            ]
-         ],
-         'WHERE'     => [
-            $this->getTable() . '.tickets_id'   => $items_id,
-            'glpi_suppliers.email'              => $email
-         ]
-      ]);
-
-      while ($data = $iterator->next()) {
-         return true;
-      }
-      return false;
-   }
-
-   function post_addItem() {
-
-      switch ($this->input['type']) { // Values from CommonITILObject::getSearchOptionsActors()
-         case CommonITILActor::ASSIGN:
-            $this->_force_log_option = 6;
-            break;
-      }
-      parent::post_addItem();
-      unset($this->_force_log_option);
-   }
 }

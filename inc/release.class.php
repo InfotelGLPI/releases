@@ -43,7 +43,7 @@ class PluginReleasesRelease extends CommonITILObject {
    static    $types             = [];
    public    $userlinkclass     = 'PluginReleasesRelease_User';
    public    $grouplinkclass    = 'PluginReleasesGroup_Release';
-   public    $supplierlinkclass = 'PluginReleasesSupplier_Release';
+   public    $supplierlinkclass = 'PluginReleasesRelease_Supplier';
 
    // STATUS
    const TODO       = 1; // todo

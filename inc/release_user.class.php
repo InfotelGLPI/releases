@@ -34,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-/// Class Ticket_User
+/// Class PluginReleasesRelease_User
 class PluginReleasesRelease_User extends CommonITILActor {
 
    // From CommonDBRelation
