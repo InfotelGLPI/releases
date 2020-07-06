@@ -37,13 +37,13 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginReleasesRelease extends CommonITILObject {
 
-   public    $dohistory  = true;
-   static    $rightname  = 'plugin_releases_releases';
-   protected $usenotepad = true;
-   static    $types      = [];
-   public $userlinkclass               = 'PluginReleasesRelease_User';
-   public $grouplinkclass              = 'PluginReleasesGroup_Release';
-   public $supplierlinkclass           = 'PluginReleasesSupplier_Release';
+   public    $dohistory         = true;
+   static    $rightname         = 'plugin_releases_releases';
+   protected $usenotepad        = true;
+   static    $types             = [];
+   public    $userlinkclass     = 'PluginReleasesRelease_User';
+   public    $grouplinkclass    = 'PluginReleasesGroup_Release';
+   public    $supplierlinkclass = 'PluginReleasesSupplier_Release';
 
    // STATUS
    const TODO       = 1; // todo
@@ -64,12 +64,11 @@ class PluginReleasesRelease extends CommonITILObject {
    const FINALIZE           = 15; // finalized
    const REVIEW             = 16; // reviewed
    const CLOSED             = 17; // closed
-   const FAIL           = 18;
+   const FAIL               = 18;
 
 
-//   static $typeslinkable = ["Computer"  => "Computer",
-//                            "Appliance" => "Appliance"];
-
+   //   static $typeslinkable = ["Computer"  => "Computer",
+   //                            "Appliance" => "Appliance"];
 
 
    /**
@@ -122,13 +121,13 @@ class PluginReleasesRelease extends CommonITILObject {
          case __CLASS__ :
             switch ($tabnum) {
                case 1 :
-                  if(!$withtemplate){
+                  if (!$withtemplate) {
                      echo "<div class='timeline_box'>";
                      $rand = mt_rand();
                      $item->showTimelineForm($rand);
                      $item->showTimeline($rand);
                      echo "</div>";
-                  }else{
+                  } else {
                      echo "<div class='timeline_box'>";
                      $rand = mt_rand();
                      $item->showTimeline($rand);
@@ -350,7 +349,7 @@ class PluginReleasesRelease extends CommonITILObject {
                )
             );
             continue;
-         }else{
+         } else {
             $relation_items = $classname::getItemsAssociatedTo($this->getType(), $source->getID());
             foreach ($relation_items as $relation_item) {
                $newId = $relation_item->clone($override_input, $history);
@@ -382,17 +381,17 @@ class PluginReleasesRelease extends CommonITILObject {
          $releaseRisk      = new PluginReleasesRisk();
          $riskTemplate     = new PluginReleasesRisktemplate();
          $itemLinkTemplate = new PluginReleasesReleasetemplate_Item();
-         $itemLink = new PluginReleasesRelease_Item();
-         $risks            = $riskTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
-         $tests            = $testTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
-         $rollbacks        = $rollbackTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
-         $tasks            = $taskTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()],["ASC"=> "level"]);
-         $items            = $itemLinkTemplate->find(["plugin_releases_releasetemplates_id"=>$template->getID()]);
-         $corresRisks = [];
-         $corresTests = [];
-         $corresRollbacks = [];
-         $corresTasks = [];
-         foreach ($risks as $risk){
+         $itemLink         = new PluginReleasesRelease_Item();
+         $risks            = $riskTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
+         $tests            = $testTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
+         $rollbacks        = $rollbackTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
+         $tasks            = $taskTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()], ["ASC" => "level"]);
+         $items            = $itemLinkTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
+         $corresRisks      = [];
+         $corresTests      = [];
+         $corresRollbacks  = [];
+         $corresTasks      = [];
+         foreach ($risks as $risk) {
             $risk["plugin_releases_releases_id"] = $this->getID();
             unset($risk["date_mod"]);
             unset($risk["date_creation"]);
@@ -406,8 +405,8 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($test["date_mod"]);
             unset($test["date_creation"]);
             unset($test["state"]);
-            $old_id = $test["id"];
-            $test["plugin_releases_risks_id"] = isset($corresRisks[$test["plugin_releases_risks_id"]])?$corresRisks[$test["plugin_releases_risks_id"]]:0;
+            $old_id                           = $test["id"];
+            $test["plugin_releases_risks_id"] = isset($corresRisks[$test["plugin_releases_risks_id"]]) ? $corresRisks[$test["plugin_releases_risks_id"]] : 0;
             unset($test["id"]);
             $corresTests[$old_id] = $releaseTest->add($test);
 
@@ -417,9 +416,9 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($task["date_mod"]);
             unset($task["date_creation"]);
             unset($task["state"]);
-            $old_id = $task["id"];
-            $task["plugin_releases_risks_id"] = isset($corresRisks[$task["plugin_releases_risks_id"]])?$corresRisks[$task["plugin_releases_risks_id"]]:0;
-            $task["plugin_releases_deploytasks_id"] = isset($corresTasks[$task["plugin_releases_deploytasktemplates_id"]])?$corresTasks[$task["plugin_releases_deploytasktemplates_id"]]:0;
+            $old_id                                 = $task["id"];
+            $task["plugin_releases_risks_id"]       = isset($corresRisks[$task["plugin_releases_risks_id"]]) ? $corresRisks[$task["plugin_releases_risks_id"]] : 0;
+            $task["plugin_releases_deploytasks_id"] = isset($corresTasks[$task["plugin_releases_deploytasktemplates_id"]]) ? $corresTasks[$task["plugin_releases_deploytasktemplates_id"]] : 0;
             unset($task["id"]);
             $corresTasks[$old_id] = $releaseTask->add($task);
 
@@ -433,7 +432,7 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($rollback["id"]);
             $corresRollbacks[$old_id] = $releaseRollback->add($rollback);
          }
-         foreach ($items as $item){
+         foreach ($items as $item) {
             $item["plugin_releases_releases_id"] = $this->getID();
             unset($item["id"]);
             $itemLink->add($item);
@@ -473,7 +472,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       $override_input['items_id'] = $this->getID();
       $override_input['itemtype'] = $this->getType();
-      if(isset($this->input["releasetemplates_id"])) {
+      if (isset($this->input["releasetemplates_id"])) {
          foreach ($relations_classes as $classname) {
             if (!is_a($classname, CommonDBConnexity::class, true)) {
                Toolbox::logWarning(
@@ -503,19 +502,19 @@ class PluginReleasesRelease extends CommonITILObject {
     **/
    static function getAllStatusArray($releasestatus = false) {
 
-         $tab = [
-            self::NEWRELEASE         => _x('status', 'New'),
-            self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
-            self::DATEDEFINITION     => __('Dates defined', 'releases'),
-            self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
-            self::RISKDEFINITION     => __('Risks defined', 'releases'),
-            self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
-            self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
-            self::TESTDEFINITION     => __('Tests in progress', 'releases'),
-            self::FINALIZE           => __('To Finalized', 'releases'),
-            self::REVIEW             => __('Reviewed', 'releases'),
-            self::CLOSED             => _x('status', 'End','releases'),
-            self::FAIL               => __('Failed', 'releases')];
+      $tab = [
+         self::NEWRELEASE         => _x('status', 'New'),
+         self::RELEASEDEFINITION  => __('Release area defined', 'releases'),
+         self::DATEDEFINITION     => __('Dates defined', 'releases'),
+         self::CHANGEDEFINITION   => __('Changes defined', 'releases'),
+         self::RISKDEFINITION     => __('Risks defined', 'releases'),
+         self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
+         self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
+         self::TESTDEFINITION     => __('Tests in progress', 'releases'),
+         self::FINALIZE           => __('To Finalized', 'releases'),
+         self::REVIEW             => __('Reviewed', 'releases'),
+         self::CLOSED             => _x('status', 'End', 'releases'),
+         self::FAIL               => __('Failed', 'releases')];
 
       return $tab;
    }
@@ -709,7 +708,7 @@ class PluginReleasesRelease extends CommonITILObject {
     */
    function prepareInputForUpdate($input) {
 
-//      $input = parent::prepareInputForUpdate($input);
+      //      $input = parent::prepareInputForUpdate($input);
       if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
          $input['target'] = [];
       }
@@ -730,41 +729,41 @@ class PluginReleasesRelease extends CommonITILObject {
       if (isset($input['_itil_requester'])) {
          if (isset($input['_itil_requester']['_type'])) {
             $input['_itil_requester'] = [
-                  'type'                            => CommonITILActor::REQUESTER,
-                  $this->getForeignKeyField()       => $input['id'],
-                  '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                  '_from_object'                    => true,
-               ] + $input['_itil_requester'];
+                                           'type'                            => CommonITILActor::REQUESTER,
+                                           $this->getForeignKeyField()       => $input['id'],
+                                           '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+                                           '_from_object'                    => true,
+                                        ] + $input['_itil_requester'];
 
             switch ($input['_itil_requester']['_type']) {
                case "user" :
                   if (isset($input['_itil_requester']['use_notification'])
-                     && is_array($input['_itil_requester']['use_notification'])) {
+                      && is_array($input['_itil_requester']['use_notification'])) {
                      $input['_itil_requester']['use_notification'] = $input['_itil_requester']['use_notification'][0];
                   }
                   if (isset($input['_itil_requester']['alternative_email'])
-                     && is_array($input['_itil_requester']['alternative_email'])) {
+                      && is_array($input['_itil_requester']['alternative_email'])) {
                      $input['_itil_requester']['alternative_email'] = $input['_itil_requester']['alternative_email'][0];
                   }
 
                   if (!empty($this->userlinkclass)) {
                      if (isset($input['_itil_requester']['alternative_email'])
-                        && $input['_itil_requester']['alternative_email']
-                        && !NotificationMailing::isUserAddressValid($input['_itil_requester']['alternative_email'])) {
+                         && $input['_itil_requester']['alternative_email']
+                         && !NotificationMailing::isUserAddressValid($input['_itil_requester']['alternative_email'])) {
 
                         $input['_itil_requester']['alternative_email'] = '';
                         Session::addMessageAfterRedirect(__('Invalid email address'), false, ERROR);
                      }
 
                      if ((isset($input['_itil_requester']['alternative_email'])
-                           && $input['_itil_requester']['alternative_email'])
-                        || ($input['_itil_requester']['users_id'] > 0)) {
+                          && $input['_itil_requester']['alternative_email'])
+                         || ($input['_itil_requester']['users_id'] > 0)) {
 
                         $useractors = new $this->userlinkclass();
                         if (isset($input['_auto_update'])
-                           || $useractors->can(-1, CREATE, $input['_itil_requester'])) {
+                            || $useractors->can(-1, CREATE, $input['_itil_requester'])) {
                            $useractors->add($input['_itil_requester']);
-                           $input['_forcenotif']                     = true;
+                           $input['_forcenotif'] = true;
                         }
                      }
                   }
@@ -772,12 +771,12 @@ class PluginReleasesRelease extends CommonITILObject {
 
                case "group" :
                   if (!empty($this->grouplinkclass)
-                     && ($input['_itil_requester']['groups_id'] > 0)) {
+                      && ($input['_itil_requester']['groups_id'] > 0)) {
                      $groupactors = new $this->grouplinkclass();
                      if (isset($input['_auto_update'])
-                        || $groupactors->can(-1, CREATE, $input['_itil_requester'])) {
+                         || $groupactors->can(-1, CREATE, $input['_itil_requester'])) {
                         $groupactors->add($input['_itil_requester']);
-                        $input['_forcenotif']                     = true;
+                        $input['_forcenotif'] = true;
                      }
                   }
                   break;
@@ -788,39 +787,39 @@ class PluginReleasesRelease extends CommonITILObject {
       if (isset($input['_itil_observer'])) {
          if (isset($input['_itil_observer']['_type'])) {
             $input['_itil_observer'] = [
-                  'type'                            => CommonITILActor::OBSERVER,
-                  $this->getForeignKeyField()       => $input['id'],
-                  '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                  '_from_object'                    => true,
-               ] + $input['_itil_observer'];
+                                          'type'                            => CommonITILActor::OBSERVER,
+                                          $this->getForeignKeyField()       => $input['id'],
+                                          '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+                                          '_from_object'                    => true,
+                                       ] + $input['_itil_observer'];
 
             switch ($input['_itil_observer']['_type']) {
                case "user" :
                   if (isset($input['_itil_observer']['use_notification'])
-                     && is_array($input['_itil_observer']['use_notification'])) {
+                      && is_array($input['_itil_observer']['use_notification'])) {
                      $input['_itil_observer']['use_notification'] = $input['_itil_observer']['use_notification'][0];
                   }
                   if (isset($input['_itil_observer']['alternative_email'])
-                     && is_array($input['_itil_observer']['alternative_email'])) {
+                      && is_array($input['_itil_observer']['alternative_email'])) {
                      $input['_itil_observer']['alternative_email'] = $input['_itil_observer']['alternative_email'][0];
                   }
 
                   if (!empty($this->userlinkclass)) {
                      if (isset($input['_itil_observer']['alternative_email'])
-                        && $input['_itil_observer']['alternative_email']
-                        && !NotificationMailing::isUserAddressValid($input['_itil_observer']['alternative_email'])) {
+                         && $input['_itil_observer']['alternative_email']
+                         && !NotificationMailing::isUserAddressValid($input['_itil_observer']['alternative_email'])) {
 
                         $input['_itil_observer']['alternative_email'] = '';
                         Session::addMessageAfterRedirect(__('Invalid email address'), false, ERROR);
                      }
                      if ((isset($input['_itil_observer']['alternative_email'])
-                           && $input['_itil_observer']['alternative_email'])
-                        || ($input['_itil_observer']['users_id'] > 0)) {
+                          && $input['_itil_observer']['alternative_email'])
+                         || ($input['_itil_observer']['users_id'] > 0)) {
                         $useractors = new $this->userlinkclass();
                         if (isset($input['_auto_update'])
-                           || $useractors->can(-1, CREATE, $input['_itil_observer'])) {
+                            || $useractors->can(-1, CREATE, $input['_itil_observer'])) {
                            $useractors->add($input['_itil_observer']);
-                           $input['_forcenotif']                    = true;
+                           $input['_forcenotif'] = true;
                         }
                      }
                   }
@@ -828,12 +827,12 @@ class PluginReleasesRelease extends CommonITILObject {
 
                case "group" :
                   if (!empty($this->grouplinkclass)
-                     && ($input['_itil_observer']['groups_id'] > 0)) {
+                      && ($input['_itil_observer']['groups_id'] > 0)) {
                      $groupactors = new $this->grouplinkclass();
                      if (isset($input['_auto_update'])
-                        || $groupactors->can(-1, CREATE, $input['_itil_observer'])) {
+                         || $groupactors->can(-1, CREATE, $input['_itil_observer'])) {
                         $groupactors->add($input['_itil_observer']);
-                        $input['_forcenotif']                    = true;
+                        $input['_forcenotif'] = true;
                      }
                   }
                   break;
@@ -844,37 +843,37 @@ class PluginReleasesRelease extends CommonITILObject {
       if (isset($input['_itil_assign'])) {
          if (isset($input['_itil_assign']['_type'])) {
             $input['_itil_assign'] = [
-                  'type'                            => CommonITILActor::ASSIGN,
-                  $this->getForeignKeyField()       => $input['id'],
-                  '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                  '_from_object'                    => true,
-               ] + $input['_itil_assign'];
+                                        'type'                            => CommonITILActor::ASSIGN,
+                                        $this->getForeignKeyField()       => $input['id'],
+                                        '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+                                        '_from_object'                    => true,
+                                     ] + $input['_itil_assign'];
 
             if (isset($input['_itil_assign']['use_notification'])
-               && is_array($input['_itil_assign']['use_notification'])) {
+                && is_array($input['_itil_assign']['use_notification'])) {
                $input['_itil_assign']['use_notification'] = $input['_itil_assign']['use_notification'][0];
             }
             if (isset($input['_itil_assign']['alternative_email'])
-               && is_array($input['_itil_assign']['alternative_email'])) {
+                && is_array($input['_itil_assign']['alternative_email'])) {
                $input['_itil_assign']['alternative_email'] = $input['_itil_assign']['alternative_email'][0];
             }
 
             switch ($input['_itil_assign']['_type']) {
                case "user" :
                   if (!empty($this->userlinkclass)
-                     && ((isset($input['_itil_assign']['alternative_email'])
+                      && ((isset($input['_itil_assign']['alternative_email'])
                            && $input['_itil_assign']['alternative_email'])
-                        || $input['_itil_assign']['users_id'] > 0)) {
+                          || $input['_itil_assign']['users_id'] > 0)) {
                      $useractors = new $this->userlinkclass();
                      if (isset($input['_auto_update'])
-                        || $useractors->can(-1, CREATE, $input['_itil_assign'])) {
+                         || $useractors->can(-1, CREATE, $input['_itil_assign'])) {
                         $useractors->add($input['_itil_assign']);
-                        $input['_forcenotif']                  = true;
+                        $input['_forcenotif'] = true;
                         if (((!isset($input['status'])
-                                 && in_array($this->fields['status'], $this->getNewStatusArray()))
-                              || (isset($input['status'])
+                              && in_array($this->fields['status'], $this->getNewStatusArray()))
+                             || (isset($input['status'])
                                  && in_array($input['status'], $this->getNewStatusArray())))
-                           && !$this->isStatusComputationBlocked($input)) {
+                            && !$this->isStatusComputationBlocked($input)) {
                            if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
                               $input['status'] = self::ASSIGNED;
                            }
@@ -885,18 +884,18 @@ class PluginReleasesRelease extends CommonITILObject {
 
                case "group" :
                   if (!empty($this->grouplinkclass)
-                     && ($input['_itil_assign']['groups_id'] > 0)) {
+                      && ($input['_itil_assign']['groups_id'] > 0)) {
                      $groupactors = new $this->grouplinkclass();
 
                      if (isset($input['_auto_update'])
-                        || $groupactors->can(-1, CREATE, $input['_itil_assign'])) {
+                         || $groupactors->can(-1, CREATE, $input['_itil_assign'])) {
                         $groupactors->add($input['_itil_assign']);
-                        $input['_forcenotif']                  = true;
+                        $input['_forcenotif'] = true;
                         if (((!isset($input['status'])
-                                 && (in_array($this->fields['status'], $this->getNewStatusArray())))
-                              || (isset($input['status'])
+                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+                             || (isset($input['status'])
                                  && (in_array($input['status'], $this->getNewStatusArray()))))
-                           && !$this->isStatusComputationBlocked($input)) {
+                            && !$this->isStatusComputationBlocked($input)) {
                            if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
                               $input['status'] = self::ASSIGNED;
                            }
@@ -907,19 +906,19 @@ class PluginReleasesRelease extends CommonITILObject {
 
                case "supplier" :
                   if (!empty($this->supplierlinkclass)
-                     && ((isset($input['_itil_assign']['alternative_email'])
+                      && ((isset($input['_itil_assign']['alternative_email'])
                            && $input['_itil_assign']['alternative_email'])
-                        || $input['_itil_assign']['suppliers_id'] > 0)) {
+                          || $input['_itil_assign']['suppliers_id'] > 0)) {
                      $supplieractors = new $this->supplierlinkclass();
                      if (isset($input['_auto_update'])
-                        || $supplieractors->can(-1, CREATE, $input['_itil_assign'])) {
+                         || $supplieractors->can(-1, CREATE, $input['_itil_assign'])) {
                         $supplieractors->add($input['_itil_assign']);
-                        $input['_forcenotif']                  = true;
+                        $input['_forcenotif'] = true;
                         if (((!isset($input['status'])
-                                 && (in_array($this->fields['status'], $this->getNewStatusArray())))
-                              || (isset($input['status'])
+                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+                             || (isset($input['status'])
                                  && (in_array($input['status'], $this->getNewStatusArray()))))
-                           && !$this->isStatusComputationBlocked($input)) {
+                            && !$this->isStatusComputationBlocked($input)) {
                            if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
                               $input['status'] = self::ASSIGNED;
                            }
@@ -932,7 +931,7 @@ class PluginReleasesRelease extends CommonITILObject {
          }
       }
 
-//      $this->addAdditionalActors($input);
+      //      $this->addAdditionalActors($input);
 
       return $input;
    }
@@ -1006,16 +1005,16 @@ class PluginReleasesRelease extends CommonITILObject {
       $default_values = self::getDefaultValues();
 
       // Restore saved value or override with page parameter
-      $saved = $this->restoreInput();
+      $saved                  = $this->restoreInput();
       $options['entities_id'] = Session::getActiveEntity();
       foreach ($default_values as $name => $value) {
          if (!isset($this->fields[$name])) {
             if (isset($saved[$name])) {
                $this->fields[$name] = $saved[$name];
-               $options[$name]= $saved[$name];
+               $options[$name]      = $saved[$name];
             } else {
                $this->fields[$name] = $value;
-               $options[$name] = $value;
+               $options[$name]      = $value;
             }
          }
       }
@@ -1039,128 +1038,64 @@ class PluginReleasesRelease extends CommonITILObject {
          }
       }
 
-
-
-
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ["value" => $this->getField('name')]);
-      echo "</td>";
-      echo "<td>" . __('Status') . "</td>";
-      echo "<td>";
-      Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->getField('status')]);
-      //      echo self::getStatus($this->getField('status'));
-      echo "</td>";
-      echo "</tr>";
+      // In percent
+      $colsize1 = '13';
+      $colsize2 = '37';
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Release area', 'releases') . "</td>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name"            => "content",
-                      "enable_richtext" => true,
-                      "value"           => $this->getField('content')]);
+      echo "<th class='left' width='$colsize1%'>";
+      echo __('Opening date');
+      echo "</th>";
+      echo "<td class='left' width='$colsize2%'>";
+      $date = $this->fields["date"];
+      if (!$ID) {
+         $date = date("Y-m-d H:i:s");
+      }
+      Html::showDateTimeField(
+         "date", [
+                  'value'      => $date,
+                  'maybeempty' => false,
+                  'required'   => (!$ID)
+               ]
+      );
       echo "</td>";
-      echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Pre-production planned run date', 'releases') . "</td>";
-      echo "<td >";
-      Html::showDateField("date_preproduction", ["value" => $this->getField('date_preproduction')]);
-      echo "</td>";
-      echo "<td>" . __('Production planned run date', 'releases') . "</td>";
-      echo "<td >";
-      Html::showDateField("date_production", ["value" => $this->getField('date_production')]);
-      echo "</td>";
-
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Location') . "</td>";
-      echo "<td >";
-      Dropdown::show(Location::getType(), ["name"  => "locations_id",
-                                           "value" => $this->getField('locations_id')]);
-      echo "</td>";
-      echo "<td colspan='2'></td>";
-      echo "</tr>";
-
-      echo "<tr  class='tab_bg_1'>";
-      echo "<td colspan='4'>";
-      $this->showActorsPartForm($ID, $options);
-      echo "</td>";
-      echo "</tr>";
-
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Service shutdown', 'releases') . "</td>";
-      echo "<td >";
-      $rand=mt_rand();
-      Dropdown::showYesNo("service_shutdown", $this->getField('service_shutdown'),-1,["rand"=>$rand]);
-      echo "</td>";
-      echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
-      echo "</tr>";
-
-      $hidden = "";
-      if($this->getField('service_shutdown') == 0){
-         $hidden = "hidden='true'";
+      echo "<th width='$colsize1%'>" . __('By') . "</th>";
+      echo "<td class='left'>";
+      User::dropdown(['name'   => 'users_id_recipient',
+                      'value'  => $this->fields["users_id_recipient"],
+                      'entity' => $this->fields["entities_id"],
+                      'right'  => 'all']);
+      echo "</td></tr>";
+      $showuserlink = 0;
+      if (User::canView()) {
+         $showuserlink = 1;
+      }
+      if ($ID) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<th>" . __('Last update') . "</th>";
+         echo "<td >" . Html::convDateTime($this->fields["date_mod"]) . "\n";
+         if ($this->fields['users_id_lastupdater'] > 0) {
+            printf(__('%1$s: %2$s'), __('By'),
+                   getUserName($this->fields["users_id_lastupdater"], $showuserlink));
+         }
+         echo "</td><th></th><td></td></tr>";
       }
 
-      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
-      Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand","fakeupdate",$CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php",["value"=>'__VALUE__']);
+      echo "</table>";
 
-      echo "<td>" . __('Service shutdown details', 'releases') . "</td>";
-      echo "<td colspan='3'>";
-     Html::textarea(["name"            => "service_shutdown_details",
-                      "enable_richtext" => true,
-                      "value"           => $this->getField('service_shutdown_details')]);
-      echo "</td>";
-      echo "</tr>";
-
+      echo "<table class='tab_cadre_fixe' id='mainformtable2'>";
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hours', 'releases') . "</td>";
-      echo "<td >";
-      Dropdown::showYesNo("hour_type", $this->getField('hour_type'));
+
+      echo "<th width='$colsize1%'>" . __('Status') . "</th>";
+      echo "<td width='$colsize2%' >";
+      Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->fields["status"]]);
       echo "</td>";
-      echo "<td>" . __('Communication', 'releases') . "</td>";
-      echo "<td >";
-      Dropdown::showYesNo("communication", $this->getField('communication'));
-      echo "</td>";
-      echo "</tr>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Communication type', 'releases') . "</td>";
-      echo "<td >";
-      $types   = ['Entity'   => 'Entity',
-                  'Group'    => 'Group',
-                  'Profile'  => 'Profile',
-                  'User'     => 'User',
-                  'Location' => 'Location'];
-      $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->getField('communication_type')]);
-      echo "</td>";
-      $targets = [];
-      $targets = json_decode($this->getField('target'));
-      //      $targets = $this->getField('target');
-      echo "<td>" . _n('Target', 'Targets',
-                       Session::getPluralNumber()) . "</td>";
-
-
-      echo "<td id='targets'>";
-
-
-      echo "</td>";
-      Ajax::updateItem("targets",
-                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-                       ['type' => $this->getField('communication_type'), 'current_type' => $this->getField('communication_type'), 'values' => $targets], true);
-      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-                                    ['type' => '__VALUE__', 'current_type' => $this->getField('communication_type'), 'values' => $targets], true);
-      echo "</tr>";
-      if ($ID == "") {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td>";
-         echo __('Associate changes');
-         echo "</td>";
+      if (!$ID) {
+         echo "<th width='$colsize1%'>";
+         echo __('Associated change', 'releases');
+         echo "</th>";
          echo "<td>";
          $change  = new Change();
          $changes = $change->find(['entities_id' => $_SESSION['glpiactive_entity'], 'status' => Change::getNotSolvedStatusArray()]);
@@ -1173,15 +1108,138 @@ class PluginReleasesRelease extends CommonITILObject {
          ////            'used' => $used,
          //         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
          echo "</td>";
-         echo "<td colspan='2'>";
-         echo "</td>";
-         echo "</tr>";
+      } else {
+         echo "<th width='$colsize1%'></th>";
+         echo "<td></td>";
+      }
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>" . __('Pre-production planned run date', 'releases') . "</th>";
+      echo "<td>";
+      Html::showDateField("date_preproduction", ["value" => $this->fields["date_preproduction"]]);
+      echo "</td>";
+      echo "<th>" . __('Production planned run date', 'releases') . "</th>";
+      echo "<td>";
+      Html::showDateField("date_production", ["value" => $this->fields["date_production"]]);
+      echo "</td>";
+
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>" . __('Location') . "</th>";
+      echo "<td >";
+      Dropdown::show(Location::getType(), ["name"  => "locations_id",
+                                           "value" => $this->fields["locations_id"]]);
+      echo "</td>";
+      echo "<th>" . __('Non-working hours', 'releases') . "</th>";
+      echo "<td >";
+      Dropdown::showYesNo("hour_type", $this->fields["hour_type"]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "</table>";
+      $this->showActorsPartForm($ID, $options);
+      echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th style='width:$colsize1%'>" . __('Title') . "</th>";
+      echo "<td colspan='3'>";
+      $opt = [
+         'value'     => $this->fields['name'],
+         'maxlength' => 250,
+         'style'     => 'width:98%',
+      ];
+      echo Html::input("name", $opt);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th width='$colsize1%'>" . __('Release area', 'releases') . "</th>";
+      echo "<td colspan='3'>";
+      Html::textarea(["name"            => "content",
+                      "enable_richtext" => true,
+                      "value"           => $this->fields["content"]]);
+      echo "</td>";
+      echo "</tr>";
+
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th>" . __('Service shutdown', 'releases') . "</th>";
+      echo "<td width='$colsize1%'>";
+      $rand = mt_rand();
+      Dropdown::showYesNo("service_shutdown", $this->fields["service_shutdown"], -1, ["rand" => $rand]);
+      echo "</td>";
+      echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
+      echo "</tr>";
+
+      $hidden = "";
+      if ($this->fields["service_shutdown"] == 0) {
+         $hidden = "hidden='true'";
       }
 
+      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
+      Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
+                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
+
+      echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
+      echo "<td colspan='3'>";
+      Html::textarea(["name"            => "service_shutdown_details",
+                      "enable_richtext" => true,
+                      "value"           => $this->fields["service_shutdown_details"]]);
+      echo "</td>";
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      echo "<th width='$colsize1%'>" . __('Communication', 'releases') . "</th>";
+      echo "<td width='$colsize2%'>";
+      Dropdown::showYesNo("communication", $this->fields["communication"]);
+      echo "</td>";
+
+      echo "<th width='$colsize1%'>" . __('Communication type', 'releases') . "</th>";
+      echo "<td>";
+      $types   = ['Entity'   => 'Entity',
+                  'Group'    => 'Group',
+                  'Profile'  => 'Profile',
+                  'User'     => 'User',
+                  'Location' => 'Location'];
+      $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->fields["communication_type"]]);
+      echo "</td>";
+
+      echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
+      $targets = [];
+      $targets = json_decode($this->fields["target"]);
+      //      $targets = $this->fields["target"];
+      echo "<th>" . _n('Target', 'Targets',
+                       Session::getPluralNumber()) . "</th>";
+
+      echo "<td id='targets'>";
+
+      echo "</td>";
+      Ajax::updateItem("targets",
+                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                       ['type'         => $this->fields["communication_type"],
+                        'current_type' => $this->fields["communication_type"],
+                        'values'       => $targets],
+                       true);
+      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
+                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                                    ['type'         => '__VALUE__',
+                                     'current_type' => $this->fields["communication_type"],
+                                     'values'       => $targets],
+                                    true);
+      echo "</td>";
+
+      echo "<th></th>";
+      echo "<td></td>";
+
+      echo "</tr>";
 
 
       if ($ID != "") {
-         echo "<tr  class='tab_bg_1'>";
+         echo "<tr class='tab_bg_1'>";
          echo "<td colspan='4'>";
          echo " <div class=\"container-fluid\">
                               <ul class=\"list-unstyled multi-steps\">";
@@ -1193,7 +1251,7 @@ class PluginReleasesRelease extends CommonITILObject {
             ////                     $class = "class = active2";
             //
             //            } else
-            if ($this->getField("status") == $i - 1) {
+            if ($this->fields["status"] == $i - 1) {
                //               $class = "class='current'";
                $class = "class='is-active'";
             }
@@ -1425,10 +1483,10 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       $style = "color:firebrick;";
-      $fa = "fa-times-circle";
+      $fa    = "fa-times-circle";
       if ($riskClass::countForItem($release) == $riskClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
-         $fa = "fa-check-circle";
+         $fa    = "fa-check-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
@@ -1440,12 +1498,11 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
 
-
       $style = "color:firebrick;";
-      $fa = "fa-times-circle";
+      $fa    = "fa-times-circle";
       if ($rollbackClass::countForItem($release) == $rollbackClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
-         $fa = "fa-check-circle";
+         $fa    = "fa-check-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
@@ -1457,10 +1514,10 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       $style = "color:firebrick;";
-      $fa = "fa-times-circle";
+      $fa    = "fa-times-circle";
       if ($taskClass::countForItem($release) == $taskClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
-         $fa = "fa-check-circle";
+         $fa    = "fa-check-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
@@ -1471,16 +1528,16 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
       $style = "color:firebrick;";
-      $fa = "fa-times-circle";
+      $fa    = "fa-times-circle";
       if ($testClass::countForItem($release) == $testClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
-         $fa = "fa-check-circle";
+         $fa    = "fa-check-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
-      echo "<li class='followup'>".
-         "<a href='#'  data-type='ITILFollowup' title='".__("Followup")."'>"
-         . "<i class='far fa-comment'></i>".__("Followup")."</a></li>";
+      echo "<li class='followup'>" .
+           "<a href='#'  data-type='ITILFollowup' title='" . __("Followup") . "'>"
+           . "<i class='far fa-comment'></i>" . __("Followup") . "</a></li>";
       if ($canadd_test) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"ITILFollowup\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
@@ -1521,7 +1578,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
       echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __('Followup') .
-         "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
+           "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
       echo "<li><a href='#' class=' filterEle fa fa-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
            "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
       echo "</ul>";
@@ -1581,9 +1638,9 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
          // set item position depending on field timeline_position
-         if($item['itiltype'] == "Followup"){
+         if ($item['itiltype'] == "Followup") {
             $user_position = 'right';
-         }else{
+         } else {
             $user_position = 'left'; // default position
          }
 
@@ -1642,16 +1699,15 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $fa    = null;
          $class = "h_content";
-         if($item['itiltype'] == "Followup"){
+         if ($item['itiltype'] == "Followup") {
             if (isset($item['itiltype'])) {
                $class .= " ITIL{$item['itiltype']}";
             } else {
                $class .= " {$item['type']}";
             }
-         }else{
+         } else {
             $class .= " {$item['type']::getCssClass()}";
          }
-
 
 
          //         $class .= " {$item_i['state']}";
@@ -1680,10 +1736,10 @@ class PluginReleasesRelease extends CommonITILObject {
 
          echo "</div>";
          if (isset($item_i['content'])) {
-            if (isset($item_i["name"])){
+            if (isset($item_i["name"])) {
                $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
-            }else{
-               $content =  $item_i['content'];
+            } else {
+               $content = $item_i['content'];
             }
 
             $content = Toolbox::getHtmlToDisplay($content);
@@ -1698,44 +1754,44 @@ class PluginReleasesRelease extends CommonITILObject {
             echo "<p>";
             if (isset($item_i['state'])) {
 
-               if($item['type'] == PluginReleasesTest::getType() || $item['type'] == pluginReleasesDeploytask::getType()){
+               if ($item['type'] == PluginReleasesTest::getType() || $item['type'] == pluginReleasesDeploytask::getType()) {
                   $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",2)'";
                   $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",3)'";
                   if (!$item_i['can_edit']) {
                      $onClick = "style='cursor: not-allowed;'";
                   }
-                  if($item_i['state'] == 1){
+                  if ($item_i['state'] == 1) {
                      echo "<span>";
                      $style = "color:gray;";
-                     $fa = "fa-times-circle fa-2x";
+                     $fa    = "fa-times-circle fa-2x";
                      echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
                      $style = "color:gray;";
-                     $fa = "fa-check-circle fa-2x";
+                     $fa    = "fa-check-circle fa-2x";
 
                      echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
-                  }else if($item_i['state'] == 2){
+                  } else if ($item_i['state'] == 2) {
                      echo "<span>";
                      $style = "color:gray;";
-                     $fa = "fa-times-circle fa-2x";
+                     $fa    = "fa-times-circle fa-2x";
                      echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
                      $style = "color:forestgreen;";
-                     $fa = "fa-check-circle fa-2x";
+                     $fa    = "fa-check-circle fa-2x";
 
                      echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
-                  }else{
+                  } else {
                      echo "<span>";
                      $style = "color:firebrick;";
-                     $fa = "fa-times-circle fa-2x";
+                     $fa    = "fa-times-circle fa-2x";
                      echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
                      $style = "color:gray;";
-                     $fa = "fa-check-circle fa-2x";
+                     $fa    = "fa-check-circle fa-2x";
 
                      echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
                   }
-               }else{
+               } else {
                   $onClick = "onclick='change_task_state(" . $item_i['id'] . ", this,\"" . $item['type'] . "\")'";
                   if (!$item_i['can_edit']) {
                      $onClick = "style='cursor: not-allowed;'";
@@ -1745,7 +1801,6 @@ class PluginReleasesRelease extends CommonITILObject {
                            title='" . Planning::getState($item_i['state']) . "'>";
                   echo "</span>";
                }
-
 
 
             }
@@ -1824,9 +1879,9 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $timeline_index++;
       }
-      if(isset($_SESSION["releases"][Session::getLoginUserID()])){
+      if (isset($_SESSION["releases"][Session::getLoginUserID()])) {
          $catToLoad = $_SESSION["releases"][Session::getLoginUserID()];
-      }else{
+      } else {
          $catToLoad = 'risk';
       }
 
@@ -1870,9 +1925,8 @@ class PluginReleasesRelease extends CommonITILObject {
       //      $restrict_risk['items_id'] = $this->getID();
       $user = new User();
 
-      $fupClass           = 'ITILFollowup';
-      $followup_obj       = new $fupClass;
-
+      $fupClass     = 'ITILFollowup';
+      $followup_obj = new $fupClass;
 
 
       //checks rights
@@ -1880,23 +1934,23 @@ class PluginReleasesRelease extends CommonITILObject {
       if (!Session::haveRight("followup", ITILFollowup::SEEPRIVATE)) {
          $restrict_fup = [
             'OR' => [
-               'is_private'   => 0,
-               'users_id'     => Session::getLoginUserID()
+               'is_private' => 0,
+               'users_id'   => Session::getLoginUserID()
             ]
          ];
       }
 
       $restrict_fup['itemtype'] = static::getType();
       $restrict_fup['items_id'] = $this->getID();
-//add followups to timeline
+      //add followups to timeline
       if ($followup_obj->canview()) {
          $followups = $followup_obj->find(['items_id' => $this->getID()] + $restrict_fup, ['date DESC', 'id DESC']);
          foreach ($followups as $followups_id => $followup) {
             $followup_obj->getFromDB($followups_id);
             $followup['can_edit'] = $followup_obj->canUpdateItem();;
-            $timeline[$followup['date'] . "_followup_" . $followups_id] = ['type' => $fupClass,
-               'item' => $followup,
-               'itiltype' => 'Followup'];
+            $timeline[$followup['date'] . "_followup_" . $followups_id] = ['type'     => $fupClass,
+                                                                           'item'     => $followup,
+                                                                           'itiltype' => 'Followup'];
          }
       }
       //add risks to timeline
@@ -2079,8 +2133,8 @@ class PluginReleasesRelease extends CommonITILObject {
       $menu['links']['search'] = self::getSearchURL(false);
 
       $menu['links']['template'] = "/plugins/releases/front/releasetemplate.php";
-//      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
-      $menu['icon']              = static::getIcon();
+      //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
+      $menu['icon'] = static::getIcon();
       if (self::canCreate()) {
          $dbu       = new DbUtils();
          $template  = new PluginReleasesReleasetemplate();
@@ -2089,7 +2143,7 @@ class PluginReleasesRelease extends CommonITILObject {
          if (empty($templates)) {
             $menu['links']['add'] = self::getFormURL(false);
          } else {
-            $menu['links']['add'] ="/plugins/releases/front/creationrelease.php";
+            $menu['links']['add'] = "/plugins/releases/front/creationrelease.php";
          }
       }
 
@@ -2109,9 +2163,9 @@ class PluginReleasesRelease extends CommonITILObject {
          $users_id_requester = Session::getLoginUserID();
          $users_id_assign    = Session::getLoginUserID();
          // No default requester if own ticket right = tech and update_ticket right to update requester
-//         if (Session::haveRightsOr(self::$rightname, [UPDATE, self::OWN]) && !$_SESSION['glpiset_default_requester']) {
-//            $users_id_requester = 0;
-//         }
+         //         if (Session::haveRightsOr(self::$rightname, [UPDATE, self::OWN]) && !$_SESSION['glpiset_default_requester']) {
+         //            $users_id_requester = 0;
+         //         }
          if (!$_SESSION['glpiset_default_tech']) {
             $users_id_assign = 0;
          }
@@ -2124,44 +2178,44 @@ class PluginReleasesRelease extends CommonITILObject {
       }
       $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $entity, '', 1);
       // Set default values...
-      return  ['_users_id_requester'       => $users_id_requester,
-         '_users_id_requester_notif' => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         '_groups_id_requester'      => 0,
-         '_users_id_assign'          =>  $users_id_assign,
-         '_users_id_assign_notif'    => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         '_groups_id_assign'         => 0,
-         '_users_id_observer'        => 0,
-         '_users_id_observer_notif'  => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         '_groups_id_observer'       => 0,
-         '_link'                     => ['tickets_id_2' => '',
-            'link'         => ''],
-         '_suppliers_id_assign'      => 0,
-         '_suppliers_id_assign_notif' => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         'name'                      => '',
-         'content'                   => '',
-         'date_preproduction'                      => null,
-         'date_production'                      => null,
-         'entities_id'               => $entity,
-         'status'                    => self::NEWRELEASE,
-         'service_shutdown'          => false,
-         'service_shutdown_details'  =>'',
-         'hour_type'                 => 0,
-         'communication'             =>false,
-         'communication_type'        =>false,
-         'target'                    => [],
-         'locations_id'              =>0,
-         'risk_state'                =>0,
-         'test_state'                =>0,
-         'rollback_state'                =>0,
-         ];
+      return ['_users_id_requester'        => $users_id_requester,
+              '_users_id_requester_notif'  => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              '_groups_id_requester'       => 0,
+              '_users_id_assign'           => $users_id_assign,
+              '_users_id_assign_notif'     => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              '_groups_id_assign'          => 0,
+              '_users_id_observer'         => 0,
+              '_users_id_observer_notif'   => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              '_groups_id_observer'        => 0,
+              '_link'                      => ['tickets_id_2' => '',
+                                               'link'         => ''],
+              '_suppliers_id_assign'       => 0,
+              '_suppliers_id_assign_notif' => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              'name'                       => '',
+              'content'                    => '',
+              'date_preproduction'         => null,
+              'date_production'            => null,
+              'entities_id'                => $entity,
+              'status'                     => self::NEWRELEASE,
+              'service_shutdown'           => false,
+              'service_shutdown_details'   => '',
+              'hour_type'                  => 0,
+              'communication'              => false,
+              'communication_type'         => false,
+              'target'                     => [],
+              'locations_id'               => 0,
+              'risk_state'                 => 0,
+              'test_state'                 => 0,
+              'rollback_state'             => 0,
+      ];
    }
 
-   static function isAllowedStatus($old,$new){
-      if($old != self::CLOSED && $old != self::REVIEW){
+   static function isAllowedStatus($old, $new) {
+      if ($old != self::CLOSED && $old != self::REVIEW) {
          return true;
       }
       return false;
@@ -2170,56 +2224,57 @@ class PluginReleasesRelease extends CommonITILObject {
    /**
     * is the current user could reopen the current change
     *
+    * @return boolean
     * @since 9.4.0
     *
-    * @return boolean
     */
    function canReopen() {
       return Session::haveRight('plugin_releases_releases', CREATE)
-         && in_array($this->fields["status"], $this->getClosedStatusArray());
+             && in_array($this->fields["status"], $this->getClosedStatusArray());
    }
 
    /**
     * Get the ITIL object closed status list
     *
-    * @since 0.83
-    *
     * @return array
-    **/
+    **@since 0.83
+    *
+    */
    static function getClosedStatusArray() {
 
 
-      $tab = [self::CLOSED,self::REVIEW];
+      $tab = [self::CLOSED, self::REVIEW];
       return $tab;
    }
 
    /**
     * Get the ITIL object closed, solved or waiting status list
     *
+    * @return array
     * @since 9.4.0
     *
-    * @return array
     */
    static function getReopenableStatusArray() {
       return [self::CLOSED, self::WAITING];
    }
 
 
-   static function failOrNot($itemtype,$items_id){
+   static function failOrNot($itemtype, $items_id) {
       $self = new self();
       $self->getFromDB($items_id);
       return $itemtype::countFailForItem($self);
    }
+
    /**
     * Displays the timeline header (filters)
     *
+    * @return void
     * @since 9.4.0
     *
-    * @return void
     */
    function showTimelineHeader() {
 
-      echo "<h2>".__("Release actions details",'releases')." : </h2>";
+      echo "<h2>" . __("Release actions details", 'releases') . " : </h2>";
       $this->filterTimeline();
    }
 }
