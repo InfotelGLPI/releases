@@ -114,7 +114,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
       switch ($field['type']) {
          case 'state' :
-            PluginReleasesRelease::dropdownStateItem("state", $this->fields["state"]);
+            PluginReleasesDeploytask::dropdownStateTask("state", $this->fields["state"]);
             break;
          case 'users_id_tech' :
             User::dropdown([
@@ -380,7 +380,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
          echo "<div class='fa-label'>
             <i class='fas fa-tasks fa-fw'
                title='".__('Status')."'></i>";
-         PluginReleasesRelease::dropdownStateItem("state", $this->fields["state"], true, ['rand' => $rand_state]);
+         PluginReleasesDeploytask::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
          echo "</div>";
       }
 

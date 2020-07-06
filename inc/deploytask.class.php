@@ -39,7 +39,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
    static $rightname = 'plugin_releases_tasks';
    const TODO = 1; // todo
    const DONE = 2; // done
-   const FAIL = 3; // fail
+   const FAIL = 3; // Failed
 
    /**
     * @param int $nb
@@ -245,7 +245,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
 
       $values = [static::TODO => __('To do'),
                  static::DONE => __('Done'),
-                 static::FAIL => __('Fail', 'releases')];
+                 static::FAIL => __('Failed', 'releases')];
 
       return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
                                                                   'display' => $display], $options));
