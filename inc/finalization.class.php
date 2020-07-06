@@ -131,6 +131,10 @@ class PluginReleasesFinalization extends CommonDBTM {
       $dtF = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, 1);
       $dtT = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
       $dtFail = PluginReleasesDeploytask::countFailForItem($release);
+      $taskfailed = "";
+      if($dtFail != 0){
+         $taskfailed = "bulleFailed";
+      }
       if ($dtT != 0) {
          $pourcentageTask = $dtF / $dtT * 100;
       } else {
@@ -140,8 +144,12 @@ class PluginReleasesFinalization extends CommonDBTM {
       $tF = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, 1);
       $tT = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
       $tFail = PluginReleasesTest::countFailForItem($release);
+      $testfailed = "";
+      if($tFail != 0){
+         $testfailed = "bulleFailed";
+      }
       if ($tT != 0) {
-         $pourcentageTest = $dtF / $dtT * 100;
+         $pourcentageTest = $tF / $tT * 100;
       } else {
          $pourcentageTest = 100;
       }
@@ -162,14 +170,18 @@ class PluginReleasesFinalization extends CommonDBTM {
 //      echo "</td>";
 //      echo "<td>";
 //      echo PluginReleasesRelease::getStateItem($release->getField("test_state"));
+      $riF = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class, 1);
+      $riT = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class);
+      $roF = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class, 1);
+      $roT = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class);
       echo "<section id=\"timeline\">
   <article>
     <div class=\"inner\" >
       <span class=\"bulle riskBulle\">
         ".PluginReleasesRelease::getStateItem($release->getField('risk_state'))."
       </span>
-      <h2 class='risk'>The Title</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+      <h2 class='risk'>"._n('Risk', 'Risk', 2,'releases')."</h2>
+      <p>".sprintf(__('%s / %s risks'),$riF,$riT )."</p>
     </div>
   </article>
   <article>
@@ -177,32 +189,35 @@ class PluginReleasesFinalization extends CommonDBTM {
       <span class=\"bulle rollbackBulle\">
         ".PluginReleasesRelease::getStateItem($release->getField("rollback_state"))."
       </span>
-      <h2 class='rollback'>The Title</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+      <h2 class='rollback'>"._n('Rollback','Rollbacks',2, 'release')."</h2>
+      <p>".sprintf(__('%s / %s rollbacks'),$roF,$roT )."</p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
-      <span class=\"bulle taskBulle\">
+      <span class=\"bulle taskBulle $taskfailed\">
       <br>
       <span class='percent '>
         ".$pourcentageTask." %
       </span>
       </span>
-      <h2 class='task'>The Title</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+      <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</h2>
+      <p>".sprintf(__('%s / %s deploy tasks'),$dtF,$dtT )."</br>
+      ".sprintf(__('%s  deploy tasks failed'),$dtFail )."</p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
-      <span class=\"bulle testBulle\">
+    
+      <span class=\"bulle testBulle $testfailed\">
         <br>
         <span class='percent'>
             ".$pourcentageTest." %
         </span>
       </span>
-      <h2 class='test'>The Title</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis rutrum nunc, eget dictum massa. Nam faucibus felis nec augue adipiscing, eget commodo libero mattis.</p>
+      <h2 class='test'>"._n('Test','Tests', 2,'release')."</h2>
+      <p>".sprintf(__('%s / %s tests'),$tF,$tT )."</br>
+      ".sprintf(__('%s  tests failed'),$tFail )."</p>
     </div>
   </article>
 </section>";

@@ -2138,7 +2138,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if (self::canCreate()) {
          $dbu       = new DbUtils();
          $template  = new PluginReleasesReleasetemplate();
-         $condition = $dbu->getEntitiesRestrictCriteria($template->getTable());
+         $condition = $dbu->getEntitiesRestrictCriteria($template->getTable(),'','',true);
          $templates = $template->find($condition);
          if (empty($templates)) {
             $menu['links']['add'] = self::getFormURL(false);

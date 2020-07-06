@@ -473,7 +473,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<tr  class='tab_bg_1'>";
       echo "<td class='center b' >";
       $dbu = new DbUtils();
-      $condition = $dbu->getEntitiesRestrictCriteria($this->getTable());
+      $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(),'','',true);
       self::dropdown(["name"=>"releasetemplates_id"]+$condition);
       $url = PluginReleasesRelease::getFormURL();
       echo "<a  id='link' href='$url'>";

@@ -82,7 +82,8 @@ function plugin_releases_uninstall() {
                    "glpi_documents_items",
                    "glpi_notepads",
                    "glpi_items_tickets",
-                   "glpi_knowbaseitems_items"
+                   "glpi_knowbaseitems_items",
+                   "glpi_itilfollowups"
    ];
 
    foreach ($tables_glpi as $table_glpi) {
