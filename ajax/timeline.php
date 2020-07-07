@@ -141,9 +141,15 @@ switch ($_REQUEST['action']) {
          $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::FAIL]);
       }
 
-            if(PluginReleasesTest::countDoneForItem($obj) != 0){
-            }else if(PluginReleasesDeploytask::countDoneForItem($obj) != 0){
-               $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::ROLLBACKDEFINITION]);            }
+      if (!PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(), $obj->fields["plugin_releases_releases_id"])   && !PluginReleasesRelease::failOrNot(new PluginReleasesTest(), $obj->fields["plugin_releases_releases_id"])) {
+         if ($release->getField("status") == PluginReleasesRelease::FAIL) {
+            if (PluginReleasesTest::countDoneForItem($release) != 0) {
+               $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TESTDEFINITION]);
+            } else if (PluginReleasesDeploytask::countDoneForItem($release) != 0) {
+               $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TASKDEFINITION]);
+            } else {
+               $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::ROLLBACKDEFINITION]);
+            }
          }
       }
 
