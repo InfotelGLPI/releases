@@ -30,7 +30,7 @@
  * ---------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
@@ -38,13 +38,13 @@ if (!isset($_REQUEST['action'])) {
    exit;
 }
 
-if ($_REQUEST['action'] == 'change_task_state' || $_REQUEST['action'] == 'done_fail' ) {
+if ($_REQUEST['action'] == 'change_task_state' || $_REQUEST['action'] == 'done_fail') {
    header("Content-Type: application/json; charset=UTF-8");
 } else {
    header("Content-Type: text/html; charset=UTF-8");
 }
 
-$objType = $_REQUEST['parenttype']::getType();
+$objType    = $_REQUEST['parenttype']::getType();
 $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 
 switch ($_REQUEST['action']) {
@@ -53,24 +53,24 @@ switch ($_REQUEST['action']) {
          exit();
       }
       $objClass = $_REQUEST['itemtype'];
-      $obj = new $objClass;
+      $obj      = new $objClass;
       $obj->getFromDB(intval($_REQUEST['items_id']));
 
       if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
          $new_state = ($obj->fields['state'] == Planning::DONE)
-                           ? Planning::TODO
-                           : Planning::DONE;
+            ? Planning::TODO
+            : Planning::DONE;
          $new_label = Planning::getState($new_state);
          echo json_encode([
-            'state'  => $new_state,
-            'label'  => $new_label
-         ]);
+                             'state' => $new_state,
+                             'label' => $new_label
+                          ]);
 
          $obj->update([
-            'id'         => intval($_REQUEST['items_id']),
-            $foreignKey => intval($_REQUEST[$foreignKey]),
-            'state'      => $new_state
-         ]);
+                         'id'        => intval($_REQUEST['items_id']),
+                         $foreignKey => intval($_REQUEST[$foreignKey]),
+                         'state'     => $new_state
+                      ]);
       }
       break;
    case "viewsubitem":
@@ -82,25 +82,25 @@ switch ($_REQUEST['action']) {
          exit();
       }
 
-      $item = getItemForItemtype($_REQUEST['type']);
+      $item   = getItemForItemtype($_REQUEST['type']);
       $parent = getItemForItemtype($_REQUEST['parenttype']);
 
       if (isset($_REQUEST[$parent->getForeignKeyField()])
-            && isset($_REQUEST["id"])
-            && $parent->getFromDB($_REQUEST[$parent->getForeignKeyField()])) {
+          && isset($_REQUEST["id"])
+          && $parent->getFromDB($_REQUEST[$parent->getForeignKeyField()])) {
 
-         $ol = ObjectLock::isLocked( $_REQUEST['parenttype'], $parent->getID() );
+         $ol = ObjectLock::isLocked($_REQUEST['parenttype'], $parent->getID());
          if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
-            ObjectLock::setReadOnlyProfile( );
+            ObjectLock::setReadOnlyProfile();
          }
-         if($item->getType() == "ITILFollowup"){
+         if ($item->getType() == "ITILFollowup") {
             $item->fields["itemtype"] = $parent->getType();
             $item->fields["items_id"] = $_REQUEST["id"];
          }
-         $parent::showSubForm($item, $_REQUEST["id"], ['parent' => $parent,
-                                                      "itemtype" => $parent->getType(),
-                                                      "items_id" => $parent->getID(),
-                                                      $foreignKey => $_REQUEST[$foreignKey]]);
+         $parent::showSubForm($item, $_REQUEST["id"], ['parent'    => $parent,
+                                                       "itemtype"  => $parent->getType(),
+                                                       "items_id"  => $parent->getID(),
+                                                       $foreignKey => $_REQUEST[$foreignKey]]);
       } else {
          echo __('Access denied');
       }
@@ -112,43 +112,38 @@ switch ($_REQUEST['action']) {
          exit();
       }
       $objClass = $_REQUEST['itemtype'];
-      $obj = new $objClass;
+      $obj      = new $objClass;
       $obj->getFromDB(intval($_REQUEST['items_id']));
 
-      if($_REQUEST["newStatus"] == $obj->fields['state'] ){
+      if ($_REQUEST["newStatus"] == $obj->fields['state']) {
          $new_state = PluginReleasesTest::TODO;
-      }else{
+      } else {
          $new_state = $_REQUEST["newStatus"];
       }
       //TODO add something to put the release in fail state in case of fail state
 
 
       echo json_encode([
-         'state'  => $new_state
-      ]);
+                          'state' => $new_state
+                       ]);
 
       $obj->update([
-         'id'         => intval($_REQUEST['items_id']),
-         $foreignKey => intval($_REQUEST[$foreignKey]),
-         'state'      => $new_state
-      ]);
+                      'id'        => intval($_REQUEST['items_id']),
+                      $foreignKey => intval($_REQUEST[$foreignKey]),
+                      'state'     => $new_state
+                   ]);
       $release = new PluginReleasesRelease();
       $release->getFromDB($obj->fields["plugin_releases_releases_id"]);
-      if(PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(),$obj->fields["plugin_releases_releases_id"])){
-         $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::FAIL]);
-      }else if (PluginReleasesRelease::failOrNot(new PluginReleasesTest(),$obj->fields["plugin_releases_releases_id"])){
-         $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::FAIL]);
+
+      if (PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(), $obj->fields["plugin_releases_releases_id"])) {
+         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::FAIL]);
+      } else if (PluginReleasesRelease::failOrNot(new PluginReleasesTest(), $obj->fields["plugin_releases_releases_id"])) {
+         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::FAIL]);
       }
 
-      if(!PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(),$obj->fields["plugin_releases_releases_id"]) && !PluginReleasesRelease::failOrNot(new PluginReleasesTest(),$obj->fields["plugin_releases_releases_id"])){
-         if($release->getField("status") ==PluginReleasesRelease::FAIL || $release->getField("status") ==PluginReleasesRelease::FAIL ){
-            if(PluginReleasesTest::countDoneForItem($release) != 0){
-               $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::TESTDEFINITION]);
-            }else if(PluginReleasesDeploytask::countDoneForItem($release) != 0){
-               $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::TASKDEFINITION]);
-            }else{
-               $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::ROLLBACKDEFINITION]);
-            }
+            if(PluginReleasesTest::countDoneForItem($obj) != 0){
+            }else if(PluginReleasesDeploytask::countDoneForItem($obj) != 0){
+               $release->update(['id'=>$release->getID(),'status'=>PluginReleasesRelease::ROLLBACKDEFINITION]);            }
          }
       }
 
