@@ -1306,15 +1306,15 @@ class PluginReleasesRelease extends CommonITILObject {
     */
    public static function getStateItem($state) {
       switch ($state) {
-         case 0:
+         case 1:
             //            return __("Waiting","releases");
             return "<span><i class=\"fas fa-3x fa-hourglass-half\"></i></span>";
             break;
-         case 1:
+         case 2:
             //            return __("Done");
             return "<span><i class=\"fas fa-3x fa-check\"></i></span>";
             break;
-         default:
+         case 3:
             return "<span><i class=\"fas fa-3x fa-times\"></i></span>";
             break;
       }

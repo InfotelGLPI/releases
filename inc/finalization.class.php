@@ -133,16 +133,16 @@ class PluginReleasesFinalization extends CommonDBTM {
       $dtT        = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
       $dtFail     = PluginReleasesDeploytask::countFailForItem($release);
       $taskfailed = "";
-      $task_state = 0;
+      $task_state = PluginReleasesDeploytask::TODO;
       if ($dtFail != 0) {
          $taskfailed = "bulleFailed";
-         $task_state = 2;
+         $task_state = PluginReleasesDeploytask::FAIL;
       }
       if ($dtT != 0) {
          $pourcentageTask = $dtF / $dtT * 100;
       } else {
          $pourcentageTask = 100;
-         $task_state = 1;
+         $task_state = PluginReleasesDeploytask::DONE;
       }
       //
       $tF         = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, 1);
@@ -182,18 +182,18 @@ class PluginReleasesFinalization extends CommonDBTM {
   <article>
     <div class=\"inner\" >
       <span class=\"bulle riskBulle\">
-        " . PluginReleasesRelease::getStateItem($release->getField('risk_state')) . "
+        " . PluginReleasesRelease::getStateItem(2) . "
       </span>
-      <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "</h2>
+      <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s risks'), $riF, $riT) . "</p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
       <span class=\"bulle rollbackBulle\">
-        " . PluginReleasesRelease::getStateItem($release->getField("rollback_state")) . "
+        " . PluginReleasesRelease::getStateItem(2) . "
       </span>
-      <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'release') . "</h2>
+      <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'release') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s rollbacks'), $roF, $roT) . "</p>
     </div>
   </article>
@@ -202,23 +202,23 @@ class PluginReleasesFinalization extends CommonDBTM {
       <span class=\"bulle taskBulle $taskfailed\">
       " . PluginReleasesRelease::getStateItem($task_state) . "
       </span>
-      <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<span class='percent'>
-        (" . $pourcentageTask . " %)
-      </span></h2>
+      <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s deploy tasks'), $dtF, $dtT) . "</br>
-      " . sprintf(__('%s  deploy tasks failed'), $dtFail) . "</p>
+      " . sprintf(__('%s  deploy tasks failed'), $dtFail) . "<span class='percent' style=\"float: right;\">
+            " . $pourcentageTask . " %
+        </span></p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
     <span class=\"bulle taskBulle $testfailed\">
-      " . PluginReleasesRelease::getStateItem($release->getField("test_state")) . "
+      " . PluginReleasesRelease::getStateItem(1) . "
       </span>
-      <h2 class='test'>" . _n('Test', 'Tests', 2, 'release') . "<span class='percent'>
-            (" . $pourcentageTest . " %)
-        </span></h2>
+      <h2 class='test'>" . _n('Test', 'Tests', 2, 'release') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s tests'), $tF, $tT) . "</br>
-      " . sprintf(__('%s  tests failed'), $tFail) . "</p>
+      " . sprintf(__('%s  tests failed'), $tFail) . "<span class='percent' style=\"float: right;\">
+            " . $pourcentageTest . " %
+        </span></p>
     </div>
   </article>
 </section>";

@@ -141,7 +141,8 @@ switch ($_REQUEST['action']) {
          $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::FAIL]);
       }
 
-      if (!PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(), $obj->fields["plugin_releases_releases_id"])   && !PluginReleasesRelease::failOrNot(new PluginReleasesTest(), $obj->fields["plugin_releases_releases_id"])) {
+      if (!PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(), $obj->fields["plugin_releases_releases_id"])
+          && !PluginReleasesRelease::failOrNot(new PluginReleasesTest(), $obj->fields["plugin_releases_releases_id"])) {
          if ($release->getField("status") == PluginReleasesRelease::FAIL) {
             if (PluginReleasesTest::countDoneForItem($release) != 0) {
                $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TESTDEFINITION]);
