@@ -700,7 +700,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
 
       echo "<li class='rollback'>";
-      echo "<a href='#'  data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
+      echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
          "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
       if ($canadd_rollback) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
@@ -711,7 +711,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
 
       echo "<li class='task'>";
-      echo "<a href='#'   data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
+      echo "<a href='#' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
          "'><i class='fas fa-check-square'></i>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
@@ -720,7 +720,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
 
       echo "<li class='test'>";
-      echo "<a href='#'  data-type='test' title='" . $testClass::getTypeName(2) .
+      echo "<a href='#' data-type='test' title='" . $testClass::getTypeName(2) .
          "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
       if ($canadd_test) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";

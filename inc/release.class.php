@@ -46,12 +46,12 @@ class PluginReleasesRelease extends CommonITILObject {
    public    $supplierlinkclass = 'PluginReleasesRelease_Supplier';
 
    // STATUS
-   const TODO       = 1; // todo
-   const DONE       = 2; // done
-   const PROCESSING = 3; // processing
-   const WAITING    = 4; // waiting
-   const LATE       = 5; // late
-   const DEF        = 6; // default
+   //   const TODO       = 1; // todo
+   //   const DONE       = 2; // done
+   //   const PROCESSING = 3; // processing
+   //   const WAITING    = 4; // waiting
+   //   const LATE       = 5; // late
+   //   const DEF        = 6; // default
 
    const NEWRELEASE         = 7;
    const RELEASEDEFINITION  = 8; // default
@@ -558,26 +558,26 @@ class PluginReleasesRelease extends CommonITILObject {
       $solid = true;
 
       switch ($status) {
-         case self::TODO :
-            $class = 'circle';
-            break;
-         case self::DONE :
-            $class = 'circle';
-            //            $solid = false;
-            break;
-         case self::PROCESSING :
-            $class = 'circle';
-            break;
-         case self::WAITING :
-            $class = 'circle';
-            break;
-         case self::LATE :
-            $class = 'circle';
-            //            $solid = false;
-            break;
-         case self::DEF :
-            $class = 'circle';
-            break;
+         //         case self::TODO :
+         //            $class = 'circle';
+         //            break;
+         //         case self::DONE :
+         //            $class = 'circle';
+         //            //            $solid = false;
+         //            break;
+         //         case self::PROCESSING :
+         //            $class = 'circle';
+         //            break;
+         //         case self::WAITING :
+         //            $class = 'circle';
+         //            break;
+         //         case self::LATE :
+         //            $class = 'circle';
+         //            //            $solid = false;
+         //            break;
+         //         case self::DEF :
+         //            $class = 'circle';
+         //            break;
          case self::NEWRELEASE :
             $class = 'circle';
             break;
@@ -644,24 +644,24 @@ class PluginReleasesRelease extends CommonITILObject {
    public static function getStatusKey($status) {
       $key = '';
       switch ($status) {
-         case self::DONE :
-            $key = 'done';
-            break;
-         case self::TODO :
-            $key = 'todo';
-            break;
-         case self::WAITING :
-            $key = 'waiting';
-            break;
-         case self::PROCESSING :
-            $key = 'inprogress';
-            break;
-         case self::LATE :
-            $key = 'late';
-            break;
-         case self::DEF :
-            $key = 'default';
-            break;
+         //         case self::DONE :
+         //            $key = 'done';
+         //            break;
+         //         case self::TODO :
+         //            $key = 'todo';
+         //            break;
+         //         case self::WAITING :
+         //            $key = 'waiting';
+         //            break;
+         //         case self::PROCESSING :
+         //            $key = 'inprogress';
+         //            break;
+         //         case self::LATE :
+         //            $key = 'late';
+         //            break;
+         //         case self::DEF :
+         //            $key = 'default';
+         //            break;
          case self::NEWRELEASE :
             $key = 'newrelease';
             break;
@@ -1308,11 +1308,14 @@ class PluginReleasesRelease extends CommonITILObject {
       switch ($state) {
          case 0:
             //            return __("Waiting","releases");
-            return "<span><i class=\"fas fa-4x fa-hourglass-half\"></i></span>";
+            return "<span><i class=\"fas fa-3x fa-hourglass-half\"></i></span>";
             break;
          case 1:
             //            return __("Done");
-            return "<span><i class=\"fas fa-4x fa-check\"></i></span>";
+            return "<span><i class=\"fas fa-3x fa-check\"></i></span>";
+            break;
+         default:
+            return "<span><i class=\"fas fa-3x fa-times\"></i></span>";
             break;
       }
    }
@@ -1557,11 +1560,12 @@ class PluginReleasesRelease extends CommonITILObject {
     * @return int
     */
    static function countFollowupForItem(CommonDBTM $item) {
-      $dbu   = new DbUtils();
+      $dbu = new DbUtils();
       return $dbu->countElementsInTable("glpi_itilfollowups",
                                         ["items_id" => $item->getID(),
                                          "itemtype" => $item->getType()]);
    }
+
    /**
     * Displays the timeline filter buttons
     *
@@ -2042,19 +2046,19 @@ class PluginReleasesRelease extends CommonITILObject {
     * @param $display  display of send string ? (true by default)
     * @param $options  options
     **/
-   static function dropdownState($name, $value = '', $display = true, $options = []) {
-
-      $values = [static::TODO       => __('To do'),
-                 static::DONE       => __('Done'),
-                 static::PROCESSING => __('Processing'),
-                 static::WAITING    => __("Waiting"),
-                 static::LATE       => __("Late"),
-                 static::DEF        => __("Default"),
-      ];
-
-      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
-                                                                  'display' => $display], $options));
-   }
+   //   static function dropdownState($name, $value = '', $display = true, $options = []) {
+   //
+   //      $values = [static::TODO       => __('To do'),
+   //                 static::DONE       => __('Done'),
+   //                 static::PROCESSING => __('Processing'),
+   //                 static::WAITING    => __("Waiting"),
+   //                 static::LATE       => __("Late"),
+   //                 static::DEF        => __("Default"),
+   //      ];
+   //
+   //      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
+   //                                                                  'display' => $display], $options));
+   //   }
 
 
    static function showCreateRelease($item) {
@@ -2149,7 +2153,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if (self::canCreate()) {
          $dbu       = new DbUtils();
          $template  = new PluginReleasesReleasetemplate();
-         $condition = $dbu->getEntitiesRestrictCriteria($template->getTable(),'','',true);
+         $condition = $dbu->getEntitiesRestrictCriteria($template->getTable(), '', '', true);
          $templates = $template->find($condition);
          if (empty($templates)) {
             $menu['links']['add'] = self::getFormURL(false);
@@ -2351,7 +2355,7 @@ class PluginReleasesRelease extends CommonITILObject {
             if ($item->haveChildren()) {
                $tree = Session::getSavedOption(__CLASS__, 'tree', 0);
                echo "<table class='tab_cadre_fixe'>";
-               echo "<tr class='tab_bg_1'><th>".__('Last releases')."</th></tr>";
+               echo "<tr class='tab_bg_1'><th>" . __('Last releases') . "</th></tr>";
                echo "<tr class='tab_bg_1'><td class='center'>";
                echo __('Child groups');
                Dropdown::showYesNo('tree', $tree, -1,
@@ -2376,30 +2380,30 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       // Link to open a new release
-      if ($item->getID()
-          && PluginReleasesRelease::isPossibleToAssignType($item->getType())
-          && self::canCreate()
-          && !(!empty($withtemplate) && $withtemplate == 2)
-          && (!isset($item->fields['is_template']) || $item->fields['is_template'] == 0)) {
-         echo "<div class='firstbloc'>";
-         Html::showSimpleForm(
-            PluginReleasesRelease::getFormURL(),
-            '_add_fromitem',
-            __('New release for this item...'),
-            [
-               '_from_itemtype' => $item->getType(),
-               '_from_items_id' => $item->getID(),
-               'entities_id'    => $item->fields['entities_id']
-            ]
-         );
-         echo "</div>";
-      }
+//      if ($item->getID()
+//          && PluginReleasesRelease::isPossibleToAssignType($item->getType())
+//          && self::canCreate()
+//          && !(!empty($withtemplate) && $withtemplate == 2)
+//          && (!isset($item->fields['is_template']) || $item->fields['is_template'] == 0)) {
+//         echo "<div class='firstbloc'>";
+//         Html::showSimpleForm(
+//            PluginReleasesRelease::getFormURL(),
+//            '_add_fromitem',
+//            __('New release for this item...'),
+//            [
+//               '_from_itemtype' => $item->getType(),
+//               '_from_items_id' => $item->getID(),
+//               'entities_id'    => $item->fields['entities_id']
+//            ]
+//         );
+//         echo "</div>";
+//      }
 
-      $criteria = self::getCommonCriteria();
+      $criteria          = self::getCommonCriteria();
       $criteria['WHERE'] = $restrict + getEntitiesRestrictCriteria(self::getTable());
       $criteria['LIMIT'] = (int)$_SESSION['glpilist_limit'];
-      $iterator = $DB->request($criteria);
-      $number = count($iterator);
+      $iterator          = $DB->request($criteria);
+      $number            = count($iterator);
 
       // Ticket for the item
       echo "<div><table class='tab_cadre_fixe'>";
@@ -2424,7 +2428,7 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "</th></tr>";
 
       } else {
-         echo "<tr><th>".__('No release found.')."</th></tr>";
+         echo "<tr><th>" . __('No release found.') . "</th></tr>";
       }
       // Ticket list
       if ($number > 0) {
@@ -2441,7 +2445,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Tickets for linked items
       $linkeditems = $item->getLinkedItems();
-      $restrict = [];
+      $restrict    = [];
       if (count($linkeditems)) {
          foreach ($linkeditems as $ltype => $tab) {
             foreach ($tab as $lID) {
@@ -2451,11 +2455,11 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       if (count($restrict)) {
-         $criteria         = self::getCommonCriteria();
+         $criteria          = self::getCommonCriteria();
          $criteria['WHERE'] = ['OR' => $restrict]
                               + getEntitiesRestrictCriteria(self::getTable());
-         $iterator = $DB->request($criteria);
-         $number = count($iterator);
+         $iterator          = $DB->request($criteria);
+         $number            = count($iterator);
 
          echo "<div class='spaced'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='$colspan'>";
@@ -2471,7 +2475,7 @@ class PluginReleasesRelease extends CommonITILObject {
             }
             self::commonListHeader(Search::HTML_OUTPUT);
          } else {
-            echo "<tr><th>".__('No release found.')."</th></tr>";
+            echo "<tr><th>" . __('No release found.') . "</th></tr>";
          }
          echo "</table></div>";
 
@@ -2482,60 +2486,60 @@ class PluginReleasesRelease extends CommonITILObject {
    /**
     * Get common request criteria
     *
+    * @return array
     * @since 9.5.0
     *
-    * @return array
     */
    public static function getCommonCriteria() {
-      $fk = self::getForeignKeyField();
+      $fk     = self::getForeignKeyField();
       $gtable = 'glpi_plugin_releases_groups_releases';
       $itable = 'glpi_plugin_releases_releases_items';
       $utable = static::getTable() . '_users';
       $stable = static::getTable() . '_suppliers';
 
-      $table = static::getTable();
+      $table    = static::getTable();
       $criteria = [
-         'SELECT'          => [
+         'SELECT'    => [
             "$table.*"
          ],
-         'DISTINCT'        => true,
-         'FROM'            => $table,
-         'LEFT JOIN'       => [
-            $gtable  => [
+         'DISTINCT'  => true,
+         'FROM'      => $table,
+         'LEFT JOIN' => [
+            $gtable => [
                'ON' => [
-                  $table   => 'id',
-                  $gtable  => $fk
+                  $table  => 'id',
+                  $gtable => $fk
                ]
             ],
-            $utable  => [
+            $utable => [
                'ON' => [
-                  $table   => 'id',
-                  $utable  => $fk
+                  $table  => 'id',
+                  $utable => $fk
                ]
             ],
-            $stable  => [
+            $stable => [
                'ON' => [
-                  $table   => 'id',
-                  $stable  => $fk
+                  $table  => 'id',
+                  $stable => $fk
                ]
             ],
-            $itable  => [
+            $itable => [
                'ON' => [
-                  $table   => 'id',
-                  $itable  => $fk
+                  $table  => 'id',
+                  $itable => $fk
                ]
             ]
          ],
-         'ORDERBY'            => "$table.date_mod DESC"
+         'ORDERBY'   => "$table.date_mod DESC"
       ];
       if (count($_SESSION["glpiactiveentities"]) > 1) {
          $criteria['LEFT JOIN']['glpi_entities'] = [
             'ON' => [
-               'glpi_entities'   => 'id',
-               $table            => 'entities_id'
+               'glpi_entities' => 'id',
+               $table          => 'entities_id'
             ]
          ];
-         $criteria['SELECT'] = array_merge(
+         $criteria['SELECT']                     = array_merge(
             $criteria['SELECT'], [
                                   'glpi_entities.completename AS entityname',
                                   "$table.entities_id AS entityID"
@@ -2547,37 +2551,37 @@ class PluginReleasesRelease extends CommonITILObject {
 
    /**
     * @param integer $output_type Output type
-    * @param string  $mass_id     id of the form to check all
+    * @param string  $mass_id id of the form to check all
     */
    static function commonListHeader($output_type = Search::HTML_OUTPUT, $mass_id = '') {
 
       // New Line for Header Items Line
       echo Search::showNewLine($output_type);
       // $show_sort if
-      $header_num                      = 1;
+      $header_num = 1;
 
-      $items                           = [];
-      $items[(empty($mass_id)?'&nbsp':Html::getCheckAllAsCheckbox($mass_id))] = '';
-      $items[__('Status')]             = "status";
-      $items[__('Date')]               = "date";
-      $items[__('Last update')]        = "date_mod";
+      $items                                                                      = [];
+      $items[(empty($mass_id) ? '&nbsp' : Html::getCheckAllAsCheckbox($mass_id))] = '';
+      $items[__('Status')]                                                        = "status";
+      $items[__('Date')]                                                          = "date";
+      $items[__('Last update')]                                                   = "date_mod";
 
       if (count($_SESSION["glpiactiveentities"]) > 1) {
          $items[_n('Entity', 'Entities', Session::getPluralNumber())] = "glpi_entities.completename";
       }
 
-//      $items[__('Priority')]           = "priority";
-      $items[__('Requester')]          = "users_id";
-      $items[__('Assigned')]           = "users_id_assign";
+      //      $items[__('Priority')]           = "priority";
+      $items[__('Requester')] = "users_id";
+      $items[__('Assigned')]  = "users_id_assign";
       if (static::getType() == 'Ticket') {
          $items[_n('Associated element', 'Associated elements', Session::getPluralNumber())] = "";
       }
-//      $items[__('Category')]           = "glpi_itilcategories.completename";
-      $items[__('Title')]              = "name";
-      $items[__('Planification')]      = "glpi_plugin_releases_deploytasks.begin";
+      //      $items[__('Category')]           = "glpi_itilcategories.completename";
+      $items[__('Title')]         = "name";
+      $items[__('Planification')] = "glpi_plugin_releases_deploytasks.begin";
 
       foreach (array_keys($items) as $key) {
-         $link   = "";
+         $link = "";
          echo Search::showHeaderItem($output_type, $key, $header_num, $link);
       }
 
@@ -2588,8 +2592,6 @@ class PluginReleasesRelease extends CommonITILObject {
    /**
     * Display a line for an object
     *
-    * @since 0.85 (befor in each object with differents parameters)
-    *
     * @param $id                 Integer  ID of the object
     * @param $options            array of options
     *      output_type            : Default output type (see Search class / default Search::HTML_OUTPUT)
@@ -2597,6 +2599,9 @@ class PluginReleasesRelease extends CommonITILObject {
     *      type_for_massiveaction : itemtype for massive action
     *      id_for_massaction      : default 0 means no massive action
     *      followups              : show followup columns
+    *
+    * @since 0.85 (befor in each object with differents parameters)
+    *
     */
    static function showShort($id, $options = []) {
       global $DB;
@@ -2623,7 +2628,7 @@ class PluginReleasesRelease extends CommonITILObject {
       // Should be called in a <table>-segment
       // Print links or not in case of user view
       // Make new job object and fill it from database, if success, print it
-      $item         = new static();
+      $item = new static();
 
       $candelete   = static::canDelete();
       $canupdate   = Session::haveRight(static::$rightname, UPDATE);
@@ -2641,9 +2646,9 @@ class PluginReleasesRelease extends CommonITILObject {
 
       if ($item->getFromDB($id)) {
          $item_num = 1;
-//         $bgcolor  = $_SESSION["glpipriority_".$item->fields["priority"]];
+         //         $bgcolor  = $_SESSION["glpipriority_".$item->fields["priority"]];
 
-         echo Search::showNewLine($p['output_type'], $p['row_num']%2, $item->isDeleted());
+         echo Search::showNewLine($p['output_type'], $p['row_num'] % 2, $item->isDeleted());
 
          $check_col = '';
          if (($candelete || $canupdate)
@@ -2668,48 +2673,48 @@ class PluginReleasesRelease extends CommonITILObject {
          // Second column
          if ($item->fields['status'] == static::CLOSED) {
             $second_col = sprintf(__('Closed on %s'),
-                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+                                  ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
                                   Html::convDateTime($item->fields['closedate']));
          } else if ($item->fields['status'] == static::SOLVED) {
             $second_col = sprintf(__('Solved on %s'),
-                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+                                  ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
                                   Html::convDateTime($item->fields['solvedate']));
          } else if ($item->fields['begin_waiting_date']) {
             $second_col = sprintf(__('Put on hold on %s'),
-                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+                                  ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
                                   Html::convDateTime($item->fields['begin_waiting_date']));
          } else {
             $second_col = sprintf(__('Opened on %s'),
-                                  ($p['output_type'] == Search::HTML_OUTPUT?'<br>':'').
+                                  ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
                                   Html::convDateTime($item->fields['date']));
          }
 
-         echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align." width=130");
+         echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align . " width=130");
 
          // Second BIS column
          $second_col = Html::convDateTime($item->fields["date_mod"]);
-         echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align." width=90");
+         echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align . " width=90");
 
          // Second TER column
          if (count($_SESSION["glpiactiveentities"]) > 1) {
             $second_col = Dropdown::getDropdownName('glpi_entities', $item->fields['entities_id']);
             echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'],
-                                  $align." width=100");
+                                  $align . " width=100");
          }
 
          // Third Column
-//         echo Search::showItem($p['output_type'],
-//                               "<span class='b'>".static::getPriorityName($item->fields["priority"]).
-//                               "</span>",
-//                               $item_num, $p['row_num'], "$align bgcolor='$bgcolor'");
+         //         echo Search::showItem($p['output_type'],
+         //                               "<span class='b'>".static::getPriorityName($item->fields["priority"]).
+         //                               "</span>",
+         //                               $item_num, $p['row_num'], "$align bgcolor='$bgcolor'");
 
          // Fourth Column
          $fourth_col = "";
 
          foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
-            $userdata    = getUserName($d["users_id"], 2);
+            $userdata   = getUserName($d["users_id"], 2);
             $fourth_col .= sprintf(__('%1$s %2$s'),
-                                   "<span class='b'>".$userdata['name']."</span>",
+                                   "<span class='b'>" . $userdata['name'] . "</span>",
                                    Html::showToolTip($userdata["comment"],
                                                      ['link'    => $userdata["link"],
                                                       'display' => false]));
@@ -2726,7 +2731,7 @@ class PluginReleasesRelease extends CommonITILObject {
          // Fifth column
          $fifth_col = "";
 
-         $entity = $item->getEntityID();
+         $entity             = $item->getEntityID();
          $anonymize_helpdesk = Entity::getUsedConfig('anonymize_support_agents', $entity)
                                && Session::getCurrentInterface() == 'helpdesk';
 
@@ -2734,9 +2739,9 @@ class PluginReleasesRelease extends CommonITILObject {
             if ($anonymize_helpdesk) {
                $fifth_col .= __("Helpdesk");
             } else {
-               $userdata   = getUserName($d["users_id"], 2);
+               $userdata  = getUserName($d["users_id"], 2);
                $fifth_col .= sprintf(__('%1$s %2$s'),
-                                     "<span class='b'>".$userdata['name']."</span>",
+                                     "<span class='b'>" . $userdata['name'] . "</span>",
                                      Html::showToolTip($userdata["comment"],
                                                        ['link'    => $userdata["link"],
                                                         'display' => false]));
@@ -2763,10 +2768,10 @@ class PluginReleasesRelease extends CommonITILObject {
 
          // Sixth Colum
          // Ticket : simple link to item
-         $sixth_col  = "";
-         $is_deleted = false;
+         $sixth_col   = "";
+         $is_deleted  = false;
          $item_ticket = new Item_Ticket();
-         $data = $item_ticket->find(['tickets_id' => $item->fields['id']]);
+         $data        = $item_ticket->find(['tickets_id' => $item->fields['id']]);
 
          if ($item->getType() == 'Ticket') {
             if (!empty($data)) {
@@ -2796,26 +2801,26 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
          // Seventh column
-//         echo Search::showItem($p['output_type'],
-//                               "<span class='b'>".
-//                               Dropdown::getDropdownName('glpi_itilcategories',
-//                                                         $item->fields["itilcategories_id"]).
-//                               "</span>",
-//                               $item_num, $p['row_num'], $align);
+         //         echo Search::showItem($p['output_type'],
+         //                               "<span class='b'>".
+         //                               Dropdown::getDropdownName('glpi_itilcategories',
+         //                                                         $item->fields["itilcategories_id"]).
+         //                               "</span>",
+         //                               $item_num, $p['row_num'], $align);
 
          // Eigth column
-         $eigth_column = "<span class='b'>".$item->getName()."</span>&nbsp;";
+         $eigth_column = "<span class='b'>" . $item->getName() . "</span>&nbsp;";
 
          // Add link
          if ($item->canViewItem()) {
-            $eigth_column = "<a id='".$item->getType().$item->fields["id"]."$rand' href=\"".$item->getLinkURL()
-                            ."\">$eigth_column</a>";
+            $eigth_column = "<a id='" . $item->getType() . $item->fields["id"] . "$rand' href=\"" . $item->getLinkURL()
+                            . "\">$eigth_column</a>";
 
             if ($p['followups']
                 && ($p['output_type'] == Search::HTML_OUTPUT)) {
                $eigth_column .= ITILFollowup::showShortForITILObject($item->fields["id"], static::class);
             } else {
-               $eigth_column  = sprintf(
+               $eigth_column = sprintf(
                   __('%1$s (%2$s)'),
                   $eigth_column,
                   sprintf(
@@ -2831,20 +2836,20 @@ class PluginReleasesRelease extends CommonITILObject {
             $eigth_column = sprintf(__('%1$s %2$s'), $eigth_column,
                                     Html::showToolTip(Html::clean(Html::entity_decode_deep($item->fields["content"])),
                                                       ['display' => false,
-                                                       'applyto' => $item->getType().$item->fields["id"].
+                                                       'applyto' => $item->getType() . $item->fields["id"] .
                                                                     $rand]));
          }
 
          echo Search::showItem($p['output_type'], $eigth_column, $item_num, $p['row_num'],
-                               $align_desc." width='200'");
+                               $align_desc . " width='200'");
 
          //tenth column
          $tenth_column  = '';
          $planned_infos = '';
 
-         $tasktype      = "PluginReleasesDeploytask";
-         $plan          = new $tasktype();
-         $items         = [];
+         $tasktype = "PluginReleasesDeploytask";
+         $plan     = new $tasktype();
+         $items    = [];
 
          $result = $DB->request(
             [
@@ -2858,15 +2863,15 @@ class PluginReleasesRelease extends CommonITILObject {
 
             if (isset($plan['begin']) && $plan['begin']) {
                $items[$plan['id']] = $plan['id'];
-               $planned_infos .= sprintf(__('From %s').
-                                         ($p['output_type'] == Search::HTML_OUTPUT?'<br>':''),
-                                         Html::convDateTime($plan['begin']));
-               $planned_infos .= sprintf(__('To %s').
-                                         ($p['output_type'] == Search::HTML_OUTPUT?'<br>':''),
-                                         Html::convDateTime($plan['end']));
+               $planned_infos      .= sprintf(__('From %s') .
+                                              ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                                              Html::convDateTime($plan['begin']));
+               $planned_infos      .= sprintf(__('To %s') .
+                                              ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                                              Html::convDateTime($plan['end']));
                if ($plan['users_id_tech']) {
-                  $planned_infos .= sprintf(__('By %s').
-                                            ($p['output_type'] == Search::HTML_OUTPUT?'<br>':''),
+                  $planned_infos .= sprintf(__('By %s') .
+                                            ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
                                             getUserName($plan['users_id_tech']));
                }
                $planned_infos .= "<br>";
@@ -2877,23 +2882,23 @@ class PluginReleasesRelease extends CommonITILObject {
          $tenth_column = count($items);
          if ($tenth_column) {
             $tenth_column = "<span class='pointer'
-                              id='".$item->getType().$item->fields["id"]."planning$rand'>".
-                            $tenth_column.'</span>';
+                              id='" . $item->getType() . $item->fields["id"] . "planning$rand'>" .
+                            $tenth_column . '</span>';
             $tenth_column = sprintf(__('%1$s %2$s'), $tenth_column,
                                     Html::showToolTip($planned_infos,
                                                       ['display' => false,
-                                                       'applyto' => $item->getType().
-                                                                    $item->fields["id"].
-                                                                    "planning".$rand]));
+                                                       'applyto' => $item->getType() .
+                                                                    $item->fields["id"] .
+                                                                    "planning" . $rand]));
          }
          echo Search::showItem($p['output_type'], $tenth_column, $item_num, $p['row_num'],
-                               $align_desc." width='150'");
+                               $align_desc . " width='150'");
 
          // Finish Line
          echo Search::showEndLine($p['output_type']);
       } else {
          echo "<tr class='tab_bg_2'>";
-         echo "<td colspan='6' ><i>".__('No item in progress.')."</i></td></tr>";
+         echo "<td colspan='6' ><i>" . __('No item in progress.') . "</i></td></tr>";
       }
    }
 
@@ -2913,11 +2918,11 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Set number of tasks
       $row = $DB->request([
-                             'COUNT'  => 'cpt',
-                             'FROM'   => $table,
-                             'WHERE'  => [
-                                            $this->getForeignKeyField()   => $this->fields['id']
-                                         ] + $RESTRICT
+                             'COUNT' => 'cpt',
+                             'FROM'  => $table,
+                             'WHERE' => [
+                                           $this->getForeignKeyField() => $this->fields['id']
+                                        ] + $RESTRICT
                           ])->next();
       return (int)$row['cpt'];
    }

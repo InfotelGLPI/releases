@@ -1607,6 +1607,7 @@ section#timeline article div.inner span.bulle {
 section#timeline article div.inner span.bulle span {
     display: block;
     text-align: center;
+    margin-top: 8px;
 }
 
 section#timeline article div.inner span.bulle span.percent {

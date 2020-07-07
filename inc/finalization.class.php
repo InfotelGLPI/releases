@@ -37,37 +37,37 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginReleasesFinalization extends CommonDBTM {
 
-   public $dohistory = true;
-   static $rightname = 'plugin_releases_releases';
-   protected $usenotepad = true;
-   static $types = [];
-   public $userlinkclass = 'PluginReleasesRelease_User';
-   public $grouplinkclass = 'PluginReleasesGroup_Release';
-   public $supplierlinkclass = 'PluginReleasesRelease_Supplier';
+   public    $dohistory         = true;
+   static    $rightname         = 'plugin_releases_releases';
+   protected $usenotepad        = true;
+   static    $types             = [];
+   public    $userlinkclass     = 'PluginReleasesRelease_User';
+   public    $grouplinkclass    = 'PluginReleasesGroup_Release';
+   public    $supplierlinkclass = 'PluginReleasesRelease_Supplier';
 
    // STATUS
-   const TODO = 1; // todo
-   const DONE = 2; // done
-   const PROCESSING = 3; // processing
-   const WAITING = 4; // waiting
-   const LATE = 5; // late
-   const DEF = 6; // default
+   //   const TODO = 1; // todo
+   //   const DONE = 2; // done
+   //   const PROCESSING = 3; // processing
+   //   const WAITING = 4; // waiting
+   //   const LATE = 5; // late
+   //   const DEF = 6; // default
+   //
+   //   const NEWRELEASE = 7;
+   //   const RELEASEDEFINITION = 8; // default
+   //   const DATEDEFINITION = 9; // date definition
+   //   const CHANGEDEFINITION = 10; // changes defenition
+   //   const RISKDEFINITION = 11; // risks definition
+   //   const ROLLBACKDEFINITION = 12; // rollbacks definition
+   //   const TASKDEFINITION = 13; // tasks definition
+   //   const TESTDEFINITION = 14; // tests definition
+   //   const FINALIZE = 15; // finalized
+   //   const REVIEW = 16; // reviewed
+   //   const CLOSED = 17; // closed
 
-   const NEWRELEASE = 7;
-   const RELEASEDEFINITION = 8; // default
-   const DATEDEFINITION = 9; // date definition
-   const CHANGEDEFINITION = 10; // changes defenition
-   const RISKDEFINITION = 11; // risks definition
-   const ROLLBACKDEFINITION = 12; // rollbacks definition
-   const TASKDEFINITION = 13; // tasks definition
-   const TESTDEFINITION = 14; // tests definition
-   const FINALIZE = 15; // finalized
-   const REVIEW = 16; // reviewed
-   const CLOSED = 17; // closed
 
-
-//   static $typeslinkable = ["Computer"  => "Computer",
-//                            "Appliance" => "Appliance"];
+   //   static $typeslinkable = ["Computer"  => "Computer",
+   //                            "Appliance" => "Appliance"];
 
 
    /**
@@ -90,6 +90,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       }
       return true;
    }
+
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if (static::canView()) {
@@ -101,7 +102,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       return '';
    }
 
-   function showForm($ID,$options = []) {
+   function showForm($ID, $options = []) {
       global $CFG_GLPI;
       $release = new PluginReleasesRelease();
       $release->getFromDB($ID);
@@ -109,43 +110,46 @@ class PluginReleasesFinalization extends CommonDBTM {
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-//      echo _n('Risk', 'Risks', 2, 'releases');
-//      echo "</td>";
-//      echo "<td>";
-//      echo PluginReleasesRelease::getStateItem($release->getField("risk_state"));
-//      echo "</td>";
-//      echo "<td>";
-//
-//
-//      echo "<td>";
-//      echo _n('Rollback', 'Rollbacks', 2, 'releases');
-//      echo "</td>";
-//      echo "<td>";
-//      echo PluginReleasesRelease::getStateItem($release->getField("rollback_state"));
-//      echo "</td>";
-//
-//      echo "<td>";
-//      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
-//      echo "</td>";
-//      echo "<td class='left'>";
-      $dtF = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, 1);
-      $dtT = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
-      $dtFail = PluginReleasesDeploytask::countFailForItem($release);
+      //      echo _n('Risk', 'Risks', 2, 'releases');
+      //      echo "</td>";
+      //      echo "<td>";
+      //      echo PluginReleasesRelease::getStateItem($release->getField("risk_state"));
+      //      echo "</td>";
+      //      echo "<td>";
+      //
+      //
+      //      echo "<td>";
+      //      echo _n('Rollback', 'Rollbacks', 2, 'releases');
+      //      echo "</td>";
+      //      echo "<td>";
+      //      echo PluginReleasesRelease::getStateItem($release->getField("rollback_state"));
+      //      echo "</td>";
+      //
+      //      echo "<td>";
+      //      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
+      //      echo "</td>";
+      //      echo "<td class='left'>";
+      $dtF        = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, 1);
+      $dtT        = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
+      $dtFail     = PluginReleasesDeploytask::countFailForItem($release);
       $taskfailed = "";
-      if($dtFail != 0){
+      $task_state = 0;
+      if ($dtFail != 0) {
          $taskfailed = "bulleFailed";
+         $task_state = 2;
       }
       if ($dtT != 0) {
          $pourcentageTask = $dtF / $dtT * 100;
       } else {
          $pourcentageTask = 100;
+         $task_state = 1;
       }
-//
-      $tF = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, 1);
-      $tT = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
-      $tFail = PluginReleasesTest::countFailForItem($release);
+      //
+      $tF         = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, 1);
+      $tT         = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
+      $tFail      = PluginReleasesTest::countFailForItem($release);
       $testfailed = "";
-      if($tFail != 0){
+      if ($tFail != 0) {
          $testfailed = "bulleFailed";
       }
       if ($tT != 0) {
@@ -153,23 +157,23 @@ class PluginReleasesFinalization extends CommonDBTM {
       } else {
          $pourcentageTest = 100;
       }
-//      echo "<div class=\"progress-circle\" data-value=\"" . round($pourcentage) . "\">
-//                <div class=\"progress-masque\">
-//                    <div class=\"progress-barre\"></div>
-//                    <div class=\"progress-sup50\"></div>
-//                </div>
-//               </div>";
-//
-//      //      echo $dtF;
-//      //      echo "/";
-//      //      echo $dtT;
-//      echo "</td>";
-//
-//      echo "<td>";
-//      echo _n('Test', 'Tests', 2, 'releases');
-//      echo "</td>";
-//      echo "<td>";
-//      echo PluginReleasesRelease::getStateItem($release->getField("test_state"));
+      //      echo "<div class=\"progress-circle\" data-value=\"" . round($pourcentage) . "\">
+      //                <div class=\"progress-masque\">
+      //                    <div class=\"progress-barre\"></div>
+      //                    <div class=\"progress-sup50\"></div>
+      //                </div>
+      //               </div>";
+      //
+      //      //      echo $dtF;
+      //      //      echo "/";
+      //      //      echo $dtT;
+      //      echo "</td>";
+      //
+      //      echo "<td>";
+      //      echo _n('Test', 'Tests', 2, 'releases');
+      //      echo "</td>";
+      //      echo "<td>";
+      //      echo PluginReleasesRelease::getStateItem($release->getField("test_state"));
       $riF = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class, 1);
       $riT = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class);
       $roF = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class, 1);
@@ -178,46 +182,43 @@ class PluginReleasesFinalization extends CommonDBTM {
   <article>
     <div class=\"inner\" >
       <span class=\"bulle riskBulle\">
-        ".PluginReleasesRelease::getStateItem($release->getField('risk_state'))."
+        " . PluginReleasesRelease::getStateItem($release->getField('risk_state')) . "
       </span>
-      <h2 class='risk'>"._n('Risk', 'Risk', 2,'releases')."</h2>
-      <p>".sprintf(__('%s / %s risks'),$riF,$riT )."</p>
+      <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "</h2>
+      <p>" . sprintf(__('%s / %s risks'), $riF, $riT) . "</p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
       <span class=\"bulle rollbackBulle\">
-        ".PluginReleasesRelease::getStateItem($release->getField("rollback_state"))."
+        " . PluginReleasesRelease::getStateItem($release->getField("rollback_state")) . "
       </span>
-      <h2 class='rollback'>"._n('Rollback','Rollbacks',2, 'release')."</h2>
-      <p>".sprintf(__('%s / %s rollbacks'),$roF,$roT )."</p>
+      <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'release') . "</h2>
+      <p>" . sprintf(__('%s / %s rollbacks'), $roF, $roT) . "</p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
       <span class=\"bulle taskBulle $taskfailed\">
-      <br>
-      <span class='percent '>
-        ".$pourcentageTask." %
+      " . PluginReleasesRelease::getStateItem($task_state) . "
       </span>
-      </span>
-      <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</h2>
-      <p>".sprintf(__('%s / %s deploy tasks'),$dtF,$dtT )."</br>
-      ".sprintf(__('%s  deploy tasks failed'),$dtFail )."</p>
+      <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<span class='percent'>
+        (" . $pourcentageTask . " %)
+      </span></h2>
+      <p>" . sprintf(__('%s / %s deploy tasks'), $dtF, $dtT) . "</br>
+      " . sprintf(__('%s  deploy tasks failed'), $dtFail) . "</p>
     </div>
   </article>
   <article>
     <div class=\"inner\">
-    
-      <span class=\"bulle testBulle $testfailed\">
-        <br>
-        <span class='percent'>
-            ".$pourcentageTest." %
-        </span>
+    <span class=\"bulle taskBulle $testfailed\">
+      " . PluginReleasesRelease::getStateItem($release->getField("test_state")) . "
       </span>
-      <h2 class='test'>"._n('Test','Tests', 2,'release')."</h2>
-      <p>".sprintf(__('%s / %s tests'),$tF,$tT )."</br>
-      ".sprintf(__('%s  tests failed'),$tFail )."</p>
+      <h2 class='test'>" . _n('Test', 'Tests', 2, 'release') . "<span class='percent'>
+            (" . $pourcentageTest . " %)
+        </span></h2>
+      <p>" . sprintf(__('%s / %s tests'), $tF, $tT) . "</br>
+      " . sprintf(__('%s  tests failed'), $tFail) . "</p>
     </div>
   </article>
 </section>";
@@ -228,10 +229,10 @@ class PluginReleasesFinalization extends CommonDBTM {
 
       echo "</table>";
       $allfinish = $release->getField("risk_state")
-         && ($dtT == $dtF)
-         && $release->getField("test_state")
-         && $release->getField("rollback_state");
-      $text = "";
+                   && ($dtT == $dtF)
+                   && $release->getField("test_state")
+                   && $release->getField("rollback_state");
+      $text      = "";
       if (!$allfinish) {
 
          $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !") . '</span>';
@@ -247,8 +248,8 @@ class PluginReleasesFinalization extends CommonDBTM {
    
             });");
          echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-         $srcImg = "fas fa-info-circle";
-         $color = "forestgreen";
+         $srcImg     = "fas fa-info-circle";
+         $color      = "forestgreen";
          $alertTitle = _n("Information", "Informations", 1);
 
          echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . "finalize" . " \";");

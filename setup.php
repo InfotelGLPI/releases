@@ -52,7 +52,7 @@ function plugin_init_releases() {
    Plugin::registerClass('PluginReleasesRelease',
                          ['addtabon' => ['Change']]);
    Plugin::registerClass('PluginReleasesRelease_Item',
-                         ['addtabon' => ['Change', 'User', 'Group', 'Supplier']]);
+                         ['addtabon' => ['User', 'Group', 'Supplier']]);
    Plugin::registerClass(PluginReleasesDeploytask::class, [
       'planning_types' => true
    ]);
