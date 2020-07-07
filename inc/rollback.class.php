@@ -47,7 +47,7 @@ class PluginReleasesRollback extends CommonDBTM {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Rollback', 'Rollbacks', $nb, 'release');
+      return _n('Rollback', 'Rollbacks', $nb, 'releases');
    }
 
    /**
@@ -106,20 +106,6 @@ class PluginReleasesRollback extends CommonDBTM {
    function post_addItem() {
       parent::post_addItem();
 
-      $release = new PluginReleasesRelease();
-      $inputRelease = [];
-      $inputRelease["id"] =  $this->fields["plugin_releases_releases_id"];
-      if(self::countForItem($release) == self::countDoneForItem($release)){
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["rollback_state"] = 1;
-         $release->update($inputRelease);
-      }else{
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["rollback_state"] = 0;
-         $release->update($inputRelease);
-      }
 
    }
 
@@ -142,19 +128,7 @@ class PluginReleasesRollback extends CommonDBTM {
 
 
    function post_updateItem($history = 1) {
-      $release = new PluginReleasesRelease();
-      $release->getFromDB($this->getField("plugin_releases_releases_id"));
-      if(self::countForItem($release) == self::countDoneForItem($release)){
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["rollback_state"] = 1;
-         $release->update($inputRelease);
-      }else{
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["rollback_state"] = 0;
-         $release->update($inputRelease);
-      }
+
 //      parent::post_updateItem($history);
    }
    /**

@@ -63,4 +63,38 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"]) ) {
    }
 
    echo "ok";
+}else if  (isset($_REQUEST["id"]) && isset($_REQUEST["failedtasks"]) && isset($_REQUEST["failedtests"]) ){
+   $review = new PluginReleasesReview();
+
+   if($review->getFromDBByCrit(["plugin_releases_releases_id"=> $_REQUEST["id"]])){
+      $val=[];
+      $val['id'] = $review->getID();
+      $val['real_date_release'] = $_REQUEST["date"];
+      $val['conforming_realization'] = 0;
+      $val['incident'] = 1;
+      $val['incident_description'] = "";
+      if($_REQUEST["failedtasks"] > 0){
+         $val['incident_description'] .= sprintf(__("%s deploy tasks failed","releases"),$_REQUEST["failedtasks"])."<br />";
+      }
+      if($_REQUEST["failedtests"] > 0){
+         $val['incident_description'] .= sprintf(__("%s tests failed","releases"),$_REQUEST["failedtests"])."<br />";
+      }
+
+
+      $review->update($val);
+   }else{
+      $val=[];
+      $val['plugin_releases_releases_id'] = $_REQUEST["id"];
+      $val['real_date_release'] = $_REQUEST["date"];
+      $val['conforming_realization'] = 0;
+      $val['incident'] = 1;
+      $val['incident_description'] = "";
+      if($_REQUEST["failedtasks"] > 0){
+         $val['incident_description'] .= sprintf(__("%s deploy tasks failed","releases"),$_REQUEST["failedtasks"]."<br />");
+      }
+      if($_REQUEST["failedtests"] > 0){
+         $val['incident_description'] .= sprintf(__("%s tests failed","releases"),$_REQUEST["failedtests"]."<br />");
+      }
+      $review->add($val);
+   }
 }

@@ -99,19 +99,7 @@ class PluginReleasesRisk extends CommonDBTM {
       parent::post_addItem();
 
       $release = new PluginReleasesRelease();
-      $inputRelease = [];
-      $inputRelease["id"] =  $this->fields["plugin_releases_releases_id"];
-      if(self::countForItem($release) == self::countDoneForItem($release)){
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["risk_state"] = 1;
-         $release->update($inputRelease);
-      }else{
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["risk_state"] = 0;
-         $release->update($inputRelease);
-      }
+
       if(isset($this->input["create_test"]) && $this->input["create_test"]== 1){
          $test = new PluginReleasesTest();
          $inputTest = [];
@@ -138,19 +126,7 @@ class PluginReleasesRisk extends CommonDBTM {
    }
 
    function post_updateItem($history = 1) {
-      $release = new PluginReleasesRelease();
-      $release->getFromDB($this->getField("plugin_releases_releases_id"));
-      if(self::countForItem($release) == self::countDoneForItem($release)){
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["risk_state"] = 1;
-         $release->update($inputRelease);
-      }else{
-         $inputRelease = [];
-         $inputRelease["id"] = $release->getID();
-         $inputRelease["risk_state"] = 0;
-         $release->update($inputRelease);
-      }
+
       parent::post_updateItem($history);
    }
 

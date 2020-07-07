@@ -46,12 +46,7 @@ class PluginReleasesRelease extends CommonITILObject {
    public    $supplierlinkclass = 'PluginReleasesRelease_Supplier';
 
    // STATUS
-   //   const TODO       = 1; // todo
-   //   const DONE       = 2; // done
-   //   const PROCESSING = 3; // processing
-   //   const WAITING    = 4; // waiting
-   //   const LATE       = 5; // late
-   //   const DEF        = 6; // default
+
 
    const NEWRELEASE         = 7;
    const RELEASEDEFINITION  = 8; // default
@@ -66,9 +61,6 @@ class PluginReleasesRelease extends CommonITILObject {
    const CLOSED             = 17; // closed
    const FAIL               = 18;
 
-
-   //   static $typeslinkable = ["Computer"  => "Computer",
-   //                            "Appliance" => "Appliance"];
 
 
    /**
@@ -936,41 +928,13 @@ class PluginReleasesRelease extends CommonITILObject {
       return $input;
    }
 
-   /**
-    * Type than could be linked to a Rack
-    *
-    * @param $all boolean, all type, or only allowed ones
-    *
-    * @return array of types
-    * */
-   static function getTypes($all = false) {
-
-      if ($all) {
-         return self::$types;
-      }
-
-      // Only allowed types
-      $types = self::$types;
-
-      foreach ($types as $key => $type) {
-         if (!class_exists($type)) {
-            continue;
-         }
-
-         $item = new $type();
-         if (!$item->canView()) {
-            unset($types[$key]);
-         }
-      }
-      return $types;
-   }
 
    function prepareField($template_id) {
       $template = new PluginReleasesReleasetemplate();
       $template->getFromDB($template_id);
 
       foreach ($this->fields as $key => $field) {
-         if ($key != "id") {
+         if ($key != "id" && $key != "entities_id") {
             $this->fields[$key] = $template->getField($key);
          }
       }
@@ -999,7 +963,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if (!isset($options['template_preview'])) {
          $options['template_preview'] = 0;
       }
-
+//      $this->fields["entities_id"] = Session::getActiveEntity();
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
       $default_values = self::getDefaultValues();
@@ -1774,7 +1738,7 @@ class PluginReleasesRelease extends CommonITILObject {
                   if (!$item_i['can_edit']) {
                      $onClick = "style='cursor: not-allowed;'";
                   }
-                  if ($item_i['state'] == PluginReleasesDeploytask::TODO) {
+                  if ($item_i['state'] == PluginReleasesDeploytask::TODO || $item_i['state'] == PluginReleasesTest::TODO) {
                      echo "<span>";
                      $style = "color:gray;";
                      $fa    = "fa-times-circle fa-2x";
@@ -1784,7 +1748,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
                      echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
-                  } else if ($item_i['state'] == PluginReleasesDeploytask::DONE) {
+                  } else if ($item_i['state'] == PluginReleasesDeploytask::DONE || $item_i['state'] == PluginReleasesTest::DONE) {
                      echo "<span>";
                      $style = "color:gray;";
                      $fa    = "fa-times-circle fa-2x";
@@ -2020,45 +1984,8 @@ class PluginReleasesRelease extends CommonITILObject {
       return $timeline;
    }
 
-   /**
-    * Dropdown of releases items state
-    *
-    * @param $name   select name
-    * @param $value  default value (default '')
-    * @param $display  display of send string ? (true by default)
-    * @param $options  options
-    **/
-   static function dropdownStateItem($name, $value = '', $display = true, $options = []) {
 
-      $values = [static::TODO => __('To do'),
-                 static::DONE => __('Done'),
-                 static::FAIL => __('Failed', 'releases')];
 
-      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
-                                                                  'display' => $display], $options));
-   }
-
-   /**
-    * Dropdown of releases state
-    *
-    * @param $name   select name
-    * @param $value  default value (default '')
-    * @param $display  display of send string ? (true by default)
-    * @param $options  options
-    **/
-   //   static function dropdownState($name, $value = '', $display = true, $options = []) {
-   //
-   //      $values = [static::TODO       => __('To do'),
-   //                 static::DONE       => __('Done'),
-   //                 static::PROCESSING => __('Processing'),
-   //                 static::WAITING    => __("Waiting"),
-   //                 static::LATE       => __("Late"),
-   //                 static::DEF        => __("Default"),
-   //      ];
-   //
-   //      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
-   //                                                                  'display' => $display], $options));
-   //   }
 
 
    static function showCreateRelease($item) {
@@ -2223,9 +2150,6 @@ class PluginReleasesRelease extends CommonITILObject {
               'communication_type'         => false,
               'target'                     => [],
               'locations_id'               => 0,
-              'risk_state'                 => 0,
-              'test_state'                 => 0,
-              'rollback_state'             => 0,
       ];
    }
 
@@ -2258,7 +2182,7 @@ class PluginReleasesRelease extends CommonITILObject {
    static function getClosedStatusArray() {
 
 
-      $tab = [self::CLOSED, self::REVIEW];
+      $tab = [self::CLOSED];
       return $tab;
    }
 
@@ -2270,7 +2194,7 @@ class PluginReleasesRelease extends CommonITILObject {
     *
     */
    static function getReopenableStatusArray() {
-      return [self::CLOSED, self::WAITING];
+      return [self::CLOSED];
    }
 
 

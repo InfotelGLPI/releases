@@ -44,7 +44,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Test type', 'Test types', $nb, 'release');
+      return _n('Test type', 'Test types', $nb, 'releases');
    }
 
    static $rightname = 'plugin_releases_tests';

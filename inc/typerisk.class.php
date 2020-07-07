@@ -44,7 +44,7 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Risk type', 'Risk types', $nb, 'release');
+      return _n('Risk type', 'Risk types', $nb, 'releases');
    }
 
    static $rightname = 'plugin_releases_risks';

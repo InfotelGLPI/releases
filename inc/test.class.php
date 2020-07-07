@@ -124,30 +124,6 @@ class PluginReleasesTest extends CommonDBTM {
    function post_addItem() {
       parent::post_addItem();
 
-      //      $input                                = [];
-      //      $input["name"]                        = $this->fields["name"];
-      //      $input["plugin_releases_risks_id"]    = $this->fields["plugin_releases_risks_id"];
-      //      $input["content"]                     = $this->fields["content"];
-      //      $input["plugin_releases_releases_id"] = $this->fields["plugin_releases_releases_id"];
-      //      $input["users_id_tech"]               = $_SESSION['glpiID'];
-      //      $task                                 = new PluginReleasesDeploytask();
-      //      $task->add($input);
-
-      $release            = new PluginReleasesRelease();
-      $inputRelease       = [];
-      $inputRelease["id"] = $this->fields["plugin_releases_releases_id"];
-      if (self::countForItem($release) == self::countDoneForItem($release)) {
-         $inputRelease               = [];
-         $inputRelease["id"]         = $release->getID();
-         $inputRelease["test_state"] = 1;
-         $release->update($inputRelease);
-      } else {
-         $inputRelease               = [];
-         $inputRelease["id"]         = $release->getID();
-         $inputRelease["test_state"] = 0;
-         $release->update($inputRelease);
-      }
-
 
    }
 
@@ -171,19 +147,6 @@ class PluginReleasesTest extends CommonDBTM {
 
 
    function post_updateItem($history = 1) {
-      $release = new PluginReleasesRelease();
-      $release->getFromDB($this->getField("plugin_releases_releases_id"));
-      if (self::countForItem($release) == self::countDoneForItem($release)) {
-         $inputRelease               = [];
-         $inputRelease["id"]         = $release->getID();
-         $inputRelease["test_state"] = 1;
-         $release->update($inputRelease);
-      } else {
-         $inputRelease               = [];
-         $inputRelease["id"]         = $release->getID();
-         $inputRelease["test_state"] = 0;
-         $release->update($inputRelease);
-      }
       parent::post_updateItem($history);
    }
 
@@ -293,7 +256,7 @@ class PluginReleasesTest extends CommonDBTM {
          echo "<div class='fa-label'>
             <i class='fas fa-tasks fa-fw'
                title='" . __('Status') . "'></i>";
-         PluginReleasesDeploytask::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
+         PluginReleasesTest::dropdownStateTest("state", $this->fields["state"], true, ['rand' => $rand_state]);
          echo "</div>";
       }
       echo "</td>";
@@ -319,6 +282,24 @@ class PluginReleasesTest extends CommonDBTM {
       $this->showFormButtons($options);
 
       return true;
+   }
+
+   /**
+    * Dropdown of test & tests state
+    *
+    * @param $name   select name
+    * @param $value  default value (default '')
+    * @param $display  display of send string ? (true by default)
+    * @param $options  options
+    **/
+   static function dropdownStateTest($name, $value = '', $display = true, $options = []) {
+
+      $values = [static::TODO => __('To do'),
+         static::DONE => __('Done'),
+         static::FAIL => __('Failed', 'releases')];
+
+      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
+         'display' => $display], $options));
    }
 }
 
