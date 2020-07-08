@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Tasklists plugin 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-08 16:41+0200\n"
-"PO-Revision-Date: 2020-07-08 16:44+0200\n"
+"PO-Revision-Date: 2020-07-08 19:50+0200\n"
 "Last-Translator: Amandine Manceau, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/tsmr/teams/79675/"
 "fr_FR/)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3\n"
 
 #: setup.php:81 front/change_release.form.php:48 inc/profile.class.php:52
 #: inc/release.class.php:73 inc/releasetemplate.class.php:925
@@ -199,7 +199,7 @@ msgstr "Tâche de déploiement en cours"
 
 #: inc/release.class.php:505
 msgid "Tests in progress"
-msgstr "Test en cours"
+msgstr "Tests en cours"
 
 #: inc/release.class.php:506
 msgid "To Finalized"
@@ -216,7 +216,7 @@ msgstr "Terminé"
 
 #: inc/release.class.php:1076
 msgid "Associated change"
-msgstr "Risque associé"
+msgstr "Changement associé"
 
 #: inc/release.class.php:1097 inc/releasetemplate.class.php:608
 msgid "Pre-production planned run date"

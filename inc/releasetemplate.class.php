@@ -2116,7 +2116,6 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     * @return string
     **/
    static function getActorIcon($user_group, $type) {
-      global $CFG_GLPI;
 
       switch ($user_group) {
          case 'user' :
@@ -2157,8 +2156,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          case 'supplier' :
             $icontitle = __('Supplier');
-            return  "<img src='".$CFG_GLPI['root_doc']."/pics/supplier.png'
-                      alt=\"$icontitle\" title=\"$icontitle\">";
+            return  "<i class='fas fa-dolly' title='$icontitle'></i>" .
+                    "<span class='sr-only'>$icontitle</span>";
 
       }
       return '';

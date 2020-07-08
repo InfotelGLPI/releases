@@ -135,7 +135,7 @@ class PluginReleasesFinalization extends CommonDBTM {
         " . PluginReleasesRelease::getStateItem($risk_state) . "
       </span>
       <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s risks'), $riskDone, $riskTotal) . "</p>
+      <p>" . sprintf(__('%s / %s risks', 'releases'), $riskDone, $riskTotal) . "</p>
     </div>
   </article>
   <article>
@@ -144,7 +144,7 @@ class PluginReleasesFinalization extends CommonDBTM {
         " . PluginReleasesRelease::getStateItem($rollback_state) . "
       </span>
       <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s rollbacks'), $rollbackDone, $rollbackTotal) . "</p>
+      <p>" . sprintf(__('%s / %s rollbacks', 'releases'), $rollbackDone, $rollbackTotal) . "</p>
     </div>
   </article>
   <article>
@@ -154,7 +154,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       </span>
       <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s deploy tasks'), $deployTaskDone, $deployTaskTotal) . "</br>
-      " . sprintf(__('%s  deploy tasks failed'), $deployTaskFail) . "<span class='percent' style=\"float: right;\">
+      " . sprintf(__('%s  deploy tasks failed', 'releases'), $deployTaskFail) . "<span class='percent' style=\"float: right;\">
             " . $pourcentageTask . " %
         </span></p>
     </div>
@@ -166,7 +166,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       </span>
       <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
-      " . sprintf(__('%s  tests failed'), $testFail) . "<span class='percent' style=\"float: right;\">
+      " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<span class='percent' style=\"float: right;\">
             " . $pourcentageTest . " %
         </span></p>
     </div>
@@ -179,14 +179,15 @@ class PluginReleasesFinalization extends CommonDBTM {
 
       echo "</table>";
       if ($deployTaskFail == 0 && $testFail == 0) {
-         $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRollback::countDoneForItem($release))
+         $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
             && ($deployTaskTotal == $deployTaskDone)
             && ($testTotal == $testDone)
             && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
+
          $text = "";
          if (!$allfinish) {
 
-            $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !") . '</span>';
+            $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !", "releases") . '</span>';
             $text .= "<br>";
             $text .= "<br>";
          }
@@ -198,12 +199,12 @@ class PluginReleasesFinalization extends CommonDBTM {
                $( '#alert-message' ).dialog( 'open' );
       
                });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
             $srcImg = "fas fa-info-circle";
             $color = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
 
-            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("finalize",'releases') . " \";");
+            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize",'releases') . " \";");
             echo Html::scriptBlock("$( '#alert-message' ).dialog({
               autoOpen: false,
               height: " . 200 . ",
@@ -251,7 +252,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                $( '#alert-message' ).dialog( 'open' );
       
                });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
             $srcImg = "fas fa-times";
             $color = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);

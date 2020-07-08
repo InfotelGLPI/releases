@@ -503,7 +503,7 @@ class PluginReleasesRelease extends CommonITILObject {
          self::ROLLBACKDEFINITION => __('Rollbacks defined', 'releases'),
          self::TASKDEFINITION     => __('Deployment tasks in progress', 'releases'),
          self::TESTDEFINITION     => __('Tests in progress', 'releases'),
-         self::FINALIZE           => __('To Finalized', 'releases'),
+         self::FINALIZE           => __('To finalized', 'releases'),
          self::REVIEW             => __('Reviewed', 'releases'),
          self::CLOSED             => _x('status', 'End', 'releases'),
          self::FAIL               => __('Failed', 'releases')];
