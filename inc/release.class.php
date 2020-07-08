@@ -984,6 +984,21 @@ class PluginReleasesRelease extends CommonITILObject {
       }
       if (isset($options["template_id"]) && $options["template_id"] > 0) {
          $this->prepareField($options["template_id"]);
+         $release_user = new PluginReleasesReleasetemplate_User();
+         $release_supplier = new PluginReleasesReleasetemplate_Supplier();
+         $group_release = new PluginReleasesGroup_Releasetemplate();
+         $users = $release_user->find(['plugin_releases_releasetemplates_id'=>$options["template_id"]]);
+         $suppliers = $release_supplier->find(['plugin_releases_releasetemplates_id'=>$options["template_id"]]);
+         $groups = $group_release->find(['plugin_releases_releasetemplates_id'=>$options["template_id"]]);
+         foreach ($users as $user){
+            $options["_users_id_".self::getActorFieldNameType($user["type"])] = $user["users_id"];
+         }
+         foreach ($suppliers as $supplier){
+            $options["_suppliers_id_".self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
+         }
+         foreach ($groups as $group){
+            $options["_groups_id_".self::getActorFieldNameType($group["type"])] = $group["groups_id"];
+         }
          echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
       }
 

@@ -368,3 +368,41 @@ CREATE TABLE `glpi_plugin_releases_releases_suppliers` (
   UNIQUE KEY `unicity` (`plugin_releases_releases_id`,`type`,`suppliers_id`),
   KEY `group` (`suppliers_id`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+DROP TABLE IF EXISTS `glpi_plugin_releases_groups_releasetemplates`;
+CREATE TABLE `glpi_plugin_releases_groups_releasetemplates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releasetemplates_id` int(11) NOT NULL DEFAULT '0',
+  `groups_id` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releasetemplates_id`,`type`,`groups_id`),
+  KEY `group` (`groups_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_releases_releasetemplates_users`;
+CREATE TABLE `glpi_plugin_releases_releasetemplates_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releasetemplates_id` int(11) NOT NULL DEFAULT '0',
+  `users_id` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '1',
+  `use_notification` tinyint(1) NOT NULL DEFAULT '0',
+  `alternative_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releasetemplates_id`,`type`,`users_id`),
+  KEY `group` (`users_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `glpi_plugin_releases_releasetemplates_suppliers`;
+CREATE TABLE `glpi_plugin_releases_releasetemplates_suppliers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `plugin_releases_releasetemplates_id` int(11) NOT NULL DEFAULT '0',
+  `suppliers_id` int(11) NOT NULL DEFAULT '0',
+  `type` int(11) NOT NULL DEFAULT '1',
+  `use_notification` tinyint(1) NOT NULL DEFAULT '1',
+  `alternative_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unicity` (`plugin_releases_releasetemplates_id`,`type`,`suppliers_id`),
+  KEY `group` (`suppliers_id`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
