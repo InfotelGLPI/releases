@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Tasklists plugin 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-08 16:41+0200\n"
-"PO-Revision-Date: 2020-07-08 19:50+0200\n"
+"PO-Revision-Date: 2020-07-08 20:00+0200\n"
 "Last-Translator: Amandine Manceau, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/tsmr/teams/79675/"
 "fr_FR/)\n"
@@ -103,8 +103,8 @@ msgstr[1] "Risques"
 #: inc/releasetemplate.class.php:677 inc/rollback.class.php:50
 msgid "Rollback"
 msgid_plural "Rollbacks"
-msgstr[0] "Rollback"
-msgstr[1] "Rollbacks"
+msgstr[0] "Retour en arrière"
+msgstr[1] "Retours en arrière"
 
 #: inc/finalization.class.php:155 inc/release.class.php:1492
 #: inc/release.class.php:1493 inc/release.class.php:1568
@@ -191,7 +191,7 @@ msgstr "Risques définis"
 
 #: inc/release.class.php:503
 msgid "Rollbacks defined"
-msgstr "Rollbacks définis"
+msgstr "Retours en arrière définis"
 
 #: inc/release.class.php:504
 msgid "Deployment tasks in progress"
@@ -254,7 +254,7 @@ msgstr "Créer une mise en production"
 
 #: inc/release.class.php:2231 inc/releasetemplate.class.php:1552
 msgid "Release actions details"
-msgstr "Détails des action de la mise en production"
+msgstr "Détails des actions de la mise en production"
 
 #: inc/releasetemplate.class.php:60
 msgid "Release template"
@@ -312,8 +312,8 @@ msgstr[1] "Types de risques"
 #: inc/rollback.class.php:155 inc/rollbacktemplate.class.php:52
 msgid "Rollback template"
 msgid_plural "Rollback templates"
-msgstr[0] "Gabarit de rollback"
-msgstr[1] "Gabarits de rollback"
+msgstr[0] "Gabarit de retour en arrière"
+msgstr[1] "Gabarits de retours en arrière"
 
 #: inc/test.class.php:175 inc/testtemplate.class.php:50
 msgid "Test template"

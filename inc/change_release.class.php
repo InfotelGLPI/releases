@@ -336,7 +336,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo Html::resume_text(Html::Clean($d["content"]));
             echo "</td >";
             echo "<td >";
-            echo Html::convDate($d["date_preproduction"]);
+            echo Html::convDateTime($d["date_preproduction"]);
             echo "</td >";
             echo "<td >";
             $tab = [1 => __("Yes"), 0 => __("No")];

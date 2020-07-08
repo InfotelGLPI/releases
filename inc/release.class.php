@@ -1094,13 +1094,13 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<th>" . __('Pre-production planned run date', 'releases') . "</th>";
+      echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
       echo "<td>";
-      Html::showDateField("date_preproduction", ["value" => $this->fields["date_preproduction"]]);
+      Html::showDateTimeField("date_preproduction", ["value" => $this->fields["date_preproduction"]]);
       echo "</td>";
-      echo "<th>" . __('Production planned run date', 'releases') . "</th>";
+      echo "<th>" . __('Production planned date', 'releases') . "</th>";
       echo "<td>";
-      Html::showDateField("date_production", ["value" => $this->fields["date_production"]]);
+      Html::showDateTimeField("date_production", ["value" => $this->fields["date_production"]]);
       echo "</td>";
 
       echo "</tr>";

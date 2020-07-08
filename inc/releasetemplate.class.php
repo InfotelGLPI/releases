@@ -605,15 +605,15 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Pre-production planned run date','releases') . "</td>";
+      echo "<td>" . __('Pre-production planned date','releases') . "</td>";
       echo "<td >";
       $date_preprod =  Html::convDateTime($this->getField('date_preproduction'));
-      Html::showDateField("date_preproduction",["value"=>$date_preprod]);
+      Html::showDateTimeField("date_preproduction",["value"=>$date_preprod]);
       echo "</td>";
-      echo "<td>" . __('Production planned run date','releases') . "</td>";
+      echo "<td>" . __('Production planned date','releases') . "</td>";
       echo "<td >";
       $date_prod =  Html::convDateTime($this->getField('date_production'));
-      Html::showDateField("date_production",["value"=>$date_prod]);
+      Html::showDateTimeField("date_production",["value"=>$date_prod]);
       echo "</td>";
       echo "</tr>";
 
