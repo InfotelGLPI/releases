@@ -1558,20 +1558,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    static function getDefaultValues($entity = 0) {
       global $CFG_GLPI;
 
-      if (is_numeric(Session::getLoginUserID(false))) {
-         $users_id_requester = Session::getLoginUserID();
-         $users_id_assign    = Session::getLoginUserID();
-
-         if (!$_SESSION['glpiset_default_tech']) {
-            $users_id_assign = 0;
-         }
-         $entity      = $_SESSION['glpiactive_entity'];
-         $requesttype = $_SESSION['glpidefault_requesttypes_id'];
-      } else {
          $users_id_requester = 0;
          $users_id_assign    = 0;
          $requesttype        = $CFG_GLPI['default_requesttypes_id'];
-      }
+
       $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $entity, '', 1);
       // Set default values...
       return ['_users_id_requester'        => $users_id_requester,
@@ -2821,9 +2811,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          $right = $options["_right"];
       }
 
-      if ($options["_users_id_".$typename] == 0 && !isset($_REQUEST["_users_id_$typename"]) && !isset($this->input["_users_id_$typename"])) {
-         $options["_users_id_".$typename] = $this->getDefaultActor($type);
-      }
+
       $rand   = mt_rand();
       $actor_name = '_users_id_'.$typename;
       if ($type == CommonITILActor::OBSERVER) {
