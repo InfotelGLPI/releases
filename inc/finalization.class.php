@@ -267,7 +267,7 @@ class PluginReleasesFinalization extends CommonDBTM {
          }
       } else {
          $text = "";
-//         if ($release->getField('status') == PluginReleasesRelease::FAIL) {
+         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
             echo '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Html::scriptBlock(
@@ -275,7 +275,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                $( '#alert-message' ).dialog( 'open' );
       
                });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
             $srcImg     = "fas fa-times";
             $color      = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);
@@ -317,6 +317,6 @@ class PluginReleasesFinalization extends CommonDBTM {
             
           })");
          }
-//      }
+      }
    }
 }

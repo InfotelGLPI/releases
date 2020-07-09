@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Releases plugin 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-09 17:30+0200\n"
-"PO-Revision-Date: 2020-07-09 17:36+0200\n"
+"PO-Revision-Date: 2020-07-09 17:54+0200\n"
 "Last-Translator: Amandine Manceau, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/tsmr/teams/79675/"
 "fr_FR/)\n"
@@ -305,7 +305,7 @@ msgstr "Réalisation conforme"
 
 #: inc/review.class.php:151
 msgid "Incidents during process"
-msgstr "Incident durant le traitement"
+msgstr "Incidents durant le traitement"
 
 #: inc/review.class.php:164
 msgid "Technical Support Document"
