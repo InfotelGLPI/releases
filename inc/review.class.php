@@ -139,7 +139,7 @@ class PluginReleasesReview extends CommonDBTM {
       if ($this->getField("date_lock") == 1) {
          $canedit = false;
       }
-      Html::showDateField('real_date_release', ["value" => $this->getField('real_date_release'), 'canedit' => $canedit]);
+      Html::showDateTimeField('real_date_release', ["value" => $this->getField('real_date_release'), 'canedit' => $canedit]);
       echo "</td>";
       echo "<td>" . __('Conforming realization','releases') . "</td>";
       echo "<td>";
