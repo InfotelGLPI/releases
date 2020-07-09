@@ -93,8 +93,8 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $dbu   = new DbUtils();
       $table = CommonDBTM::getTable(self::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releases_id" => $item->getID(),
-            "state"                       => self::FAIL]);
+                                        ["plugin_releases_releases_id" => $item->getID(),
+                                         "state"                       => self::FAIL]);
    }
 
    /**
@@ -109,7 +109,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
-      $release = new PluginReleasesRelease();
+      $release           = new PluginReleasesRelease();
       $release->getFromDB($input["plugin_releases_releases_id"]);
       $input["entities_id"] = $release->getField("entities_id");
       if ($input["plugin_releases_deploytasks_id"] != 0) {
@@ -272,7 +272,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $rand_state      = mt_rand();
 
       if (isset($options['parent']) && !empty($options['parent'])) {
-         $item = $options['parent'];
+         $item    = $options['parent'];
          $fkfield = $item::getForeignKeyField();
       }
       //TODO error from loading from planning (no parent ?)
@@ -343,7 +343,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       echo "<td style='vertical-align: middle'>";
       echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
-               title='" . _n('Task template', 'Task templates', 1,'releases') . "'></i>";
+               title='" . _n('Task template', 'Task templates', 1, 'releases') . "'></i>";
       PluginReleasesDeploytasktemplate::dropdown(['value'     => $this->fields['plugin_releases_deploytasktemplates_id'],
                                                   'entity'    => $this->getEntityID(),
                                                   'rand'      => $rand_template,

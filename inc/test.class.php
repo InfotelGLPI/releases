@@ -39,7 +39,7 @@ class PluginReleasesTest extends CommonDBTM {
    static $rightname = 'plugin_releases_tests';
    const TODO = 1; // todo
    const DONE = 2; // done
-   const FAIL = 3; // fail
+   const FAIL = 3; // Failed
 
    /**
     * @param int $nb
@@ -256,7 +256,7 @@ class PluginReleasesTest extends CommonDBTM {
          echo "<div class='fa-label'>
             <i class='fas fa-tasks fa-fw'
                title='" . __('Status') . "'></i>";
-         PluginReleasesTest::dropdownStateTest("state", $this->fields["state"], true, ['rand' => $rand_state]);
+         self::dropdownStateTest("state", $this->fields["state"], true, ['rand' => $rand_state]);
          echo "</div>";
       }
       echo "</td>";
@@ -295,11 +295,11 @@ class PluginReleasesTest extends CommonDBTM {
    static function dropdownStateTest($name, $value = '', $display = true, $options = []) {
 
       $values = [static::TODO => __('To do'),
-         static::DONE => __('Done'),
-         static::FAIL => __('Failed', 'releases')];
+                 static::DONE => __('Done'),
+                 static::FAIL => __('Failed', 'releases')];
 
       return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
-         'display' => $display], $options));
+                                                                  'display' => $display], $options));
    }
 }
 

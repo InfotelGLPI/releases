@@ -37,9 +37,11 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginReleasesFinalization extends CommonDBTM {
 
-   public    $dohistory         = true;
-   static    $rightname         = 'plugin_releases_releases';
-
+   public $dohistory = true;
+   static $rightname = 'plugin_releases_releases';
+   const TODO = 1; // todo
+   const DONE = 2; // done
+   const FAIL = 3; // Failed
 
 
    /**
@@ -74,6 +76,25 @@ class PluginReleasesFinalization extends CommonDBTM {
       return '';
    }
 
+   /**
+    * @param $state
+    *
+    * @return string
+    */
+   public static function getStateItem($state) {
+      switch ($state) {
+         case self::TODO :
+            return "<span><i class=\"fas fa-3x fa-hourglass-half\"></i></span>";
+            break;
+         case self::DONE :
+            return "<span><i class=\"fas fa-3x fa-check\"></i></span>";
+            break;
+         case self::FAIL :
+            return "<span><i class=\"fas fa-3x fa-times\"></i></span>";
+            break;
+      }
+   }
+
    function showForm($ID, $options = []) {
       global $CFG_GLPI;
       $release = new PluginReleasesRelease();
@@ -93,25 +114,28 @@ class PluginReleasesFinalization extends CommonDBTM {
       } else {
          $rollback_state = PluginReleasesRollback::TODO;
       }
-      $deployTaskDone = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, 1);
+
+      $deployTaskDone  = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, PluginReleasesDeploytask::DONE);
       $deployTaskTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
-      $deployTaskFail = PluginReleasesDeploytask::countFailForItem($release);
-      $taskfailed = "";
-      $task_state = PluginReleasesDeploytask::TODO;
+      $deployTaskFail  = PluginReleasesDeploytask::countFailForItem($release);
+      $taskfailed      = "";
+      $task_state      = PluginReleasesDeploytask::TODO;
       if ($deployTaskFail != 0) {
          $taskfailed = "bulleFailed";
          $task_state = PluginReleasesDeploytask::FAIL;
       }
       if ($deployTaskTotal != 0) {
          $pourcentageTask = $deployTaskDone / $deployTaskTotal * 100;
-      } else {
-         $pourcentageTask = 100;
-         $task_state = PluginReleasesDeploytask::DONE;
       }
+      if ($deployTaskDone == $deployTaskTotal) {
+         $pourcentageTask = 100;
+         $task_state      = PluginReleasesDeploytask::DONE;
+      }
+
       $test_state = PluginReleasesTest::TODO;
-      $testDone = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, 1);
-      $testTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
-      $testFail = PluginReleasesTest::countFailForItem($release);
+      $testDone   = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, PluginReleasesTest::DONE);
+      $testTotal  = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
+      $testFail   = PluginReleasesTest::countFailForItem($release);
       $testfailed = "";
       if ($testFail != 0) {
          $testfailed = "bulleFailed";
@@ -119,20 +143,22 @@ class PluginReleasesFinalization extends CommonDBTM {
       }
       if ($testTotal != 0) {
          $pourcentageTest = $testDone / $testTotal * 100;
-      } else {
+      }
+      if ($testDone == $testTotal) {
          $pourcentageTest = 100;
-         $test_state = PluginReleasesTest::DONE;
+         $test_state      = PluginReleasesTest::DONE;
       }
 
-      $riskDone = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class, 1);
-      $riskTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class);
-      $rollbackDone = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class, 1);
+      $riskDone      = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class, PluginReleasesRisk::DONE);
+      $riskTotal     = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class);
+      $rollbackDone  = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class, PluginReleasesRollback::DONE);
       $rollbackTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class);
+
       echo "<section id=\"timeline\">
   <article>
     <div class=\"inner\" >
       <span class=\"bulle riskBulle\">
-        " . PluginReleasesRelease::getStateItem($risk_state) . "
+        " . self::getStateItem($risk_state) . "
       </span>
       <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s risks', 'releases'), $riskDone, $riskTotal) . "</p>
@@ -141,7 +167,7 @@ class PluginReleasesFinalization extends CommonDBTM {
   <article>
     <div class=\"inner\">
       <span class=\"bulle rollbackBulle\">
-        " . PluginReleasesRelease::getStateItem($rollback_state) . "
+        " . self::getStateItem($rollback_state) . "
       </span>
       <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s rollbacks', 'releases'), $rollbackDone, $rollbackTotal) . "</p>
@@ -150,10 +176,10 @@ class PluginReleasesFinalization extends CommonDBTM {
   <article>
     <div class=\"inner\">
       <span class=\"bulle taskBulle $taskfailed\">
-      " . PluginReleasesRelease::getStateItem($task_state) . "
+      " . self::getStateItem($task_state) . "
       </span>
       <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s deploy tasks'), $deployTaskDone, $deployTaskTotal) . "</br>
+      <p>" . sprintf(__('%s / %s deploy tasks', 'releases'), $deployTaskDone, $deployTaskTotal) . "</br>
       " . sprintf(__('%s  deploy tasks failed', 'releases'), $deployTaskFail) . "<span class='percent' style=\"float: right;\">
             " . $pourcentageTask . " %
         </span></p>
@@ -162,7 +188,7 @@ class PluginReleasesFinalization extends CommonDBTM {
   <article>
     <div class=\"inner\">
     <span class=\"bulle taskBulle $testfailed\">
-      " . PluginReleasesRelease::getStateItem($test_state) . "
+      " . self::getStateItem($test_state) . "
       </span>
       <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
@@ -173,20 +199,17 @@ class PluginReleasesFinalization extends CommonDBTM {
   </article>
 </section>";
       echo "</td>";
-
       echo "</tr>";
-
-
       echo "</table>";
+
       if ($deployTaskFail == 0 && $testFail == 0) {
          $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
-            && ($deployTaskTotal == $deployTaskDone)
-            && ($testTotal == $testDone)
-            && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
+                      && ($deployTaskTotal == $deployTaskDone)
+                      && ($testTotal == $testDone)
+                      && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
 
          $text = "";
          if (!$allfinish) {
-
             $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !", "releases") . '</span>';
             $text .= "<br>";
             $text .= "<br>";
@@ -200,11 +223,11 @@ class PluginReleasesFinalization extends CommonDBTM {
       
                });");
             echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-            $srcImg = "fas fa-info-circle";
-            $color = "forestgreen";
+            $srcImg     = "fas fa-info-circle";
+            $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
 
-            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize",'releases') . " \";");
+            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
             echo Html::scriptBlock("$( '#alert-message' ).dialog({
               autoOpen: false,
               height: " . 200 . ",
@@ -217,7 +240,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                   .html(mTitle);
             },
               buttons: {
-               '".__("Ok")."': function() {
+               '" . __("Ok") . "': function() {
                   if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
               
                     $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
@@ -235,16 +258,16 @@ class PluginReleasesFinalization extends CommonDBTM {
                   }
                
                },
-               '".__("Cancel")."': function() {
+               '" . __("Cancel") . "': function() {
                      $( this ).dialog( 'close' );
                 }
             },
             
           })");
          }
-      }else{
+      } else {
          $text = "";
-         if ($release->getField('status') <= PluginReleasesRelease::FAIL) {
+//         if ($release->getField('status') == PluginReleasesRelease::FAIL) {
             echo '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Html::scriptBlock(
@@ -253,11 +276,11 @@ class PluginReleasesFinalization extends CommonDBTM {
       
                });");
             echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-            $srcImg = "fas fa-times";
-            $color = "firebrick";
+            $srcImg     = "fas fa-times";
+            $color      = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);
 
-            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed",'releases') . " \";");
+            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed", 'releases') . " \";");
             echo Html::scriptBlock("$( '#alert-message' ).dialog({
               autoOpen: false,
               height: " . 200 . ",
@@ -270,7 +293,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                   .html(mTitle);
             },
               buttons: {
-               '".__("Confirm",'releases')."': function() {
+               '" . __("Confirm", 'releases') . "': function() {
                   if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
               
                     $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
@@ -287,15 +310,13 @@ class PluginReleasesFinalization extends CommonDBTM {
                   }
                
                },
-               '".__("Cancel")."': function() {
+               '" . __("Cancel") . "': function() {
                      $( this ).dialog( 'close' );
                 }
             },
             
           })");
          }
-      }
-
-
+//      }
    }
 }

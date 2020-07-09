@@ -48,18 +48,18 @@ class PluginReleasesRelease extends CommonITILObject {
    // STATUS
 
 
-   const NEWRELEASE         = 7;
-   const RELEASEDEFINITION  = 8; // default
-   const DATEDEFINITION     = 9; // date definition
-   const CHANGEDEFINITION   = 10; // changes defenition
-   const RISKDEFINITION     = 11; // risks definition
-   const ROLLBACKDEFINITION = 12; // rollbacks definition
-   const TASKDEFINITION     = 13; // tasks definition
-   const TESTDEFINITION     = 14; // tests definition
-   const FINALIZE           = 15; // finalized
-   const REVIEW             = 16; // reviewed
-   const CLOSED             = 17; // closed
-   const FAIL               = 18;
+   const NEWRELEASE         = 1;
+   const RELEASEDEFINITION  = 2; // default
+   const DATEDEFINITION     = 3; // date definition
+   const CHANGEDEFINITION   = 4; // changes defenition
+   const RISKDEFINITION     = 5; // risks definition
+   const ROLLBACKDEFINITION = 6; // rollbacks definition
+   const TASKDEFINITION     = 7; // tasks definition
+   const TESTDEFINITION     = 8; // tests definition
+   const FINALIZE           = 9; // finalized
+   const REVIEW             = 10; // reviewed
+   const CLOSED             = 11; // closed
+   const FAIL               = 12;
 
 
 
@@ -79,7 +79,7 @@ class PluginReleasesRelease extends CommonITILObject {
       $table = CommonDBTM::getTable($class);
       if ($state) {
          return $dbu->countElementsInTable($table,
-                                           ["plugin_releases_releases_id" => $ID, "state" => 2]);
+                                           ["plugin_releases_releases_id" => $ID, "state" => $state]);
       }
       return $dbu->countElementsInTable($table,
                                         ["plugin_releases_releases_id" => $ID]);
@@ -198,7 +198,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'field'         => 'date_preproduction',
          'name'          => __('Pre-production run date', 'releases'),
          'massiveaction' => false,
-         'datatype'      => 'date'
+         'datatype'      => 'datetime'
       ];
       $tab[] = [
          'id'            => '4',
@@ -238,7 +238,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'field'         => 'date_production',
          'name'          => __('Production run date', 'releases'),
          'massiveaction' => false,
-         'datatype'      => 'date'
+         'datatype'      => 'datetime'
       ];
       return $tab;
 
@@ -269,7 +269,8 @@ class PluginReleasesRelease extends CommonITILObject {
             return $var;
             break;
          case 'service_shutdown':
-            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class, 1) . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
+            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
+                   . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);
@@ -550,26 +551,6 @@ class PluginReleasesRelease extends CommonITILObject {
       $solid = true;
 
       switch ($status) {
-         //         case self::TODO :
-         //            $class = 'circle';
-         //            break;
-         //         case self::DONE :
-         //            $class = 'circle';
-         //            //            $solid = false;
-         //            break;
-         //         case self::PROCESSING :
-         //            $class = 'circle';
-         //            break;
-         //         case self::WAITING :
-         //            $class = 'circle';
-         //            break;
-         //         case self::LATE :
-         //            $class = 'circle';
-         //            //            $solid = false;
-         //            break;
-         //         case self::DEF :
-         //            $class = 'circle';
-         //            break;
          case self::NEWRELEASE :
             $class = 'circle';
             break;
@@ -612,8 +593,6 @@ class PluginReleasesRelease extends CommonITILObject {
          case self::CLOSED :
             $class = 'circle';
             break;
-
-
          default:
             $class = 'circle';
             break;
@@ -636,24 +615,6 @@ class PluginReleasesRelease extends CommonITILObject {
    public static function getStatusKey($status) {
       $key = '';
       switch ($status) {
-         //         case self::DONE :
-         //            $key = 'done';
-         //            break;
-         //         case self::TODO :
-         //            $key = 'todo';
-         //            break;
-         //         case self::WAITING :
-         //            $key = 'waiting';
-         //            break;
-         //         case self::PROCESSING :
-         //            $key = 'inprogress';
-         //            break;
-         //         case self::LATE :
-         //            $key = 'late';
-         //            break;
-         //         case self::DEF :
-         //            $key = 'default';
-         //            break;
          case self::NEWRELEASE :
             $key = 'newrelease';
             break;
@@ -861,15 +822,15 @@ class PluginReleasesRelease extends CommonITILObject {
                          || $useractors->can(-1, CREATE, $input['_itil_assign'])) {
                         $useractors->add($input['_itil_assign']);
                         $input['_forcenotif'] = true;
-                        if (((!isset($input['status'])
-                              && in_array($this->fields['status'], $this->getNewStatusArray()))
-                             || (isset($input['status'])
-                                 && in_array($input['status'], $this->getNewStatusArray())))
-                            && !$this->isStatusComputationBlocked($input)) {
-                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-                              $input['status'] = self::ASSIGNED;
-                           }
-                        }
+//                        if (((!isset($input['status'])
+//                              && in_array($this->fields['status'], $this->getNewStatusArray()))
+//                             || (isset($input['status'])
+//                                 && in_array($input['status'], $this->getNewStatusArray())))
+//                            && !$this->isStatusComputationBlocked($input)) {
+//                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+//                              $input['status'] = self::ASSIGNED;
+//                           }
+//                        }
                      }
                   }
                   break;
@@ -883,15 +844,15 @@ class PluginReleasesRelease extends CommonITILObject {
                          || $groupactors->can(-1, CREATE, $input['_itil_assign'])) {
                         $groupactors->add($input['_itil_assign']);
                         $input['_forcenotif'] = true;
-                        if (((!isset($input['status'])
-                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
-                             || (isset($input['status'])
-                                 && (in_array($input['status'], $this->getNewStatusArray()))))
-                            && !$this->isStatusComputationBlocked($input)) {
-                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-                              $input['status'] = self::ASSIGNED;
-                           }
-                        }
+//                        if (((!isset($input['status'])
+//                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+//                             || (isset($input['status'])
+//                                 && (in_array($input['status'], $this->getNewStatusArray()))))
+//                            && !$this->isStatusComputationBlocked($input)) {
+//                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+//                              $input['status'] = self::ASSIGNED;
+//                           }
+//                        }
                      }
                   }
                   break;
@@ -906,16 +867,15 @@ class PluginReleasesRelease extends CommonITILObject {
                          || $supplieractors->can(-1, CREATE, $input['_itil_assign'])) {
                         $supplieractors->add($input['_itil_assign']);
                         $input['_forcenotif'] = true;
-                        if (((!isset($input['status'])
-                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
-                             || (isset($input['status'])
-                                 && (in_array($input['status'], $this->getNewStatusArray()))))
-                            && !$this->isStatusComputationBlocked($input)) {
-                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-                              $input['status'] = self::ASSIGNED;
-                           }
-
-                        }
+//                        if (((!isset($input['status'])
+//                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+//                             || (isset($input['status'])
+//                                 && (in_array($input['status'], $this->getNewStatusArray()))))
+//                            && !$this->isStatusComputationBlocked($input)) {
+//                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+//                              $input['status'] = self::ASSIGNED;
+//                           }
+//                        }
                      }
                   }
                   break;
@@ -1223,14 +1183,14 @@ class PluginReleasesRelease extends CommonITILObject {
          echo " <div class=\"container-fluid\">
                               <ul class=\"list-unstyled multi-steps\">";
 
-         for ($i = 7; $i <= 17; $i++) {
+         for ($i = 1; $i <= 12; $i++) {
             $class = "";
             //
             //            if ($value["ranking"] < $ranking) {
             ////                     $class = "class = active2";
             //
             //            } else
-            if ($this->fields["status"] == $i - 1) {
+            if ($this->fields["status"] == $i) {
                //               $class = "class='current'";
                $class = "class='is-active'";
             }
@@ -1277,27 +1237,6 @@ class PluginReleasesRelease extends CommonITILObject {
       return $this->fields["service_shutdown_details"];
    }
 
-
-   /**
-    * @param $state
-    *
-    * @return string
-    */
-   public static function getStateItem($state) {
-      switch ($state) {
-         case 1:
-            //            return __("Waiting","releases");
-            return "<span><i class=\"fas fa-3x fa-hourglass-half\"></i></span>";
-            break;
-         case 2:
-            //            return __("Done");
-            return "<span><i class=\"fas fa-3x fa-check\"></i></span>";
-            break;
-         case 3:
-            return "<span><i class=\"fas fa-3x fa-times\"></i></span>";
-            break;
-      }
-   }
 
    /**
     * Displays the form at the top of the timeline.
@@ -1963,7 +1902,7 @@ class PluginReleasesRelease extends CommonITILObject {
          foreach ($rollbacks as $rollbacks_id => $rollback) {
             $rollback_obj->getFromDB($rollbacks_id);
             $rollback['can_edit']                                       = $rollback_obj->canUpdateItem();
-            $timeline[$risk['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
+            $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
                                                                            'item'     => $rollback,
                                                                            'itiltype' => 'Rollback'];
          }
@@ -1987,7 +1926,7 @@ class PluginReleasesRelease extends CommonITILObject {
          foreach ($tests as $tests_id => $test) {
             $test_obj->getFromDB($tests_id);
             $test['can_edit']                                   = $test_obj->canUpdateItem();
-            $timeline[$risk['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
+            $timeline[$test['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
                                                                    'item'     => $test,
                                                                    'itiltype' => 'test'];
          }
@@ -2614,10 +2553,6 @@ class PluginReleasesRelease extends CommonITILObject {
             $second_col = sprintf(__('Closed on %s'),
                                   ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
                                   Html::convDateTime($item->fields['closedate']));
-         } else if ($item->fields['status'] == static::SOLVED) {
-            $second_col = sprintf(__('Solved on %s'),
-                                  ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
-                                  Html::convDateTime($item->fields['solvedate']));
          } else if ($item->fields['begin_waiting_date']) {
             $second_col = sprintf(__('Put on hold on %s'),
                                   ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .

@@ -64,7 +64,7 @@ class PluginReleasesRisk extends CommonDBTM {
     */
    static function countForItem(CommonDBTM $item) {
       $dbu   = new DbUtils();
-      $table = CommonDBTM::getTable(PluginReleasesRisk::class);
+      $table = CommonDBTM::getTable(self::class);
       return $dbu->countElementsInTable($table,
                                         ["plugin_releases_releases_id" => $item->getID()]);
    }
