@@ -402,16 +402,16 @@ class PluginReleasesDeploytask extends CommonITILTask {
          }
       ');
 
-
-      if ($ID > 0) {
-         echo "<div class='fa-label'>
-         <i class='far fa-calendar fa-fw'
-            title='" . __('Date') . "'></i>";
-         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
-                                          'timestep'   => 1,
-                                          'maybeempty' => false]);
-         echo "</div>";
-      }
+//TODO used ?
+//      if ($ID > 0) {
+//         echo "<div class='fa-label'>
+//         <i class='far fa-calendar fa-fw'
+//            title='" . __('Date') . "'></i>";
+//         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
+//                                          'timestep'   => 1,
+//                                          'maybeempty' => false]);
+//         echo "</div>";
+//      }
 
       echo "<div class='fa-label'>
          <i class='fas fa-tag fa-fw'
@@ -436,23 +436,6 @@ class PluginReleasesDeploytask extends CommonITILTask {
                title='" . __('Status') . "'></i>";
          self::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
          echo "</div>";
-      }
-
-      if ($this->maybePrivate()) {
-         echo "<div class='fa-label'>
-            <i class='fas fa-lock fa-fw' title='" . __('Private') . "'></i>
-            <span class='switch pager_controls'>
-               <label for='is_privateswitch$rand_is_private' title='" . __('Private') . "'>
-                  <input type='hidden' name='is_private' value='0'>
-                  <input type='checkbox' id='is_privateswitch$rand_is_private' name='is_private' value='1'" .
-              ($this->fields["is_private"]
-                 ? "checked='checked'"
-                 : "") . "
-                  >
-                  <span class='lever'></span>
-               </label>
-            </span>
-         </div>";
       }
 
       echo "<div class='fa-label'>
