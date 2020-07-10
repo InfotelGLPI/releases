@@ -34,7 +34,7 @@ if (!defined('GLPI_ROOT')) {
 /**
  * Class PluginReleasesDeploytask
  */
-class PluginReleasesDeploytask extends CommonDBTM {
+class PluginReleasesDeploytask extends CommonITILTask {
 
    static $rightname = 'plugin_releases_tasks';
    const TODO = 1; // todo
@@ -278,7 +278,6 @@ class PluginReleasesDeploytask extends CommonDBTM {
          $item    = $options['parent'];
          $fkfield = $item::getForeignKeyField();
       }
-      //TODO error from loading from planning (no parent ?)
 
       if ($ID > 0) {
          $this->check($ID, READ);
@@ -314,12 +313,16 @@ class PluginReleasesDeploytask extends CommonDBTM {
          <span>" . __('Name') . "</span>&nbsp;";
       echo "</td>";
       echo "<td class='fa-label'>";
-      echo Html::input("name", ["id" => "name" . $rand_name, "rand" => $rand_name, "value" => $this->getField('name')]);
+      echo Html::input("name", ["id"    => "name" . $rand_name,
+                                "rand"  => $rand_name,
+                                "value" => $this->fields['name']]);
 
       echo "</td>";
       echo "<td >" . __("Previous task", "releases") . "</td>";
       echo "<td>";
-      Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $options['plugin_releases_releases_id'], "NOT" => ["id" => $this->getID()]], "value" => $this->fields["plugin_releases_deploytasks_id"]]);
+      Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
+                                                                           "NOT"                         => ["id" => $this->getID()]],
+                                                           "value"     => $this->fields["plugin_releases_deploytasks_id"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -402,16 +405,16 @@ class PluginReleasesDeploytask extends CommonDBTM {
          }
       ');
 
-
-      if ($ID > 0) {
-         echo "<div class='fa-label'>
-         <i class='far fa-calendar fa-fw'
-            title='" . __('Date') . "'></i>";
-         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
-                                          'timestep'   => 1,
-                                          'maybeempty' => false]);
-         echo "</div>";
-      }
+//TODO used ?
+//      if ($ID > 0) {
+//         echo "<div class='fa-label'>
+//         <i class='far fa-calendar fa-fw'
+//            title='" . __('Date') . "'></i>";
+//         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
+//                                          'timestep'   => 1,
+//                                          'maybeempty' => false]);
+//         echo "</div>";
+//      }
 
       echo "<div class='fa-label'>
          <i class='fas fa-tag fa-fw'
@@ -424,9 +427,10 @@ class PluginReleasesDeploytask extends CommonDBTM {
                                              ]);
       echo "</div>";
       echo "<div class='fa-label'>
-         <span>" . __('Risk') . "</span>&nbsp;";
-      Dropdown::show(PluginReleasesRisk::getType(), ['name'  => "plugin_releases_risks_id", "condition" => ["plugin_releases_releases_id" => $options['plugin_releases_releases_id']],
-                                                     'value' => $this->fields["plugin_releases_risks_id"]]);
+         <span>" . __('Risk', 'releases') . "</span>&nbsp;";
+      Dropdown::show(PluginReleasesRisk::getType(), ['name'      => "plugin_releases_risks_id",
+                                                     "condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id']],
+                                                     'value'     => $this->fields["plugin_releases_risks_id"]]);
       echo "</div>";
 
       if (isset($this->fields["state"])) {
@@ -435,23 +439,6 @@ class PluginReleasesDeploytask extends CommonDBTM {
                title='" . __('Status') . "'></i>";
          self::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
          echo "</div>";
-      }
-
-      if ($this->maybePrivate()) {
-         echo "<div class='fa-label'>
-            <i class='fas fa-lock fa-fw' title='" . __('Private') . "'></i>
-            <span class='switch pager_controls'>
-               <label for='is_privateswitch$rand_is_private' title='" . __('Private') . "'>
-                  <input type='hidden' name='is_private' value='0'>
-                  <input type='checkbox' id='is_privateswitch$rand_is_private' name='is_private' value='1'" .
-              ($this->fields["is_private"]
-                 ? "checked='checked'"
-                 : "") . "
-                  >
-                  <span class='lever'></span>
-               </label>
-            </span>
-         </div>";
       }
 
       echo "<div class='fa-label'>
@@ -615,10 +602,12 @@ class PluginReleasesDeploytask extends CommonDBTM {
     * @return array
     * @throws \GlpitestSQLError
     */
-   static function populatePlanning($parm) {
+   static function populatePlanning($options = []): array {
       global $DB, $CFG_GLPI;
 
       $output = [];
+
+      $parm = $options;
 
       if (!isset($parm['begin']) || $parm['begin'] == 'NULL' || !isset($parm['end']) || $parm['end'] == 'NULL') {
          return $parm;
@@ -665,15 +654,12 @@ class PluginReleasesDeploytask extends CommonDBTM {
          $ASSIGN .= ") AND ";
       }
 
-      $query = "SELECT `glpi_plugin_releases_deploytasks`.*,
-                        `glpi_plugin_releases_deploytasks`.`begin`, 
-                        `glpi_plugin_releases_deploytasks`.`end`,
-                        `glpi_plugin_releases_typedeploytasks`.`name` as type
+      $query = "SELECT `glpi_plugin_releases_deploytasks`.*
                 FROM `glpi_plugin_releases_deploytasks`
                 LEFT JOIN `glpi_plugin_releases_typedeploytasks` 
                 ON (`glpi_plugin_releases_typedeploytasks`.`id` = `glpi_plugin_releases_deploytasks`.`plugin_releases_typedeploytasks_id`)
                 WHERE $ASSIGN
-                      '$begin' < `end` AND '$end' > `begin` AND `glpi_plugin_releases_deploytasks`.`state` != 2
+                      '$begin' < `end` AND '$end' > `begin`
                 ORDER BY `begin`";
 
       $result = $DB->query($query);
@@ -692,7 +678,20 @@ class PluginReleasesDeploytask extends CommonDBTM {
             $output[$key]["editable"]         = true;
             $output[$key]["content"]          = Html::resume_text($data["content"], $CFG_GLPI["cut"]);
             $output[$key]["itemtype"]         = 'PluginReleasesDeploytask';
-            $output[$key]["url"]              = $CFG_GLPI["root_doc"] . "/plugins/releases/front/deploytask.form.php?id=" . $data['id'];;
+            $url_id                           = $data["plugin_releases_releases_id"];
+            $output[$key]["parentitemtype"]   = 'PluginReleasesRelease';
+
+            $parentitemtype                   = new $output[$key]["parentitemtype"]();
+            $output[$key]["url"]              = $CFG_GLPI["url_base"] .
+                                                $parentitemtype::getFormURLWithID($url_id, false);
+            $output[$key]["parentid"]         = $data["plugin_releases_releases_id"];
+            $output[$key]["ajaxurl"]          = $CFG_GLPI["root_doc"] . "/ajax/planning.php" .
+                                                "?action=edit_event_form" .
+                                                "&itemtype=" . $output[$key]["itemtype"] .
+                                                "&parentitemtype=" . $output[$key]["parentitemtype"] .
+                                                "&parentid=" . $data["plugin_releases_releases_id"] .
+                                                "&id=" . $data['id'] .
+                                                "&url=" . $output[$key]["url"];
          }
       }
 
