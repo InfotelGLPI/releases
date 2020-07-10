@@ -41,6 +41,7 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    $val           = [];
    $val['id']     = $_REQUEST["id"];
    $val['status'] = PluginReleasesRelease::FINALIZE;
+   $val['date_end'] = $_SESSION["glpi_currenttime"];
    $release->update($val);
 
    $review = new PluginReleasesReview();
@@ -70,7 +71,6 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $_REQUEST["id"]])) {
       $val                           = [];
       $val['id']                     = $review->getID();
-      $val['real_date_release']      = $_REQUEST["date"];
       $val['conforming_realization'] = 0;
       $val['incident']               = 1;
       $val['incident_description']   = "";
@@ -85,7 +85,6 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    } else {
       $val                                = [];
       $val['plugin_releases_releases_id'] = $_REQUEST["id"];
-      $val['real_date_release']           = $_REQUEST["date"];
       $val['conforming_realization']      = 0;
       $val['incident']                    = 1;
       $val['incident_description']        = "";
@@ -97,4 +96,10 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
       }
       $review->add($val);
    }
+   $release       = new PluginReleasesRelease();
+   $val           = [];
+   $val['id']     = $_REQUEST["id"];
+   $val['status'] = PluginReleasesRelease::FAIL;
+   $val['date_end'] = $_SESSION["glpi_currenttime"];
+   $release->update($val);
 }

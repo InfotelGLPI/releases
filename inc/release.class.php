@@ -966,15 +966,19 @@ class PluginReleasesRelease extends CommonITILObject {
       $select_changes = [];
       if (isset($options["changes_id"])) {
          $select_changes = [$options["changes_id"]];
-         if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
-            $c = new Change();
-            if ($c->getFromDB($options["changes_id"])) {
-               $this->fields["name"]        = $c->getField("name");
-               $this->fields["content"]     = $c->getField("content");
-               $this->fields["entities_id"] = $c->getField("entities_id");
-            }
+         $c = new Change();
+         if ($c->getFromDB($options["changes_id"])) {
+            if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
 
+               $this->fields["name"]        = $c->getField("name");
+               $options["name"]        = $c->getField("name");
+               $this->fields["content"]     = $c->getField("content");
+               $options["content"]     = $c->getField("content");
+
+            }
          }
+         $options['entities_id'] = $c->getField("entities_id");
+         $this->fields["entities_id"] = $c->getField("entities_id");
       }
 
       // In percent
@@ -1037,7 +1041,9 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "</th>";
          echo "<td>";
          $change  = new Change();
-         $changes = $change->find(['entities_id' => $_SESSION['glpiactive_entity'], 'status' => Change::getNotSolvedStatusArray()]);
+         $condition["status"] =  Change::getNotSolvedStatusArray();
+         $condition[] = getEntitiesRestrictCriteria($change->getTable(),'',$options["entities_id"],true);
+         $changes = $change->find($condition);
          $list    = [];
          foreach ($changes as $ch) {
             $list[$ch["id"]] = $ch["name"];

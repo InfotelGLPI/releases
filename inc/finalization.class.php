@@ -153,11 +153,27 @@ class PluginReleasesFinalization extends CommonDBTM {
       $riskTotal     = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class);
       $rollbackDone  = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class, PluginReleasesRollback::DONE);
       $rollbackTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class);
+      setlocale(LC_TIME,$_SESSION["glpilanguage"]);
+      $date = date_parse($release->getField("date_creation"));
+      $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
+      $monthName = $dateObj->format('F'); // March
 
       echo "<section id=\"timeline\">
   <article>
     <div class=\"inner\" >
-      <span class=\"bulle riskBulle\">
+      <span class=\"bulle\">
+        <span class=\"day\">".$date["day"]."</span>
+        <span class=\"month\">$monthName</span>
+        <span class=\"year\">".$date["year"]."</span>
+      </span>
+      <h2 class='dateColor'>" . __("Creation date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
+      <p></p>
+ 
+    </div>
+  </article>
+  <article>
+    <div class=\"inner\" >
+      <span class=\"bulle riskBulle bulleMarge\">
         " . self::getStateItem($risk_state) . "
       </span>
       <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
@@ -166,7 +182,7 @@ class PluginReleasesFinalization extends CommonDBTM {
   </article>
   <article>
     <div class=\"inner\">
-      <span class=\"bulle rollbackBulle\">
+      <span class=\"bulle rollbackBulle bulleMarge\">
         " . self::getStateItem($rollback_state) . "
       </span>
       <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
@@ -175,7 +191,7 @@ class PluginReleasesFinalization extends CommonDBTM {
   </article>
   <article>
     <div class=\"inner\">
-      <span class=\"bulle taskBulle $taskfailed\">
+      <span class=\"bulle taskBulle $taskfailed bulleMarge\">
       " . self::getStateItem($task_state) . "
       </span>
       <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
@@ -187,7 +203,7 @@ class PluginReleasesFinalization extends CommonDBTM {
   </article>
   <article>
     <div class=\"inner\">
-    <span class=\"bulle taskBulle $testfailed\">
+    <span class=\"bulle testBulle $testfailed bulleMarge\">
       " . self::getStateItem($test_state) . "
       </span>
       <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
@@ -197,16 +213,35 @@ class PluginReleasesFinalization extends CommonDBTM {
         </span></p>
     </div>
   </article>
-</section>";
-      echo "</td>";
-      echo "</tr>";
-      echo "</table>";
+  ";
+      if(!empty($release->fields["date_end"])){
+         $date = date_parse($release->getField("date_end"));
+         $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
+         $monthName = $dateObj->format('F'); // March
+         echo "<article>
+         <div class=\"inner\" >
+            <span class=\"bulle\">
+              <span class=\"day\">".$date["day"]."</span>
+              <span class=\"month\">$monthName</span>
+              <span class=\"year\">".$date["year"]."</span>
+            </span>
+            <h2 class='dateColor'>" . __("End date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
+            <p></p>
+       </div>
+     </article>";
+      }
 
+
+  echo "</section>";
+   echo "</td>";
+   echo "</tr>";
+   echo "</table>";
+   if(empty($release->fields["date_end"])) {
       if ($deployTaskFail == 0 && $testFail == 0) {
          $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
-                      && ($deployTaskTotal == $deployTaskDone)
-                      && ($testTotal == $testDone)
-                      && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
+            && ($deployTaskTotal == $deployTaskDone)
+            && ($testTotal == $testDone)
+            && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
 
          $text = "";
          if (!$allfinish) {
@@ -214,108 +249,106 @@ class PluginReleasesFinalization extends CommonDBTM {
             $text .= "<br>";
             $text .= "<br>";
          }
-         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
+//         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
             echo '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
             echo Html::scriptBlock(
                "$('#finalize').click(function(){
-               $( '#alert-message' ).dialog( 'open' );
-      
-               });");
+                  $( '#alert-message' ).dialog( 'open' );
+         
+                  });");
             echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-            $srcImg     = "fas fa-info-circle";
-            $color      = "forestgreen";
+            $srcImg = "fas fa-info-circle";
+            $color = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
 
             echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
             echo Html::scriptBlock("$( '#alert-message' ).dialog({
-              autoOpen: false,
-              height: " . 200 . ",
-              width: " . 300 . ",
-              modal: true,
-              open: function (){
-               $(this)
-                  .parent()
-                  .children('.ui-dialog-titlebar')
-                  .html(mTitle);
-            },
-              buttons: {
-               '" . __("Ok") . "': function() {
-                  if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
-              
-                    $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
-                  }else{  
-                     var date = $(\"[name = 'date_production']\").val();
-                     console.log(date);
-                     $.ajax({
-                        url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
-                        data: {'id' : " . $release->getID() . ",'date' : date},
-                        success: function() {
-                           document.location.reload();
-                        }
-                     });
-                     
-                  }
-               
+                 autoOpen: false,
+                 height: " . 200 . ",
+                 width: " . 300 . ",
+                 modal: true,
+                 open: function (){
+                  $(this)
+                     .parent()
+                     .children('.ui-dialog-titlebar')
+                     .html(mTitle);
                },
-               '" . __("Cancel") . "': function() {
-                     $( this ).dialog( 'close' );
-                }
-            },
-            
-          })");
-         }
+                 buttons: {
+                  '" . __("Ok") . "': function() {
+                     if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
+                 
+                       $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
+                     }else{  
+                        var date = $(\"[name = 'date_production']\").val();
+                        console.log(date);
+                        $.ajax({
+                           url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
+                           data: {'id' : " . $release->getID() . ",'date' : date},
+                           success: function() {
+                              document.location.reload();
+                           }
+                        });
+                        
+                     }
+                  
+                  },
+                  '" . __("Cancel") . "': function() {
+                        $( this ).dialog( 'close' );
+                   }
+               },
+               
+             })");
+//         }
       } else {
          $text = "";
-         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
+//         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
             echo '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Html::scriptBlock(
                "$('#finalize').click(function(){
-               $( '#alert-message' ).dialog( 'open' );
-      
-               });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-            $srcImg     = "fas fa-times";
-            $color      = "firebrick";
+                  $( '#alert-message' ).dialog( 'open' );
+         
+                  });");
+            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text. "</div>";
+            $srcImg = "fas fa-times";
+            $color = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);
 
             echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed", 'releases') . " \";");
             echo Html::scriptBlock("$( '#alert-message' ).dialog({
-              autoOpen: false,
-              height: " . 200 . ",
-              width: " . 300 . ",
-              modal: true,
-              open: function (){
-               $(this)
-                  .parent()
-                  .children('.ui-dialog-titlebar')
-                  .html(mTitle);
-            },
-              buttons: {
-               '" . __("Confirm", 'releases') . "': function() {
-                  if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
-              
-                    $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
-                  }else{  
-                     var date = $(\"[name = 'date_production']\").val();
-                     $.ajax({
-                        url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
-                        data: {'id' : " . $release->getID() . ",'failedtasks' : $deployTaskFail , 'failedtests' : $testFail},
-                        success: function() {
-                           document.location.reload();
-                        }
-                     });
-                     
-                  }
-               
+                 autoOpen: false,
+                 height: " . 200 . ",
+                 width: " . 300 . ",
+                 modal: true,
+                 open: function (){
+                  $(this)
+                     .parent()
+                     .children('.ui-dialog-titlebar')
+                     .html(mTitle);
                },
-               '" . __("Cancel") . "': function() {
-                     $( this ).dialog( 'close' );
-                }
-            },
-            
-          })");
+                 buttons: {
+                  '" . __("Confirm", 'releases') . "': function() {
+                
+                        var date = $(\"[name = 'date_production']\").val();
+                        $.ajax({
+                           url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
+                           data: {'id' : " . $release->getID() . ",'failedtasks' : $deployTaskFail , 'failedtests' : $testFail},
+                           success: function() {
+                              document.location.reload();
+                           }
+                        });
+                        
+                     
+                  
+                  },
+                  '" . __("Cancel") . "': function() {
+                        $( this ).dialog( 'close' );
+                   }
+               },
+               
+             })");
+//         }
          }
       }
    }

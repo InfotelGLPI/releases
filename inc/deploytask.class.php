@@ -164,6 +164,9 @@ class PluginReleasesDeploytask extends CommonDBTM {
           && ($uid = Session::getLoginUserID())) { // Change from task form
          $input["users_id_editor"] = $uid;
       }
+      $this->fields['date_mod'] = $_SESSION["glpi_currenttime"];
+      $input['date_mod'] = $_SESSION["glpi_currenttime"];
+      $input['users_id_editor'] = Session::getLoginUserID();
 
 
       //      $input["_job"] = new PluginReleasesRelease();

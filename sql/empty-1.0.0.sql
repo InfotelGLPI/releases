@@ -21,6 +21,7 @@ CREATE TABLE `glpi_plugin_releases_releases` (
   `locations_id` int(11) NOT NULL default '0',
   `date_mod` TIMESTAMP NULL default NULL,
   `date_creation` TIMESTAMP NULL DEFAULT NULL,
+  `date_end` TIMESTAMP NULL DEFAULT NULL,
   `is_deleted` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),

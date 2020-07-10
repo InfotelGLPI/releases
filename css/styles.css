@@ -1607,6 +1607,9 @@ section#timeline article div.inner span.bulle {
 section#timeline article div.inner span.bulle span {
     display: block;
     text-align: center;
+}
+
+.bulleMarge span {
     margin-top: 8px;
 }
 
@@ -1647,33 +1650,20 @@ section#timeline article:nth-child(2n+2) div.inner {
 section#timeline article:nth-child(2n+2) div.inner h2:after {
     left: -5px;
 }
-/*section#timeline article:nth-child(1) div.inner h2 {*/
-/*    background: #e74c3c;*/
-/*}*/
-/*section#timeline article:nth-child(1) div.inner h2:after {*/
-/*    background: #e74c3c;*/
-/*}*/
-/*section#timeline article:nth-child(2) div.inner h2 {*/
-/*    background: #2ecc71;*/
-/*}*/
-/*section#timeline article:nth-child(2) div.inner h2:after {*/
-/*    background: #2ecc71;*/
-/*}*/
-/*section#timeline article:nth-child(3) div.inner h2 {*/
-/*    background: #e67e22;*/
-/*}*/
-/*section#timeline article:nth-child(3) div.inner h2:after {*/
-/*    background: #e67e22;*/
-/*}*/
-/*section#timeline article:nth-child(4) div.inner h2 {*/
-/*    background: #1abc9c;*/
-/*}*/
-/*section#timeline article:nth-child(4) div.inner h2:after {*/
-/*    background: #1abc9c;*/
-/*}*/
-/*section#timeline article:nth-child(5) div.inner h2 {*/
-/*    background: #9b59b6;*/
-/*}*/
-/*section#timeline article:nth-child(5) div.inner h2:after {*/
-/*    background: #9b59b6;*/
-/*}*/
+
+section#timeline article div.inner span.date span.day {
+    font-size: 10px;
+    margin-top: 0px !important;
+}
+section#timeline article div.inner span.date span.month {
+    font-size: 18px;
+    margin-top: 0px !important;
+}
+section#timeline article div.inner span.date span.year {
+    font-size: 10px;
+    margin-top: 0px !important;
+}
+.dateColor {
+    background-color: #25303B;
+    color: white !important;
+}
