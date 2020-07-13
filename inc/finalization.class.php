@@ -153,23 +153,16 @@ class PluginReleasesFinalization extends CommonDBTM {
       $riskTotal     = PluginReleasesRelease::countForItem($ID, PluginReleasesRisk::class);
       $rollbackDone  = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class, PluginReleasesRollback::DONE);
       $rollbackTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class);
-      setlocale(LC_TIME,$_SESSION["glpilanguage"]);
-      $date = date_parse($release->getField("date_creation"));
-      $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
-      $monthName = $dateObj->format('F'); // March
 
       echo "<section id=\"timeline\">
   <article>
     <div class=\"inner\" >
-      <span class=\"bulle\">
-        <span class=\"day\">".$date["day"]."</span>
-        <span class=\"month\">$monthName</span>
-        <span class=\"year\">".$date["year"]."</span>
-      </span>
-      <h2 class='dateColor'>" . __("Creation date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-      <p></p>
- 
-    </div>
+            <span class=\"bulle bulleMarge\">
+              <span style=\"margin-left: 5px;\"><i class=\"fas fa-3x fa-play\"></i></span>
+            </span>
+            <h2 class='dateColor'>" . __("Creation date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
+            <p>" . Html::convDateTime($release->fields["date_creation"]) . "</p>
+       </div>
   </article>
   <article>
     <div class=\"inner\" >
@@ -196,9 +189,9 @@ class PluginReleasesFinalization extends CommonDBTM {
       </span>
       <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s deploy tasks', 'releases'), $deployTaskDone, $deployTaskTotal) . "</br>
-      " . sprintf(__('%s  deploy tasks failed', 'releases'), $deployTaskFail) . "<span class='percent' style=\"float: right;\">
-            " . $pourcentageTask . " %
-        </span></p>
+      " . sprintf(__('%s  deploy tasks failed', 'releases'), $deployTaskFail) . "<p><span class='percent' style=\"float: right;\">
+            " . Html::formatNumber($pourcentageTask) . " %
+        </span></p></p>
     </div>
   </article>
   <article>
@@ -208,48 +201,46 @@ class PluginReleasesFinalization extends CommonDBTM {
       </span>
       <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
       <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
-      " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<span class='percent' style=\"float: right;\">
-            " . $pourcentageTest . " %
-        </span></p>
+      " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<p><span class='percent' style=\"float: right;\">
+            " . Html::formatNumber($pourcentageTest) . " %
+        </span></p></p>
     </div>
   </article>
   ";
-      if(!empty($release->fields["date_end"])){
-         $date = date_parse($release->getField("date_end"));
-         $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
-         $monthName = $dateObj->format('F'); // March
+      if (!empty($release->fields["date_end"])) {
+         //         $date = date_parse($release->getField("date_end"));
+         //         $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
+         //         $monthName = $dateObj->format('F'); // March
          echo "<article>
          <div class=\"inner\" >
-            <span class=\"bulle\">
-              <span class=\"day\">".$date["day"]."</span>
-              <span class=\"month\">$monthName</span>
-              <span class=\"year\">".$date["year"]."</span>
+            <span class=\"bulle bulleMarge\">
+              <span><i class=\"fas fa-3x fa-stop\"></i></span>
             </span>
             <h2 class='dateColor'>" . __("End date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-            <p></p>
+            <p>" . Html::convDateTime($release->fields["date_end"]) . "</p>
        </div>
      </article>";
       }
 
 
-  echo "</section>";
-   echo "</td>";
-   echo "</tr>";
-   echo "</table>";
-   if(empty($release->fields["date_end"])) {
-      if ($deployTaskFail == 0 && $testFail == 0) {
-         $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
-            && ($deployTaskTotal == $deployTaskDone)
-            && ($testTotal == $testDone)
-            && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
+      echo "</section>";
+      echo "</td>";
+      echo "</tr>";
+      echo "</table>";
+      if (empty($release->fields["date_end"])) {
+         if ($deployTaskFail == 0 && $testFail == 0) {
+            $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
+                         && ($deployTaskTotal == $deployTaskDone)
+                         && ($testTotal == $testDone)
+                         && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
 
-         $text = "";
-         if (!$allfinish) {
-            $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !", "releases") . '</span>';
-            $text .= "<br>";
-            $text .= "<br>";
-         }
-//         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
+            $text = "";
+            if (!$allfinish) {
+               $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !", "releases") . '</span>';
+               $text .= "<br>";
+               $text .= "<br>";
+            }
+            //         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
             echo '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
             echo Html::scriptBlock(
@@ -258,8 +249,8 @@ class PluginReleasesFinalization extends CommonDBTM {
          
                   });");
             echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-            $srcImg = "fas fa-info-circle";
-            $color = "forestgreen";
+            $srcImg     = "fas fa-info-circle";
+            $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
 
             echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
@@ -299,10 +290,10 @@ class PluginReleasesFinalization extends CommonDBTM {
                },
                
              })");
-//         }
-      } else {
-         $text = "";
-//         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
+            //         }
+         } else {
+            $text = "";
+            //         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
             echo '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Html::scriptBlock(
@@ -310,9 +301,9 @@ class PluginReleasesFinalization extends CommonDBTM {
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text. "</div>";
-            $srcImg = "fas fa-times";
-            $color = "firebrick";
+            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . "</div>";
+            $srcImg     = "fas fa-times";
+            $color      = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);
 
             echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed", 'releases') . " \";");
@@ -348,7 +339,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                },
                
              })");
-//         }
+            //         }
          }
       }
    }

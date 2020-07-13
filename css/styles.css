@@ -1663,7 +1663,8 @@ section#timeline article div.inner span.date span.year {
     font-size: 10px;
     margin-top: 0px !important;
 }
-.dateColor {
-    background-color: #25303B;
+
+h2.dateColor {
+    background-color: #8db8e2;
     color: white !important;
 }

@@ -51,6 +51,10 @@ class PluginReleasesDeploytask extends CommonITILTask {
       return _n('Release deploy task', 'Release deploy tasks', $nb, 'releases');
    }
 
+   public function getItilObjectItemType() {
+      return str_replace('Deploytask', 'Release', $this->getType());
+   }
+
    /**
     *
     * @return css class
@@ -106,18 +110,42 @@ class PluginReleasesDeploytask extends CommonITILTask {
     **/
    function prepareInputForAdd($input) {
 
-      $input = parent::prepareInputForAdd($input);
+      Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
-      $input["users_id"] = Session::getLoginUserID();
+      if (isset($input["plan"])) {
+         $input["begin"]         = $input['plan']["begin"];
+         $input["end"]           = $input['plan']["end"];
+
+         $timestart              = strtotime($input["begin"]);
+         $timeend                = strtotime($input["end"]);
+         $input["actiontime"]    = $timeend-$timestart;
+
+         unset($input["plan"]);
+         if (!$this->test_valid_date($input)) {
+            Session::addMessageAfterRedirect(__('Error in entering dates. The starting date is later than the ending date'),
+                                             false, ERROR);
+            return false;
+         }
+      }
+
+      if (!isset($input["users_id"])
+          && ($uid = Session::getLoginUserID())) {
+         $input["users_id"] = $uid;
+      }
+
       $release           = new PluginReleasesRelease();
       $release->getFromDB($input["plugin_releases_releases_id"]);
       $input["entities_id"] = $release->getField("entities_id");
+
       if ($input["plugin_releases_deploytasks_id"] != 0) {
          $task = new self();
          $task->getFromDB($input["plugin_releases_deploytasks_id"]);
          $input["level"] = $task->getField("level") + 1;
       }
 
+      if (!isset($input["date"])) {
+         $input["date"] = $_SESSION["glpi_currenttime"];
+      }
 
       return $input;
    }
@@ -164,9 +192,6 @@ class PluginReleasesDeploytask extends CommonITILTask {
           && ($uid = Session::getLoginUserID())) { // Change from task form
          $input["users_id_editor"] = $uid;
       }
-      $this->fields['date_mod'] = $_SESSION["glpi_currenttime"];
-      $input['date_mod'] = $_SESSION["glpi_currenttime"];
-      $input['users_id_editor'] = Session::getLoginUserID();
 
 
       //      $input["_job"] = new PluginReleasesRelease();
@@ -405,16 +430,16 @@ class PluginReleasesDeploytask extends CommonITILTask {
          }
       ');
 
-//TODO used ?
-//      if ($ID > 0) {
-//         echo "<div class='fa-label'>
-//         <i class='far fa-calendar fa-fw'
-//            title='" . __('Date') . "'></i>";
-//         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
-//                                          'timestep'   => 1,
-//                                          'maybeempty' => false]);
-//         echo "</div>";
-//      }
+
+      if ($ID > 0) {
+         echo "<div class='fa-label'>
+         <i class='far fa-calendar fa-fw'
+            title='" . __('Date') . "'></i>";
+         Html::showDateTimeField("date", ['value'      => $this->fields["date"],
+                                          'timestep'   => 1,
+                                          'maybeempty' => false]);
+         echo "</div>";
+      }
 
       echo "<div class='fa-label'>
          <i class='fas fa-tag fa-fw'

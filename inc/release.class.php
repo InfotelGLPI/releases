@@ -1854,9 +1854,10 @@ class PluginReleasesRelease extends CommonITILObject {
             echo "<p>";
             if (isset($item_i['state'])) {
 
-               if ($item['type'] == PluginReleasesTest::getType() || $item['type'] == pluginReleasesDeploytask::getType()) {
-                  $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",2)'";
-                  $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",3)'";
+               if ($item['type'] == PluginReleasesTest::getType()
+                   || $item['type'] == pluginReleasesDeploytask::getType()) {
+                  $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",".PluginReleasesTest::DONE.")'";
+                  $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",".PluginReleasesTest::FAIL.")'";
                   if (!$item_i['can_edit']) {
                      $onClick = "style='cursor: not-allowed;'";
                   }
@@ -1864,31 +1865,31 @@ class PluginReleasesRelease extends CommonITILObject {
                      echo "<span>";
                      $style = "color:gray;";
                      $fa    = "fa-times-circle fa-2x";
-                     echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
+                     echo "<i data-type='fail' class='fas $fa pointer' style='margin-right: 10px;$style' $onClickFail></i>";
                      $style = "color:gray;";
                      $fa    = "fa-check-circle fa-2x";
 
-                     echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
+                     echo "<i data-type='done' class='fas $fa pointer' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
                   } else if ($item_i['state'] == PluginReleasesDeploytask::DONE || $item_i['state'] == PluginReleasesTest::DONE) {
                      echo "<span>";
                      $style = "color:gray;";
                      $fa    = "fa-times-circle fa-2x";
-                     echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
+                     echo "<i data-type='fail' class='fas $fa pointer' style='margin-right: 10px;$style' $onClickFail></i>";
                      $style = "color:forestgreen;";
                      $fa    = "fa-check-circle fa-2x";
 
-                     echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
+                     echo "<i data-type='done' class='fas $fa pointer' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
                   } else {
                      echo "<span>";
                      $style = "color:firebrick;";
                      $fa    = "fa-times-circle fa-2x";
-                     echo "<i data-type='fail' class='fas $fa' style='margin-right: 10px;$style' $onClickFail></i>";
+                     echo "<i data-type='fail' class='fas $fa pointer' style='margin-right: 10px;$style' $onClickFail></i>";
                      $style = "color:gray;";
                      $fa    = "fa-check-circle fa-2x";
 
-                     echo "<i data-type='done' class='fas $fa' style='margin-right: 10px;$style' $onClickDone></i>";
+                     echo "<i data-type='done' class='fas $fa pointer' style='margin-right: 10px;$style' $onClickDone></i>";
                      echo "</span>";
                   }
                } else {
