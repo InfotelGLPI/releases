@@ -174,7 +174,21 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'   => 'common',
          'name' => self::getTypeName(2)
       ];
-
+      $tab[] = [
+         'id'            => '81',
+         'table'         => self::getTable(),
+         'field'         => 'id',
+         'name'          => __('ID'),
+         'massiveaction' => false,
+         'datatype'      => 'number'
+      ];
+      $tab[] = [
+         'id'            => '80',
+         'table'         => 'glpi_entities',
+         'field'         => 'completename',
+         'name'          => __('Entity'),
+         'datatype'      => 'dropdown'
+      ];
       $tab[] = [
          'id'            => '1',
          'table'         => $this->getTable(),
@@ -211,13 +225,21 @@ class PluginReleasesRelease extends CommonITILObject {
       $tab[] = [
          'id'            => '5',
          'table'         => $this->getTable(),
+         'field'         => 'content',
+         'name'          => __('Number of rollbacks', 'releases'),
+         'massiveaction' => false,
+         'datatype'      => 'specific'
+      ];
+      $tab[] = [
+         'id'            => '6',
+         'table'         => $this->getTable(),
          'field'         => 'name',
          'name'          => __('Number of tests', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id'            => '6',
+         'id'            => '7',
          'table'         => $this->getTable(),
          'field'         => 'service_shutdown',
          'name'          => __('Number of tasks', 'releases'),
@@ -225,7 +247,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id'            => '7',
+         'id'            => '8',
          'table'         => $this->getTable(),
          'field'         => 'status',
          'name'          => __('Status'),
@@ -233,13 +255,80 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id'            => '8',
+         'id'            => '9',
          'table'         => $this->getTable(),
          'field'         => 'date_production',
          'name'          => __('Production run date', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'datetime'
       ];
+      $tab[] = [
+         'id'            => '10',
+         'table'         => $this->getTable(),
+         'field'         => 'service_shutdown',
+         'name'          => __('Service shutdown', 'releases'),
+         'massiveaction' => false,
+         'datatype'      => 'bool'
+      ];
+      $tab[] = [
+         'id'            => '11',
+         'table'         => $this->getTable(),
+         'field'         => 'service_shutdown_details',
+         'name'          => __('Service shutdown details', 'releases'),
+         'massiveaction' => false,
+         'datatype'      => 'text',
+         'htmltext'      => true
+      ];
+      $tab[] = [
+         'id'            => '12',
+         'table'         => $this->getTable(),
+         'field'         => 'communication',
+         'name'          => __('Communication', 'releases'),
+         'massiveaction' => false,
+         'datatype'      => 'bool'
+      ];
+      $tab[] = [
+         'id'            => '13',
+         'table'         => $this->getTable(),
+         'field'         => 'communication_type',
+         'name'          => __('Communication type', 'releases'),
+         'massiveaction' => false,
+         'datatype'      => 'specific'
+      ];
+      $tab[] = [
+         'id'            => '14',
+         'table'         => $this->getTable(),
+         'field'         => 'target',
+         'name'          => __('Target', 'releases'),
+         'massiveaction' => false,
+         'datatype'      => 'specific'
+      ];
+      $tab[] = [
+         'id'                 => '15',
+         'table'              => $this->getTable(),
+         'field'              => 'date_mod',
+         'name'               => __('Last update'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+
+      $tab[] = [
+         'id'                 => '16',
+         'table'              => $this->getTable(),
+         'field'              => 'date_creation',
+         'name'               => __('Creation date'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+      $tab[] = [
+         'id'                 => '17',
+         'table'              => $this->getTable(),
+         'field'              => 'date_end',
+         'name'               => __('Closing date'),
+         'datatype'           => 'datetime',
+         'massiveaction'      => false
+      ];
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
       return $tab;
 
    }
@@ -271,6 +360,79 @@ class PluginReleasesRelease extends CommonITILObject {
          case 'service_shutdown':
             return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
                    . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
+            break;
+         case 'is_recursive':
+            $self = new self();
+            $self->getFromDB($options["raw_data"]["id"]);
+            return PluginReleasesRisk::countDoneForItem($self) . " / ".PluginReleasesRisk::countForItem($self);
+            break;
+         case 'content':
+            $self = new self();
+            $self->getFromDB($options["raw_data"]["id"]);
+            return PluginReleasesRollback::countDoneForItem($self) . " / ".PluginReleasesRollback::countForItem($self);
+            break;
+         case 'communication_type':
+            if($values["communication_type"] == "0"){
+               return " ";
+            }
+            return $values["communication_type"]::getTypeName();
+            break;
+         case 'target':
+            $self = new self();
+            $self->getFromDB($options["raw_data"]["id"]);
+            if($self->fields["communication_type"] == "0" || $values["target"] == "[]"){
+               return " ";
+            }
+            if($self->fields["communication_type"] == "User"){
+               $text = "";
+               $user = new User();
+               $items = json_decode($values["target"]);
+               foreach ($items as $item){
+                  $user->getFromDB($item);
+                  $text .= $user->getFriendlyName()."<br />";
+               }
+               return $text;
+            }
+            if($self->fields["communication_type"] == "Profile"){
+               $text = "";
+               $profile = new Profile();
+               $items = json_decode($values["target"]);
+               foreach ($items as $item){
+                  $profile->getFromDB($item);
+                  $text .= $profile->getFriendlyName()."<br />";
+               }
+               return $text;
+            }
+            if($self->fields["communication_type"] == "Group"){
+               $text = "";
+               $group = new Group();
+               $items = json_decode($values["target"]);
+               foreach ($items as $item){
+                  $group->getFromDB($item);
+                  $text .= $group->getFriendlyName()."<br />";
+               }
+               return $text;
+            }
+            if($self->fields["communication_type"] == "Entity"){
+               $text = "";
+               $entity = new Entity();
+               $items = json_decode($values["target"]);
+               foreach ($items as $item){
+                  $entity->getFromDB($item);
+                  $text .= $entity->getFriendlyName()."<br />";
+               }
+               return $text;
+            }
+            if($self->fields["communication_type"] == "Location"){
+               $text = "";
+               $location = new Location();
+               $items = json_decode($values["target"]);
+               foreach ($items as $item){
+                  $location->getFromDB($item);
+                  $text .= $location->getFriendlyName()."<br />";
+               }
+               return $text;
+            }
             break;
       }
       return parent::getSpecificValueToDisplay($field, $values, $options);

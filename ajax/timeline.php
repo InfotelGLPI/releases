@@ -130,29 +130,24 @@ switch ($_REQUEST['action']) {
       $obj->update([
                       'id'        => intval($_REQUEST['items_id']),
                       $foreignKey => intval($_REQUEST[$foreignKey]),
-                      'state'     => $new_state
+                      'state'     => $new_state,
+                      'update'    => true
                    ]);
       $release = new PluginReleasesRelease();
       $release->getFromDB($obj->fields["plugin_releases_releases_id"]);
 
-      if (PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(), $obj->fields["plugin_releases_releases_id"])) {
-         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::FAIL]);
-      } else if (PluginReleasesRelease::failOrNot(new PluginReleasesTest(), $obj->fields["plugin_releases_releases_id"])) {
-         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::FAIL]);
+
+      if (PluginReleasesTest::countDoneForItem($release) != 0) {
+         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TESTDEFINITION]);
+      } else if (PluginReleasesDeploytask::countDoneForItem($release) != 0) {
+         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TASKDEFINITION]);
+      } else if (PluginReleasesRollback::countDoneForItem($release) != 0) {
+         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::ROLLBACKDEFINITION]);
+      } else {
+         $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::RISKDEFINITION]);
       }
 
-      if (!PluginReleasesRelease::failOrNot(new PluginReleasesDeploytask(), $obj->fields["plugin_releases_releases_id"])
-          && !PluginReleasesRelease::failOrNot(new PluginReleasesTest(), $obj->fields["plugin_releases_releases_id"])) {
-         if ($release->getField("status") == PluginReleasesRelease::FAIL) {
-            if (PluginReleasesTest::countDoneForItem($release) != 0) {
-               $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TESTDEFINITION]);
-            } else if (PluginReleasesDeploytask::countDoneForItem($release) != 0) {
-               $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::TASKDEFINITION]);
-            } else {
-               $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::ROLLBACKDEFINITION]);
-            }
-         }
-      }
+
 
       break;
 }
