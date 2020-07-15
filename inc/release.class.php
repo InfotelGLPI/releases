@@ -207,7 +207,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'htmltext'      => true
       ];
       $tab[] = [
-         'id'            => '3',
+         'id'            => '18',
          'table'         => $this->getTable(),
          'field'         => 'date_preproduction',
          'name'          => __('Pre-production run date', 'releases'),
@@ -215,36 +215,58 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'datetime'
       ];
       $tab[] = [
-         'id'            => '4',
-         'table'         => $this->getTable(),
-         'field'         => 'is_recursive',
-         'name'          => __('Number of risks', 'releases'),
-         'massiveaction' => false,
-         'datatype'      => 'specific'
+         'id'                 => '4',
+         'table'              => 'glpi_plugin_releases_risks',
+         'field'              => 'id',
+         'name'               => __('Number of risks', 'releases'),
+         'datatype'           => 'count',
+         'forcegroupby'       => true,
+         'usehaving'          => true,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'jointype'           => 'child',
+         ]
       ];
       $tab[] = [
          'id'            => '5',
-         'table'         => $this->getTable(),
-         'field'         => 'content',
+         'table'         => 'glpi_plugin_releases_rollbacks',
+         'field'         => 'id',
          'name'          => __('Number of rollbacks', 'releases'),
-         'massiveaction' => false,
-         'datatype'      => 'specific'
+         'datatype'           => 'count',
+         'forcegroupby'       => true,
+         'usehaving'          => true,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'jointype'           => 'child',
+         ]
       ];
       $tab[] = [
          'id'            => '6',
-         'table'         => $this->getTable(),
-         'field'         => 'name',
+         'table'         => 'glpi_plugin_releases_tests',
+         'field'         => 'id',
          'name'          => __('Number of tests', 'releases'),
          'massiveaction' => false,
-         'datatype'      => 'specific'
+         'datatype'      => 'count',
+         'forcegroupby'       => true,
+         'usehaving'          => true,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'jointype'           => 'child',
+         ]
       ];
       $tab[] = [
          'id'            => '7',
-         'table'         => $this->getTable(),
-         'field'         => 'service_shutdown',
+         'table'         => 'glpi_plugin_releases_deploytasks',
+         'field'         => 'id',
          'name'          => __('Number of tasks', 'releases'),
          'massiveaction' => false,
-         'datatype'      => 'specific'
+         'datatype'      => 'count',
+         'forcegroupby'       => true,
+         'usehaving'          => true,
+         'massiveaction'      => false,
+         'joinparams'         => [
+            'jointype'           => 'child',
+         ]
       ];
       $tab[] = [
          'id'            => '8',
@@ -299,7 +321,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '14',
          'table'         => $this->getTable(),
          'field'         => 'target',
-         'name'          => __('Target', 'releases'),
+         'name'          => _n('Target', 'Targets',2),
          'massiveaction' => false,
          'datatype'      => 'specific'
       ];
@@ -349,6 +371,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if (!is_array($values)) {
          $values = [$field => $values];
       }
+
       switch ($field) {
          case 'status':
             $var = "<span class='status'>";
@@ -357,20 +380,25 @@ class PluginReleasesRelease extends CommonITILObject {
             $var .= "</span>";
             return $var;
             break;
-         case 'service_shutdown':
-            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
-                   . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
-            break;
-         case 'is_recursive':
-            $self = new self();
-            $self->getFromDB($options["raw_data"]["id"]);
-            return PluginReleasesRisk::countDoneForItem($self) . " / ".PluginReleasesRisk::countForItem($self);
-            break;
-         case 'content':
-            $self = new self();
-            $self->getFromDB($options["raw_data"]["id"]);
-            return PluginReleasesRollback::countDoneForItem($self) . " / ".PluginReleasesRollback::countForItem($self);
-            break;
+//         case 'nb_tasks':
+//            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
+//                   . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
+//            break;
+//         case 'nb_risks':
+//            $self = new self();
+//            $self->getFromDB($options["raw_data"]["id"]);
+//            return PluginReleasesRisk::countDoneForItem($self) . " / ".PluginReleasesRisk::countForItem($self);
+//            break;
+//         case 'nb_rollbacks':
+//            $self = new self();
+//            $self->getFromDB($options["raw_data"]["id"]);
+//            return PluginReleasesRollback::countDoneForItem($self) . " / ".PluginReleasesRollback::countForItem($self);
+//            break;
+//         case 'nb_tests':
+//            $self = new self();
+//            $self->getFromDB($options["raw_data"]["id"]);
+//            return PluginReleasesTest::countDoneForItem($self) . " / ".PluginReleasesTest::countForItem($self);
+//            break;
          case 'communication_type':
             if($values["communication_type"] == "0"){
                return " ";
@@ -510,8 +538,6 @@ class PluginReleasesRelease extends CommonITILObject {
                $newId = $relation_item->clone($override_input, $history);
             }
          }
-
-
       }
    }
 
@@ -523,6 +549,7 @@ class PluginReleasesRelease extends CommonITILObject {
     **/
    function post_addItem() {
       global $DB;
+
       if (isset($this->input["releasetemplates_id"])) {
          $template = new PluginReleasesReleasetemplate();
          $template->getFromDB($this->input["releasetemplates_id"]);
@@ -704,61 +731,31 @@ class PluginReleasesRelease extends CommonITILObject {
    /**
     * Get status class
     *
+    * @param $status
+    *
     * @return string
     * @since 9.3
-    *
     */
    public static function getStatusClass($status) {
       $class = null;
       $solid = true;
 
       switch ($status) {
-         case self::NEWRELEASE :
-            $class = 'circle';
-            break;
+         case self::DATEDEFINITION:
+         case self::CHANGEDEFINITION:
+         case self::RISKDEFINITION:
+         case self::TESTDEFINITION:
+         case self::TASKDEFINITION:
+         case self::ROLLBACKDEFINITION:
+         case self::REVIEW:
+         case self::FINALIZE:
          case self::RELEASEDEFINITION :
             $class = 'circle';
             $solid = false;
             break;
-         case self::DATEDEFINITION :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::CHANGEDEFINITION :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::RISKDEFINITION :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::TESTDEFINITION :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::TASKDEFINITION :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::ROLLBACKDEFINITION :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::FINALIZE :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::REVIEW :
-            $class = 'circle';
-            $solid = false;
-            break;
-         case self::CLOSED :
-            $class = 'circle';
-            break;
          default:
             $class = 'circle';
             break;
-
       }
 
       return $class == null

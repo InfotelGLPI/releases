@@ -122,21 +122,6 @@ CREATE TABLE `glpi_plugin_releases_typedeploytasks` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `glpi_plugin_releases_deploytasks`;
--- CREATE TABLE `glpi_plugin_release_deploytasks` (
---    `id` int(11) NOT NULL auto_increment,
---    `entities_id` int(11) NOT NULL default '0',
---    `plugin_release_releases_id` int(11) NOT NULL default '0',
---    `plugin_release_typedeploytasks_id` int(11) NOT NULL default '0',
---    `plugin_release_risks_id` int(11) NOT NULL default '0',
---    `users_id` INT(11) NOT NULL,
---    `state` int(11) NOT NULL default '1',
---    `name` varchar(255) collate utf8_unicode_ci default NULL,
---    `date_mod` TIMESTAMP NULL default NULL,
---    `date_creation` TIMESTAMP NULL DEFAULT NULL,
---    `comment` text collate utf8_unicode_ci,
---    PRIMARY KEY  (`id`),
---    KEY `name` (`name`)
--- ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 CREATE TABLE `glpi_plugin_releases_deploytasks` (
   `id` int(11) NOT NULL auto_increment,
   `entities_id` int(11) NOT NULL default '0',
