@@ -222,6 +222,11 @@ class PluginReleasesTest extends CommonDBTM {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
+      echo "</td>";
+
       echo "<td>";
       echo __("Test type", 'releases');
       echo "</td>";
@@ -236,10 +241,7 @@ class PluginReleasesTest extends CommonDBTM {
                                                          'value' => $value]);
       echo "</td>";
 
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
-      echo "</td>";
+
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";

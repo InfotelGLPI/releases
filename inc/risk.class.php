@@ -201,6 +201,13 @@ class PluginReleasesRisk extends CommonDBTM {
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
+
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
+      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
+      echo "</td>";
+
       echo "<td>";
       echo __("Risk type", 'releases');
       echo "</td>";
@@ -215,11 +222,7 @@ class PluginReleasesRisk extends CommonDBTM {
                                                          'value' => $value, 'rand' => $rand_type]);
       echo "</td>";
 
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
-      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
-      echo "</td>";
+
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";

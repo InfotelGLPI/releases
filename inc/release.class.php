@@ -1135,9 +1135,10 @@ class PluginReleasesRelease extends CommonITILObject {
                $options["content"]     = $c->getField("content");
 
             }
+            $options['entities_id'] = $c->getField("entities_id");
+            $this->fields["entities_id"] = $c->getField("entities_id");
          }
-         $options['entities_id'] = $c->getField("entities_id");
-         $this->fields["entities_id"] = $c->getField("entities_id");
+
       }
 
       // In percent
