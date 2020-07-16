@@ -2303,7 +2303,7 @@ class PluginReleasesRelease extends CommonITILObject {
    static function getClosedStatusArray() {
 
 
-      $tab = [self::CLOSED];
+      $tab = [self::CLOSED,self::FAIL];
       return $tab;
    }
 
