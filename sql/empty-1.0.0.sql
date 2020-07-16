@@ -200,6 +200,7 @@ DROP TABLE IF EXISTS `glpi_plugin_releases_reviews`;
 CREATE TABLE `glpi_plugin_releases_reviews` (
    `id` int(11) NOT NULL auto_increment,
    `entities_id` int(11) NOT NULL default '0',
+   `name` varchar(255) collate utf8_unicode_ci default NULL,
    `plugin_releases_releases_id` int(11) NOT NULL default '0',
    `real_date_release` TIMESTAMP NULL DEFAULT NULL,
    `conforming_realization` tinyint(1) NOT NULL default '0',

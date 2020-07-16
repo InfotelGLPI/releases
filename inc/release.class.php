@@ -807,6 +807,9 @@ class PluginReleasesRelease extends CommonITILObject {
          case self::CLOSED :
             $key = 'closerelease';
             break;
+         case self::FAIL :
+            $key = 'closerelease';
+            break;
 
       }
       return $key;
@@ -821,10 +824,11 @@ class PluginReleasesRelease extends CommonITILObject {
    function prepareInputForUpdate($input) {
 
       //      $input = parent::prepareInputForUpdate($input);
-      if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
+      if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
          $input['target'] = [];
+         $input['target'] = json_encode($input['target']);
       }
-      $input['target'] = json_encode($input['target']);
+
       if (!empty($input["date_preproduction"])
           && !empty($input["date_production"])
           && $input["status"] < self::DATEDEFINITION) {
@@ -1103,6 +1107,7 @@ class PluginReleasesRelease extends CommonITILObject {
       }
       if (isset($options["template_id"]) && $options["template_id"] > 0) {
          $this->prepareField($options["template_id"]);
+         $this->fields["status"] = self::NEWRELEASE;
          $release_user = new PluginReleasesReleasetemplate_User();
          $release_supplier = new PluginReleasesReleasetemplate_Supplier();
          $group_release = new PluginReleasesGroup_Releasetemplate();
@@ -2261,6 +2266,7 @@ class PluginReleasesRelease extends CommonITILObject {
               'name'                       => '',
               'content'                    => '',
               'date_preproduction'         => null,
+              'users_id_recipient'         => Session::getLoginUserID(),
               'date_production'            => null,
               'entities_id'                => $entity,
               'status'                     => self::NEWRELEASE,
@@ -2269,7 +2275,7 @@ class PluginReleasesRelease extends CommonITILObject {
               'hour_type'                  => 0,
               'communication'              => false,
               'communication_type'         => false,
-              'target'                     => [],
+              'target'                     => "",
               'locations_id'               => 0,
       ];
    }
@@ -2966,6 +2972,10 @@ class PluginReleasesRelease extends CommonITILObject {
                                         ] + $RESTRICT
                           ])->next();
       return (int)$row['cpt'];
+   }
+
+   function post_getEmpty() {
+      $this->fields['users_id_recipient']         = Session::getLoginUserID();
    }
 }
 

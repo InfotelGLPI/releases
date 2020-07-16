@@ -207,7 +207,8 @@ class PluginReleasesFinalization extends CommonDBTM {
     </div>
   </article>
   ";
-      if (!empty($release->fields["date_end"])) {
+
+      $dateEnd = (!empty($release->fields["date_end"]))? Html::convDateTime($release->fields["date_end"]):__("Not yet completed",'releases');
          //         $date = date_parse($release->getField("date_end"));
          //         $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
          //         $monthName = $dateObj->format('F'); // March
@@ -217,10 +218,10 @@ class PluginReleasesFinalization extends CommonDBTM {
               <span><i class=\"fas fa-3x fa-stop\"></i></span>
             </span>
             <h2 class='dateColor'>" . __("End date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-            <p>" . Html::convDateTime($release->fields["date_end"]) . "</p>
+            <p>" . $dateEnd . "</p>
        </div>
      </article>";
-      }
+
 
 
       echo "</section>";
@@ -248,7 +249,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
             $srcImg     = "fas fa-info-circle";
             $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);

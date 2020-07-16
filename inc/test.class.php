@@ -173,20 +173,21 @@ class PluginReleasesTest extends CommonDBTM {
       $this->showFormHeader($options);
 
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo _n('Test template', 'Test templates', 1, 'releases');
-      echo "</td>";
-      echo "<td style='vertical-align: middle' >";
-      //      echo "<div class='fa-label'>
-      //            <i class='fas fa-reply fa-fw'
-      //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-      PluginReleasesTesttemplate::dropdown(['value'     => '',
-                                            'entity'    => $this->getEntityID(),
-                                            'rand'      => $rand_template,
-                                            'on_change' => 'tasktemplate_update(this.value)']);
-      echo "</div>";
-      echo Html::scriptBlock('
+      if($ID<0) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<td>";
+         echo _n('Test template', 'Test templates', 1, 'releases');
+         echo "</td>";
+         echo "<td style='vertical-align: middle' >";
+         //      echo "<div class='fa-label'>
+         //            <i class='fas fa-reply fa-fw'
+         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
+         PluginReleasesTesttemplate::dropdown(['value' => '',
+            'entity' => $this->getEntityID(),
+            'rand' => $rand_template,
+            'on_change' => 'tasktemplate_update(this.value)']);
+         echo "</div>";
+         echo Html::scriptBlock('
          function tasktemplate_update(value) {
             $.ajax({
                url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/test.php",
@@ -216,11 +217,11 @@ class PluginReleasesTest extends CommonDBTM {
             });
          }
       ');
-      echo "</td>";
-      echo "<td colspan='2'>";
-      echo "</td>";
-      echo "</tr>";
-
+         echo "</td>";
+         echo "<td colspan='2'>";
+         echo "</td>";
+         echo "</tr>";
+      }
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";

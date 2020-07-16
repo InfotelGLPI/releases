@@ -284,6 +284,11 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
    function prepareInputForAdd($input) {
      $input =  parent::prepareInputForAdd($input);
+      //      $input = parent::prepareInputForUpdate($input);
+      if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
+         $input['target'] = [];
+      }
+      $input['target'] = json_encode($input['target']);
       if (!isset($input['_auto_import'])) {
          if (!isset($input["_users_id_requester"])) {
             if ($uid = Session::getLoginUserID()) {
@@ -305,6 +310,11 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
    function prepareInputForUpdate($input) {
       $input = parent::prepareInputForUpdate($input);
+      //      $input = parent::prepareInputForUpdate($input);
+      if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && $input["communication_type"] != $this->fields["communication_type"])) {
+         $input['target'] = [];
+      }
+      $input['target'] = json_encode($input['target']);
       $release_user = new PluginReleasesReleasetemplate_User();
       $release_supplier = new PluginReleasesReleasetemplate_Supplier();
       $group_release = new PluginReleasesGroup_Releasetemplate();
@@ -812,9 +822,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</td>";
       echo "</tr>";
 
-      echo "</table>";
-      $this->showActorsPartForm($ID, $options);
-      echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
+
 
       echo "<tr class='tab_bg_1'>";
       echo "<th style='width:$colsize1%'>" . __('Title') . "</th>";
@@ -836,7 +844,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          "value"           => $this->fields["content"]]);
       echo "</td>";
       echo "</tr>";
-
+      echo "</table>";
+      $this->showActorsPartForm($ID, $options);
+      echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<th>" . __('Service shutdown', 'releases') . "</th>";
@@ -882,34 +892,34 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "</tr>";
 
-//      echo "<tr class='tab_bg_1'>";
-//
-//      $targets = json_decode($this->fields["target"]);
-//
-//      echo "<th>" . _n('Target', 'Targets',
-//            Session::getPluralNumber()) . "</th>";
-//
-//      echo "<td id='targets'>";
-//
-//      echo "</td>";
-//      Ajax::updateItem("targets",
-//         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-//         ['type'         => $this->fields["communication_type"],
-//            'current_type' => $this->fields["communication_type"],
-//            'values'       => $targets],
-//         true);
-//      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-//         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-//         ['type'         => '__VALUE__',
-//            'current_type' => $this->fields["communication_type"],
-//            'values'       => $targets],
-//         true);
-//      echo "</td>";
-//
-//      echo "<th></th>";
-//      echo "<td></td>";
-//
-//      echo "</tr>";
+      echo "<tr class='tab_bg_1'>";
+
+      $targets = json_decode($this->fields["target"]);
+
+      echo "<th>" . _n('Target', 'Targets',
+            Session::getPluralNumber()) . "</th>";
+
+      echo "<td id='targets'>";
+
+      echo "</td>";
+      Ajax::updateItem("targets",
+         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+         ['type'         => $this->fields["communication_type"],
+            'current_type' => $this->fields["communication_type"],
+            'values'       => $targets],
+         true);
+      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
+         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+         ['type'         => '__VALUE__',
+            'current_type' => $this->fields["communication_type"],
+            'values'       => $targets],
+         true);
+      echo "</td>";
+
+      echo "<th></th>";
+      echo "<td></td>";
+
+      echo "</tr>";
 
 
 
@@ -1482,8 +1492,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          }
          if (isset($item_i['plugin_releases_risks_id'])
             && !empty($item_i['plugin_releases_risks_id'])) {
-            echo __("Associated with") . " ";
-            echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id']) . "<br>";
+            echo __("Associated with",'releases') . " ";
+            echo Dropdown::getDropdownName("glpi_plugin_releases_risktemplates", $item_i['plugin_releases_risks_id']) . "<br>";
          }
 
          if (isset($item_i['actiontime'])
@@ -1525,16 +1535,23 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          $timeline_index++;
       }
-      echo Html::scriptBlock("$(document).ready(function (){
+      if (isset($_SESSION["releases"]["template"][Session::getLoginUserID()])) {
+         $catToLoad = $_SESSION["releases"]["template"][Session::getLoginUserID()];
+      } else {
+         $catToLoad = 'risk';
+      }
+
+      unset($_SESSION["releases"]["template"][Session::getLoginUserID()]);
+      echo Html::scriptBlock("$(document).ready(function (){        
                                         $('.filter_timeline_release li a').removeClass('h_active');
                                         $('.h_item').removeClass('h_hidden');
                                        $('.h_item').addClass('h_hidden');
-                                      $(\"a[data-type='risk']\").addClass('h_active');
+                                      $(\"a[data-type='$catToLoad']\").addClass('h_active');
                                        $('.ajax_box').empty();
                                        //activate clicked element
                                        //find active classname
-                                       $(\"a[data-type='risk'].filterEle\").addClass('h_active');
-                                       $(\".h_content.risk\").parent().removeClass('h_hidden');
+                                       $(\"a[data-type='$catToLoad'].filterEle\").addClass('h_active');
+                                       $(\".h_content.$catToLoad\").parent().removeClass('h_hidden');
 
                                     });");
       // end timeline
@@ -1592,7 +1609,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          'hour_type'                  => 0,
          'communication'              => false,
          'communication_type'         => false,
-         'target'                     => [],
+         'target'                     => "",
          'locations_id'               => 0,
       ];
    }

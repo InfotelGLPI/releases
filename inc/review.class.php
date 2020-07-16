@@ -148,11 +148,16 @@ class PluginReleasesReview extends CommonDBTM {
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name", ['id' => 'name' , "value" => $this->getField('name')]);
+
+      echo "</td>";
       echo "<td>" . __('Incidents during process', 'releases') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("incident", $this->getField("incident"));
       echo "</td>";
-      echo "<td colspan='2'></td>";
+
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Description') . "</td>";

@@ -132,11 +132,15 @@ class PluginReleasesRisktemplate extends CommonDropdown {
 
       echo "<tr class='tab_bg_1' hidden>";
       echo "<td colspan='4'>";
-      $foreignKey = $options['itemtype']::getForeignKeyField();
+      $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
       echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name'),'rand'=>$rand_name]);
+      echo "</td>";
       echo "<td>";
       echo __("Risk type",'releases');
       echo "</td>";
@@ -151,10 +155,7 @@ class PluginReleasesRisktemplate extends CommonDropdown {
          'value' => $value,'rand'=>$rand_type]);
       echo "</td>";
 
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name'),'rand'=>$rand_name]);
-      echo "</td>";
+
 
       echo "</tr>";
 
@@ -196,5 +197,8 @@ class PluginReleasesRisktemplate extends CommonDropdown {
     */
    static function getCssClass() {
       return "risk";
+   }
+   function post_addItem() {
+      $_SESSION['releases']["template"][Session::getLoginUserID()] = 'risk';
    }
 }

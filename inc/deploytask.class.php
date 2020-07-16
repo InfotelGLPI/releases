@@ -219,7 +219,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
          Planning::checkAlreadyPlanned($input["users_id_tech"], $input["begin"], $input["end"],
                                        [$this->getType() => [$input["id"]]]);
 
-         $calendars_id = Entity::getUsedConfig('calendars_id', $input["_job"]->fields['entities_id']);
+         $calendars_id = Entity::getUsedConfig('calendars_id', $this->fields['entities_id']);
          $calendar     = new Calendar();
 
          // Using calendar
@@ -347,7 +347,8 @@ class PluginReleasesDeploytask extends CommonITILTask {
       echo "<td>";
       Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
                                                                            "NOT"                         => ["id" => $this->getID()]],
-                                                           "value"     => $this->fields["plugin_releases_deploytasks_id"]]);
+                                                           "value"     => $this->fields["plugin_releases_deploytasks_id"],
+                                                           "comments"=>false]);
       echo "</td>";
       echo "</tr>";
 
@@ -372,15 +373,16 @@ class PluginReleasesDeploytask extends CommonITILTask {
       echo "</td>";
 
       echo "<td style='vertical-align: middle'>";
-      echo "<div class='fa-label'>
+      if($ID<0) {
+         echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
                title='" . _n('Task template', 'Task templates', 1, 'releases') . "'></i>";
-      PluginReleasesDeploytasktemplate::dropdown(['value'     => $this->fields['plugin_releases_deploytasktemplates_id'],
-                                                  'entity'    => $this->getEntityID(),
-                                                  'rand'      => $rand_template,
-                                                  'on_change' => 'tasktemplate_update(this.value)']);
-      echo "</div>";
-      echo Html::scriptBlock('
+         PluginReleasesDeploytasktemplate::dropdown(['value' => $this->fields['plugin_releases_deploytasktemplates_id'],
+            'entity' => $this->getEntityID(),
+            'rand' => $rand_template,
+            'on_change' => 'tasktemplate_update(this.value)']);
+         echo "</div>";
+         echo Html::scriptBlock('
          function tasktemplate_update(value) {
             $.ajax({
                url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/deploytask.php",
@@ -429,6 +431,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
             });
          }
       ');
+      }
 
 
       if ($ID > 0) {
@@ -787,6 +790,67 @@ class PluginReleasesDeploytask extends CommonITILTask {
       $html .= "</div>";
 
       return $html;
+   }
+
+   function post_updateItem($history = 1) {
+      global $CFG_GLPI;
+
+      $options = [
+         'force_update' => true,
+         'name' => 'content',
+         'content_field' => 'content',
+      ];
+      $this->input = $this->addFiles($this->input, $options);
+
+      if (in_array("begin", $this->updates)) {
+         PlanningRecall::managePlanningUpdates($this->getType(), $this->getID(),
+            $this->fields["begin"]);
+      }
+
+      if (isset($this->input['_planningrecall'])) {
+         $this->input['_planningrecall']['items_id'] = $this->fields['id'];
+         PlanningRecall::manageDatas($this->input['_planningrecall']);
+      }
+
+      $update_done = false;
+      $itemtype    = $this->getItilObjectItemType();
+      $item        = new $itemtype();
+
+      if ($item->getFromDB($this->fields[$item->getForeignKeyField()])) {
+         $item->updateDateMod($this->fields[$item->getForeignKeyField()]);
+
+         $proceed = count($this->updates);
+
+         //Also check if item status has changed
+         if (!$proceed) {
+            if (isset($this->input['_status'])
+               && $this->input['status'] != $item->getField('status')
+            ) {
+               $proceed = true;
+            }
+         }
+         if ($proceed) {
+            $update_done = true;
+
+            //todo change for notifications
+            if (!isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"]) {
+               $options = ['task_id'    => $this->fields["id"]];
+               NotificationEvent::raiseEvent('update_task', $item, $options);
+            }
+
+         }
+      }
+
+      if ($update_done) {
+         // Add log entry in the ITIL object
+         $changes = [
+            0,
+            '',
+            $this->fields['id'],
+         ];
+         Log::history($this->getField($item->getForeignKeyField()), $itemtype, $changes,
+            $this->getType(), Log::HISTORY_UPDATE_SUBITEM);
+      }
    }
 }
 

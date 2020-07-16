@@ -140,7 +140,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
 
       echo "<tr class='tab_bg_1' hidden>";
       echo "<td colspan='4'>";
-      $foreignKey = $options['itemtype']::getForeignKeyField();
+      $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
       echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
       echo "</td>";
       echo "</tr>";
@@ -192,5 +192,9 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
     */
    static function getCssClass() {
       return "rollback";
+   }
+
+   function post_addItem() {
+      $_SESSION['releases']["template"][Session::getLoginUserID()] = 'rollback';
    }
 }

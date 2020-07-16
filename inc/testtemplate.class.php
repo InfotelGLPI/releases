@@ -147,11 +147,17 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
       echo "<tr class='tab_bg_1' hidden>";
       echo "<td colspan='4'>";
-      $foreignKey = $options['itemtype']::getForeignKeyField();
+      $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
       echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
+
+      echo "<td>" . __('Name') . "</td>";
+      echo "<td>";
+      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name')]);
+      echo "</td>";
+
       echo "<td>";
       echo __("Test type",'releases');
       echo "</td>";
@@ -166,10 +172,7 @@ class PluginReleasesTesttemplate extends CommonDropdown {
          'value' => $value]);
       echo "</td>";
 
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name')]);
-      echo "</td>";
+
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
@@ -221,5 +224,8 @@ class PluginReleasesTesttemplate extends CommonDropdown {
     */
    static function getCssClass() {
       return "test";
+   }
+   function post_addItem() {
+      $_SESSION['releases']["template"][Session::getLoginUserID()] = 'test';
    }
 }

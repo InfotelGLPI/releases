@@ -308,7 +308,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       }
       echo "<tr class='tab_bg_1' hidden>";
       echo "<td colspan='4'>";
-      $foreignKey = $options['itemtype']::getForeignKeyField();
+      $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
       echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
       echo "</td>";
       echo "</tr>";
@@ -323,7 +323,8 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 //      echo "<td colspan='2'></td>";
       echo "<td >" . __("Previous task", "releases") . "</td>";
       echo "<td>";
-      Dropdown::show(PluginReleasesDeploytasktemplate::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $options['plugin_releases_releasetemplates_id'], "NOT" => ["id" => $this->getID()]], "value" => $this->fields["plugin_releases_deploytasktemplates_id"]]);
+      $id_release = isset($options['plugin_releases_releasetemplates_id'])?$options['plugin_releases_releasetemplates_id']:$this->fields["plugin_releases_releasetemplates_id"];
+      Dropdown::show(PluginReleasesDeploytasktemplate::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release, "NOT" => ["id" => $this->getID()]], "value" => $this->fields["plugin_releases_deploytasktemplates_id"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -371,7 +372,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       ]);
       echo "</div>";
       echo "<div class='fa-label'>
-         <span>".__('Risk')."</span>&nbsp;";
+         <span>".__('Risk','releases')."</span>&nbsp;";
       Dropdown::show(PluginReleasesRisktemplate::getType(), ['name' => "plugin_releases_risks_id",
          'value' =>  $this->fields["plugin_releases_risks_id"],"condition"=>["plugin_releases_releasetemplates_id"=>$this->fields[$foreignKey]]]);
       echo "</div>";
@@ -542,12 +543,10 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
          && ($uid = Session::getLoginUserID())) { // Change from task form
          $input["users_id_editor"] = $uid;
       }
-
-
-
-
-
-
       return $input;
+   }
+
+   function post_addItem() {
+      $_SESSION['releases']["template"][Session::getLoginUserID()] = 'task';
    }
 }

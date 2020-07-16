@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Releases plugin 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-09 17:30+0200\n"
-"PO-Revision-Date: 2020-07-09 17:54+0200\n"
+"PO-Revision-Date: 2020-07-16 17:19+0200\n"
 "Last-Translator: Amandine Manceau, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/tsmr/teams/79675/"
 "fr_FR/)\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.2.3\n"
 
 #: setup.php:81 front/change_release.form.php:48 inc/profile.class.php:52
 #: inc/release.class.php:73 inc/releasetemplate.class.php:925
@@ -170,7 +170,7 @@ msgstr "Date de mise en production"
 
 #: inc/finalization.class.php:273 inc/finalization.class.php:285
 msgid "Mark as failed"
-msgstr "Marquer comme échoué"
+msgstr "Marquer comme échouée"
 
 #: inc/finalization.class.php:298
 msgid "Confirm"
@@ -235,7 +235,7 @@ msgstr "Revue"
 #: inc/release.class.php:509
 msgctxt "status"
 msgid "End"
-msgstr "Terminé"
+msgstr "Terminée"
 
 #: inc/release.class.php:1036
 msgid "Associated change"

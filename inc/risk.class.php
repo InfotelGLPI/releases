@@ -145,61 +145,59 @@ class PluginReleasesRisk extends CommonDBTM {
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo _n('Risk template', 'Risk templates', 1,'releases');
-      echo "</td>";
-      echo "<td style='vertical-align: middle' >";
-      //      echo
-      //         "<div class='fa-label'>
-      //            <i class='fas fa-reply fa-fw'
-      //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-      PluginReleasesRisktemplate::dropdown(['value'     => '',
-                                            'entity'    => $this->getEntityID(),
-                                            'rand'      => $rand_template,
-                                            'on_change' => 'tasktemplate_update(this.value)']);
-      echo "</div>";
-      echo Html::scriptBlock('
-         function tasktemplate_update(value) {
-            $.ajax({
-               url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/risk.php",
-               type: "POST",
-               data: {
-                  templates_id: value
-               }
-            }).done(function(data) {
-               console.log(data);
-               var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
-                  ? 0
-                  : parseInt(data.plugin_releases_typerisks_id);
-
-               // set textarea content
-               $("#content' . $rand_text . '").html(data.content);
-               // set name
-               $("#name' . $rand_name . '").val(data.name);
-               $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
-               // set also tinmyce (if enabled)
-               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
-                  tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
-               }
-               
-            });
-         }
-      ');
-      echo "</td>";
-      if($ID == ""){
+      if($ID<0) {
+         echo "<tr class='tab_bg_1'>";
          echo "<td>";
-         echo __("Create a test from this risk","releases");
+         echo _n('Risk template', 'Risk templates', 1, 'releases');
+         echo "</td>";
+         echo "<td style='vertical-align: middle' >";
+         //      echo
+         //         "<div class='fa-label'>
+         //            <i class='fas fa-reply fa-fw'
+         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
+         PluginReleasesRisktemplate::dropdown(['value' => '',
+            'entity' => $this->getEntityID(),
+            'rand' => $rand_template,
+            'on_change' => 'tasktemplate_update(this.value)']);
+         //      echo "</div>";
+         echo Html::scriptBlock('
+            function tasktemplate_update(value) {
+               $.ajax({
+                  url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/risk.php",
+                  type: "POST",
+                  data: {
+                     templates_id: value
+                  }
+               }).done(function(data) {
+                  console.log(data);
+                  var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
+                     ? 0
+                     : parseInt(data.plugin_releases_typerisks_id);
+   
+                  // set textarea content
+                  $("#content' . $rand_text . '").html(data.content);
+                  // set name
+                  $("#name' . $rand_name . '").val(data.name);
+                  $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
+                  // set also tinmyce (if enabled)
+                  if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
+                     tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
+                  }
+                  
+               });
+            }
+         ');
+         echo "</td>";
+         echo "<td>";
+         echo __("Create a test from this risk", "releases");
          echo "</td>";
          echo "<td>";
          Html::showCheckbox(["name" => "create_test"]);
          echo "</td>";
-      }else{
-         echo "<td colspan='2'></td>";
-      }
 
-      echo "</tr>";
+
+         echo "</tr>";
+      }
       echo "<tr class='tab_bg_1'>";
 
       echo "<td>" . __('Name') . "</td>";
