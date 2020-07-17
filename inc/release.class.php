@@ -1959,7 +1959,7 @@ class PluginReleasesRelease extends CommonITILObject {
          }
          if (isset($item_i['plugin_releases_risks_id'])
              && !empty($item_i['plugin_releases_risks_id'])) {
-            echo __("Associated with") . " ";
+            echo __("Associated with",'releases') . " ";
             echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id']) . "<br>";
          }
 

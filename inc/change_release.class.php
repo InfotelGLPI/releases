@@ -291,7 +291,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          Html::showMassiveActions($massiveactionparams);
       }
       echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr class='noHover'><th colspan='6'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
+      echo "<tr class='noHover'><th colspan='8'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
       echo "</tr>";
       if ($numrows) {
          echo "<tr  class='tab_bg_1'>";

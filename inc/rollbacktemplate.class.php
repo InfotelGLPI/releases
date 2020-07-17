@@ -41,33 +41,32 @@ if (!defined('GLPI_ROOT')) {
 class PluginReleasesRollbacktemplate extends CommonDropdown {
 
    // From CommonDBTM
-   public $dohistory          = true;
-   public $can_be_translated  = true;
+   public $dohistory         = true;
+   public $can_be_translated = true;
 
-   static $rightname          = 'plugin_releases_rollbacks';
-
+   static $rightname = 'plugin_releases_rollbacks';
 
 
    static function getTypeName($nb = 0) {
-      return _n('Rollback template', 'Rollback templates', $nb,'releases');
+      return _n('Rollback template', 'Rollback templates', $nb, 'releases');
    }
 
 
    function getAdditionalFields() {
 
       return [
-//         ['name'  => 'plugin_release_typerollbacks_id',
-//            'label' => __('Type test','Type tests', 'release'),
-//            'type'  => 'dropdownRollbacks',
-//         ],
-//         ['name'  => 'plugin_release_risks_id',
-//            'label' => __('Risk','Risks', 'release'),
-//            'type'  => 'dropdownRisks',
-//         ],
+         //         ['name'  => 'plugin_release_typerollbacks_id',
+         //            'label' => __('Type test','Type tests', 'release'),
+         //            'type'  => 'dropdownRollbacks',
+         //         ],
+         //         ['name'  => 'plugin_release_risks_id',
+         //            'label' => __('Risk','Risks', 'release'),
+         //            'type'  => 'dropdownRisks',
+         //         ],
          ['name'  => 'content',
-            'label' => __('Description'),
-            'type'  => 'textarea',
-            'rows' => 10],
+          'label' => __('Description'),
+          'type'  => 'textarea',
+          'rows'  => 10],
 
       ];
    }
@@ -77,20 +76,20 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'                 => '4',
-         'name'               => __('Content'),
-         'field'              => 'content',
-         'table'              => $this->getTable(),
-         'datatype'           => 'text',
-         'htmltext'           => true
+         'id'       => '4',
+         'name'     => __('Content'),
+         'field'    => 'content',
+         'table'    => $this->getTable(),
+         'datatype' => 'text',
+         'htmltext' => true
       ];
 
       $tab[] = [
-         'id'                 => '3',
-         'name'               => __('Deploy Task type'),
-         'field'              => 'name',
-         'table'              => getTableForItemType('PluginReleasesTypeDeployTask'),
-         'datatype'           => 'dropdown'
+         'id'       => '3',
+         'name'     => __('Deploy Task type'),
+         'field'    => 'name',
+         'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
+         'datatype' => 'dropdown'
       ];
 
       return $tab;
@@ -103,17 +102,18 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
    function displaySpecificTypeField($ID, $field = []) {
 
       switch ($field['type']) {
-//         case 'dropdownRollbacks' :
-//            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
-//            break;
+         //         case 'dropdownRollbacks' :
+         //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
+         //            break;
          case 'dropdownRisks' :
-            PluginReleasesRisktemplate::dropdown(["name"=>"plugin_releases_risks_id"]);
+            PluginReleasesRisktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
             break;
 
       }
    }
+
    static function canCreate() {
-      return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
+      return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
    }
 
    /**
@@ -128,11 +128,12 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
    static function canView() {
       return Session::haveRight(static::$rightname, READ);
    }
+
    function showForm($ID, $options = []) {
       global $CFG_GLPI, $DB;
-      $rand_template   = mt_rand();
-      $rand_text       = mt_rand();
-      $rand_name      = mt_rand();
+      $rand_template = mt_rand();
+      $rand_text     = mt_rand();
+      $rand_name     = mt_rand();
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
       echo "<tr class='tab_bg_1'>";
@@ -141,12 +142,14 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       echo "<tr class='tab_bg_1' hidden>";
       echo "<td colspan='4'>";
       $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
-      echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
+      echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
       echo "</td>";
       echo "</tr>";
+
+      echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name",["id"=>"name".$rand_name,"value"=>$this->getField('name'),  'rand'      => $rand_name,]);
+      echo Html::input("name", ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]);
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
@@ -156,18 +159,18 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Description') . "</td>";
       echo "<td colspan='3'>";
-//       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
+      //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
       $content_id = "content$rand_text";
       $cols       = 100;
       $rows       = 10;
       Html::textarea(['name'              => 'content',
-         'value'             => $this->fields["content"],
-         'rand'              => $rand_text,
-         'editor_id'         => $content_id,
-         'enable_fileupload' => false,
-         'enable_richtext'   => true,
-         'cols'              => $cols,
-         'rows'              => $rows]);
+                      'value'             => $this->fields["content"],
+                      'rand'              => $rand_text,
+                      'editor_id'         => $content_id,
+                      'enable_fileupload' => false,
+                      'enable_richtext'   => true,
+                      'cols'              => $cols,
+                      'rows'              => $rows]);
       echo "</td>";
       echo "</tr>";
 
@@ -183,7 +186,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
       $dbu   = new DbUtils();
       $table = CommonDBTM::getTable(self::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releasetemplates_id" => $item->getID()]);
+                                        ["plugin_releases_releasetemplates_id" => $item->getID()]);
    }
 
    /**
