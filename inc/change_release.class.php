@@ -304,6 +304,8 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "<th>" . __('Status') . "</th>";
          echo "<th>" . __('Release area', 'releases') . "</th>";
          echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
+         echo "<th>" . __('Production planned date', 'releases') . "</th>";
+         echo "<th>" . __('Real production run date', 'releases') . "</th>";
          echo "<th>" . __('Service shutdown', 'releases') . "</th>";
          echo "</tr>";
          foreach ($changes as $idc => $d) {
@@ -337,6 +339,16 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo "</td >";
             echo "<td >";
             echo Html::convDateTime($d["date_preproduction"]);
+            echo "</td >";
+            echo "<td >";
+            echo Html::convDateTime($d["date_production"]);
+            echo "</td >";
+            echo "<td >";
+            $review = new PluginReleasesReview();
+            if($review->getFromDBByCrit(["plugin_releases_releases_id"=>$d['id']])){
+               echo Html::convDateTime($review->fields["real_date_release"]);
+            }
+
             echo "</td >";
             echo "<td >";
             $tab = [1 => __("Yes"), 0 => __("No")];

@@ -228,7 +228,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
       echo "</table>";
-      if (empty($release->fields["date_end"])) {
+      if ((empty($release->fields["date_end"]) || $release->fields["status"] < PluginReleasesRelease::REVIEW) && $this->canUpdate()) {
          if ($deployTaskFail == 0 && $testFail == 0) {
             $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
                          && ($deployTaskTotal == $deployTaskDone)
