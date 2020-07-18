@@ -88,10 +88,10 @@ class PluginReleasesProfile extends Profile {
       self::addDefaultProfileInfos($ID,
                                    [
                                       'plugin_releases_releases'  => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                      'plugin_releases_tests'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                      'plugin_releases_risks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                      'plugin_releases_rollbacks' => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE,
-                                      'plugin_releases_tasks'     => ALLSTANDARDRIGHT + READNOTE + UPDATENOTE
+                                      'plugin_releases_tests'     => READ + UPDATE + CREATE + PURGE,
+                                      'plugin_releases_risks'     => READ + UPDATE + CREATE + PURGE,
+                                      'plugin_releases_rollbacks' => READ + UPDATE + CREATE + PURGE,
+                                      'plugin_releases_tasks'     => READ + UPDATE + CREATE + PURGE
 
                                    ], true);
    }

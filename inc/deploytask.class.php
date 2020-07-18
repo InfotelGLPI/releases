@@ -48,7 +48,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Release deploy task', 'Release deploy tasks', $nb, 'releases');
+      return _n('Deploy task', 'Deploy tasks', $nb, 'releases');
    }
 
    public function getItilObjectItemType() {
