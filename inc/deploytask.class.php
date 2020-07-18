@@ -696,8 +696,8 @@ class PluginReleasesDeploytask extends CommonITILTask {
          for ($i = 0; $data = $DB->fetchArray($result); $i++) {
 
             $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_releases";
-//            $output[$key]['color']            = $parm['color'];
-//            $output[$key]['event_type_color'] = $parm['event_type_color'];
+            $output[$key]['color']            = isset($parm['color'])?$parm['color']:null;
+            $output[$key]['event_type_color'] = isset($parm['event_type_color'])?$parm['event_type_color']:null;;
             $output[$key]["id"]               = $data["id"];
             $output[$key]["users_id_tech"]    = $data["users_id_tech"];
             $output[$key]["begin"]            = $data["begin"];
