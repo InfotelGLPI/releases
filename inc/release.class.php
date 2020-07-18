@@ -62,7 +62,6 @@ class PluginReleasesRelease extends CommonITILObject {
    const FAIL               = 12;
 
 
-
    /**
     * @param int $nb
     *
@@ -183,11 +182,11 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'number'
       ];
       $tab[] = [
-         'id'            => '80',
-         'table'         => 'glpi_entities',
-         'field'         => 'completename',
-         'name'          => __('Entity'),
-         'datatype'      => 'dropdown'
+         'id'       => '80',
+         'table'    => 'glpi_entities',
+         'field'    => 'completename',
+         'name'     => __('Entity'),
+         'datatype' => 'dropdown'
       ];
       $tab[] = [
          'id'            => '1',
@@ -215,16 +214,16 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'datetime'
       ];
       $tab[] = [
-         'id'                 => '4',
-         'table'              => 'glpi_plugin_releases_risks',
-         'field'              => 'id',
-         'name'               => __('Number of risks', 'releases'),
-         'datatype'           => 'count',
-         'forcegroupby'       => true,
-         'usehaving'          => true,
-         'massiveaction'      => false,
-         'joinparams'         => [
-            'jointype'           => 'child',
+         'id'            => '4',
+         'table'         => 'glpi_plugin_releases_risks',
+         'field'         => 'id',
+         'name'          => __('Number of risks', 'releases'),
+         'datatype'      => 'count',
+         'forcegroupby'  => true,
+         'usehaving'     => true,
+         'massiveaction' => false,
+         'joinparams'    => [
+            'jointype' => 'child',
          ]
       ];
       $tab[] = [
@@ -232,12 +231,12 @@ class PluginReleasesRelease extends CommonITILObject {
          'table'         => 'glpi_plugin_releases_rollbacks',
          'field'         => 'id',
          'name'          => __('Number of rollbacks', 'releases'),
-         'datatype'           => 'count',
-         'forcegroupby'       => true,
-         'usehaving'          => true,
-         'massiveaction'      => false,
-         'joinparams'         => [
-            'jointype'           => 'child',
+         'datatype'      => 'count',
+         'forcegroupby'  => true,
+         'usehaving'     => true,
+         'massiveaction' => false,
+         'joinparams'    => [
+            'jointype' => 'child',
          ]
       ];
       $tab[] = [
@@ -247,11 +246,11 @@ class PluginReleasesRelease extends CommonITILObject {
          'name'          => __('Number of tests', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'count',
-         'forcegroupby'       => true,
-         'usehaving'          => true,
-         'massiveaction'      => false,
-         'joinparams'         => [
-            'jointype'           => 'child',
+         'forcegroupby'  => true,
+         'usehaving'     => true,
+         'massiveaction' => false,
+         'joinparams'    => [
+            'jointype' => 'child',
          ]
       ];
       $tab[] = [
@@ -261,11 +260,11 @@ class PluginReleasesRelease extends CommonITILObject {
          'name'          => __('Number of tasks', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'count',
-         'forcegroupby'       => true,
-         'usehaving'          => true,
-         'massiveaction'      => false,
-         'joinparams'         => [
-            'jointype'           => 'child',
+         'forcegroupby'  => true,
+         'usehaving'     => true,
+         'massiveaction' => false,
+         'joinparams'    => [
+            'jointype' => 'child',
          ]
       ];
       $tab[] = [
@@ -321,36 +320,36 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '14',
          'table'         => $this->getTable(),
          'field'         => 'target',
-         'name'          => _n('Target', 'Targets',2),
+         'name'          => _n('Target', 'Targets', 2),
          'massiveaction' => false,
          'datatype'      => 'specific'
       ];
       $tab[] = [
-         'id'                 => '15',
-         'table'              => $this->getTable(),
-         'field'              => 'date_mod',
-         'name'               => __('Last update'),
-         'datatype'           => 'datetime',
-         'massiveaction'      => false
+         'id'            => '15',
+         'table'         => $this->getTable(),
+         'field'         => 'date_mod',
+         'name'          => __('Last update'),
+         'datatype'      => 'datetime',
+         'massiveaction' => false
       ];
 
       $tab[] = [
-         'id'                 => '16',
-         'table'              => $this->getTable(),
-         'field'              => 'date_creation',
-         'name'               => __('Creation date'),
-         'datatype'           => 'datetime',
-         'massiveaction'      => false
+         'id'            => '16',
+         'table'         => $this->getTable(),
+         'field'         => 'date_creation',
+         'name'          => __('Creation date'),
+         'datatype'      => 'datetime',
+         'massiveaction' => false
       ];
       $tab[] = [
-         'id'                 => '17',
-         'table'              => $this->getTable(),
-         'field'              => 'date_end',
-         'name'               => __('Closing date'),
-         'datatype'           => 'datetime',
-         'massiveaction'      => false
+         'id'            => '17',
+         'table'         => $this->getTable(),
+         'field'         => 'date_end',
+         'name'          => __('Closing date'),
+         'datatype'      => 'datetime',
+         'massiveaction' => false
       ];
-      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
+      $tab   = array_merge($tab, Location::rawSearchOptionsToAdd());
       return $tab;
 
    }
@@ -380,47 +379,47 @@ class PluginReleasesRelease extends CommonITILObject {
             $var .= "</span>";
             return $var;
             break;
-//         case 'nb_tasks':
-//            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
-//                   . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
-//            break;
-//         case 'nb_risks':
-//            $self = new self();
-//            $self->getFromDB($options["raw_data"]["id"]);
-//            return PluginReleasesRisk::countDoneForItem($self) . " / ".PluginReleasesRisk::countForItem($self);
-//            break;
-//         case 'nb_rollbacks':
-//            $self = new self();
-//            $self->getFromDB($options["raw_data"]["id"]);
-//            return PluginReleasesRollback::countDoneForItem($self) . " / ".PluginReleasesRollback::countForItem($self);
-//            break;
-//         case 'nb_tests':
-//            $self = new self();
-//            $self->getFromDB($options["raw_data"]["id"]);
-//            return PluginReleasesTest::countDoneForItem($self) . " / ".PluginReleasesTest::countForItem($self);
-//            break;
+         //         case 'nb_tasks':
+         //            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
+         //                   . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
+         //            break;
+         //         case 'nb_risks':
+         //            $self = new self();
+         //            $self->getFromDB($options["raw_data"]["id"]);
+         //            return PluginReleasesRisk::countDoneForItem($self) . " / ".PluginReleasesRisk::countForItem($self);
+         //            break;
+         //         case 'nb_rollbacks':
+         //            $self = new self();
+         //            $self->getFromDB($options["raw_data"]["id"]);
+         //            return PluginReleasesRollback::countDoneForItem($self) . " / ".PluginReleasesRollback::countForItem($self);
+         //            break;
+         //         case 'nb_tests':
+         //            $self = new self();
+         //            $self->getFromDB($options["raw_data"]["id"]);
+         //            return PluginReleasesTest::countDoneForItem($self) . " / ".PluginReleasesTest::countForItem($self);
+         //            break;
          case 'communication_type':
-            if($values["communication_type"] == "0"){
+            if ($values["communication_type"] == "0") {
                return " ";
             }
             return $values["communication_type"]::getTypeName();
             break;
          case 'target':
             $self = new self();
-            if(isset($options["raw_data"]["id"])){
+            if (isset($options["raw_data"]["id"])) {
                $self->getFromDB($options["raw_data"]["id"]);
-            }else{
+            } else {
                $self->getFromDB($_REQUEST["id"]);
             }
 
-            if($self->fields["communication_type"] == "0" || $values["target"] == "[]"){
+            if ($self->fields["communication_type"] == "0" || $values["target"] == "[]") {
                return " ";
             }
-            if($self->fields["communication_type"] == "User"){
-               $text = "";
-               $user = new User();
+            if ($self->fields["communication_type"] == "User") {
+               $text  = "";
+               $user  = new User();
                $items = json_decode($values["target"]);
-               if(is_array($items)) {
+               if (is_array($items)) {
                   foreach ($items as $item) {
                      $user->getFromDB($item);
                      $text .= $user->getFriendlyName() . "<br />";
@@ -428,11 +427,11 @@ class PluginReleasesRelease extends CommonITILObject {
                }
                return $text;
             }
-            if($self->fields["communication_type"] == "Profile"){
-               $text = "";
+            if ($self->fields["communication_type"] == "Profile") {
+               $text    = "";
                $profile = new Profile();
-               $items = json_decode($values["target"]);
-               if(is_array($items)) {
+               $items   = json_decode($values["target"]);
+               if (is_array($items)) {
                   foreach ($items as $item) {
                      $profile->getFromDB($item);
                      $text .= $profile->getFriendlyName() . "<br />";
@@ -440,11 +439,11 @@ class PluginReleasesRelease extends CommonITILObject {
                }
                return $text;
             }
-            if($self->fields["communication_type"] == "Group"){
-               $text = "";
+            if ($self->fields["communication_type"] == "Group") {
+               $text  = "";
                $group = new Group();
                $items = json_decode($values["target"]);
-               if(is_array($items)) {
+               if (is_array($items)) {
                   foreach ($items as $item) {
                      $group->getFromDB($item);
                      $text .= $group->getFriendlyName() . "<br />";
@@ -452,11 +451,11 @@ class PluginReleasesRelease extends CommonITILObject {
                }
                return $text;
             }
-            if($self->fields["communication_type"] == "Entity"){
-               $text = "";
+            if ($self->fields["communication_type"] == "Entity") {
+               $text   = "";
                $entity = new Entity();
-               $items = json_decode($values["target"]);
-               if(is_array($items)) {
+               $items  = json_decode($values["target"]);
+               if (is_array($items)) {
                   foreach ($items as $item) {
                      $entity->getFromDB($item);
                      $text .= $entity->getFriendlyName() . "<br />";
@@ -464,11 +463,11 @@ class PluginReleasesRelease extends CommonITILObject {
                }
                return $text;
             }
-            if($self->fields["communication_type"] == "Location"){
-               $text = "";
+            if ($self->fields["communication_type"] == "Location") {
+               $text     = "";
                $location = new Location();
-               $items = json_decode($values["target"]);
-               if(is_array($items)) {
+               $items    = json_decode($values["target"]);
+               if (is_array($items)) {
                   foreach ($items as $item) {
                      $location->getFromDB($item);
                      $text .= $location->getFriendlyName() . "<br />";
@@ -1000,15 +999,15 @@ class PluginReleasesRelease extends CommonITILObject {
                          || $useractors->can(-1, CREATE, $input['_itil_assign'])) {
                         $useractors->add($input['_itil_assign']);
                         $input['_forcenotif'] = true;
-//                        if (((!isset($input['status'])
-//                              && in_array($this->fields['status'], $this->getNewStatusArray()))
-//                             || (isset($input['status'])
-//                                 && in_array($input['status'], $this->getNewStatusArray())))
-//                            && !$this->isStatusComputationBlocked($input)) {
-//                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-//                              $input['status'] = self::ASSIGNED;
-//                           }
-//                        }
+                        //                        if (((!isset($input['status'])
+                        //                              && in_array($this->fields['status'], $this->getNewStatusArray()))
+                        //                             || (isset($input['status'])
+                        //                                 && in_array($input['status'], $this->getNewStatusArray())))
+                        //                            && !$this->isStatusComputationBlocked($input)) {
+                        //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+                        //                              $input['status'] = self::ASSIGNED;
+                        //                           }
+                        //                        }
                      }
                   }
                   break;
@@ -1022,15 +1021,15 @@ class PluginReleasesRelease extends CommonITILObject {
                          || $groupactors->can(-1, CREATE, $input['_itil_assign'])) {
                         $groupactors->add($input['_itil_assign']);
                         $input['_forcenotif'] = true;
-//                        if (((!isset($input['status'])
-//                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
-//                             || (isset($input['status'])
-//                                 && (in_array($input['status'], $this->getNewStatusArray()))))
-//                            && !$this->isStatusComputationBlocked($input)) {
-//                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-//                              $input['status'] = self::ASSIGNED;
-//                           }
-//                        }
+                        //                        if (((!isset($input['status'])
+                        //                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+                        //                             || (isset($input['status'])
+                        //                                 && (in_array($input['status'], $this->getNewStatusArray()))))
+                        //                            && !$this->isStatusComputationBlocked($input)) {
+                        //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+                        //                              $input['status'] = self::ASSIGNED;
+                        //                           }
+                        //                        }
                      }
                   }
                   break;
@@ -1045,15 +1044,15 @@ class PluginReleasesRelease extends CommonITILObject {
                          || $supplieractors->can(-1, CREATE, $input['_itil_assign'])) {
                         $supplieractors->add($input['_itil_assign']);
                         $input['_forcenotif'] = true;
-//                        if (((!isset($input['status'])
-//                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
-//                             || (isset($input['status'])
-//                                 && (in_array($input['status'], $this->getNewStatusArray()))))
-//                            && !$this->isStatusComputationBlocked($input)) {
-//                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-//                              $input['status'] = self::ASSIGNED;
-//                           }
-//                        }
+                        //                        if (((!isset($input['status'])
+                        //                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+                        //                             || (isset($input['status'])
+                        //                                 && (in_array($input['status'], $this->getNewStatusArray()))))
+                        //                            && !$this->isStatusComputationBlocked($input)) {
+                        //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+                        //                              $input['status'] = self::ASSIGNED;
+                        //                           }
+                        //                        }
                      }
                   }
                   break;
@@ -1101,7 +1100,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if (!isset($options['template_preview'])) {
          $options['template_preview'] = 0;
       }
-//      $this->fields["entities_id"] = Session::getActiveEntity();
+      //      $this->fields["entities_id"] = Session::getActiveEntity();
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
       $default_values = self::getDefaultValues();
@@ -1123,20 +1122,20 @@ class PluginReleasesRelease extends CommonITILObject {
       if (isset($options["template_id"]) && $options["template_id"] > 0) {
          $this->prepareField($options["template_id"]);
          $this->fields["status"] = self::NEWRELEASE;
-         $release_user = new PluginReleasesReleasetemplate_User();
-         $release_supplier = new PluginReleasesReleasetemplate_Supplier();
-         $group_release = new PluginReleasesGroup_Releasetemplate();
-         $users = $release_user->find(['plugin_releases_releasetemplates_id'=>$options["template_id"]]);
-         $suppliers = $release_supplier->find(['plugin_releases_releasetemplates_id'=>$options["template_id"]]);
-         $groups = $group_release->find(['plugin_releases_releasetemplates_id'=>$options["template_id"]]);
-         foreach ($users as $user){
-            $options["_users_id_".self::getActorFieldNameType($user["type"])] = $user["users_id"];
+         $release_user           = new PluginReleasesReleasetemplate_User();
+         $release_supplier       = new PluginReleasesReleasetemplate_Supplier();
+         $group_release          = new PluginReleasesGroup_Releasetemplate();
+         $users                  = $release_user->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
+         $suppliers              = $release_supplier->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
+         $groups                 = $group_release->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
+         foreach ($users as $user) {
+            $options["_users_id_" . self::getActorFieldNameType($user["type"])] = $user["users_id"];
          }
-         foreach ($suppliers as $supplier){
-            $options["_suppliers_id_".self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
+         foreach ($suppliers as $supplier) {
+            $options["_suppliers_id_" . self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
          }
-         foreach ($groups as $group){
-            $options["_groups_id_".self::getActorFieldNameType($group["type"])] = $group["groups_id"];
+         foreach ($groups as $group) {
+            $options["_groups_id_" . self::getActorFieldNameType($group["type"])] = $group["groups_id"];
          }
          echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
       }
@@ -1145,17 +1144,17 @@ class PluginReleasesRelease extends CommonITILObject {
       $select_changes = [];
       if (isset($options["changes_id"])) {
          $select_changes = [$options["changes_id"]];
-         $c = new Change();
+         $c              = new Change();
          if ($c->getFromDB($options["changes_id"])) {
             if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
 
-               $this->fields["name"]        = $c->getField("name");
-               $options["name"]        = $c->getField("name");
-               $this->fields["content"]     = $c->getField("content");
-               $options["content"]     = $c->getField("content");
+               $this->fields["name"]    = $c->getField("name");
+               $options["name"]         = $c->getField("name");
+               $this->fields["content"] = $c->getField("content");
+               $options["content"]      = $c->getField("content");
 
             }
-            $options['entities_id'] = $c->getField("entities_id");
+            $options['entities_id']      = $c->getField("entities_id");
             $this->fields["entities_id"] = $c->getField("entities_id");
          }
 
@@ -1220,11 +1219,12 @@ class PluginReleasesRelease extends CommonITILObject {
          echo __('Associated change', 'releases');
          echo "</th>";
          echo "<td>";
-         $change  = new Change();
-         $condition["status"] =  Change::getNotSolvedStatusArray();
-         $condition[] = getEntitiesRestrictCriteria($change->getTable(),'',$options["entities_id"],true);
-         $changes = $change->find($condition);
-         $list    = [];
+         $change                  = new Change();
+         $condition["status"]     = Change::getNotSolvedStatusArray();
+         $condition["is_deleted"] = 0;
+         $condition[]             = getEntitiesRestrictCriteria($change->getTable(), '', $options["entities_id"], true);
+         $changes                 = $change->find($condition);
+         $list                    = [];
          foreach ($changes as $ch) {
             $list[$ch["id"]] = $ch["name"];
          }
@@ -1875,11 +1875,11 @@ class PluginReleasesRelease extends CommonITILObject {
 
                if ($item['type'] == PluginReleasesTest::getType()
                    || $item['type'] == pluginReleasesDeploytask::getType()) {
-                  $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",".PluginReleasesTest::DONE.")'";
-                  $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\",".PluginReleasesTest::FAIL.")'";
-                  $cursor = "";
+                  $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\"," . PluginReleasesTest::DONE . ")'";
+                  $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\"," . PluginReleasesTest::FAIL . ")'";
+                  $cursor      = "";
                   if (!$item_i['can_edit']) {
-                     $cursor = "cursor: not-allowed;";
+                     $cursor      = "cursor: not-allowed;";
                      $onClickDone = "";
                      $onClickFail = "";
                   }
@@ -1959,7 +1959,7 @@ class PluginReleasesRelease extends CommonITILObject {
          }
          if (isset($item_i['plugin_releases_risks_id'])
              && !empty($item_i['plugin_releases_risks_id'])) {
-            echo __("Associated with",'releases') . " ";
+            echo __("Associated with", 'releases') . " ";
             echo Dropdown::getDropdownName("glpi_plugin_releases_risks", $item_i['plugin_releases_risks_id']) . "<br>";
          }
 
@@ -2092,10 +2092,10 @@ class PluginReleasesRelease extends CommonITILObject {
          $rollbacks = $rollback_obj->find([$foreignKey => $this->getID()] + $restrict_rollback, ['date_mod DESC', 'id DESC']);
          foreach ($rollbacks as $rollbacks_id => $rollback) {
             $rollback_obj->getFromDB($rollbacks_id);
-            $rollback['can_edit']                                       = $rollback_obj->canUpdate();
+            $rollback['can_edit']                                           = $rollback_obj->canUpdate();
             $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
-                                                                           'item'     => $rollback,
-                                                                           'itiltype' => 'Rollback'];
+                                                                               'item'     => $rollback,
+                                                                               'itiltype' => 'Rollback'];
          }
       }
 
@@ -2128,9 +2128,6 @@ class PluginReleasesRelease extends CommonITILObject {
 
       return $timeline;
    }
-
-
-
 
 
    static function showCreateRelease($item) {
@@ -2328,7 +2325,7 @@ class PluginReleasesRelease extends CommonITILObject {
    static function getClosedStatusArray() {
 
 
-      $tab = [self::CLOSED,self::FAIL];
+      $tab = [self::CLOSED, self::FAIL];
       return $tab;
    }
 
@@ -2450,24 +2447,24 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       // Link to open a new release
-//      if ($item->getID()
-//          && PluginReleasesRelease::isPossibleToAssignType($item->getType())
-//          && self::canCreate()
-//          && !(!empty($withtemplate) && $withtemplate == 2)
-//          && (!isset($item->fields['is_template']) || $item->fields['is_template'] == 0)) {
-//         echo "<div class='firstbloc'>";
-//         Html::showSimpleForm(
-//            PluginReleasesRelease::getFormURL(),
-//            '_add_fromitem',
-//            __('New release for this item...'),
-//            [
-//               '_from_itemtype' => $item->getType(),
-//               '_from_items_id' => $item->getID(),
-//               'entities_id'    => $item->fields['entities_id']
-//            ]
-//         );
-//         echo "</div>";
-//      }
+      //      if ($item->getID()
+      //          && PluginReleasesRelease::isPossibleToAssignType($item->getType())
+      //          && self::canCreate()
+      //          && !(!empty($withtemplate) && $withtemplate == 2)
+      //          && (!isset($item->fields['is_template']) || $item->fields['is_template'] == 0)) {
+      //         echo "<div class='firstbloc'>";
+      //         Html::showSimpleForm(
+      //            PluginReleasesRelease::getFormURL(),
+      //            '_add_fromitem',
+      //            __('New release for this item...'),
+      //            [
+      //               '_from_itemtype' => $item->getType(),
+      //               '_from_items_id' => $item->getID(),
+      //               'entities_id'    => $item->fields['entities_id']
+      //            ]
+      //         );
+      //         echo "</div>";
+      //      }
 
       $criteria          = self::getCommonCriteria();
       $criteria['WHERE'] = $restrict + getEntitiesRestrictCriteria(self::getTable());
@@ -2493,12 +2490,12 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "<tr><th colspan='$colspan'>";
 
          //TRANS : %d is the number of problems
-         echo sprintf(_n('%d last release', '%d last releases', $number,'releases'), $number);
+         echo sprintf(_n('%d last release', '%d last releases', $number, 'releases'), $number);
 
          echo "</th></tr>";
 
       } else {
-         echo "<tr><th>" . __('No release found.','releases') . "</th></tr>";
+         echo "<tr><th>" . __('No release found.', 'releases') . "</th></tr>";
       }
       // Ticket list
       if ($number > 0) {
@@ -2533,7 +2530,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
          echo "<div class='spaced'><table class='tab_cadre_fixe'>";
          echo "<tr><th colspan='$colspan'>";
-         echo __('Releases on linked items','releases');
+         echo __('Releases on linked items', 'releases');
 
          echo "</th></tr>";
          if ($number > 0) {
@@ -2545,7 +2542,7 @@ class PluginReleasesRelease extends CommonITILObject {
             }
             self::commonListHeader(Search::HTML_OUTPUT);
          } else {
-            echo "<tr><th>" . __('No release found.','releases') . "</th></tr>";
+            echo "<tr><th>" . __('No release found.', 'releases') . "</th></tr>";
          }
          echo "</table></div>";
 
@@ -2994,7 +2991,7 @@ class PluginReleasesRelease extends CommonITILObject {
    }
 
    function post_getEmpty() {
-      $this->fields['users_id_recipient']         = Session::getLoginUserID();
+      $this->fields['users_id_recipient'] = Session::getLoginUserID();
    }
 
    //TODO delete useless lines
@@ -3006,52 +3003,52 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Check dates change interval due to the fact that second are not displayed in form
       if ((($key = array_search('date', $this->updates)) !== false)
-         && (substr($this->fields["date"], 0, 16) == substr($this->oldvalues['date'], 0, 16))) {
+          && (substr($this->fields["date"], 0, 16) == substr($this->oldvalues['date'], 0, 16))) {
          unset($this->updates[$key]);
          unset($this->oldvalues['date']);
       }
 
-      if ((($key=array_search('closedate', $this->updates)) !== false)
-         && (substr($this->fields["closedate"], 0, 16) == substr($this->oldvalues['closedate'], 0, 16))) {
+      if ((($key = array_search('closedate', $this->updates)) !== false)
+          && (substr($this->fields["closedate"], 0, 16) == substr($this->oldvalues['closedate'], 0, 16))) {
          unset($this->updates[$key]);
          unset($this->oldvalues['closedate']);
       }
 
-      if ((($key=array_search('time_to_resolve', $this->updates)) !== false)
-         && (substr($this->fields["time_to_resolve"], 0, 16) == substr($this->oldvalues['time_to_resolve'], 0, 16))) {
+      if ((($key = array_search('time_to_resolve', $this->updates)) !== false)
+          && (substr($this->fields["time_to_resolve"], 0, 16) == substr($this->oldvalues['time_to_resolve'], 0, 16))) {
          unset($this->updates[$key]);
          unset($this->oldvalues['time_to_resolve']);
       }
 
-      if ((($key=array_search('solvedate', $this->updates)) !== false)
-         && (substr($this->fields["solvedate"], 0, 16) == substr($this->oldvalues['solvedate'], 0, 16))) {
+      if ((($key = array_search('solvedate', $this->updates)) !== false)
+          && (substr($this->fields["solvedate"], 0, 16) == substr($this->oldvalues['solvedate'], 0, 16))) {
          unset($this->updates[$key]);
          unset($this->oldvalues['solvedate']);
       }
 
       if (isset($this->input["status"])) {
          if (($this->input["status"] != self::WAITING)
-            && ($this->countSuppliers(CommonITILActor::ASSIGN) == 0)
-            && ($this->countUsers(CommonITILActor::ASSIGN) == 0)
-            && ($this->countGroups(CommonITILActor::ASSIGN) == 0)
-            && !in_array($this->fields['status'], array_merge($this->getSolvedStatusArray(),
-               $this->getClosedStatusArray()))) {
+             && ($this->countSuppliers(CommonITILActor::ASSIGN) == 0)
+             && ($this->countUsers(CommonITILActor::ASSIGN) == 0)
+             && ($this->countGroups(CommonITILActor::ASSIGN) == 0)
+             && !in_array($this->fields['status'], array_merge($this->getSolvedStatusArray(),
+                                                               $this->getClosedStatusArray()))) {
 
             if (!in_array('status', $this->updates)) {
                $this->oldvalues['status'] = $this->fields['status'];
-               $this->updates[] = 'status';
+               $this->updates[]           = 'status';
             }
 
             // $this->fields['status'] = self::INCOMING;
             // Don't change status if it's a new status allow
             if (in_array($this->oldvalues['status'], $this->getNewStatusArray())
-               && !in_array($this->input['status'], $this->getNewStatusArray())) {
+                && !in_array($this->input['status'], $this->getNewStatusArray())) {
                $this->fields['status'] = $this->oldvalues['status'];
             }
          }
 
          if (in_array("status", $this->updates)
-            && in_array($this->input["status"], $this->getSolvedStatusArray())) {
+             && in_array($this->input["status"], $this->getSolvedStatusArray())) {
             $this->updates[]              = "solvedate";
             $this->oldvalues['solvedate'] = $this->fields["solvedate"];
             $this->fields["solvedate"]    = $_SESSION["glpi_currenttime"];
@@ -3062,7 +3059,7 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
          if (in_array("status", $this->updates)
-            && in_array($this->input["status"], $this->getClosedStatusArray())) {
+             && in_array($this->input["status"], $this->getClosedStatusArray())) {
             $this->updates[]              = "closedate";
             $this->oldvalues['closedate'] = $this->fields["closedate"];
             $this->fields["closedate"]    = $_SESSION["glpi_currenttime"];
@@ -3084,7 +3081,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // check time_to_resolve (SLA)
       if ((in_array("date", $this->updates) || in_array("time_to_resolve", $this->updates))
-         && !is_null($this->fields["time_to_resolve"])) { // Date set
+          && !is_null($this->fields["time_to_resolve"])) { // Date set
 
          if ($this->fields["time_to_resolve"] < $this->fields["date"]) {
             Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
@@ -3102,7 +3099,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // check internal_time_to_resolve (OLA)
       if ((in_array("date", $this->updates) || in_array("internal_time_to_resolve", $this->updates))
-         && !is_null($this->fields["internal_time_to_resolve"])) { // Date set
+          && !is_null($this->fields["internal_time_to_resolve"])) { // Date set
 
          if ($this->fields["internal_time_to_resolve"] < $this->fields["date"]) {
             Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
@@ -3120,7 +3117,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Status close : check dates
       if (in_array($this->fields["status"], $this->getClosedStatusArray())
-         && (in_array("date", $this->updates) || in_array("closedate", $this->updates))) {
+          && (in_array("date", $this->updates) || in_array("closedate", $this->updates))) {
 
          // Invalid dates : no change
          // closedate must be > solvedate
@@ -3148,7 +3145,7 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       if ((($key = array_search('status', $this->updates)) !== false)
-         && $this->oldvalues['status'] == $this->fields['status']) {
+          && $this->oldvalues['status'] == $this->fields['status']) {
 
          unset($this->updates[$key]);
          unset($this->oldvalues['status']);
@@ -3156,7 +3153,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Status solved : check dates
       if (in_array($this->fields["status"], $this->getSolvedStatusArray())
-         && (in_array("date", $this->updates) || in_array("solvedate", $this->updates))) {
+          && (in_array("date", $this->updates) || in_array("solvedate", $this->updates))) {
 
          // Invalid dates : no change
          // solvedate must be > create date
@@ -3176,11 +3173,11 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Manage come back to waiting state
       if (!is_null($this->fields['begin_waiting_date'])
-         && (($key = array_search('status', $this->updates)) !== false)
-         && (($this->oldvalues['status'] == self::WAITING)
-            // From solved to another state than closed
-            || (in_array($this->oldvalues["status"], $this->getSolvedStatusArray())
-               && !in_array($this->fields["status"], $this->getClosedStatusArray())))) {
+          && (($key = array_search('status', $this->updates)) !== false)
+          && (($this->oldvalues['status'] == self::WAITING)
+              // From solved to another state than closed
+              || (in_array($this->oldvalues["status"], $this->getSolvedStatusArray())
+                  && !in_array($this->fields["status"], $this->getClosedStatusArray())))) {
 
          // Compute ticket waiting time use calendar if exists
          $calendar     = new Calendar();
@@ -3190,12 +3187,12 @@ class PluginReleasesRelease extends CommonITILObject {
          // Compute ticket waiting time use calendar if exists
          // Using calendar
          if (($calendars_id > 0)
-            && $calendar->getFromDB($calendars_id)) {
+             && $calendar->getFromDB($calendars_id)) {
             $delay_time = $calendar->getActiveTimeBetween($this->fields['begin_waiting_date'],
-               $_SESSION["glpi_currenttime"]);
+                                                          $_SESSION["glpi_currenttime"]);
          } else { // Not calendar defined
             $delay_time = strtotime($_SESSION["glpi_currenttime"])
-               -strtotime($this->fields['begin_waiting_date']);
+                          - strtotime($this->fields['begin_waiting_date']);
          }
 
          // SLA case : compute sla_ttr duration
@@ -3203,29 +3200,29 @@ class PluginReleasesRelease extends CommonITILObject {
             $sla = new SLA();
             if ($sla->getFromDB($this->fields['slas_id_ttr'])) {
                $sla->setTicketCalendar($calendars_id);
-               $delay_time_sla  = $sla->getActiveTimeBetween($this->fields['begin_waiting_date'],
-                  $_SESSION["glpi_currenttime"]);
-               $this->updates[] = "sla_waiting_duration";
+               $delay_time_sla                       = $sla->getActiveTimeBetween($this->fields['begin_waiting_date'],
+                                                                                  $_SESSION["glpi_currenttime"]);
+               $this->updates[]                      = "sla_waiting_duration";
                $this->fields["sla_waiting_duration"] += $delay_time_sla;
             }
 
             // Compute new time_to_resolve
             $this->updates[]                 = "time_to_resolve";
             $this->fields['time_to_resolve'] = $sla->computeDate($this->fields['date'],
-               $this->fields["sla_waiting_duration"]);
+                                                                 $this->fields["sla_waiting_duration"]);
             // Add current level to do
             $sla->addLevelToDo($this);
 
          } else {
             // Using calendar
             if (($calendars_id > 0)
-               && $calendar->getFromDB($calendars_id)
-               && $calendar->hasAWorkingDay()) {
+                && $calendar->getFromDB($calendars_id)
+                && $calendar->hasAWorkingDay()) {
                if ($this->fields['time_to_resolve'] > 0) {
                   // compute new due date using calendar
                   $this->updates[]                 = "time_to_resolve";
                   $this->fields['time_to_resolve'] = $calendar->computeEndDate($this->fields['time_to_resolve'],
-                     $delay_time);
+                                                                               $delay_time);
                }
 
             } else { // Not calendar defined
@@ -3233,7 +3230,7 @@ class PluginReleasesRelease extends CommonITILObject {
                   // compute new due date : no calendar so add computed delay_time
                   $this->updates[]                 = "time_to_resolve";
                   $this->fields['time_to_resolve'] = date('Y-m-d H:i:s',
-                     $delay_time + strtotime($this->fields['time_to_resolve']));
+                                                          $delay_time + strtotime($this->fields['time_to_resolve']));
                }
             }
          }
@@ -3243,8 +3240,8 @@ class PluginReleasesRelease extends CommonITILObject {
             $ola = new OLA();
             if ($ola->getFromDB($this->fields['olas_id_ttr'])) {
                $ola->setTicketCalendar($calendars_id);
-               $delay_time_ola  = $ola->getActiveTimeBetween($this->fields['begin_waiting_date'],
-                  $_SESSION["glpi_currenttime"]);
+               $delay_time_ola                       = $ola->getActiveTimeBetween($this->fields['begin_waiting_date'],
+                                                                                  $_SESSION["glpi_currenttime"]);
                $this->updates[]                      = "ola_waiting_duration";
                $this->fields["ola_waiting_duration"] += $delay_time_ola;
             }
@@ -3252,7 +3249,7 @@ class PluginReleasesRelease extends CommonITILObject {
             // Compute new internal_time_to_resolve
             $this->updates[]                          = "internal_time_to_resolve";
             $this->fields['internal_time_to_resolve'] = $ola->computeDate($this->fields['ola_ttr_begin_date'],
-               $this->fields["ola_waiting_duration"]);
+                                                                          $this->fields["ola_waiting_duration"]);
             // Add current level to do
             $ola->addLevelToDo($this, $this->fields["olalevels_id_ttr"]);
 
@@ -3260,8 +3257,8 @@ class PluginReleasesRelease extends CommonITILObject {
             // Change doesn't have internal_time_to_resolve
             // Using calendar
             if (($calendars_id > 0)
-               && $calendar->getFromDB($calendars_id)
-               && $calendar->hasAWorkingDay()) {
+                && $calendar->getFromDB($calendars_id)
+                && $calendar->hasAWorkingDay()) {
                if ($this->fields['internal_time_to_resolve'] > 0) {
                   // compute new internal_time_to_resolve using calendar
                   $this->updates[]                          = "internal_time_to_resolve";
@@ -3275,13 +3272,13 @@ class PluginReleasesRelease extends CommonITILObject {
                   // compute new internal_time_to_resolve : no calendar so add computed delay_time
                   $this->updates[]                          = "internal_time_to_resolve";
                   $this->fields['internal_time_to_resolve'] = date('Y-m-d H:i:s',
-                     $delay_time +
-                     strtotime($this->fields['internal_time_to_resolve']));
+                                                                   $delay_time +
+                                                                   strtotime($this->fields['internal_time_to_resolve']));
                }
             }
          }
 
-         $this->updates[]                   = "waiting_duration";
+         $this->updates[]                  = "waiting_duration";
          $this->fields["waiting_duration"] += $delay_time;
 
          // Reset begin_waiting_date
@@ -3291,8 +3288,8 @@ class PluginReleasesRelease extends CommonITILObject {
 
       // Set begin waiting date if needed
       if ((($key = array_search('status', $this->updates)) !== false)
-         && (($this->fields['status'] == self::WAITING)
-            || in_array($this->fields["status"], $this->getSolvedStatusArray()))) {
+          && (($this->fields['status'] == self::WAITING)
+              || in_array($this->fields["status"], $this->getSolvedStatusArray()))) {
 
          $this->updates[]                    = "begin_waiting_date";
          $this->fields["begin_waiting_date"] = $_SESSION["glpi_currenttime"];
@@ -3324,8 +3321,8 @@ class PluginReleasesRelease extends CommonITILObject {
          $this->getClosedStatusArray()
       );
       if (($key = array_search('status', $this->updates)) !== false
-         && in_array($this->oldvalues['status'], $statuses)
-         && !in_array($this->fields['status'], $statuses)
+          && in_array($this->oldvalues['status'], $statuses)
+          && !in_array($this->fields['status'], $statuses)
       ) {
          $users_id_reject = 0;
          // set last updater if interactive user
@@ -3336,19 +3333,19 @@ class PluginReleasesRelease extends CommonITILObject {
          //Mark existing solutions as refused
          $DB->update(
             ITILSolution::getTable(), [
-            'status'             => CommonITILValidation::REFUSED,
-            'users_id_approval'  => $users_id_reject,
-            'date_approval'      => date('Y-m-d H:i:s')
+            'status'            => CommonITILValidation::REFUSED,
+            'users_id_approval' => $users_id_reject,
+            'date_approval'     => date('Y-m-d H:i:s')
          ], [
-               'WHERE'  => [
-                  'itemtype'  => static::getType(),
-                  'items_id'  => $this->getID()
+               'WHERE' => [
+                  'itemtype' => static::getType(),
+                  'items_id' => $this->getID()
                ],
-               'ORDER'  => [
+               'ORDER' => [
                   'date_creation DESC',
                   'id DESC'
                ],
-               'LIMIT'  => 1
+               'LIMIT' => 1
             ]
          );
 
@@ -3361,26 +3358,26 @@ class PluginReleasesRelease extends CommonITILObject {
          //Mark last solution as approved
          $DB->update(
             ITILSolution::getTable(), [
-            'status'             => CommonITILValidation::ACCEPTED,
-            'users_id_approval'  => Session::getLoginUserID(),
-            'date_approval'      => date('Y-m-d H:i:s')
+            'status'            => CommonITILValidation::ACCEPTED,
+            'users_id_approval' => Session::getLoginUserID(),
+            'date_approval'     => date('Y-m-d H:i:s')
          ], [
-               'WHERE'  => [
-                  'itemtype'  => static::getType(),
-                  'items_id'  => $this->getID()
+               'WHERE' => [
+                  'itemtype' => static::getType(),
+                  'items_id' => $this->getID()
                ],
-               'ORDER'  => [
+               'ORDER' => [
                   'date_creation DESC',
                   'id DESC'
                ],
-               'LIMIT'  => 1
+               'LIMIT' => 1
             ]
          );
       }
 
       // Do not take into account date_mod if no update is done
       if ((count($this->updates) == 1)
-         && (($key = array_search('date_mod', $this->updates)) !== false)) {
+          && (($key = array_search('date_mod', $this->updates)) !== false)) {
          unset($this->updates[$key]);
       }
    }
