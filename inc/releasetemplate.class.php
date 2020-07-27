@@ -311,10 +311,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    function prepareInputForUpdate($input) {
       $input = parent::prepareInputForUpdate($input);
       //      $input = parent::prepareInputForUpdate($input);
-      if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && $input["communication_type"] != $this->fields["communication_type"])) {
+      if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
          $input['target'] = [];
       }
-      $input['target'] = json_encode($input['target']);
+      if(isset($input["communication_type"])){
+         $input['target'] = json_encode($input['target']);
+      }
+
       $release_user = new PluginReleasesReleasetemplate_User();
       $release_supplier = new PluginReleasesReleasetemplate_Supplier();
       $group_release = new PluginReleasesGroup_Releasetemplate();

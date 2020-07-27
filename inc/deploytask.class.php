@@ -370,6 +370,67 @@ class PluginReleasesDeploytask extends CommonITILTask {
                       'rows'              => $rows]);
 
       echo "<input type='hidden' name='$fkfield' value='" . $this->fields[$fkfield] . "'>";
+      $document = new Document_Item();
+      $type     = self::getType();
+
+      if ($document->find(["itemtype" => $type, "items_id" => $this->getID()])) {
+         $d       = new Document();
+         $items_i = $document->find(["itemtype" => $type, "items_id" => $this->getID()]);
+         //         $item_i = reset($items_i);
+         foreach ($items_i as $item_d) {
+            $items_i    = $d->find(["id" => $item_d["documents_id"]]);
+            $item_i     = reset($items_i);
+            $foreignKey = "plugin_releases_reviews_id";
+            $pics_url   = $CFG_GLPI['root_doc'] . "/pics/timeline";
+
+            if ($item_i['filename']) {
+               $filename = $item_i['filename'];
+               $ext      = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+               echo "<img src='";
+               if (empty($filename)) {
+                  $filename = $item_i['name'];
+               }
+               if (file_exists(GLPI_ROOT . "/pics/icones/$ext-dist.png")) {
+                  echo $CFG_GLPI['root_doc'] . "/pics/icones/$ext-dist.png";
+               } else {
+                  echo "$pics_url/file.png";
+               }
+               echo "'/>&nbsp;";
+
+               echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
+                  . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
+               if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
+                  echo "<div class='timeline_img_preview'>";
+                  echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
+                     . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
+                  echo "</div>";
+               }
+               echo "</a>";
+            }
+            if ($item_i['link']) {
+               echo "<a href='{$item_i['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
+            }
+            if (!empty($item_i['mime'])) {
+               echo "&nbsp;(" . $item_i['mime'] . ")";
+            }
+            echo "<span class='buttons'>";
+            echo "<a href='" . Document::getFormURLWithID($item_i['id']) . "' class='edit_document fa fa-eye pointer' title='" .
+               _sx("button", "Show") . "'>";
+            echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
+
+            $doc = new Document();
+            $doc->getFromDB($item_i['id']);
+            if ($doc->can($item_i['id'], UPDATE)) {
+               echo "<a href='" . static::getFormURL() .
+                  "?delete_document&documents_id=" . $item_i['id'] .
+                  "&$foreignKey=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
+                  _sx("button", "Delete permanently") . "'>";
+               echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
+            }
+            echo "</span>";
+            echo "<br />";
+         }
+      }
       echo "</td>";
 
       echo "<td style='vertical-align: middle'>";
@@ -391,7 +452,6 @@ class PluginReleasesDeploytask extends CommonITILTask {
                   tasktemplates_id: value
                }
             }).done(function(data) {
-               console.log(data);
                var taskcategories_id = isNaN(parseInt(data.taskcategories_id))
                   ? 0
                   : parseInt(data.taskcategories_id);

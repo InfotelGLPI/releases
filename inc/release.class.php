@@ -840,6 +840,8 @@ class PluginReleasesRelease extends CommonITILObject {
       //      $input = parent::prepareInputForUpdate($input);
       if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
          $input['target'] = [];
+      }
+      if(isset($input["communication_type"])){
          $input['target'] = json_encode($input['target']);
       }
 
@@ -1071,7 +1073,7 @@ class PluginReleasesRelease extends CommonITILObject {
       $template->getFromDB($template_id);
 
       foreach ($this->fields as $key => $field) {
-         if ($key != "id" && $key != "entities_id") {
+         if ($key != "id" && $key != "entities_id" && $template->getField($key) != NOT_AVAILABLE) {
             $this->fields[$key] = $template->getField($key);
          }
       }
@@ -1507,7 +1509,6 @@ class PluginReleasesRelease extends CommonITILObject {
                   'newStatus': newStatus 
                 })
                 .done(function(response) {
-                console.log('done '+response.state)
                 $(target).parent().children().css('color','gray');//add gray to done and fail
                           
                 if(response.state == 2){
@@ -3008,142 +3009,6 @@ class PluginReleasesRelease extends CommonITILObject {
          unset($this->oldvalues['date']);
       }
 
-      if ((($key = array_search('closedate', $this->updates)) !== false)
-          && (substr($this->fields["closedate"], 0, 16) == substr($this->oldvalues['closedate'], 0, 16))) {
-         unset($this->updates[$key]);
-         unset($this->oldvalues['closedate']);
-      }
-
-      if ((($key = array_search('time_to_resolve', $this->updates)) !== false)
-          && (substr($this->fields["time_to_resolve"], 0, 16) == substr($this->oldvalues['time_to_resolve'], 0, 16))) {
-         unset($this->updates[$key]);
-         unset($this->oldvalues['time_to_resolve']);
-      }
-
-      if ((($key = array_search('solvedate', $this->updates)) !== false)
-          && (substr($this->fields["solvedate"], 0, 16) == substr($this->oldvalues['solvedate'], 0, 16))) {
-         unset($this->updates[$key]);
-         unset($this->oldvalues['solvedate']);
-      }
-
-      if (isset($this->input["status"])) {
-         if (($this->input["status"] != self::WAITING)
-             && ($this->countSuppliers(CommonITILActor::ASSIGN) == 0)
-             && ($this->countUsers(CommonITILActor::ASSIGN) == 0)
-             && ($this->countGroups(CommonITILActor::ASSIGN) == 0)
-             && !in_array($this->fields['status'], array_merge($this->getSolvedStatusArray(),
-                                                               $this->getClosedStatusArray()))) {
-
-            if (!in_array('status', $this->updates)) {
-               $this->oldvalues['status'] = $this->fields['status'];
-               $this->updates[]           = 'status';
-            }
-
-            // $this->fields['status'] = self::INCOMING;
-            // Don't change status if it's a new status allow
-            if (in_array($this->oldvalues['status'], $this->getNewStatusArray())
-                && !in_array($this->input['status'], $this->getNewStatusArray())) {
-               $this->fields['status'] = $this->oldvalues['status'];
-            }
-         }
-
-         if (in_array("status", $this->updates)
-             && in_array($this->input["status"], $this->getSolvedStatusArray())) {
-            $this->updates[]              = "solvedate";
-            $this->oldvalues['solvedate'] = $this->fields["solvedate"];
-            $this->fields["solvedate"]    = $_SESSION["glpi_currenttime"];
-            // If invalid date : set open date
-            if ($this->fields["solvedate"] < $this->fields["date"]) {
-               $this->fields["solvedate"] = $this->fields["date"];
-            }
-         }
-
-         if (in_array("status", $this->updates)
-             && in_array($this->input["status"], $this->getClosedStatusArray())) {
-            $this->updates[]              = "closedate";
-            $this->oldvalues['closedate'] = $this->fields["closedate"];
-            $this->fields["closedate"]    = $_SESSION["glpi_currenttime"];
-            // If invalid date : set open date
-            if ($this->fields["closedate"] < $this->fields["date"]) {
-               $this->fields["closedate"] = $this->fields["date"];
-            }
-            // Set solvedate to closedate
-            if (empty($this->fields["solvedate"])) {
-               $this->updates[]              = "solvedate";
-               $this->oldvalues['solvedate'] = $this->fields["solvedate"];
-               $this->fields["solvedate"]    = $this->fields["closedate"];
-            }
-         }
-
-      }
-
-      // check dates
-
-      // check time_to_resolve (SLA)
-      if ((in_array("date", $this->updates) || in_array("time_to_resolve", $this->updates))
-          && !is_null($this->fields["time_to_resolve"])) { // Date set
-
-         if ($this->fields["time_to_resolve"] < $this->fields["date"]) {
-            Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
-
-            if (($key = array_search('date', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['date']);
-            }
-            if (($key = array_search('time_to_resolve', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['time_to_resolve']);
-            }
-         }
-      }
-
-      // check internal_time_to_resolve (OLA)
-      if ((in_array("date", $this->updates) || in_array("internal_time_to_resolve", $this->updates))
-          && !is_null($this->fields["internal_time_to_resolve"])) { // Date set
-
-         if ($this->fields["internal_time_to_resolve"] < $this->fields["date"]) {
-            Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
-
-            if (($key = array_search('date', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['date']);
-            }
-            if (($key = array_search('internal_time_to_resolve', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['internal_time_to_resolve']);
-            }
-         }
-      }
-
-      // Status close : check dates
-      if (in_array($this->fields["status"], $this->getClosedStatusArray())
-          && (in_array("date", $this->updates) || in_array("closedate", $this->updates))) {
-
-         // Invalid dates : no change
-         // closedate must be > solvedate
-         if ($this->fields["closedate"] < $this->fields["solvedate"]) {
-            Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
-
-            if (($key = array_search('closedate', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['closedate']);
-            }
-         }
-
-         // closedate must be > create date
-         if ($this->fields["closedate"] < $this->fields["date"]) {
-            Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
-            if (($key = array_search('date', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['date']);
-            }
-            if (($key = array_search('closedate', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['closedate']);
-            }
-         }
-      }
-
       if ((($key = array_search('status', $this->updates)) !== false)
           && $this->oldvalues['status'] == $this->fields['status']) {
 
@@ -3151,229 +3016,14 @@ class PluginReleasesRelease extends CommonITILObject {
          unset($this->oldvalues['status']);
       }
 
-      // Status solved : check dates
-      if (in_array($this->fields["status"], $this->getSolvedStatusArray())
-          && (in_array("date", $this->updates) || in_array("solvedate", $this->updates))) {
 
-         // Invalid dates : no change
-         // solvedate must be > create date
-         if ($this->fields["solvedate"] < $this->fields["date"]) {
-            Session::addMessageAfterRedirect(__('Invalid dates. Update cancelled.'), false, ERROR);
 
-            if (($key = array_search('date', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['date']);
-            }
-            if (($key = array_search('solvedate', $this->updates)) !== false) {
-               unset($this->updates[$key]);
-               unset($this->oldvalues['solvedate']);
-            }
-         }
-      }
 
-      // Manage come back to waiting state
-      if (!is_null($this->fields['begin_waiting_date'])
-          && (($key = array_search('status', $this->updates)) !== false)
-          && (($this->oldvalues['status'] == self::WAITING)
-              // From solved to another state than closed
-              || (in_array($this->oldvalues["status"], $this->getSolvedStatusArray())
-                  && !in_array($this->fields["status"], $this->getClosedStatusArray())))) {
 
-         // Compute ticket waiting time use calendar if exists
-         $calendar     = new Calendar();
-         $calendars_id = $this->getCalendar();
-         $delay_time   = 0;
 
-         // Compute ticket waiting time use calendar if exists
-         // Using calendar
-         if (($calendars_id > 0)
-             && $calendar->getFromDB($calendars_id)) {
-            $delay_time = $calendar->getActiveTimeBetween($this->fields['begin_waiting_date'],
-                                                          $_SESSION["glpi_currenttime"]);
-         } else { // Not calendar defined
-            $delay_time = strtotime($_SESSION["glpi_currenttime"])
-                          - strtotime($this->fields['begin_waiting_date']);
-         }
 
-         // SLA case : compute sla_ttr duration
-         if (isset($this->fields['slas_id_ttr']) && ($this->fields['slas_id_ttr'] > 0)) {
-            $sla = new SLA();
-            if ($sla->getFromDB($this->fields['slas_id_ttr'])) {
-               $sla->setTicketCalendar($calendars_id);
-               $delay_time_sla                       = $sla->getActiveTimeBetween($this->fields['begin_waiting_date'],
-                                                                                  $_SESSION["glpi_currenttime"]);
-               $this->updates[]                      = "sla_waiting_duration";
-               $this->fields["sla_waiting_duration"] += $delay_time_sla;
-            }
 
-            // Compute new time_to_resolve
-            $this->updates[]                 = "time_to_resolve";
-            $this->fields['time_to_resolve'] = $sla->computeDate($this->fields['date'],
-                                                                 $this->fields["sla_waiting_duration"]);
-            // Add current level to do
-            $sla->addLevelToDo($this);
 
-         } else {
-            // Using calendar
-            if (($calendars_id > 0)
-                && $calendar->getFromDB($calendars_id)
-                && $calendar->hasAWorkingDay()) {
-               if ($this->fields['time_to_resolve'] > 0) {
-                  // compute new due date using calendar
-                  $this->updates[]                 = "time_to_resolve";
-                  $this->fields['time_to_resolve'] = $calendar->computeEndDate($this->fields['time_to_resolve'],
-                                                                               $delay_time);
-               }
-
-            } else { // Not calendar defined
-               if ($this->fields['time_to_resolve'] > 0) {
-                  // compute new due date : no calendar so add computed delay_time
-                  $this->updates[]                 = "time_to_resolve";
-                  $this->fields['time_to_resolve'] = date('Y-m-d H:i:s',
-                                                          $delay_time + strtotime($this->fields['time_to_resolve']));
-               }
-            }
-         }
-
-         // OLA case : compute ola_ttr duration
-         if (isset($this->fields['olas_id_ttr']) && ($this->fields['olas_id_ttr'] > 0)) {
-            $ola = new OLA();
-            if ($ola->getFromDB($this->fields['olas_id_ttr'])) {
-               $ola->setTicketCalendar($calendars_id);
-               $delay_time_ola                       = $ola->getActiveTimeBetween($this->fields['begin_waiting_date'],
-                                                                                  $_SESSION["glpi_currenttime"]);
-               $this->updates[]                      = "ola_waiting_duration";
-               $this->fields["ola_waiting_duration"] += $delay_time_ola;
-            }
-
-            // Compute new internal_time_to_resolve
-            $this->updates[]                          = "internal_time_to_resolve";
-            $this->fields['internal_time_to_resolve'] = $ola->computeDate($this->fields['ola_ttr_begin_date'],
-                                                                          $this->fields["ola_waiting_duration"]);
-            // Add current level to do
-            $ola->addLevelToDo($this, $this->fields["olalevels_id_ttr"]);
-
-         } else if (array_key_exists("internal_time_to_resolve", $this->fields)) {
-            // Change doesn't have internal_time_to_resolve
-            // Using calendar
-            if (($calendars_id > 0)
-                && $calendar->getFromDB($calendars_id)
-                && $calendar->hasAWorkingDay()) {
-               if ($this->fields['internal_time_to_resolve'] > 0) {
-                  // compute new internal_time_to_resolve using calendar
-                  $this->updates[]                          = "internal_time_to_resolve";
-                  $this->fields['internal_time_to_resolve'] = $calendar->computeEndDate(
-                     $this->fields['internal_time_to_resolve'],
-                     $delay_time);
-               }
-
-            } else { // Not calendar defined
-               if ($this->fields['internal_time_to_resolve'] > 0) {
-                  // compute new internal_time_to_resolve : no calendar so add computed delay_time
-                  $this->updates[]                          = "internal_time_to_resolve";
-                  $this->fields['internal_time_to_resolve'] = date('Y-m-d H:i:s',
-                                                                   $delay_time +
-                                                                   strtotime($this->fields['internal_time_to_resolve']));
-               }
-            }
-         }
-
-         $this->updates[]                  = "waiting_duration";
-         $this->fields["waiting_duration"] += $delay_time;
-
-         // Reset begin_waiting_date
-         $this->updates[]                    = "begin_waiting_date";
-         $this->fields["begin_waiting_date"] = 'NULL';
-      }
-
-      // Set begin waiting date if needed
-      if ((($key = array_search('status', $this->updates)) !== false)
-          && (($this->fields['status'] == self::WAITING)
-              || in_array($this->fields["status"], $this->getSolvedStatusArray()))) {
-
-         $this->updates[]                    = "begin_waiting_date";
-         $this->fields["begin_waiting_date"] = $_SESSION["glpi_currenttime"];
-
-         // Specific for tickets
-         if (isset($this->fields['slas_id_ttr']) && ($this->fields['slas_id_ttr'] > 0)) {
-            SLA::deleteLevelsToDo($this);
-         }
-
-         if (isset($this->fields['olas_id_ttr']) && ($this->fields['olas_id_ttr'] > 0)) {
-            OLA::deleteLevelsToDo($this);
-         }
-      }
-
-      // solve_delay_stat : use delay between opendate and solvedate
-      if (in_array("solvedate", $this->updates)) {
-         $this->updates[]                  = "solve_delay_stat";
-         $this->fields['solve_delay_stat'] = $this->computeSolveDelayStat();
-      }
-      // close_delay_stat : use delay between opendate and closedate
-      if (in_array("closedate", $this->updates)) {
-         $this->updates[]                  = "close_delay_stat";
-         $this->fields['close_delay_stat'] = $this->computeCloseDelayStat();
-      }
-
-      //Look for reopening
-      $statuses = array_merge(
-         $this->getSolvedStatusArray(),
-         $this->getClosedStatusArray()
-      );
-      if (($key = array_search('status', $this->updates)) !== false
-          && in_array($this->oldvalues['status'], $statuses)
-          && !in_array($this->fields['status'], $statuses)
-      ) {
-         $users_id_reject = 0;
-         // set last updater if interactive user
-         if (!Session::isCron()) {
-            $users_id_reject = Session::getLoginUserID();
-         }
-
-         //Mark existing solutions as refused
-         $DB->update(
-            ITILSolution::getTable(), [
-            'status'            => CommonITILValidation::REFUSED,
-            'users_id_approval' => $users_id_reject,
-            'date_approval'     => date('Y-m-d H:i:s')
-         ], [
-               'WHERE' => [
-                  'itemtype' => static::getType(),
-                  'items_id' => $this->getID()
-               ],
-               'ORDER' => [
-                  'date_creation DESC',
-                  'id DESC'
-               ],
-               'LIMIT' => 1
-            ]
-         );
-
-         //Delete existing survey
-         $inquest = new TicketSatisfaction();
-         $inquest->delete(['tickets_id' => $this->getID()]);
-      }
-
-      if (isset($this->input['_accepted'])) {
-         //Mark last solution as approved
-         $DB->update(
-            ITILSolution::getTable(), [
-            'status'            => CommonITILValidation::ACCEPTED,
-            'users_id_approval' => Session::getLoginUserID(),
-            'date_approval'     => date('Y-m-d H:i:s')
-         ], [
-               'WHERE' => [
-                  'itemtype' => static::getType(),
-                  'items_id' => $this->getID()
-               ],
-               'ORDER' => [
-                  'date_creation DESC',
-                  'id DESC'
-               ],
-               'LIMIT' => 1
-            ]
-         );
-      }
 
       // Do not take into account date_mod if no update is done
       if ((count($this->updates) == 1)
@@ -3381,5 +3031,9 @@ class PluginReleasesRelease extends CommonITILObject {
          unset($this->updates[$key]);
       }
    }
+  public static function getTimelinePosition($items_id, $sub_type, $users_id){
+      return self::TIMELINE_RIGHT;
+
+  }
 }
 

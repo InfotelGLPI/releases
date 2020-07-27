@@ -273,7 +273,6 @@ class PluginReleasesFinalization extends CommonDBTM {
                        $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
                      }else{  
                         var date = $(\"[name = 'date_production']\").val();
-                        console.log(date);
                         $.ajax({
                            url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
                            data: {'id' : " . $release->getID() . ",'date' : date},

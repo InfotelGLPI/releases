@@ -40,7 +40,7 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    $release       = new PluginReleasesRelease();
    $val           = [];
    $val['id']     = $_REQUEST["id"];
-   $val['status'] = PluginReleasesRelease::FINALIZE;
+   $val['status'] = PluginReleasesRelease::REVIEW;
    $val['date_end'] = $_SESSION["glpi_currenttime"];
    $release->update($val);
    $release->getFromDB($_REQUEST["id"]);

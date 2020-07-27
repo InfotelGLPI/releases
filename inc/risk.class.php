@@ -169,7 +169,6 @@ class PluginReleasesRisk extends CommonDBTM {
                      templates_id: value
                   }
                }).done(function(data) {
-                  console.log(data);
                   var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
                      ? 0
                      : parseInt(data.plugin_releases_typerisks_id);

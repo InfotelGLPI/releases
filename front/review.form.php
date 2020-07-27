@@ -76,7 +76,10 @@ if (isset($_POST["add"])) {
                "items_id"     => $_GET["plugin_releases_reviews_id"],
                "itemtype"     => PluginReleasesReview::getType()]);;
    Html::back();
-} else {
+}else if (isset($_GET["conclude"])) {
+
+
+}else{
 
    $release->checkGlobal(READ);
 

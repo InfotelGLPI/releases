@@ -241,6 +241,14 @@ class PluginReleasesReview extends CommonDBTM {
 
       $this->showFormButtons($options);
 
+      echo "<form method='post' action='" . $this->getFormURL() . "'>";
+      echo "<br><table class='tab_cadre_fixe'>";
+      echo "<tr class='tab_bg_2 center'>";
+      echo "<input type='hidden' name='plugin_releases_releases_id' value='".$options["plugin_releases_releases_id"]."'>";
+      echo "<td><input type='submit' name='conclude' value=\""._sx('button', 'Conclude the review','releases')."\" class='submit'>";
+      echo "</td></tr>\n";
+      echo "</table>\n";
+
       return true;
    }
 

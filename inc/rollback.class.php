@@ -176,7 +176,6 @@ class PluginReleasesRollback extends CommonDBTM {
                   templates_id: value
                }
             }).done(function(data) {
-               console.log(data);
                
 
                // set textarea content
