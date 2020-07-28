@@ -76,9 +76,12 @@ if (isset($_POST["add"])) {
                "items_id"     => $_GET["plugin_releases_reviews_id"],
                "itemtype"     => PluginReleasesReview::getType()]);;
    Html::back();
-}else if (isset($_GET["conclude"])) {
-
-
+}else if (isset($_POST["conclude"])) {
+   $r = new PluginReleasesRelease();
+   $input["id"] = $_POST["plugin_releases_releases_id"];
+   $input["status"] = PluginReleasesRelease::CLOSED;
+   $r->update($input);
+   Html::back();
 }else{
 
    $release->checkGlobal(READ);

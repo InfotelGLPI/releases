@@ -231,5 +231,27 @@ class PluginReleasesRollback extends CommonDBTM {
 
       return true;
    }
+   /**
+    * @param $ID
+    * @param $entity
+    * @return ID|int|the
+    */
+   static function transfer($ID, $entity) {
+      global $DB;
+
+      if ($ID > 0) {
+         $self = new self();
+         $items = $self->find(["plugin_releases_releases_id"=>$ID]);
+         foreach ($items as $id => $vals){
+            $input = [];
+            $input["id"] = $id;
+            $input["entities_id"] = $entity;
+            $self->update($input);
+         }
+         return true;
+
+      }
+      return 0;
+   }
 }
 

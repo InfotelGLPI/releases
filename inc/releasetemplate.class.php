@@ -3015,4 +3015,110 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
       return 0;
    }
+
+   /**
+    * @param null $checkitem
+    *
+    * @return array
+    * @since version 0.85
+    *
+    * @see CommonDBTM::getSpecificMassiveActions()
+    *
+    */
+   function getSpecificMassiveActions($checkitem = null) {
+      $isadmin = static::canUpdate();
+      $actions = parent::getSpecificMassiveActions($checkitem);
+
+      if (Session::getCurrentInterface() == 'central') {
+         if ($isadmin) {
+            $actions['PluginReleasesReleasetemplate' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
+         }
+      }
+      return $actions;
+   }
+   /**
+    * @param MassiveAction $ma
+    *
+    * @return bool|false
+    * @since version 0.85
+    *
+    * @see CommonDBTM::showMassiveActionsSubForm()
+    *
+    */
+   static function showMassiveActionsSubForm(MassiveAction $ma) {
+
+      switch ($ma->getAction()) {
+         case "transfer" :
+            Dropdown::show('Entity');
+            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+            return true;
+            break;
+      }
+      return parent::showMassiveActionsSubForm($ma);
+   }
+
+   /**
+    * @param MassiveAction $ma
+    * @param CommonDBTM    $item
+    * @param array         $ids
+    *
+    * @return nothing|void
+    * @since version 0.85
+    *
+    * @see CommonDBTM::processMassiveActionsForOneItemtype()
+    *
+    */
+   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,
+                                                       array $ids) {
+
+
+      switch ($ma->getAction()) {
+
+         case "transfer" :
+            $input = $ma->getInput();
+            if ($item->getType() == PluginReleasesReleasetemplate::getType()) {
+               foreach ($ids as $key) {
+                  $item->getFromDB($key);
+
+
+
+                  unset($values);
+                  $values["id"]          = $key;
+                  $values["entities_id"] = $input['entities_id'];
+
+                  if ($item->update($values)) {
+                     PluginReleasesDeploytasktemplate::transfer($key,$input["entities_id"]);
+                     PluginReleasesTesttemplate::transfer($key,$input["entities_id"]);
+                     PluginReleasesRisktemplate::transfer($key,$input["entities_id"]);
+                     PluginReleasesRollbacktemplate::transfer($key,$input["entities_id"]);
+                     self::transferDocument($key,$input["entities_id"]);
+                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
+                  } else {
+                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+                  }
+               }
+            }
+            return;
+      }
+      parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
+   }
+
+   static function transferDocument($ID, $entity) {
+      global $DB;
+
+      if ($ID > 0) {
+         $self = new self();
+         $documents = new Document_Item();
+         $items = $documents->find(["items_id"=>$ID,"itemtype"=>self::getType()]);
+         foreach ($items as $id => $vals){
+            $input = [];
+            $input["id"] = $id;
+            $input["entities_id"] = $entity;
+            $documents->update($input);
+         }
+         return true;
+
+      }
+      return 0;
+   }
 }
