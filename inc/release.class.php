@@ -2003,14 +2003,23 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $timeline_index++;
       }
-      if (isset($_SESSION["releases"][Session::getLoginUserID()])) {
-         $catToLoad = $_SESSION["releases"][Session::getLoginUserID()];
-      } else {
-         $catToLoad = 'risk';
-      }
+      if(count($timeline) == 0){
+         echo "<table class=\"tab_cadre_fixehov\">";
+         echo "<tr >";
+         echo "<th class='center'>";
+         echo __("No data available",'releases');
+         echo "</th>";
+         echo "</tr>";
+         echo "</table>";
+      }else{
+         if (isset($_SESSION["releases"][Session::getLoginUserID()])) {
+            $catToLoad = $_SESSION["releases"][Session::getLoginUserID()];
+         } else {
+            $catToLoad = 'risk';
+         }
 
-      unset($_SESSION["releases"][Session::getLoginUserID()]);
-      echo Html::scriptBlock("$(document).ready(function (){        
+         unset($_SESSION["releases"][Session::getLoginUserID()]);
+         echo Html::scriptBlock("$(document).ready(function (){        
                                         $('.filter_timeline_release li a').removeClass('h_active');
                                         $('.h_item').removeClass('h_hidden');
                                        $('.h_item').addClass('h_hidden');
@@ -2022,6 +2031,8 @@ class PluginReleasesRelease extends CommonITILObject {
                                        $(\".h_content.$catToLoad\").parent().removeClass('h_hidden');
 
                                     });");
+      }
+
       // end timeline
       echo "</div>"; // h_item $user_position
    }
@@ -2221,15 +2232,7 @@ class PluginReleasesRelease extends CommonITILObject {
       //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
       $menu['icon'] = static::getIcon();
       if (self::canCreate()) {
-         $dbu       = new DbUtils();
-         $template  = new PluginReleasesReleasetemplate();
-         $condition = $dbu->getEntitiesRestrictCriteria($template->getTable(), '', '', true);
-         $templates = $template->find($condition);
-         if (empty($templates)) {
-            $menu['links']['add'] = self::getFormURL(false);
-         } else {
             $menu['links']['add'] = "/plugins/releases/front/creationrelease.php";
-         }
       }
 
 

@@ -937,15 +937,24 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<tr  class='tab_bg_1'>";
       echo "<th>" . __("Release","releases") . "</th>";
       echo "</tr>";
+
       echo "<tr  class='tab_bg_1'>";
       echo "<td class='center b' >";
       $dbu = new DbUtils();
       $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(),'','',true);
-      self::dropdown(["name"=>"releasetemplates_id"]+$condition);
-      $url = PluginReleasesRelease::getFormURL();
-      echo "<a  id='link' href='$url'>";
-      $url = $url."?template_id=";
-      $script = "
+      $template = new PluginReleasesReleasetemplate();
+      $templates = $template->find($condition);
+      if(count($templates) != 0) {
+
+
+         self::dropdown(["name" => "releasetemplates_id"] + $condition);
+
+         echo "<br/><br/>";
+      }
+         $url = PluginReleasesRelease::getFormURL();
+         echo "<a  id='link' href='$url'>";
+         $url = $url . "?template_id=";
+         $script = "
       var link = function (id,linkurl) {
          var link = linkurl+id;
          $(\"a#link\").attr(\"href\", link);
@@ -954,10 +963,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          link($(\"select[name='releasetemplates_id']\").val(),'$url');
          });";
 
-      echo Html::scriptBlock('$(document).ready(function() {'.$script.'});');
-      echo "<br/><br/>";
+         echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
+
       echo __("Create a release", 'releases');
       echo "</a>";
+      echo "</td>";
+      echo "</tr>";
       echo "</table>";
       echo "</div>";
    }
@@ -1538,14 +1549,23 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          $timeline_index++;
       }
-      if (isset($_SESSION["releases"]["template"][Session::getLoginUserID()])) {
-         $catToLoad = $_SESSION["releases"]["template"][Session::getLoginUserID()];
-      } else {
-         $catToLoad = 'risk';
-      }
+      if(count($timeline) == 0){
+         echo "<table class=\"tab_cadre_fixehov\">";
+         echo "<tr >";
+         echo "<th class='center'>";
+         echo __("No data available",'releases');
+         echo "</th>";
+         echo "</tr>";
+         echo "</table>";
+      }else{
+         if (isset($_SESSION["releases"]["template"][Session::getLoginUserID()])) {
+            $catToLoad = $_SESSION["releases"]["template"][Session::getLoginUserID()];
+         } else {
+            $catToLoad = 'risk';
+         }
 
-      unset($_SESSION["releases"]["template"][Session::getLoginUserID()]);
-      echo Html::scriptBlock("$(document).ready(function (){        
+         unset($_SESSION["releases"]["template"][Session::getLoginUserID()]);
+         echo Html::scriptBlock("$(document).ready(function (){        
                                         $('.filter_timeline_release li a').removeClass('h_active');
                                         $('.h_item').removeClass('h_hidden');
                                        $('.h_item').addClass('h_hidden');
@@ -1557,6 +1577,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                                        $(\".h_content.$catToLoad\").parent().removeClass('h_hidden');
 
                                     });");
+      }
       // end timeline
       echo "</div>"; // h_item $user_position
    }
