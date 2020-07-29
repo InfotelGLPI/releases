@@ -955,5 +955,24 @@ class PluginReleasesDeploytask extends CommonITILTask {
       }
       return 0;
    }
+
+   /**
+    * Get deploytask state name
+    *
+    * @param $value status ID
+    **/
+   static function getState($value) {
+
+      switch ($value) {
+         case static::FAIL :
+            return __('Failed', 'releases');
+
+         case static::TODO :
+            return __('To do');
+
+         case static::DONE :
+            return __('Done');
+      }
+   }
 }
 

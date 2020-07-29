@@ -329,5 +329,24 @@ class PluginReleasesTest extends CommonDBTM {
       }
       return 0;
    }
+
+   /**
+    * Get test state name
+    *
+    * @param $value status ID
+    **/
+   static function getState($value) {
+
+      switch ($value) {
+         case static::FAIL :
+            return __('Failed', 'releases');
+
+         case static::TODO :
+            return __('To do');
+
+         case static::DONE :
+            return __('Done');
+      }
+   }
 }
 
