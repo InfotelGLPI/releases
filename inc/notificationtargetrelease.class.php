@@ -331,8 +331,9 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
          $data["##$objettype.numberoflogs##"] = count($data['log']);
 
-
+         //TODO Comment document
          // Document
+
          $iterator = $DB->request([
             'SELECT'    => 'glpi_documents.*',
             'FROM'      => 'glpi_documents',
@@ -407,6 +408,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp['##task.id##']           = $task['id'];
 
             $tmp['##task.author##']       = Html::clean(getUserName($task['users_id']));
+            $tmp['##task.name##']       = Html::clean($task['name']);
 
             $tmp_taskcatinfo = Dropdown::getDropdownName('glpi_plugin_releases_typedeploytasks',
                $task['plugin_releases_typedeploytasks_id'], true, true, false);
@@ -451,12 +453,13 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp['##risk.id##']           = $risk['id'];
 
             $tmp['##risk.author##']       = Html::clean(getUserName($risk['users_id']));
+            $tmp['##risk.name##']       = Html::clean($risk['name']);
 
             $tmp_taskcatinfo = Dropdown::getDropdownName('glpi_plugin_releases_typerisks',
                $risk['plugin_releases_typerisks_id'], true, true, false);
             $tmp['##risk.type##']        = $tmp_taskcatinfo['name'];
 
-            $tmp['##risk.date##']         = Html::convDateTime($risk['date']);
+            $tmp['##risk.date##']         = Html::convDateTime($risk['date_creation']);
             $tmp['##risk.description##']  = $risk['content'];
             $tmp['##risk.status##']       = Planning::getState($risk['state']);
 
@@ -483,9 +486,10 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp['##rollback.id##']           = $rollback['id'];
 
             $tmp['##rollback.author##']       = Html::clean(getUserName($rollback['users_id']));
+            $tmp['##rollback.name##']       = Html::clean($rollback['name']);
 
 
-            $tmp['##rollback.date##']         = Html::convDateTime($rollback['date']);
+            $tmp['##rollback.date##']         = Html::convDateTime($rollback['date_creation']);
             $tmp['##rollback.description##']  = $rollback['content'];
             $tmp['##rollback.status##']       = Planning::getState($rollback['state']);
 
@@ -512,9 +516,10 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp['##test.id##']           = $test['id'];
 
             $tmp['##test.author##']       = Html::clean(getUserName($test['users_id']));
+            $tmp['##test.name##']       = Html::clean($test['name']);
 
 
-            $tmp['##test.date##']         = Html::convDateTime($test['date']);
+            $tmp['##test.date##']         = Html::convDateTime($test['date_creation']);
             $tmp['##test.description##']  = $test['content'];
             $tmp['##test.status##']       = $testtype::getState($test['state']);
 
@@ -560,7 +565,6 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = ['plugin_releases_releases_id' => $item->getField('id')];
 
 
-         $data["##$objettype.numberofproblems##"] = count($data['problems']);
 
          $items    = getAllDataFromTable('glpi_plugin_releases_releases_items', $restrict);
 
@@ -676,16 +680,19 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          'item.user'                 => __('User'),
          'item.group'                => __('Group'),
          'risk.author'                       => __('Writer'),
+         'risk.name'                       => __('Name'),
          'risk.date'                         => __('Opening date'),
          'risk.description'                  => __('Description'),
          'risk.type'                   => _n('Risk type', 'Risk types', 1, 'releases'),
          'risk.state'                       => __('State'),
          $objettype.'.numberofrisk'         => _x('quantity', 'Number of risks','releases'),
+         'rollback.name'                       => __('Name'),
          'rollback.author'                       => __('Writer'),
          'rollback.date'                         => __('Opening date'),
          'rollback.description'                  => __('Description'),
          'rollback.state'                       => __('State'),
          $objettype.'.numberofrollback'         => _x('quantity', 'Number of rollbacks','releases'),
+         'test.name'                       => __('Name'),
          'test.author'                       => __('Writer'),
          'test.date'                         => __('Opening date'),
          'test.description'                  => __('Description'),
@@ -790,12 +797,11 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $objettype.'.numberofunresolved'    => __('Number of unresolved items'),
          $objettype.'.numberofdocuments'     => _x('quantity', 'Number of documents'),
          'task.author'                       => __('Writer'),
+         'task.name'                       => __('Name'),
          'task.isprivate'                    => __('Private'),
          'task.date'                         => __('Opening date'),
          'task.description'                  => __('Description'),
-         'task.categoryid'                   => __('Category id'),
-         'task.category'                     => __('Category'),
-         'task.categorycomment'              => __('Category comment'),
+         'task.type'                   => _n('Deploy task type', 'Deploy task types', 1, 'releases'),
          'task.time'                         => __('Total duration'),
          'task.user'                         => __('User assigned to task'),
          'task.group'                        => __('Group assigned to task'),
@@ -853,7 +859,11 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $objettype.'.entity'             => __('Entity'),
          $objettype.'.nocategoryassigned' => __('No defined category'),
          $objettype.'.log'                => __('Historical'),
-         $objettype.'.tasks'              => _n('Task', 'Tasks', Session::getPluralNumber()),
+         $objettype.'.tasks'              => _n('Task', 'Tasks', Session::getPluralNumber(),'release'),
+         $objettype.'.tests'              => _n('Test', 'Tests', Session::getPluralNumber(),'release'),
+         $objettype.'.risks'              => _n('Risk', 'Risks', Session::getPluralNumber(),'release'),
+         $objettype.'.rollbacks'              => _n('Rollback', 'Rollbacks', Session::getPluralNumber(),'release'),
+         $objettype.'.release'              => _n('Release', 'Releases',1, 'releases')
         ];
 
       foreach ($tags as $tag => $label) {

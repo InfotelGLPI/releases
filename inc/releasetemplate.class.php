@@ -315,7 +315,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          $input['target'] = [];
       }
       if(isset($input["communication_type"])){
-         $input['target'] = json_encode($input['target']);
+         if(isset($input['target'])){
+            $input['target'] = json_encode($input['target']);
+         }else{
+            $input['target'] = json_encode([]);
+         }
+
       }
 
       $release_user = new PluginReleasesReleasetemplate_User();

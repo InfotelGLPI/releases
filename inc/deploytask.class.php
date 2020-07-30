@@ -55,6 +55,10 @@ class PluginReleasesDeploytask extends CommonITILTask {
       return str_replace('Deploytask', 'Release', $this->getType());
    }
 
+   public static function getNameField() {
+      return 'name';
+   }
+
    /**
     *
     * @return css class
@@ -154,7 +158,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
     *
     */
    function post_addItem() {
-
+      global $CFG_GLPI;
       //      $this->input["_job"] = new PluginReleasesRelease();
       //
       //      if (isset($this->input[$this->input["_job"]->getForeignKeyField()])
@@ -164,6 +168,12 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
       // Add document if needed, without notification
       $this->input = $this->addFiles($this->input, ['force_update' => true]);
+      $donotif = !isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"];
+      if ($donotif) {
+         $options = ['task_id'             => $this->fields["id"],
+            'is_private'          => $this->isPrivate()];
+         NotificationEvent::raiseEvent('add_task', $this->input["_job"], $options);
+      }
    }
 
    /**
@@ -972,6 +982,35 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
          case static::DONE :
             return __('Done');
+      }
+   }
+
+   function post_deleteFromDB() {
+      global $CFG_GLPI;
+
+      $itemtype = $this->getItilObjectItemType();
+      $item     = new $itemtype();
+      $item->getFromDB($this->fields[$item->getForeignKeyField()]);
+      $item->updateDateMod($this->fields[$item->getForeignKeyField()]);
+
+      // Add log entry in the ITIL object
+      $changes = [
+         0,
+         '',
+         $this->fields['id'],
+      ];
+      Log::history($this->getField($item->getForeignKeyField()), $this->getItilObjectItemType(),
+         $changes, $this->getType(), Log::HISTORY_DELETE_SUBITEM);
+
+      if (!isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"]) {
+         $options = ['task_id'             => $this->fields["id"],
+            // Force is_private with data / not available
+            'is_private'          => $this->isPrivate(),
+            // Pass users values
+            'task_users_id'       => $this->fields['users_id'],
+            'task_users_id_tech'  => $this->fields['users_id_tech'],
+            'task_groups_id_tech' => $this->fields['groups_id_tech']];
+         NotificationEvent::raiseEvent('delete_task', $item, $options);
       }
    }
 }

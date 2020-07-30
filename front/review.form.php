@@ -77,10 +77,14 @@ if (isset($_POST["add"])) {
                "itemtype"     => PluginReleasesReview::getType()]);;
    Html::back();
 }else if (isset($_POST["conclude"])) {
+   global $CFG_GLPI;
    $r = new PluginReleasesRelease();
    $input["id"] = $_POST["plugin_releases_releases_id"];
    $input["status"] = PluginReleasesRelease::CLOSED;
    $r->update($input);
+   if ($CFG_GLPI['use_notifications']) {
+      NotificationEvent::raiseEvent('closeRelease', $this);
+   }
    Html::back();
 }else{
 

@@ -47,21 +47,19 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["delete"])) {
    $release->check($_POST['id'], DELETE);
    $release->delete($_POST);
-   $release->redirectToList();
+   $_SESSION['releases'][Session::getLoginUserID()] = 'test';
+   Html::back();
 
-} else if (isset($_POST["restore"])) {
-   $release->check($_POST['id'], PURGE);
-   $release->restore($_POST);
-   $release->redirectToList();
-
-} else if (isset($_POST["purge"])) {
+}  else if (isset($_POST["purge"])) {
    $release->check($_POST['id'], PURGE);
    $release->delete($_POST, 1);
-   $release->redirectToList();
+   $_SESSION['releases'][Session::getLoginUserID()] = 'test';
+   Html::back();
 
 } else if (isset($_POST["update"])) {
    $release->check($_POST['id'], UPDATE);
    $release->update($_POST);
+   $_SESSION['releases'][Session::getLoginUserID()] = 'test';
    Html::back();
 
 } else {
