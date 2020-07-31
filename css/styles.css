@@ -18,6 +18,11 @@
     font-weight: bold;
 }
 
+h3.noinfo {
+    font-weight: bold;
+    color: #D4D7DA;
+}
+
 /** release statuses */
 .releasestatus {
     font-size: 1.4em;

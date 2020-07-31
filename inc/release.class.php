@@ -712,6 +712,7 @@ class PluginReleasesRelease extends CommonITILObject {
          NotificationEvent::raiseEvent('updateRelease', $this);
       }
    }
+
    /**
     * get the Ticket status list
     *
@@ -1613,12 +1614,13 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
-      $style = "color:firebrick;";
-      $fa    = "fa-times-circle";
+      $style = "color:orange;";
+      $fa    = "fa-pencil-alt";
       if ($riskClass::countForItem($release) == $riskClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
          $fa    = "fa-check-circle";
       }
+
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
       echo "<li class='rollback'>";
@@ -1629,8 +1631,8 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
 
-      $style = "color:firebrick;";
-      $fa    = "fa-times-circle";
+      $style = "color:orange;";
+      $fa    = "fa-pencil-alt";
       if ($rollbackClass::countForItem($release) == $rollbackClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
          $fa    = "fa-check-circle";
@@ -1644,11 +1646,15 @@ class PluginReleasesRelease extends CommonITILObject {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
-      $style = "color:firebrick;";
-      $fa    = "fa-times-circle";
+      $style = "color:orange;";
+      $fa    = "fa-pencil-alt";
       if ($taskClass::countForItem($release) == $taskClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
          $fa    = "fa-check-circle";
+      }
+      if ($taskClass::countFailForItem($release) > 0) {
+         $style = "color:firebrick;";
+         $fa    = "fa-times-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
@@ -1658,11 +1664,15 @@ class PluginReleasesRelease extends CommonITILObject {
       if ($canadd_test) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
-      $style = "color:firebrick;";
-      $fa    = "fa-times-circle";
+      $style = "color:orange;";
+      $fa    = "fa-pencil-alt";
       if ($testClass::countForItem($release) == $testClass::countDoneForItem($release)) {
          $style = "color:forestgreen;";
          $fa    = "fa-check-circle";
+      }
+      if ($testClass::countFailForItem($release) > 0) {
+         $style = "color:firebrick;";
+         $fa    = "fa-times-circle";
       }
       echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
@@ -1714,8 +1724,8 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
       $taskClass = "PluginReleasesDeploytask";
-      echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
-           "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
+      echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . $taskClass::getTypeName(2) .
+           "'><span class='sr-only'>" . $taskClass::getTypeName(2) . "</span></a></li>";
       $testClass = "PluginReleasesTest";
       echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
@@ -1948,8 +1958,6 @@ class PluginReleasesRelease extends CommonITILObject {
                            title='" . Planning::getState($item_i['state']) . "'>";
                   echo "</span>";
                }
-
-
             }
             echo "</p>";
 
@@ -2087,15 +2095,14 @@ class PluginReleasesRelease extends CommonITILObject {
 
          $timeline_index++;
       }
-      if(count($timeline) == 0){
-         echo "<table class=\"tab_cadre_fixehov\">";
-         echo "<tr >";
-         echo "<th class='center'>";
-         echo __("No data available",'releases');
-         echo "</th>";
-         echo "</tr>";
-         echo "</table>";
-      }else{
+      if (count($timeline) == 0) {
+
+         $display = "<br><br><div align='center'><h3 class='noinfo'>";
+         $display .= __("No data available", 'releases');
+         $display .= "</h3></div>";
+         echo $display;
+
+      } else {
          if (isset($_SESSION["releases"][Session::getLoginUserID()])) {
             $catToLoad = $_SESSION["releases"][Session::getLoginUserID()];
          } else {
@@ -2444,7 +2451,7 @@ class PluginReleasesRelease extends CommonITILObject {
     */
    function showTimelineHeader() {
 
-      echo "<h2>" . __("Release actions details", 'releases') . " : </h2>";
+      echo "<h2>" . __("Release actions details", 'releases') . "</h2>";
       $this->filterTimeline();
    }
 
@@ -3102,14 +3109,6 @@ class PluginReleasesRelease extends CommonITILObject {
          unset($this->updates[$key]);
          unset($this->oldvalues['status']);
       }
-
-
-
-
-
-
-
-
 
 
       // Do not take into account date_mod if no update is done
