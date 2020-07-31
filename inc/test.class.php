@@ -142,9 +142,9 @@ class PluginReleasesTest extends CommonDBTM {
          $input["users_id_editor"] = $uid;
       }
       $this->fields['date_mod'] = $_SESSION["glpi_currenttime"];
-      $input['date_mod'] = $_SESSION["glpi_currenttime"];
+      $input['date_mod']        = $_SESSION["glpi_currenttime"];
       $input['users_id_editor'] = Session::getLoginUserID();
-      $input = parent::prepareInputForUpdate($input);
+      $input                    = parent::prepareInputForUpdate($input);
       return $input;
    }
 
@@ -173,7 +173,7 @@ class PluginReleasesTest extends CommonDBTM {
       $this->showFormHeader($options);
 
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
-      if($ID<0) {
+      if ($ID < 0) {
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
          echo _n('Test template', 'Test templates', 1, 'releases');
@@ -182,10 +182,10 @@ class PluginReleasesTest extends CommonDBTM {
          //      echo "<div class='fa-label'>
          //            <i class='fas fa-reply fa-fw'
          //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-         PluginReleasesTesttemplate::dropdown(['value' => '',
-            'entity' => $this->getEntityID(),
-            'rand' => $rand_template,
-            'on_change' => 'tasktemplate_update(this.value)']);
+         PluginReleasesTesttemplate::dropdown(['value'     => '',
+                                               'entity'    => $this->getEntityID(),
+                                               'rand'      => $rand_template,
+                                               'on_change' => 'tasktemplate_update(this.value)']);
          echo "</div>";
          echo Html::scriptBlock('
          function tasktemplate_update(value) {
@@ -240,7 +240,6 @@ class PluginReleasesTest extends CommonDBTM {
       Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'  => $rand_type, 'name' => "plugin_releases_typetests_id",
                                                          'value' => $value]);
       echo "</td>";
-
 
 
       echo "</tr>";
@@ -310,17 +309,18 @@ class PluginReleasesTest extends CommonDBTM {
    /**
     * @param $ID
     * @param $entity
+    *
     * @return ID|int|the
     */
    static function transfer($ID, $entity) {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
-         $items = $self->find(["plugin_releases_releases_id"=>$ID]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $self  = new self();
+         $items = $self->find(["plugin_releases_releases_id" => $ID]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $self->update($input);
          }

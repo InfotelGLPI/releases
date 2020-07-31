@@ -40,6 +40,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
 
    /**
     * @param int $nb
+    *
     * @return translated
     */
    static function getTypeName($nb = 0) {
@@ -47,12 +48,13 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       return _n('Test type', 'Test types', $nb, 'releases');
    }
 
-   static $rightname = 'plugin_releases_tests';
-   var $can_be_translated = true;
+   static $rightname         = 'plugin_releases_tests';
+   var    $can_be_translated = true;
 
    /**
     * @param $ID
     * @param $entity
+    *
     * @return ID|int|the
     */
    static function transfer($ID, $entity) {
@@ -68,12 +70,12 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
 
          if ($result = $DB->query($query)) {
             if ($DB->numrows($result)) {
-               $data = $DB->fetchAssoc($result);
-               $data = Toolbox::addslashes_deep($data);
-               $input['name'] = $data['name'];
+               $data                 = $DB->fetchAssoc($result);
+               $data                 = Toolbox::addslashes_deep($data);
+               $input['name']        = $data['name'];
                $input['entities_id'] = $entity;
 
-               $temp = new self();
+               $temp  = new self();
                $newID = $temp->getID();
 
                if ($newID < 0) {
@@ -92,49 +94,49 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       $tab = [];
 
       $tab[] = [
-         'id' => 'common',
+         'id'   => 'common',
          'name' => self::getTypeName(2)
       ];
 
       $tab[] = [
-         'id' => '1',
-         'table' => $this->getTable(),
-         'field' => 'name',
-         'name' => __('Name'),
-         'datatype' => 'itemlink',
+         'id'            => '1',
+         'table'         => $this->getTable(),
+         'field'         => 'name',
+         'name'          => __('Name'),
+         'datatype'      => 'itemlink',
          'itemlink_type' => $this->getType()
       ];
 
       $tab[] = [
-         'id' => '12',
-         'table' => $this->getTable(),
-         'field' => 'date_mod',
+         'id'            => '12',
+         'table'         => $this->getTable(),
+         'field'         => 'date_mod',
          'massiveaction' => false,
-         'name' => __('Last update'),
-         'datatype' => 'datetime'
+         'name'          => __('Last update'),
+         'datatype'      => 'datetime'
       ];
 
       $tab[] = [
-         'id' => '18',
-         'table' => $this->getTable(),
-         'field' => 'is_recursive',
-         'name' => __('Child entities'),
+         'id'       => '18',
+         'table'    => $this->getTable(),
+         'field'    => 'is_recursive',
+         'name'     => __('Child entities'),
          'datatype' => 'bool'
       ];
 
       $tab[] = [
-         'id' => '30',
-         'table' => $this->getTable(),
-         'field' => 'id',
-         'name' => __('ID'),
+         'id'       => '30',
+         'table'    => $this->getTable(),
+         'field'    => 'id',
+         'name'     => __('ID'),
          'datatype' => 'number'
       ];
 
       $tab[] = [
-         'id' => '80',
-         'table' => 'glpi_entities',
-         'field' => 'completename',
-         'name' => __('Entity'),
+         'id'       => '80',
+         'table'    => 'glpi_entities',
+         'field'    => 'completename',
+         'name'     => __('Entity'),
          'datatype' => 'dropdown'
       ];
       return $tab;
@@ -143,11 +145,11 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
    static function getMenuOptions($menu) {
 
       $plugin_page = '/plugins/release/front/typetest.php';
-      $itemtype = strtolower(self::getType());
+      $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
-      $menu['options'][$itemtype]['title'] = self::getTypeName();
-      $menu['options'][$itemtype]['page'] = $plugin_page;
+      $menu['options'][$itemtype]['title']           = self::getTypeName();
+      $menu['options'][$itemtype]['page']            = $plugin_page;
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {

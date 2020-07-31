@@ -49,10 +49,10 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
     **/
    function getEvents() {
 
-      $events = ['newRelease'               => __('New release','releases'),
-         'updateRelease'            => __('Update of a release','releases'),
-         'closedRelease'            => __('Closure of a releases','releases'),
-         'deleteRelease'            => __('Deleting a releases','releases')];
+      $events = ['newRelease'    => __('New release', 'releases'),
+                 'updateRelease' => __('Update of a release', 'releases'),
+                 'closedRelease' => __('Closure of a releases', 'releases'),
+                 'deleteRelease' => __('Deleting a releases', 'releases')];
 
       $events = array_merge($events, parent::getEvents());
       asort($events);
@@ -61,35 +61,35 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
 
    function getDataForObject(CommonDBTM $item, array $options, $simple = false) {
-      global $CFG_GLPI,$DB;
+      global $CFG_GLPI, $DB;
       // Common ITIL data
-//      $data = parent::getDataForObject($item, $options, $simple);
+      //      $data = parent::getDataForObject($item, $options, $simple);
       $objettype = strtolower($item->getType());
 
 
-      $data["##$objettype.title##"]        = $item->getField('name');
-      $data["##$objettype.content##"]      = $item->getField('content');
-      $data["##$objettype.description##"]  = $item->getField('content');
-      $data["##$objettype.id##"]           = sprintf("%07d", $item->getField("id"));
+      $data["##$objettype.title##"]       = $item->getField('name');
+      $data["##$objettype.content##"]     = $item->getField('content');
+      $data["##$objettype.description##"] = $item->getField('content');
+      $data["##$objettype.id##"]          = sprintf("%07d", $item->getField("id"));
 
 
-      $data["##review.realproductiondate##"]           = "";
-      $data["##review.conformrealization##"]           = "";
-      $data["##review.name##"]           = "";
-      $data["##review.incident##"]           = "";
-      $data["##review.incidentdescription##"]           = "";
+      $data["##review.realproductiondate##"]  = "";
+      $data["##review.conformrealization##"]  = "";
+      $data["##review.name##"]                = "";
+      $data["##review.incident##"]            = "";
+      $data["##review.incidentdescription##"] = "";
 
       $review = new PluginReleasesReview();
-      if($review->getFromDBByCrit(["plugin_releases_release_id"=>$item->getField('id')])){
-         $data["##review.realproductiondate##"]           = Html::convDateTime($review->getField("real_date_release"));
-         $data["##review.conformrealization##"]           =  Dropdown::getYesNo($review->getField('conforming_realization'));
-         $data["##review.name##"]           = Html::clean($review->getField('name'));
-         $data["##review.incident##"]           = Dropdown::getYesNo($review->getField('incident'));
-         $data["##review.incidentdescription##"]           = Html::clean($review->getField('incident_description'));
+      if ($review->getFromDBByCrit(["plugin_releases_release_id" => $item->getField('id')])) {
+         $data["##review.realproductiondate##"]  = Html::convDateTime($review->getField("real_date_release"));
+         $data["##review.conformrealization##"]  = Dropdown::getYesNo($review->getField('conforming_realization'));
+         $data["##review.name##"]                = Html::clean($review->getField('name'));
+         $data["##review.incident##"]            = Dropdown::getYesNo($review->getField('incident'));
+         $data["##review.incidentdescription##"] = Html::clean($review->getField('incident_description'));
       }
       $data["##$objettype.url##"]
          = $this->formatURL($options['additionnaloption']['usertype'],
-         $objettype."_".$item->getField("id"));
+                            $objettype . "_" . $item->getField("id"));
 
 
       $entity = new Entity();
@@ -107,8 +107,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $data["##$objettype.entity.country##"]  = $entity->getField('country');
       }
 
-      $data["##$objettype.storestatus##"]  = $item->getField('status');
-      $data["##$objettype.status##"]       = $item->getStatus($item->getField('status'));
+      $data["##$objettype.storestatus##"] = $item->getField('status');
+      $data["##$objettype.status##"]      = $item->getStatus($item->getField('status'));
 
 
       $data["##$objettype.creationdate##"] = Html::convDateTime($item->getField('date'));
@@ -120,20 +120,20 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       if ($item->countUsers(CommonITILActor::REQUESTER)) {
          $users = [];
          foreach ($item->getUsers(CommonITILActor::REQUESTER) as $tmpusr) {
-            $uid = $tmpusr['users_id'];
+            $uid      = $tmpusr['users_id'];
             $user_tmp = new User();
             if ($uid
-               && $user_tmp->getFromDB($uid)) {
+                && $user_tmp->getFromDB($uid)) {
                $users[] = $user_tmp->getName();
 
-               $tmp = [];
+               $tmp                    = [];
                $tmp['##author.id##']   = $uid;
                $tmp['##author.name##'] = $user_tmp->getName();
 
                if ($user_tmp->getField('locations_id')) {
                   $tmp['##author.location##']
                      = Dropdown::getDropdownName('glpi_locations',
-                     $user_tmp->getField('locations_id'));
+                                                 $user_tmp->getField('locations_id'));
                } else {
                   $tmp['##author.location##'] = '';
                }
@@ -141,7 +141,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                if ($user_tmp->getField('usertitles_id')) {
                   $tmp['##author.title##']
                      = Dropdown::getDropdownName('glpi_usertitles',
-                     $user_tmp->getField('usertitles_id'));
+                                                 $user_tmp->getField('usertitles_id'));
                } else {
                   $tmp['##author.title##'] = '';
                }
@@ -149,7 +149,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                if ($user_tmp->getField('usercategories_id')) {
                   $tmp['##author.category##']
                      = Dropdown::getDropdownName('glpi_usercategories',
-                     $user_tmp->getField('usercategories_id'));
+                                                 $user_tmp->getField('usercategories_id'));
                } else {
                   $tmp['##author.category##'] = '';
                }
@@ -158,7 +158,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                $tmp['##author.mobile##'] = $user_tmp->getField('mobile');
                $tmp['##author.phone##']  = $user_tmp->getField('phone');
                $tmp['##author.phone2##'] = $user_tmp->getField('phone2');
-               $data['authors'][]       = $tmp;
+               $data['authors'][]        = $tmp;
             } else {
                // Anonymous users only in xxx.authors, not in authors
                $users[] = $tmpusr['alternative_email'];
@@ -168,17 +168,17 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       }
 
       $data["##$objettype.suppliers##"] = '';
-      $data['suppliers']              = [];
+      $data['suppliers']                = [];
       if ($item->countSuppliers(CommonITILActor::ASSIGN)) {
          $suppliers = [];
          foreach ($item->getSuppliers(CommonITILActor::ASSIGN) as $tmpspplier) {
             $sid      = $tmpspplier['suppliers_id'];
             $supplier = new Supplier();
             if ($sid
-               && $supplier->getFromDB($sid)) {
+                && $supplier->getFromDB($sid)) {
                $suppliers[] = $supplier->getName();
 
-               $tmp = [];
+               $tmp                          = [];
                $tmp['##supplier.id##']       = $sid;
                $tmp['##supplier.name##']     = $supplier->getName();
                $tmp['##supplier.email##']    = $supplier->getField('email');
@@ -197,7 +197,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                if ($supplier->getField('suppliertypes_id')) {
                   $tmp['##supplier.type##']
                      = Dropdown::getDropdownName('glpi_suppliertypes',
-                     $supplier->getField('suppliertypes_id'));
+                                                 $supplier->getField('suppliertypes_id'));
                }
 
                $data['suppliers'][] = $tmp;
@@ -237,8 +237,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       if ($item->countSuppliers(CommonITILActor::ASSIGN)) {
          $suppliers = [];
          foreach ($item->getSuppliers(CommonITILActor::ASSIGN) as $tmp) {
-            $uid           = $tmp['suppliers_id'];
-            $supplier_tmp  = new Supplier();
+            $uid          = $tmp['suppliers_id'];
+            $supplier_tmp = new Supplier();
             if ($supplier_tmp->getFromDB($uid)) {
                $suppliers[$uid] = $supplier_tmp->getName();
             }
@@ -273,7 +273,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $uid      = $tmp['users_id'];
             $user_tmp = new User();
             if ($uid
-               && $user_tmp->getFromDB($uid)) {
+                && $user_tmp->getFromDB($uid)) {
                $users[] = $user_tmp->getName();
             } else {
                $users[] = $tmp['alternative_email'];
@@ -295,29 +295,29 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
       // Complex mode
       if (!$simple) {
-         $followup_restrict = [];
+         $followup_restrict             = [];
          $followup_restrict['items_id'] = $item->getField('id');
          if (!isset($options['additionnaloption']['show_private'])
-            || !$options['additionnaloption']['show_private']) {
+             || !$options['additionnaloption']['show_private']) {
             $followup_restrict['is_private'] = 0;
          }
          $followup_restrict['itemtype'] = $objettype;
 
          //Followup infos
-         $followups          = getAllDataFromTable(
+         $followups         = getAllDataFromTable(
             'glpi_itilfollowups', [
-               'WHERE'  => $followup_restrict,
-               'ORDER'  => ['date_mod DESC', 'id ASC']
-            ]
+                                   'WHERE' => $followup_restrict,
+                                   'ORDER' => ['date_mod DESC', 'id ASC']
+                                ]
          );
          $data['followups'] = [];
          foreach ($followups as $followup) {
-            $tmp                             = [];
-            $tmp['##followup.isprivate##']   = Dropdown::getYesNo($followup['is_private']);
+            $tmp                           = [];
+            $tmp['##followup.isprivate##'] = Dropdown::getYesNo($followup['is_private']);
 
             // Check if the author need to be anonymized
             if (Entity::getUsedConfig('anonymize_support_agents', $item->getField('entities_id'))
-               && ITILFollowup::getById($followup['id'])->isFromSupportAgent()
+                && ITILFollowup::getById($followup['id'])->isFromSupportAgent()
             ) {
                $tmp['##followup.author##'] = __("Helpdesk");
             } else {
@@ -325,7 +325,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             }
 
             $tmp['##followup.requesttype##'] = Dropdown::getDropdownName('glpi_requesttypes',
-               $followup['requesttypes_id']);
+                                                                         $followup['requesttypes_id']);
             $tmp['##followup.date##']        = Html::convDateTime($followup['date']);
             $tmp['##followup.description##'] = $followup['content'];
 
@@ -342,7 +342,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp["##$objettype.log.user##"]    = $log['user_name'];
             $tmp["##$objettype.log.field##"]   = $log['field'];
             $tmp["##$objettype.log.content##"] = $log['change'];
-            $data['log'][]                    = $tmp;
+            $data['log'][]                     = $tmp;
          }
 
          $data["##$objettype.numberoflogs##"] = count($data['log']);
@@ -351,59 +351,57 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          // Document
 
          $iterator = $DB->request([
-            'SELECT'    => 'glpi_documents.*',
-            'FROM'      => 'glpi_documents',
-            'LEFT JOIN' => [
-               'glpi_documents_items'  => [
-                  'ON' => [
-                     'glpi_documents_items'  => 'documents_id',
-                     'glpi_documents'        => 'id'
-                  ]
-               ]
-            ],
-            'WHERE'     => [
-               $item->getAssociatedDocumentsCriteria(),
-               'timeline_position' => ['>', CommonITILObject::NO_TIMELINE], // skip inlined images
-            ]
-         ]);
+                                     'SELECT'    => 'glpi_documents.*',
+                                     'FROM'      => 'glpi_documents',
+                                     'LEFT JOIN' => [
+                                        'glpi_documents_items' => [
+                                           'ON' => [
+                                              'glpi_documents_items' => 'documents_id',
+                                              'glpi_documents'       => 'id'
+                                           ]
+                                        ]
+                                     ],
+                                     'WHERE'     => [
+                                        $item->getAssociatedDocumentsCriteria(),
+                                        'timeline_position' => ['>', CommonITILObject::NO_TIMELINE], // skip inlined images
+                                     ]
+                                  ]);
 
          $data["documents"] = [];
-         $addtodownloadurl   = '';
+         $addtodownloadurl  = '';
          if ($item->getType() == 'Ticket') {
-            $addtodownloadurl = "%2526tickets_id=".$item->fields['id'];
+            $addtodownloadurl = "%2526tickets_id=" . $item->fields['id'];
          }
          while ($row = $iterator->next()) {
             $tmp                      = [];
             $tmp['##document.id##']   = $row['id'];
             $tmp['##document.name##'] = $row['name'];
             $tmp['##document.weblink##']
-               = $row['link'];
+                                      = $row['link'];
 
-            $tmp['##document.url##']  = $this->formatURL($options['additionnaloption']['usertype'],
-               "document_".$row['id']);
-            $downloadurl              = "/front/document.send.php?docid=".$row['id'];
+            $tmp['##document.url##'] = $this->formatURL($options['additionnaloption']['usertype'],
+                                                        "document_" . $row['id']);
+            $downloadurl             = "/front/document.send.php?docid=" . $row['id'];
 
             $tmp['##document.downloadurl##']
                = $this->formatURL($options['additionnaloption']['usertype'],
-               $downloadurl.$addtodownloadurl);
+                                  $downloadurl . $addtodownloadurl);
             $tmp['##document.heading##']
                = Dropdown::getDropdownName('glpi_documentcategories',
-               $row['documentcategories_id']);
+                                           $row['documentcategories_id']);
 
             $tmp['##document.filename##']
                = $row['filename'];
 
-            $data['documents'][]     = $tmp;
+            $data['documents'][] = $tmp;
          }
 
          $data["##$objettype.urldocument##"]
             = $this->formatURL($options['additionnaloption']['usertype'],
-            $objettype."_".$item->getField("id").'_Document_Item$1');
+                               $objettype . "_" . $item->getField("id") . '_Document_Item$1');
 
          $data["##$objettype.numberofdocuments##"]
             = count($data['documents']);
-
-
 
 
          //Task infos
@@ -412,41 +410,41 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $tasks          = getAllDataFromTable(
+         $tasks         = getAllDataFromTable(
             $taskobj->getTable(), [
-               'WHERE'  => $restrict,
-               'ORDER'  => ['date_mod DESC', 'id ASC']
-            ]
+                                   'WHERE' => $restrict,
+                                   'ORDER' => ['date_mod DESC', 'id ASC']
+                                ]
          );
          $data['tasks'] = [];
          foreach ($tasks as $task) {
-            $tmp                          = [];
-            $tmp['##task.id##']           = $task['id'];
+            $tmp                = [];
+            $tmp['##task.id##'] = $task['id'];
 
-            $tmp['##task.author##']       = Html::clean(getUserName($task['users_id']));
-            $tmp['##task.name##']       = Html::clean($task['name']);
+            $tmp['##task.author##'] = Html::clean(getUserName($task['users_id']));
+            $tmp['##task.name##']   = Html::clean($task['name']);
 
-            $tmp_taskcatinfo = Dropdown::getDropdownName('glpi_plugin_releases_typedeploytasks',
-               $task['plugin_releases_typedeploytasks_id'], true, true, false);
-            $tmp['##task.type##']        = $tmp_taskcatinfo['name'];
+            $tmp_taskcatinfo      = Dropdown::getDropdownName('glpi_plugin_releases_typedeploytasks',
+                                                              $task['plugin_releases_typedeploytasks_id'], true, true, false);
+            $tmp['##task.type##'] = $tmp_taskcatinfo['name'];
 
-            $tmp['##task.date##']         = Html::convDateTime($task['date']);
-            $tmp['##task.description##']  = $task['content'];
-            $tmp['##task.time##']         = Ticket::getActionTime($task['actiontime']);
-            $tmp['##task.status##']       = PluginReleasesDeploytask::getState($task['state']);
+            $tmp['##task.date##']        = Html::convDateTime($task['date']);
+            $tmp['##task.description##'] = $task['content'];
+            $tmp['##task.time##']        = Ticket::getActionTime($task['actiontime']);
+            $tmp['##task.status##']      = PluginReleasesDeploytask::getState($task['state']);
 
-            $tmp['##task.user##']         = Html::clean(getUserName($task['users_id_tech']));
+            $tmp['##task.user##']  = Html::clean(getUserName($task['users_id_tech']));
             $tmp['##task.group##']
-               = Html::clean(Toolbox::clean_cross_side_scripting_deep(Dropdown::getDropdownName("glpi_groups",
-               $task['groups_id_tech'])), true, 2, false);
-            $tmp['##task.begin##']        = "";
-            $tmp['##task.end##']          = "";
+                                   = Html::clean(Toolbox::clean_cross_side_scripting_deep(Dropdown::getDropdownName("glpi_groups",
+                                                                                                                    $task['groups_id_tech'])), true, 2, false);
+            $tmp['##task.begin##'] = "";
+            $tmp['##task.end##']   = "";
             if (!is_null($task['begin'])) {
-               $tmp['##task.begin##']     = Html::convDateTime($task['begin']);
-               $tmp['##task.end##']       = Html::convDateTime($task['end']);
+               $tmp['##task.begin##'] = Html::convDateTime($task['begin']);
+               $tmp['##task.end##']   = Html::convDateTime($task['end']);
             }
 
-            $data['tasks'][]             = $tmp;
+            $data['tasks'][] = $tmp;
          }
 
          $data["##$objettype.numberoftasks##"] = count($data['tasks']);
@@ -457,29 +455,29 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $risks          = getAllDataFromTable(
+         $risks         = getAllDataFromTable(
             $riskobj->getTable(), [
-               'WHERE'  => $restrict,
-               'ORDER'  => ['date_mod DESC', 'id ASC']
-            ]
+                                   'WHERE' => $restrict,
+                                   'ORDER' => ['date_mod DESC', 'id ASC']
+                                ]
          );
          $data['risks'] = [];
          foreach ($risks as $risk) {
-            $tmp                          = [];
-            $tmp['##risk.id##']           = $risk['id'];
+            $tmp                = [];
+            $tmp['##risk.id##'] = $risk['id'];
 
-            $tmp['##risk.author##']       = Html::clean(getUserName($risk['users_id']));
-            $tmp['##risk.name##']       = Html::clean($risk['name']);
+            $tmp['##risk.author##'] = Html::clean(getUserName($risk['users_id']));
+            $tmp['##risk.name##']   = Html::clean($risk['name']);
 
-            $tmp_taskcatinfo = Dropdown::getDropdownName('glpi_plugin_releases_typerisks',
-               $risk['plugin_releases_typerisks_id'], true, true, false);
-            $tmp['##risk.type##']        = $tmp_taskcatinfo['name'];
+            $tmp_taskcatinfo      = Dropdown::getDropdownName('glpi_plugin_releases_typerisks',
+                                                              $risk['plugin_releases_typerisks_id'], true, true, false);
+            $tmp['##risk.type##'] = $tmp_taskcatinfo['name'];
 
-            $tmp['##risk.date##']         = Html::convDateTime($risk['date_creation']);
-            $tmp['##risk.description##']  = $risk['content'];
-            $tmp['##risk.status##']       = Planning::getState($risk['state']);
+            $tmp['##risk.date##']        = Html::convDateTime($risk['date_creation']);
+            $tmp['##risk.description##'] = $risk['content'];
+            $tmp['##risk.status##']      = Planning::getState($risk['state']);
 
-            $data['risks'][]             = $tmp;
+            $data['risks'][] = $tmp;
          }
 
          $data["##$objettype.numberofrisks##"] = count($data['risks']);
@@ -487,29 +485,29 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          //Rollback infos
          $rollbacktype = PluginReleasesRollback::getType();
          $rollbackobj  = new $rollbacktype();
-         $restrict = [$item->getForeignKeyField() => $item->getField('id')];
+         $restrict     = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $rollbacks          = getAllDataFromTable(
+         $rollbacks         = getAllDataFromTable(
             $rollbackobj->getTable(), [
-               'WHERE'  => $restrict,
-               'ORDER'  => ['date_mod DESC', 'id ASC']
-            ]
+                                       'WHERE' => $restrict,
+                                       'ORDER' => ['date_mod DESC', 'id ASC']
+                                    ]
          );
          $data['rollbacks'] = [];
          foreach ($rollbacks as $rollback) {
-            $tmp                          = [];
-            $tmp['##rollback.id##']           = $rollback['id'];
+            $tmp                    = [];
+            $tmp['##rollback.id##'] = $rollback['id'];
 
-            $tmp['##rollback.author##']       = Html::clean(getUserName($rollback['users_id']));
-            $tmp['##rollback.name##']       = Html::clean($rollback['name']);
+            $tmp['##rollback.author##'] = Html::clean(getUserName($rollback['users_id']));
+            $tmp['##rollback.name##']   = Html::clean($rollback['name']);
 
 
-            $tmp['##rollback.date##']         = Html::convDateTime($rollback['date_creation']);
-            $tmp['##rollback.description##']  = $rollback['content'];
-            $tmp['##rollback.status##']       = Planning::getState($rollback['state']);
+            $tmp['##rollback.date##']        = Html::convDateTime($rollback['date_creation']);
+            $tmp['##rollback.description##'] = $rollback['content'];
+            $tmp['##rollback.status##']      = Planning::getState($rollback['state']);
 
-            $data['rollbacks'][]             = $tmp;
+            $data['rollbacks'][] = $tmp;
          }
 
          $data["##$objettype.numberofrollbacks##"] = count($data['rollbacks']);
@@ -520,28 +518,28 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $tests          = getAllDataFromTable(
+         $tests         = getAllDataFromTable(
             $testobj->getTable(), [
-               'WHERE'  => $restrict,
-               'ORDER'  => ['date_mod DESC', 'id ASC']
-            ]
+                                   'WHERE' => $restrict,
+                                   'ORDER' => ['date_mod DESC', 'id ASC']
+                                ]
          );
          $data['tests'] = [];
          foreach ($tests as $test) {
-            $tmp                          = [];
-            $tmp['##test.id##']           = $test['id'];
+            $tmp                = [];
+            $tmp['##test.id##'] = $test['id'];
 
-            $tmp['##test.author##']       = Html::clean(getUserName($test['users_id']));
-            $tmp['##test.name##']       = Html::clean($test['name']);
-            $tmp_taskcatinfo = Dropdown::getDropdownName('glpi_plugin_releases_typetests',
-                                                         $risk['plugin_releases_typetests_id'], true, true, false);
-            $tmp['##risk.type##']        = $tmp_taskcatinfo['name'];
+            $tmp['##test.author##'] = Html::clean(getUserName($test['users_id']));
+            $tmp['##test.name##']   = Html::clean($test['name']);
+            $tmp_taskcatinfo        = Dropdown::getDropdownName('glpi_plugin_releases_typetests',
+                                                                $risk['plugin_releases_typetests_id'], true, true, false);
+            $tmp['##risk.type##']   = $tmp_taskcatinfo['name'];
 
-            $tmp['##test.date##']         = Html::convDateTime($test['date_creation']);
-            $tmp['##test.description##']  = $test['content'];
-            $tmp['##test.status##']       = $testtype::getState($test['state']);
+            $tmp['##test.date##']        = Html::convDateTime($test['date_creation']);
+            $tmp['##test.description##'] = $test['content'];
+            $tmp['##test.status##']      = $testtype::getState($test['state']);
 
-            $data['tests'][]             = $tmp;
+            $data['tests'][] = $tmp;
          }
 
          $data["##$objettype.numberoftests##"] = count($data['tests']);
@@ -552,31 +550,30 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
 
       $data["##$objettype.datepreproduction##"]      = Html::convDateTime($item->getField("date_preproduction"));
-      $data["##$objettype.dateproduction##"]  = Html::convDateTime($item->getField("date_production"));
-      $data["##$objettype.serviceshutdown##"] = Dropdown::getYesNo($item->getField("service_shutdown"));
+      $data["##$objettype.dateproduction##"]         = Html::convDateTime($item->getField("date_production"));
+      $data["##$objettype.serviceshutdown##"]        = Dropdown::getYesNo($item->getField("service_shutdown"));
       $data["##$objettype.serviceshutdowndetails##"] = "";
-      if($item->getField("service_shutdown")){
+      if ($item->getField("service_shutdown")) {
          $data["##$objettype.serviceshutdowndetails##"] = $item->getField("service_shutdown_details");
       }
 
-      $data["##$objettype.hourtype##"] = Dropdown::getYesNo($item->getField("hour_type"));
-      $data["##$objettype.communication##"]   = Dropdown::getYesNo($item->getField("communication"));
-      if($item->getField("communication")){
-         $data["##$objettype.communicationtype##"]   = $item->getField("communication_type");
-         $targets = [];
-         $ie = $item->getField("communication_type");
-         $obj = new $ie;
-         $t = json_decode($item->getField("target"));
-         foreach ($t as $target=>$val){
+      $data["##$objettype.hourtype##"]      = Dropdown::getYesNo($item->getField("hour_type"));
+      $data["##$objettype.communication##"] = Dropdown::getYesNo($item->getField("communication"));
+      if ($item->getField("communication")) {
+         $data["##$objettype.communicationtype##"] = $item->getField("communication_type");
+         $targets                                  = [];
+         $ie                                       = $item->getField("communication_type");
+         $obj                                      = new $ie;
+         $t                                        = json_decode($item->getField("target"));
+         foreach ($t as $target => $val) {
             $targets[] = $obj->getName($val);
          }
-         $data["##$objettype.target##"]   = implode(', ', $targets);
+         $data["##$objettype.target##"] = implode(', ', $targets);
       }
-      $data["##$objettype.location##"]   ="";
+      $data["##$objettype.location##"] = "";
       if ($item->getField('locations_id') != NOT_AVAILABLE) {
-         $data["##$objettype.location##"]   = Dropdown::getDropdownName("glpi_locations", $item->getField("locations_id"));
+         $data["##$objettype.location##"] = Dropdown::getDropdownName("glpi_locations", $item->getField("locations_id"));
       }
-
 
 
       // Complex mode
@@ -584,15 +581,14 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = ['plugin_releases_releases_id' => $item->getField('id')];
 
 
-
-         $items    = getAllDataFromTable('glpi_plugin_releases_releases_items', $restrict);
+         $items = getAllDataFromTable('glpi_plugin_releases_releases_items', $restrict);
 
          $data['items'] = [];
          if (count($items)) {
             foreach ($items as $row) {
                if ($item2 = getItemForItemtype($row['itemtype'])) {
                   if ($item2->getFromDB($row['items_id'])) {
-                     $tmp = [];
+                     $tmp                         = [];
                      $tmp['##item.itemtype##']    = $item2->getTypeName();
                      $tmp['##item.name##']        = $item2->getField('name');
                      $tmp['##item.serial##']      = $item2->getField('serial');
@@ -608,7 +604,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                      if ($item2->getField('locations_id') != NOT_AVAILABLE) {
                         $tmp['##item.location##']
                            = Dropdown::getDropdownName('glpi_locations',
-                           $item2->getField('locations_id'));
+                                                       $item2->getField('locations_id'));
                      }
 
                      //Object user
@@ -623,10 +619,10 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                      if ($item2->getField('groups_id')) {
                         $tmp['##item.group##']
                            = Dropdown::getDropdownName('glpi_groups',
-                           $item2->getField('groups_id'));
+                                                       $item2->getField('groups_id'));
                      }
 
-                     $modeltable = getSingular($item2->getTable())."models";
+                     $modeltable = getSingular($item2->getTable()) . "models";
                      $modelfield = getForeignKeyFieldForTable($modeltable);
 
                      if ($item2->isField($modelfield)) {
@@ -642,11 +638,10 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $data['##change.numberofitems##'] = count($data['items']);
 
 
+         $restrict = ['plugin_releases_releases_id' => $item->getField('id')];
 
-         $restrict          = ['plugin_releases_releases_id' => $item->getField('id')];
 
-
-         $changes          = getAllDataFromTable('glpi_plugin_releases_changes_releases', $restrict);
+         $changes         = getAllDataFromTable('glpi_plugin_releases_changes_releases', $restrict);
          $data['changes'] = [];
          if (count($changes)) {
             $change = new Change();
@@ -662,7 +657,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                      = $change->getField('name');
                   $tmp['##change.url##']
                      = $this->formatURL($options['additionnaloption']['usertype'],
-                     "change_".$row['changes_id']);
+                                        "change_" . $row['changes_id']);
                   $tmp['##change.content##']
                      = $change->getField('content');
 
@@ -680,266 +675,262 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
    function getTags() {
 
-//      parent::getTags();
+      //      parent::getTags();
       //TODO change for release
 
       $itemtype  = $this->obj->getType();
       $objettype = strtolower($itemtype);
       //Locales
       $tags = [
-         $objettype.'.numberofchanges'       => _x('quantity', 'Number of changes'),
+         $objettype . '.numberofchanges' => _x('quantity', 'Number of changes'),
 
-         'item.name'                 => __('Associated item'),
-         'item.serial'               => __('Serial number'),
-         'item.otherserial'          => __('Inventory number'),
-         'item.location'             => __('Location'),
-         'item.model'                => __('Model'),
-         'item.contact'              => __('Alternate username'),
-         'item.contactnumber'        => __('Alternate username number'),
-         'item.user'                 => __('User'),
-         'item.group'                => __('Group'),
-         'risk.author'                       => __('Writer'),
+         'item.name'                       => __('Associated item'),
+         'item.serial'                     => __('Serial number'),
+         'item.otherserial'                => __('Inventory number'),
+         'item.location'                   => __('Location'),
+         'item.model'                      => __('Model'),
+         'item.contact'                    => __('Alternate username'),
+         'item.contactnumber'              => __('Alternate username number'),
+         'item.user'                       => __('User'),
+         'item.group'                      => __('Group'),
+         'risk.author'                     => __('Writer'),
          'risk.name'                       => __('Name'),
-         'risk.date'                         => __('Opening date'),
-         'risk.description'                  => __('Description'),
-         'risk.type'                   => _n('Risk type', 'Risk types', 1, 'releases'),
-         'risk.state'                       => __('State'),
-         $objettype.'.numberofrisks'         => _x('quantity', 'Number of risks','releases'),
-         'rollback.name'                       => __('Name'),
-         'rollback.author'                       => __('Writer'),
-         'rollback.date'                         => __('Opening date'),
-         'rollback.description'                  => __('Description'),
-         'rollback.state'                       => __('State'),
-         $objettype.'.numberofrollbacks'         => _x('quantity', 'Number of rollbacks','releases'),
+         'risk.date'                       => __('Opening date'),
+         'risk.description'                => __('Description'),
+         'risk.type'                       => _n('Risk type', 'Risk types', 1, 'releases'),
+         'risk.state'                      => __('State'),
+         $objettype . '.numberofrisks'     => _x('quantity', 'Number of risks', 'releases'),
+         'rollback.name'                   => __('Name'),
+         'rollback.author'                 => __('Writer'),
+         'rollback.date'                   => __('Opening date'),
+         'rollback.description'            => __('Description'),
+         'rollback.state'                  => __('State'),
+         $objettype . '.numberofrollbacks' => _x('quantity', 'Number of rollbacks', 'releases'),
          'test.name'                       => __('Name'),
-         'test.author'                       => __('Writer'),
-         'test.date'                         => __('Opening date'),
-         'test.description'                  => __('Description'),
-         'test.type'                   => _n('Test type', 'Test types', 1, 'releases'),
-         'test.status'                       => __('Status'),
-         $objettype.'.numberoftests'         => _x('quantity', 'Number of tests','releases'),
-         "review.realproductiondate" =>__("Real production run date", 'releases'),
-         "review.conformrealization"=>  __('Conforming realization','releases'),
-        "review.name"=> __('Name'),
-         "review.incident"=>__('Incidents during process', 'releases'),
-        "review.incidentdescription"=> __('Description'),
-         ];
+         'test.author'                     => __('Writer'),
+         'test.date'                       => __('Opening date'),
+         'test.description'                => __('Description'),
+         'test.type'                       => _n('Test type', 'Test types', 1, 'releases'),
+         'test.status'                     => __('Status'),
+         $objettype . '.numberoftests'     => _x('quantity', 'Number of tests', 'releases'),
+         "review.realproductiondate"       => __("Real production run date", 'releases'),
+         "review.conformrealization"       => __('Conforming realization', 'releases'),
+         "review.name"                     => __('Name'),
+         "review.incident"                 => __('Incidents during process', 'releases'),
+         "review.incidentdescription"      => __('Description'),
+      ];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'    => $tag,
-            'label'  => $label,
-            'value'  => true,
-            'events' => NotificationTarget::TAG_FOR_ALL_EVENTS]);
+                              'label'  => $label,
+                              'value'  => true,
+                              'events' => NotificationTarget::TAG_FOR_ALL_EVENTS]);
       }
 
 
       //Foreach global tags
       $tags = [
-         'items'       => _n('Item', 'Items', Session::getPluralNumber()),
-         'changes'       => _n('Change', 'Changes', Session::getPluralNumber()),
-         'risks'       => _n('Risk', 'Risks', Session::getPluralNumber(), 'releases'),
-         'rollbacks'       => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'releases'),
-         'tests'       => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'releases'),
-         'documents'   => _n('Document', 'Documents', Session::getPluralNumber())];
+         'items'     => _n('Item', 'Items', Session::getPluralNumber()),
+         'changes'   => _n('Change', 'Changes', Session::getPluralNumber()),
+         'risks'     => _n('Risk', 'Risks', Session::getPluralNumber(), 'releases'),
+         'rollbacks' => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'releases'),
+         'tests'     => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'releases'),
+         'documents' => _n('Document', 'Documents', Session::getPluralNumber())];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'     => $tag,
-            'label'   => $label,
-            'value'   => false,
-            'foreach' => true]);
+                              'label'   => $label,
+                              'value'   => false,
+                              'foreach' => true]);
       }
 
       //Tags with just lang
       $tags = [
-         $objettype.'.changes'          => _n('Change', 'Changes', Session::getPluralNumber()),
-         'items'            => _n('Item', 'Items', Session::getPluralNumber())];
+         $objettype . '.changes' => _n('Change', 'Changes', Session::getPluralNumber()),
+         'items'                 => _n('Item', 'Items', Session::getPluralNumber())];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'   => $tag,
-            'label' => $label,
-            'value' => false,
-            'lang'  => true]);
+                              'label' => $label,
+                              'value' => false,
+                              'lang'  => true]);
       }
 
 
       //TODO
 
 
-
       //Locales
-      $tags = [$objettype.'.id'                    => __('ID'),
-         $objettype.'.title'                 => __('Title'),
-         $objettype.'.url'                   => __('URL'),
-         $objettype.'.category'              => __('Category'),
-         $objettype.'.content'               => __('Description'),
-         $objettype.'.description'           => sprintf(__('%1$s: %2$s'), $this->obj->getTypeName(1),
-            __('Description')),
-         $objettype.'.status'                => __('Status'),
-         $objettype.'.time'                  => __('Total duration'),
-         $objettype.'.creationdate'          => __('Opening date'),
-         $objettype.'.closedate'             => __('Closing date'),
-         $objettype.'.authors'               => _n('Requester', 'Requesters', Session::getPluralNumber()),
-         'author.id'                         => __('Requester ID'),
-         'author.name'                       => __('Requester'),
-         'author.location'                   => __('Requester location'),
-         'author.mobile'                     => __('Mobile phone'),
-         'author.phone'                      => __('Phone'),
-         'author.phone2'                     => __('Phone 2'),
-         'author.email'                      => _n('Email', 'Emails', 1),
-         'author.title'                      => _x('person', 'Title'),
-         'author.category'                   => __('Category'),
-         $objettype.'.suppliers'             => _n('Supplier', 'Suppliers', Session::getPluralNumber()),
-         'supplier.id'                       => __('Supplier ID'),
-         'supplier.name'                     => __('Supplier'),
-         'supplier.phone'                    => __('Phone'),
-         'supplier.fax'                      => __('Fax'),
-         'supplier.website'                  => __('Website'),
-         'supplier.email'                    => __('Email'),
-         'supplier.address'                  => __('Address'),
-         'supplier.postcode'                 => __('Postal code'),
-         'supplier.town'                     => __('City'),
-         'supplier.state'                    => _x('location', 'State'),
-         'supplier.country'                  => __('Country'),
-         'supplier.comments'                 => _n('Comment', 'Comments', 2),
-         'supplier.type'                     => __('Third party type'),
-         $objettype.'.openbyuser'            => __('Writer'),
-         $objettype.'.lastupdater'           => __('Last updater'),
-         $objettype.'.assigntousers'         => __('Assigned to technicians'),
-         $objettype.'.assigntosupplier'      => __('Assigned to a supplier'),
-         $objettype.'.groups'                => _n('Requester group',
-            'Requester groups', Session::getPluralNumber()),
-         $objettype.'.observergroups'        => _n('Watcher group', 'Watcher groups', Session::getPluralNumber()),
-         $objettype.'.assigntogroups'        => __('Assigned to groups'),
-         $objettype.'.observerusers'         => _n('Watcher', 'Watchers', Session::getPluralNumber()),
-         $objettype.'.action'                => _n('Event', 'Events', 1),
-         'followup.date'                     => __('Opening date'),
-         'followup.isprivate'                => __('Private'),
-         'followup.author'                   => __('Writer'),
-         'followup.description'              => __('Description'),
-         'followup.requesttype'              => __('Request source'),
-         $objettype.'.numberoffollowups'     => _x('quantity', 'Number of followups'),
-         $objettype.'.numberofunresolved'    => __('Number of unresolved items'),
-         $objettype.'.numberofdocuments'     => _x('quantity', 'Number of documents'),
-         'task.author'                       => __('Writer'),
-         'task.name'                       => __('Name'),
-         'task.isprivate'                    => __('Private'),
-         'task.date'                         => __('Opening date'),
-         'task.description'                  => __('Description'),
-         'task.type'                   => _n('Deploy task type', 'Deploy task types', 1, 'releases'),
-         'task.time'                         => __('Total duration'),
-         'task.user'                         => __('User assigned to task'),
-         'task.group'                        => __('Group assigned to task'),
-         'task.begin'                        => __('Start date'),
-         'task.end'                          => __('End date'),
-         'task.status'                       => __('Status'),
-         $objettype.'.numberoftasks'         => _x('quantity', 'Number of tasks','releases'),
-         $objettype.'.entity.phone'          => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Phone')),
-         $objettype.'.entity.fax'            => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Fax')),
-         $objettype.'.entity.website'        => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Website')),
-         $objettype.'.entity.email'          => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Email')),
-         $objettype.'.entity.address'        => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Address')),
-         $objettype.'.entity.postcode'       => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Postal code')),
-         $objettype.'.entity.town'           => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('City')),
-         $objettype.'.entity.state'          => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), _x('location', 'State')),
-         $objettype.'.entity.country'        => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Country')),
+      $tags = [$objettype . '.id'                 => __('ID'),
+               $objettype . '.title'              => __('Title'),
+               $objettype . '.url'                => __('URL'),
+               $objettype . '.category'           => __('Category'),
+               $objettype . '.content'            => __('Description'),
+               $objettype . '.description'        => sprintf(__('%1$s: %2$s'), $this->obj->getTypeName(1),
+                                                             __('Description')),
+               $objettype . '.status'             => __('Status'),
+               $objettype . '.time'               => __('Total duration'),
+               $objettype . '.creationdate'       => __('Opening date'),
+               $objettype . '.closedate'          => __('Closing date'),
+               $objettype . '.authors'            => _n('Requester', 'Requesters', Session::getPluralNumber()),
+               'author.id'                        => __('Requester ID'),
+               'author.name'                      => __('Requester'),
+               'author.location'                  => __('Requester location'),
+               'author.mobile'                    => __('Mobile phone'),
+               'author.phone'                     => __('Phone'),
+               'author.phone2'                    => __('Phone 2'),
+               'author.email'                     => _n('Email', 'Emails', 1),
+               'author.title'                     => _x('person', 'Title'),
+               'author.category'                  => __('Category'),
+               $objettype . '.suppliers'          => _n('Supplier', 'Suppliers', Session::getPluralNumber()),
+               'supplier.id'                      => __('Supplier ID'),
+               'supplier.name'                    => __('Supplier'),
+               'supplier.phone'                   => __('Phone'),
+               'supplier.fax'                     => __('Fax'),
+               'supplier.website'                 => __('Website'),
+               'supplier.email'                   => __('Email'),
+               'supplier.address'                 => __('Address'),
+               'supplier.postcode'                => __('Postal code'),
+               'supplier.town'                    => __('City'),
+               'supplier.state'                   => _x('location', 'State'),
+               'supplier.country'                 => __('Country'),
+               'supplier.comments'                => _n('Comment', 'Comments', 2),
+               'supplier.type'                    => __('Third party type'),
+               $objettype . '.openbyuser'         => __('Writer'),
+               $objettype . '.lastupdater'        => __('Last updater'),
+               $objettype . '.assigntousers'      => __('Assigned to technicians'),
+               $objettype . '.assigntosupplier'   => __('Assigned to a supplier'),
+               $objettype . '.groups'             => _n('Requester group',
+                                                        'Requester groups', Session::getPluralNumber()),
+               $objettype . '.observergroups'     => _n('Watcher group', 'Watcher groups', Session::getPluralNumber()),
+               $objettype . '.assigntogroups'     => __('Assigned to groups'),
+               $objettype . '.observerusers'      => _n('Watcher', 'Watchers', Session::getPluralNumber()),
+               $objettype . '.action'             => _n('Event', 'Events', 1),
+               'followup.date'                    => __('Opening date'),
+               'followup.isprivate'               => __('Private'),
+               'followup.author'                  => __('Writer'),
+               'followup.description'             => __('Description'),
+               'followup.requesttype'             => __('Request source'),
+               $objettype . '.numberoffollowups'  => _x('quantity', 'Number of followups'),
+               $objettype . '.numberofunresolved' => __('Number of unresolved items'),
+               $objettype . '.numberofdocuments'  => _x('quantity', 'Number of documents'),
+               'task.author'                      => __('Writer'),
+               'task.name'                        => __('Name'),
+               'task.isprivate'                   => __('Private'),
+               'task.date'                        => __('Opening date'),
+               'task.description'                 => __('Description'),
+               'task.type'                        => _n('Deploy task type', 'Deploy task types', 1, 'releases'),
+               'task.time'                        => __('Total duration'),
+               'task.user'                        => __('User assigned to task'),
+               'task.group'                       => __('Group assigned to task'),
+               'task.begin'                       => __('Start date'),
+               'task.end'                         => __('End date'),
+               'task.status'                      => __('Status'),
+               $objettype . '.numberoftasks'      => _x('quantity', 'Number of tasks', 'releases'),
+               $objettype . '.entity.phone'       => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Phone')),
+               $objettype . '.entity.fax'         => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Fax')),
+               $objettype . '.entity.website'     => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Website')),
+               $objettype . '.entity.email'       => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Email')),
+               $objettype . '.entity.address'     => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Address')),
+               $objettype . '.entity.postcode'    => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Postal code')),
+               $objettype . '.entity.town'        => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('City')),
+               $objettype . '.entity.state'       => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), _x('location', 'State')),
+               $objettype . '.entity.country'     => sprintf(__('%1$s (%2$s)'),
+                                                             __('Entity'), __('Country')),
       ];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'    => $tag,
-            'label'  => $label,
-            'value'  => true,
-            'events' => parent::TAG_FOR_ALL_EVENTS]);
+                              'label'  => $label,
+                              'value'  => true,
+                              'events' => parent::TAG_FOR_ALL_EVENTS]);
       }
 
       //Foreach global tags
       $tags = ['log'       => __('Historical'),
-         'followups' => _n('Followup', 'Followups', Session::getPluralNumber()),
-         'tasks'     =>_n('Deploy task', 'Deploy tasks', Session::getPluralNumber(), 'releases'),
-         'tests'     =>_n('Test', 'Tests', Session::getPluralNumber(), 'releases'),
-         'risks'     =>_n('Risk', 'Risks', Session::getPluralNumber(), 'releases'),
-         'rollbacks'     =>_n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'releases'),
-         'authors'   => _n('Requester', 'Requesters', Session::getPluralNumber()),
-         'suppliers' => _n('Supplier', 'Suppliers', Session::getPluralNumber())];
+               'followups' => _n('Followup', 'Followups', Session::getPluralNumber()),
+               'tasks'     => _n('Deploy task', 'Deploy tasks', Session::getPluralNumber(), 'releases'),
+               'tests'     => _n('Test', 'Tests', Session::getPluralNumber(), 'releases'),
+               'risks'     => _n('Risk', 'Risks', Session::getPluralNumber(), 'releases'),
+               'rollbacks' => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'releases'),
+               'authors'   => _n('Requester', 'Requesters', Session::getPluralNumber()),
+               'suppliers' => _n('Supplier', 'Suppliers', Session::getPluralNumber())];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'     => $tag,
-            'label'   => $label,
-            'value'   => false,
-            'foreach' => true]);
+                              'label'   => $label,
+                              'value'   => false,
+                              'foreach' => true]);
       }
 
       //Tags with just lang
-      $tags = [$objettype.'.days'               => _n('Day', 'Days', Session::getPluralNumber()),
-         $objettype.'.attribution'        => __('Assigned to'),
-         $objettype.'.entity'             => __('Entity'),
-         $objettype.'.nocategoryassigned' => __('No defined category'),
-         $objettype.'.log'                => __('Historical'),
-         $objettype.'.tasks'              => _n('Task', 'Tasks', Session::getPluralNumber(),'release'),
-         $objettype.'.tests'              => _n('Test', 'Tests', Session::getPluralNumber(),'release'),
-         $objettype.'.risks'              => _n('Risk', 'Risks', Session::getPluralNumber(),'release'),
-         $objettype.'.rollbacks'              => _n('Rollback', 'Rollbacks', Session::getPluralNumber(),'release'),
-         $objettype.'.release'              => _n('Release', 'Releases',1, 'releases')
-        ];
+      $tags = [$objettype . '.days'               => _n('Day', 'Days', Session::getPluralNumber()),
+               $objettype . '.attribution'        => __('Assigned to'),
+               $objettype . '.entity'             => __('Entity'),
+               $objettype . '.nocategoryassigned' => __('No defined category'),
+               $objettype . '.log'                => __('Historical'),
+               $objettype . '.tasks'              => _n('Task', 'Tasks', Session::getPluralNumber(), 'release'),
+               $objettype . '.tests'              => _n('Test', 'Tests', Session::getPluralNumber(), 'release'),
+               $objettype . '.risks'              => _n('Risk', 'Risks', Session::getPluralNumber(), 'release'),
+               $objettype . '.rollbacks'          => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'release'),
+               $objettype . '.release'            => _n('Release', 'Releases', 1, 'releases')
+      ];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'   => $tag,
-            'label' => $label,
-            'value' => false,
-            'lang'  => true]);
+                              'label' => $label,
+                              'value' => false,
+                              'lang'  => true]);
       }
 
       //Tags without lang
-      $tags = [$objettype.'.urlapprove'     => __('Web link to approval the solution'),
-         $objettype.'.entity'         => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Complete name')),
-         $objettype.'.shortentity'    => sprintf(__('%1$s (%2$s)'),
-            __('Entity'), __('Name')),
-         $objettype.'.numberoflogs'   => sprintf(__('%1$s: %2$s'), __('Historical'),
-            _x('quantity', 'Number of items')),
-         $objettype.'.log.date'       => sprintf(__('%1$s: %2$s'), __('Historical'),
-            __('Date')),
-         $objettype.'.log.user'       => sprintf(__('%1$s: %2$s'), __('Historical'),
-            __('User')),
-         $objettype.'.log.field'      => sprintf(__('%1$s: %2$s'), __('Historical'),
-            __('Field')),
-         $objettype.'.log.content'    => sprintf(__('%1$s: %2$s'), __('Historical'),
-            _x('name', 'Update')),
-         'document.url'               => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('URL')),
-         'document.downloadurl'       => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('Download URL')),
-         'document.heading'           => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('Heading')),
-         'document.id'                => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('ID')),
-         'document.filename'          => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('File')),
-         'document.weblink'           => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('Web link')),
-         'document.name'              => sprintf(__('%1$s: %2$s'), __('Document'),
-            __('Name')),
-         $objettype.'.urldocument'   => sprintf(__('%1$s: %2$s'),
-            _n('Document', 'Documents', Session::getPluralNumber()),
-            __('URL'))];
+      $tags = [$objettype . '.urlapprove'   => __('Web link to approval the solution'),
+               $objettype . '.entity'       => sprintf(__('%1$s (%2$s)'),
+                                                       __('Entity'), __('Complete name')),
+               $objettype . '.shortentity'  => sprintf(__('%1$s (%2$s)'),
+                                                       __('Entity'), __('Name')),
+               $objettype . '.numberoflogs' => sprintf(__('%1$s: %2$s'), __('Historical'),
+                                                       _x('quantity', 'Number of items')),
+               $objettype . '.log.date'     => sprintf(__('%1$s: %2$s'), __('Historical'),
+                                                       __('Date')),
+               $objettype . '.log.user'     => sprintf(__('%1$s: %2$s'), __('Historical'),
+                                                       __('User')),
+               $objettype . '.log.field'    => sprintf(__('%1$s: %2$s'), __('Historical'),
+                                                       __('Field')),
+               $objettype . '.log.content'  => sprintf(__('%1$s: %2$s'), __('Historical'),
+                                                       _x('name', 'Update')),
+               'document.url'               => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('URL')),
+               'document.downloadurl'       => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('Download URL')),
+               'document.heading'           => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('Heading')),
+               'document.id'                => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('ID')),
+               'document.filename'          => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('File')),
+               'document.weblink'           => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('Web link')),
+               'document.name'              => sprintf(__('%1$s: %2$s'), __('Document'),
+                                                       __('Name')),
+               $objettype . '.urldocument'  => sprintf(__('%1$s: %2$s'),
+                                                       _n('Document', 'Documents', Session::getPluralNumber()),
+                                                       __('URL'))];
 
       foreach ($tags as $tag => $label) {
          $this->addTagToList(['tag'   => $tag,
-            'label' => $label,
-            'value' => true,
-            'lang'  => false]);
+                              'label' => $label,
+                              'value' => true,
+                              'lang'  => false]);
       }
-
-
-
 
 
       asort($this->tag_descriptions);
@@ -956,21 +947,21 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       global $DB;
       //TODO change for release -> OK
 
-     if (isset($options['task_id'])) {
+      if (isset($options['task_id'])) {
          $tasktable = getTableForItemType(PluginReleasesDeploytask::getType());
 
-         $criteria = array_merge_recursive(
+         $criteria                           = array_merge_recursive(
             ['INNER JOIN' => [
                User::getTable() => [
                   'ON' => [
-                     $tasktable        => 'users_id',
-                     User::getTable()  => 'id'
+                     $tasktable       => 'users_id',
+                     User::getTable() => 'id'
                   ]
                ]
             ]],
             $this->getDistinctUserCriteria() + $this->getProfileJoinCriteria()
          );
-         $criteria['FROM'] = $tasktable;
+         $criteria['FROM']                   = $tasktable;
          $criteria['WHERE']["$tasktable.id"] = $options['task_id'];
 
          $iterator = $DB->request($criteria);
@@ -992,21 +983,21 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       global $DB;
       //TODO change for release -> OK
 
-    if (isset($options['task_id'])) {
+      if (isset($options['task_id'])) {
          $tasktable = getTableForItemType(PluginReleasesDeploytask::getType());
 
-         $criteria = array_merge_recursive(
+         $criteria                           = array_merge_recursive(
             ['INNER JOIN' => [
                User::getTable() => [
                   'ON' => [
-                     $tasktable        => 'users_id_tech',
-                     User::getTable()  => 'id'
+                     $tasktable       => 'users_id_tech',
+                     User::getTable() => 'id'
                   ]
                ]
             ]],
             $this->getDistinctUserCriteria() + $this->getProfileJoinCriteria()
          );
-         $criteria['FROM'] = $tasktable;
+         $criteria['FROM']                   = $tasktable;
          $criteria['WHERE']["$tasktable.id"] = $options['task_id'];
 
          $iterator = $DB->request($criteria);
@@ -1020,31 +1011,31 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
    /**
     * Add group assigned to the task
     *
-    * @since 9.1
-    *
     * @param array $options Options
     *
     * @return void
+    * @since 9.1
+    *
     */
    function addTaskAssignGroup($options = []) {
       global $DB;
 
       //TODO change for release -> OK
 
-     if (isset($options['task_id'])) {
+      if (isset($options['task_id'])) {
          $tasktable = getTableForItemType(PluginReleasesDeploytask::getType());
-         $iterator = $DB->request([
-            'FROM'   => $tasktable,
-            'INNER JOIN'   => [
-               'glpi_groups'  => [
-                  'ON'  => [
-                     'glpi_groups'  => 'id',
-                     $tasktable     => 'groups_id_tech'
-                  ]
-               ]
-            ],
-            'WHERE'        => ["$tasktable.id" => $options['task_id']]
-         ]);
+         $iterator  = $DB->request([
+                                      'FROM'       => $tasktable,
+                                      'INNER JOIN' => [
+                                         'glpi_groups' => [
+                                            'ON' => [
+                                               'glpi_groups' => 'id',
+                                               $tasktable    => 'groups_id_tech'
+                                            ]
+                                         ]
+                                      ],
+                                      'WHERE'      => ["$tasktable.id" => $options['task_id']]
+                                   ]);
          while ($data = $iterator->next()) {
             $this->addForGroup(0, $data['groups_id_tech']);
          }

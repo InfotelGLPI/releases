@@ -37,21 +37,21 @@ if (strpos($_SERVER['PHP_SELF'], "finalize.php")) {
 Session::checkCentralAccess();
 
 if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
-   $release       = new PluginReleasesRelease();
-   $val           = [];
-   $val['id']     = $_REQUEST["id"];
-   $val['status'] = PluginReleasesRelease::REVIEW;
+   $release         = new PluginReleasesRelease();
+   $val             = [];
+   $val['id']       = $_REQUEST["id"];
+   $val['status']   = PluginReleasesRelease::REVIEW;
    $val['date_end'] = $_SESSION["glpi_currenttime"];
    $release->update($val);
    $release->getFromDB($_REQUEST["id"]);
    $review = new PluginReleasesReview();
 
    if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $_REQUEST["id"]])) {
-      $val                      = [];
-      $val['id']                = $review->getID();
-      $val['real_date_release'] = $_REQUEST["date"];
-      $val['name'] = PluginReleasesReview::getTypeName() ." - ". $release->getField("name");
-      $val['date_lock']         = 1;
+      $val                           = [];
+      $val['id']                     = $review->getID();
+      $val['real_date_release']      = $_REQUEST["date"];
+      $val['name']                   = PluginReleasesReview::getTypeName() . " - " . $release->getField("name");
+      $val['date_lock']              = 1;
       $val['conforming_realization'] = 1;
       $val['incident']               = 0;
       $val['incident_description']   = "";
@@ -61,11 +61,11 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
       $val                                = [];
       $val['plugin_releases_releases_id'] = $_REQUEST["id"];
       $val['real_date_release']           = $_REQUEST["date"];
-      $val['name'] = PluginReleasesReview::getTypeName() ." - ". $release->getField("name");
+      $val['name']                        = PluginReleasesReview::getTypeName() . " - " . $release->getField("name");
       $val['date_lock']                   = 1;
-      $val['conforming_realization'] = 1;
-      $val['incident']               = 0;
-      $val['incident_description']   = "";
+      $val['conforming_realization']      = 1;
+      $val['incident']                    = 0;
+      $val['incident_description']        = "";
 
       $review->add($val);
    }
@@ -74,18 +74,18 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
 } else if (isset($_REQUEST["id"])
            && isset($_REQUEST["failedtasks"])
            && isset($_REQUEST["failedtests"])) {
-   $review = new PluginReleasesReview();
-   $release       = new PluginReleasesRelease();
-   $val           = [];
-   $val['id']     = $_REQUEST["id"];
-   $val['status'] = PluginReleasesRelease::FAIL;
+   $review          = new PluginReleasesReview();
+   $release         = new PluginReleasesRelease();
+   $val             = [];
+   $val['id']       = $_REQUEST["id"];
+   $val['status']   = PluginReleasesRelease::FAIL;
    $val['date_end'] = $_SESSION["glpi_currenttime"];
    $release->update($val);
    $release->getFromDB($_REQUEST["id"]);
    if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $_REQUEST["id"]])) {
       $val                           = [];
       $val['id']                     = $review->getID();
-      $val['name'] = PluginReleasesReview::getTypeName() ." - ". $release->getField("name");
+      $val['name']                   = PluginReleasesReview::getTypeName() . " - " . $release->getField("name");
       $val['conforming_realization'] = 0;
       $val['incident']               = 1;
       $val['incident_description']   = "";
@@ -100,7 +100,7 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    } else {
       $val                                = [];
       $val['plugin_releases_releases_id'] = $_REQUEST["id"];
-      $val['name'] = PluginReleasesReview::getTypeName() ." - ". $release->getField("name");
+      $val['name']                        = PluginReleasesReview::getTypeName() . " - " . $release->getField("name");
       $val['conforming_realization']      = 0;
       $val['incident']                    = 1;
       $val['incident_description']        = "";

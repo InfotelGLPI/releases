@@ -190,11 +190,11 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
       Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
-//      if (isset($input["plugin_releases_deploytasks_id"]) && $input["plugin_releases_deploytasks_id"] != 0) {
-//         $task = new self();
-//         $task->getFromDB($input["plugin_releases_deploytasks_id"]);
-//         $input["level"] = $task->getField("level") + 1;
-//      }
+      //      if (isset($input["plugin_releases_deploytasks_id"]) && $input["plugin_releases_deploytasks_id"] != 0) {
+      //         $task = new self();
+      //         $task->getFromDB($input["plugin_releases_deploytasks_id"]);
+      //         $input["level"] = $task->getField("level") + 1;
+      //      }
 
       if (isset($input['_planningrecall'])) {
          PlanningRecall::manageDatas($input['_planningrecall']);
@@ -358,12 +358,12 @@ class PluginReleasesDeploytask extends CommonITILTask {
       echo "</td>";
       echo "<td >" . __("Previous task", "releases") . "</td>";
       echo "<td>";
-      if($ID != -1 && $ID != 0){
+      if ($ID != -1 && $ID != 0) {
          $forbidden_id = self::getAllDescendant($this->getID());
          Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
                                                                               "NOT"                         => ["id" => $forbidden_id]],
-                                                              "value"     => $this->fields["plugin_releases_deploytasks_id"], "comments"  => false]);
-      }else{
+                                                              "value"     => $this->fields["plugin_releases_deploytasks_id"], "comments" => false]);
+      } else {
          Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
                                                                               "NOT"                         => ["id" => $this->getID()]],
                                                               "value"     => $this->fields["plugin_releases_deploytasks_id"],
@@ -877,7 +877,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
       global $CFG_GLPI;
 
       $task = new self();
-      if(!isset($this->input['no_leveling'])) {
+      if (!isset($this->input['no_leveling'])) {
          if ($task->getFromDB($this->getField("plugin_releases_deploytasks_id"))) {
             self::leveling_task($this->getID(), $task);
          } else {
@@ -1009,13 +1009,13 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
    function post_deleteFromDB() {
       global $CFG_GLPI;
-      $task = new self();
+      $task  = new self();
       $tasks = $task->find(["plugin_releases_deploytasks_id" => $this->getID()]);
-      foreach ($tasks as $t){
-         $input = [];
-         $input['id'] = $t["id"];
+      foreach ($tasks as $t) {
+         $input                                   = [];
+         $input['id']                             = $t["id"];
          $input['plugin_releases_deploytasks_id'] = $this->getField('plugin_releases_deploytasks_id');
-         $input['_disablenotif'] = true;
+         $input['_disablenotif']                  = true;
          $task->update($input);
       }
       $itemtype = $this->getItilObjectItemType();
@@ -1045,16 +1045,16 @@ class PluginReleasesDeploytask extends CommonITILTask {
    }
 
 
-   static function leveling_task($id, $previous_task){
+   static function leveling_task($id, $previous_task) {
 
-      $task = new PluginReleasesDeploytask();
-      $input = [];
-      $input['id'] = $id;
+      $task                   = new PluginReleasesDeploytask();
+      $input                  = [];
+      $input['id']            = $id;
       $input['_disablenotif'] = true;
-      $input['no_leveling'] = true;
-      if($previous_task != null){
-         $input["level"] = $previous_task->getField('level') +1;
-      }else{
+      $input['no_leveling']   = true;
+      if ($previous_task != null) {
+         $input["level"] = $previous_task->getField('level') + 1;
+      } else {
          $input["level"] = 0;
       }
 
@@ -1062,20 +1062,20 @@ class PluginReleasesDeploytask extends CommonITILTask {
       $task->update($input);
       $tasks = $task->find(["plugin_releases_deploytasks_id" => $id]);
       $task->getFromDB($id);
-      foreach ($tasks as $t){
-         self::leveling_task($t['id'],$task);
+      foreach ($tasks as $t) {
+         self::leveling_task($t['id'], $task);
       }
 
    }
 
-   static function getAllDescendant($id){
-      $childrens = [];
-      $task = new PluginReleasesDeploytask();
-      $tasks = $task->find(["plugin_releases_deploytasks_id" => $id]);
+   static function getAllDescendant($id) {
+      $childrens   = [];
+      $task        = new PluginReleasesDeploytask();
+      $tasks       = $task->find(["plugin_releases_deploytasks_id" => $id]);
       $childrens[] = $id;
-      foreach ($tasks as $t){
-         $childs = self::getAllDescendant($t['id']);
-         $childrens = array_merge($childrens,$childs);
+      foreach ($tasks as $t) {
+         $childs    = self::getAllDescendant($t['id']);
+         $childrens = array_merge($childrens, $childs);
       }
       return $childrens;
    }

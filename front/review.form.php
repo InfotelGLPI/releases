@@ -76,18 +76,18 @@ if (isset($_POST["add"])) {
                "items_id"     => $_GET["plugin_releases_reviews_id"],
                "itemtype"     => PluginReleasesReview::getType()]);;
    Html::back();
-}else if (isset($_POST["conclude"])) {
+} else if (isset($_POST["conclude"])) {
    global $CFG_GLPI;
-   $r = new PluginReleasesRelease();
-   $input["id"] = $_POST["plugin_releases_releases_id"];
+   $r               = new PluginReleasesRelease();
+   $input["id"]     = $_POST["plugin_releases_releases_id"];
    $input["status"] = PluginReleasesRelease::CLOSED;
    $r->update($input);
-   $r->getFromDBByCrit(["plugin_releases_releases_id"=>$_POST["plugin_releases_releases_id"]]);
+   $r->getFromDBByCrit(["plugin_releases_releases_id" => $_POST["plugin_releases_releases_id"]]);
    if ($CFG_GLPI['use_notifications']) {
       NotificationEvent::raiseEvent('closeRelease', $r);
    }
    Html::back();
-}else{
+} else {
 
    $release->checkGlobal(READ);
 

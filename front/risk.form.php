@@ -41,7 +41,7 @@ $release = New PluginReleasesRisk();
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);
    $_SESSION['releases'][Session::getLoginUserID()] = 'risk';
-   $newID = $release->add($_POST);
+   $newID                                           = $release->add($_POST);
 
    Html::back();
 } else if (isset($_POST["delete"])) {
@@ -50,7 +50,7 @@ if (isset($_POST["add"])) {
    $_SESSION['releases'][Session::getLoginUserID()] = 'risk';
    Html::back();
 
-}  else if (isset($_POST["purge"])) {
+} else if (isset($_POST["purge"])) {
    $release->check($_POST['id'], PURGE);
    $release->delete($_POST, 1);
    $_SESSION['releases'][Session::getLoginUserID()] = 'risk';

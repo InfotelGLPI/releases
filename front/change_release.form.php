@@ -39,13 +39,13 @@ $item = new PluginReleasesChange_Release();
 if (isset($_POST["add"])) {
    if (!empty($_POST['plugin_releases_releases_id']) && empty($_POST['changes_id'])) {
       $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-         __('Change'));
+                         __('Change'));
       Session::addMessageAfterRedirect($message, false, ERROR);
       Html::back();
    }
    if (empty($_POST['plugin_releases_releases_id']) && !empty($_POST['changes_id'])) {
       $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-         __('Release','releases'));
+                         __('Release', 'releases'));
       Session::addMessageAfterRedirect($message, false, ERROR);
       Html::back();
    }

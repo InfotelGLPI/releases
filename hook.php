@@ -273,21 +273,21 @@ function plugin_releases_AssignToTicket($types) {
  *
  * @return bool for success (will die for most error)
  * */
-function install_notifications(){
+function install_notifications() {
 
-      global $DB;
+   global $DB;
 
-      $migration = new Migration(1.0);
+   $migration = new Migration(1.0);
 
-      // Notification
-      // Request
-      $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','PluginReleasesRelease', NOW());";
-      $result = $DB->query($query_id) or die($DB->error());
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginReleasesRelease' AND `name` = 'New release'";
-      $result = $DB->query($query_id) or die($DB->error());
-      $templates_id = $DB->result($result, 0, 'id');
+   // Notification
+   // Request
+   $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','PluginReleasesRelease', NOW());";
+   $result = $DB->query($query_id) or die($DB->error());
+   $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginReleasesRelease' AND `name` = 'New release'";
+   $result = $DB->query($query_id) or die($DB->error());
+   $templates_id = $DB->result($result, 0, 'id');
 
-      $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
+   $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
 VALUES('" . $templates_id . "',
 '##lang.pluginreleasesrelease.release## : ##pluginreleasesrelease.title##',
 '##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
@@ -340,7 +340,7 @@ VALUES('" . $templates_id . "',
 
 
 ','');";
-      $DB->query($query);
+   $DB->query($query);
 
    $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
               VALUES ('New release', 0, 'PluginReleasesRelease', 'newRelease', 1);";
@@ -355,72 +355,72 @@ VALUES('" . $templates_id . "',
    $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`) 
                VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
    $DB->query($query);
-//
-//      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
-//              VALUES ('Consumable request', 0, 'PluginConsumablesRequest', 'ConsumableRequest', 1);";
-//      $DB->query($query);
-//
-//      //retrieve notification id
-//      $query_id = "SELECT `id` FROM `glpi_notifications`
-//               WHERE `name` = 'Consumable request' AND `itemtype` = 'PluginConsumablesRequest' AND `event` = 'ConsumableRequest'";
-//      $result = $DB->query($query_id) or die ($DB->error());
-//      $notification = $DB->result($result, 0, 'id');
-//
-//      $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
-//               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
-//      $DB->query($query);
-//
-//      // Request validation
-//      $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`, `comment`, `css`) VALUES ('Consumables Request Validation','PluginConsumablesRequest', NOW(),'','');";
-//      $result = $DB->query($query_id) or die($DB->error());
-//      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginConsumablesRequest' AND `name` = 'Consumables Request Validation'";
-//      $result = $DB->query($query_id) or die($DB->error());
-//      $templates_id = $DB->result($result, 0, 'id');
-//
-//      $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
-//VALUES('" . $templates_id . "', '##consumable.action## : ##consumable.entity##',
-//'##FOREACHconsumabledatas##
-//##lang.consumable.entity## :##consumable.entity##
-//##lang.consumablerequest.requester## : ##consumablerequest.requester##
-//##lang.consumablerequest.validator## : ##consumablerequest.validator##
-//##lang.consumablerequest.consumabletype## : ##consumablerequest.consumabletype##
-//##lang.consumablerequest.consumable## : ##consumablerequest.consumable##
-//##lang.consumablerequest.number## : ##consumablerequest.number##
-//##lang.consumablerequest.requestdate## : ##consumablerequest.requestdate##
-//##lang.consumablerequest.status## : ##consumablerequest.status##
-//##ENDFOREACHconsumabledatas##
-//##lang.consumablerequest.comment## : ##consumablerequest.comment##',
-//'##FOREACHconsumabledatas##&lt;br /&gt; &lt;br /&gt;
-//&lt;p&gt;##lang.consumable.entity## :##consumable.entity##&lt;br /&gt; &lt;br /&gt;
-//##lang.consumablerequest.requester## : ##consumablerequest.requester##&lt;br /&gt;
-//##lang.consumablerequest.validator## : ##consumablerequest.validator##&lt;br /&gt;
-//##lang.consumablerequest.consumabletype## : ##consumablerequest.consumabletype##&lt;br /&gt;
-//##lang.consumablerequest.consumable## : ##consumablerequest.consumable##&lt;br /&gt;
-//##lang.consumablerequest.number## : ##consumablerequest.number##&lt;br /&gt;
-//##lang.consumablerequest.requestdate## : ##consumablerequest.requestdate##&lt;br /&gt;
-//##lang.consumablerequest.status## : ##consumablerequest.status##&lt;br /&gt;
-//##lang.consumablerequest.comment## : ##consumablerequest.comment##&lt;br /&gt;
-//##ENDFOREACHconsumabledatas##');";
-//      $DB->query($query);
-//
-//      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
-//              VALUES ('Consumable request validation', 0, 'PluginConsumablesRequest', 'ConsumableResponse', 1);";
-//      $DB->query($query);
-//
-//      //retrieve notification id
-//      $query_id = "SELECT `id` FROM `glpi_notifications`
-//               WHERE `name` = 'Consumable request validation' AND `itemtype` = 'PluginConsumablesRequest'
-//               AND `event` = 'ConsumableResponse'";
-//      $result = $DB->query($query_id) or die ($DB->error());
-//      $notification = $DB->result($result, 0, 'id');
-//
-//      $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
-//               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
-//      $DB->query($query);
+   //
+   //      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
+   //              VALUES ('Consumable request', 0, 'PluginConsumablesRequest', 'ConsumableRequest', 1);";
+   //      $DB->query($query);
+   //
+   //      //retrieve notification id
+   //      $query_id = "SELECT `id` FROM `glpi_notifications`
+   //               WHERE `name` = 'Consumable request' AND `itemtype` = 'PluginConsumablesRequest' AND `event` = 'ConsumableRequest'";
+   //      $result = $DB->query($query_id) or die ($DB->error());
+   //      $notification = $DB->result($result, 0, 'id');
+   //
+   //      $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
+   //               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
+   //      $DB->query($query);
+   //
+   //      // Request validation
+   //      $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`, `comment`, `css`) VALUES ('Consumables Request Validation','PluginConsumablesRequest', NOW(),'','');";
+   //      $result = $DB->query($query_id) or die($DB->error());
+   //      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginConsumablesRequest' AND `name` = 'Consumables Request Validation'";
+   //      $result = $DB->query($query_id) or die($DB->error());
+   //      $templates_id = $DB->result($result, 0, 'id');
+   //
+   //      $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
+   //VALUES('" . $templates_id . "', '##consumable.action## : ##consumable.entity##',
+   //'##FOREACHconsumabledatas##
+   //##lang.consumable.entity## :##consumable.entity##
+   //##lang.consumablerequest.requester## : ##consumablerequest.requester##
+   //##lang.consumablerequest.validator## : ##consumablerequest.validator##
+   //##lang.consumablerequest.consumabletype## : ##consumablerequest.consumabletype##
+   //##lang.consumablerequest.consumable## : ##consumablerequest.consumable##
+   //##lang.consumablerequest.number## : ##consumablerequest.number##
+   //##lang.consumablerequest.requestdate## : ##consumablerequest.requestdate##
+   //##lang.consumablerequest.status## : ##consumablerequest.status##
+   //##ENDFOREACHconsumabledatas##
+   //##lang.consumablerequest.comment## : ##consumablerequest.comment##',
+   //'##FOREACHconsumabledatas##&lt;br /&gt; &lt;br /&gt;
+   //&lt;p&gt;##lang.consumable.entity## :##consumable.entity##&lt;br /&gt; &lt;br /&gt;
+   //##lang.consumablerequest.requester## : ##consumablerequest.requester##&lt;br /&gt;
+   //##lang.consumablerequest.validator## : ##consumablerequest.validator##&lt;br /&gt;
+   //##lang.consumablerequest.consumabletype## : ##consumablerequest.consumabletype##&lt;br /&gt;
+   //##lang.consumablerequest.consumable## : ##consumablerequest.consumable##&lt;br /&gt;
+   //##lang.consumablerequest.number## : ##consumablerequest.number##&lt;br /&gt;
+   //##lang.consumablerequest.requestdate## : ##consumablerequest.requestdate##&lt;br /&gt;
+   //##lang.consumablerequest.status## : ##consumablerequest.status##&lt;br /&gt;
+   //##lang.consumablerequest.comment## : ##consumablerequest.comment##&lt;br /&gt;
+   //##ENDFOREACHconsumabledatas##');";
+   //      $DB->query($query);
+   //
+   //      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
+   //              VALUES ('Consumable request validation', 0, 'PluginConsumablesRequest', 'ConsumableResponse', 1);";
+   //      $DB->query($query);
+   //
+   //      //retrieve notification id
+   //      $query_id = "SELECT `id` FROM `glpi_notifications`
+   //               WHERE `name` = 'Consumable request validation' AND `itemtype` = 'PluginConsumablesRequest'
+   //               AND `event` = 'ConsumableResponse'";
+   //      $result = $DB->query($query_id) or die ($DB->error());
+   //      $notification = $DB->result($result, 0, 'id');
+   //
+   //      $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
+   //               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
+   //      $DB->query($query);
 
-      $migration->executeMigration();
+   $migration->executeMigration();
 
-      return true;
+   return true;
 
 
 }

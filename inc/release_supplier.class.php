@@ -40,7 +40,7 @@ if (!defined('GLPI_ROOT')) {
  * Relation between Releases and Suppliers
  *
  * @since 0.84
-**/
+ **/
 class PluginReleasesRelease_Supplier extends CommonITILActor {
 
    // From CommonDBRelation

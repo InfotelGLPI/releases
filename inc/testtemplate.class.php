@@ -41,13 +41,13 @@ if (!defined('GLPI_ROOT')) {
 class PluginReleasesTesttemplate extends CommonDropdown {
 
    // From CommonDBTM
-   public $dohistory          = true;
-   public $can_be_translated  = true;
+   public $dohistory         = true;
+   public $can_be_translated = true;
 
-   static $rightname          = 'plugin_releases_tests';
+   static $rightname = 'plugin_releases_tests';
 
    static function getTypeName($nb = 0) {
-      return _n('Test template', 'Test templates', $nb,'releases');
+      return _n('Test template', 'Test templates', $nb, 'releases');
    }
 
 
@@ -55,17 +55,17 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
       return [
          ['name'  => 'plugin_releases_typetests_id',
-            'label' => _n('Test type','Test types',1, 'releases'),
-            'type'  => 'dropdownTests',
+          'label' => _n('Test type', 'Test types', 1, 'releases'),
+          'type'  => 'dropdownTests',
          ],
          ['name'  => 'plugin_releases_risks_id',
-            'label' => _n('Risk','Risks', 1,'releases'),
-            'type'  => 'dropdownRisks',
+          'label' => _n('Risk', 'Risks', 1, 'releases'),
+          'type'  => 'dropdownRisks',
          ],
          ['name'  => 'content',
-            'label' => __('Description'),
-            'type'  => 'textarea',
-            'rows' => 10],
+          'label' => __('Description'),
+          'type'  => 'textarea',
+          'rows'  => 10],
 
       ];
    }
@@ -75,20 +75,20 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'                 => '4',
-         'name'               => __('Content'),
-         'field'              => 'content',
-         'table'              => $this->getTable(),
-         'datatype'           => 'text',
-         'htmltext'           => true
+         'id'       => '4',
+         'name'     => __('Content'),
+         'field'    => 'content',
+         'table'    => $this->getTable(),
+         'datatype' => 'text',
+         'htmltext' => true
       ];
 
       $tab[] = [
-         'id'                 => '3',
-         'name'               => __('Deploy Task type'),
-         'field'              => 'name',
-         'table'              => getTableForItemType('PluginReleasesTypeDeployTask'),
-         'datatype'           => 'dropdown'
+         'id'       => '3',
+         'name'     => __('Deploy Task type'),
+         'field'    => 'name',
+         'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
+         'datatype' => 'dropdown'
       ];
 
       return $tab;
@@ -102,10 +102,10 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
       switch ($field['type']) {
          case 'dropdownTests' :
-            PluginReleasesTypeTest::dropdown(["name"=>"plugin_releases_typetests_id"]);
+            PluginReleasesTypeTest::dropdown(["name" => "plugin_releases_typetests_id"]);
             break;
          case 'dropdownRisks' :
-            PluginReleasesRisktemplate::dropdown(["name"=>"plugin_releases_risks_id"]);
+            PluginReleasesRisktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
             break;
 
       }
@@ -113,7 +113,7 @@ class PluginReleasesTesttemplate extends CommonDropdown {
 
 
    static function canCreate() {
-      return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
+      return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
    }
 
    /**
@@ -140,26 +140,26 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
-      $rand_text       = mt_rand();
-      $rand_name      = mt_rand();
-      $rand_type      = mt_rand();
-      $rand_risk      = mt_rand();
+      $rand_text = mt_rand();
+      $rand_name = mt_rand();
+      $rand_type = mt_rand();
+      $rand_risk = mt_rand();
 
       echo "<tr class='tab_bg_1' hidden>";
       echo "<td colspan='4'>";
       $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
-      echo Html::hidden($foreignKey,["value"=>$this->fields[$foreignKey]]);
+      echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
 
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name",['id'=>'name'.$rand_name,"value"=>$this->getField('name')]);
+      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
       echo "</td>";
 
       echo "<td>";
-      echo __("Test type",'releases');
+      echo __("Test type", 'releases');
       echo "</td>";
 
       echo "<td>";
@@ -168,40 +168,39 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       } else {
          $value = $this->fields["plugin_releases_typetests_id"];
       }
-      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'=>$rand_type,'name' => "plugin_releases_typetests_id",
-         'value' => $value]);
+      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'  => $rand_type, 'name' => "plugin_releases_typetests_id",
+                                                         'value' => $value]);
       echo "</td>";
-
 
 
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo __("Associated risk",'releases');
+      echo __("Associated risk", 'releases');
       echo "</td>";
 
       echo "<td>";
 
-      Dropdown::show(PluginReleasesRisktemplate::getType(), ['rand'=>$rand_risk,'name' => "plugin_releases_risks_id",
-         'value' =>  $this->fields["plugin_releases_risks_id"],"condition"=>["plugin_releases_releasetemplates_id"=>$this->fields[$foreignKey]]]);
+      Dropdown::show(PluginReleasesRisktemplate::getType(), ['rand'  => $rand_risk, 'name' => "plugin_releases_risks_id",
+                                                             'value' => $this->fields["plugin_releases_risks_id"], "condition" => ["plugin_releases_releasetemplates_id" => $this->fields[$foreignKey]]]);
       echo "</td>";
       echo "<td colspan='2'></td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Description') . "</td>";
       echo "<td colspan='3'>";
-//       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
+      //       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
       $content_id = "content$rand_text";
       $cols       = 100;
       $rows       = 10;
       Html::textarea(['name'              => 'content',
-         'value'             => $this->fields["content"],
-         'rand'              => $rand_text,
-         'editor_id'         => $content_id,
-         'enable_fileupload' => false,
-         'enable_richtext'   => true,
-         'cols'              => $cols,
-         'rows'              => $rows]);
+                      'value'             => $this->fields["content"],
+                      'rand'              => $rand_text,
+                      'editor_id'         => $content_id,
+                      'enable_fileupload' => false,
+                      'enable_richtext'   => true,
+                      'cols'              => $cols,
+                      'rows'              => $rows]);
       echo "</td>";
       echo "</tr>";
       $this->showFormButtons($options);
@@ -216,8 +215,9 @@ class PluginReleasesTesttemplate extends CommonDropdown {
       $dbu   = new DbUtils();
       $table = CommonDBTM::getTable(self::class);
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releasetemplates_id" => $item->getID()]);
+                                        ["plugin_releases_releasetemplates_id" => $item->getID()]);
    }
+
    /**
     *
     * @return css class
@@ -225,6 +225,7 @@ class PluginReleasesTesttemplate extends CommonDropdown {
    static function getCssClass() {
       return "test";
    }
+
    function post_addItem() {
       $_SESSION['releases']["template"][Session::getLoginUserID()] = 'test';
    }
@@ -232,17 +233,18 @@ class PluginReleasesTesttemplate extends CommonDropdown {
    /**
     * @param $ID
     * @param $entity
+    *
     * @return ID|int|the
     */
    static function transfer($ID, $entity) {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
-         $items = $self->find(["plugin_releases_releasetemplates_id"=>$ID]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $self  = new self();
+         $items = $self->find(["plugin_releases_releasetemplates_id" => $ID]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $self->update($input);
          }

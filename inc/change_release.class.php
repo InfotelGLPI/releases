@@ -345,7 +345,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo "</td >";
             echo "<td >";
             $review = new PluginReleasesReview();
-            if($review->getFromDBByCrit(["plugin_releases_releases_id"=>$d['id']])){
+            if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $d['id']])) {
                echo Html::convDateTime($review->fields["real_date_release"]);
             }
 

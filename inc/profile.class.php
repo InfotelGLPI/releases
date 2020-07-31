@@ -69,11 +69,11 @@ class PluginReleasesProfile extends Profile {
          $prof = new self();
 
          self::addDefaultProfileInfos($ID,
-                                      [ 'plugin_releases_releases'  =>0,
-                                         'plugin_releases_tests'     => 0,
-                                         'plugin_releases_risks'     => 0,
-                                         'plugin_releases_rollbacks' => 0,
-                                         'plugin_releases_tasks'     => 0
+                                      ['plugin_releases_releases'  => 0,
+                                       'plugin_releases_tests'     => 0,
+                                       'plugin_releases_risks'     => 0,
+                                       'plugin_releases_rollbacks' => 0,
+                                       'plugin_releases_tasks'     => 0
                                       ]);
          $prof->showForm($ID);
       }
@@ -199,7 +199,6 @@ class PluginReleasesProfile extends Profile {
          //         )
          //TODO continuer les droits
       );
-
 
 
       return $rights;

@@ -50,8 +50,8 @@ function plugin_init_releases() {
                             ['addtabon' => 'Profile']);
    }
    Plugin::registerClass('PluginReleasesRelease',
-                         ['addtabon' => ['Change'],
-                            'notificationtemplates_types' => true]);
+                         ['addtabon'                    => ['Change'],
+                          'notificationtemplates_types' => true]);
    Plugin::registerClass('PluginReleasesRelease_Item',
                          ['addtabon' => ['User', 'Group', 'Supplier']]);
    Plugin::registerClass(PluginReleasesDeploytask::class, [

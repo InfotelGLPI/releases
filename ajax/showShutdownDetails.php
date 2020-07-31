@@ -38,11 +38,11 @@ Session::checkCentralAccess();
 
 
 if (isset($_POST["value"])) {
-   if($_POST["value"] == 0){
+   if ($_POST["value"] == 0) {
       echo Html::scriptBlock(
          '$("#shutdowndetails").attr(\'hidden\',true);'
       );
-   }else{
+   } else {
       echo Html::scriptBlock(
          '$("#shutdowndetails").attr(\'hidden\',false);'
       );

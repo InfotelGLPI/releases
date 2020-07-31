@@ -96,7 +96,7 @@ class PluginReleasesRollback extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
-      $release = new PluginReleasesRelease();
+      $release           = new PluginReleasesRelease();
       $release->getFromDB($input["plugin_releases_releases_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
@@ -123,17 +123,18 @@ class PluginReleasesRollback extends CommonDBTM {
          $input["users_id_editor"] = $uid;
       }
       $this->fields['date_mod'] = $_SESSION["glpi_currenttime"];
-      $input['date_mod'] = $_SESSION["glpi_currenttime"];
+      $input['date_mod']        = $_SESSION["glpi_currenttime"];
       $input['users_id_editor'] = Session::getLoginUserID();
-      $input = parent::prepareInputForUpdate($input);
+      $input                    = parent::prepareInputForUpdate($input);
       return $input;
    }
 
 
    function post_updateItem($history = 1) {
 
-//      parent::post_updateItem($history);
+      //      parent::post_updateItem($history);
    }
+
    /**
     * @param       $ID
     * @param array $options
@@ -153,7 +154,7 @@ class PluginReleasesRollback extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
       echo "</tr>";
-      if($ID<0) {
+      if ($ID < 0) {
          echo "<tr class='tab_bg_1'>";
          echo "<td>";
          echo _n('Rollback template', 'Rollback templates', 1, 'releases');
@@ -162,10 +163,10 @@ class PluginReleasesRollback extends CommonDBTM {
          //      echo "<div class='fa-label'>
          //            <i class='fas fa-reply fa-fw'
          //               title='".."'></i>";
-         PluginReleasesRollbacktemplate::dropdown(['value' => $this->fields['plugin_releases_rollbacktemplates_id'],
-            'entity' => $this->getEntityID(),
-            'rand' => $rand_template,
-            'on_change' => 'tasktemplate_update(this.value)']);
+         PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
+                                                   'entity'    => $this->getEntityID(),
+                                                   'rand'      => $rand_template,
+                                                   'on_change' => 'tasktemplate_update(this.value)']);
          echo "</div>";
          echo Html::scriptBlock('
          function tasktemplate_update(value) {
@@ -231,20 +232,22 @@ class PluginReleasesRollback extends CommonDBTM {
 
       return true;
    }
+
    /**
     * @param $ID
     * @param $entity
+    *
     * @return ID|int|the
     */
    static function transfer($ID, $entity) {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
-         $items = $self->find(["plugin_releases_releases_id"=>$ID]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $self  = new self();
+         $items = $self->find(["plugin_releases_releases_id" => $ID]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $self->update($input);
          }

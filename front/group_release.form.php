@@ -37,13 +37,13 @@
 use Glpi\Event;
 
 if (!defined('GLPI_ROOT')) {
-   include ('../../../inc/includes.php');
+   include('../../../inc/includes.php');
 }
 
 $link = new PluginReleasesGroup_Release();
 $item = new PluginReleasesRelease();
 
-Session ::checkLoginUser();
+Session::checkLoginUser();
 
 if (isset($_POST['delete'])) {
    $link->check($_POST['id'], DELETE);
@@ -58,7 +58,7 @@ if (isset($_POST['delete'])) {
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);
 
-   Html::redirect($CFG_GLPI["root_doc"]."/plugins/releases/front/release.php");
+   Html::redirect($CFG_GLPI["root_doc"] . "/plugins/releases/front/release.php");
 }
 
 Html::displayErrorAndDie('Lost');

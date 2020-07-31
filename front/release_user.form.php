@@ -37,13 +37,13 @@
 use Glpi\Event;
 
 if (!defined('GLPI_ROOT')) {
-   include ('../../../inc/includes.php');
+   include('../../../inc/includes.php');
 }
 
 $link = new PluginReleasesRelease_User();
 $item = new PluginReleasesRelease();
 
-Session ::checkLoginUser();
+Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
 
 if (isset($_POST["update"])) {
@@ -68,7 +68,7 @@ if (isset($_POST["update"])) {
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);
 
-   Html::redirect($CFG_GLPI["root_doc"]."/plugins/releases/front/release.php");
+   Html::redirect($CFG_GLPI["root_doc"] . "/plugins/releases/front/release.php");
 
 } else if (isset($_GET["id"])) {
    $link->showUserNotificationForm($_GET["id"]);

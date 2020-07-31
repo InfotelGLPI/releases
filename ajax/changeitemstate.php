@@ -41,10 +41,10 @@ if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && is
    global $DB;
    $item = new PluginReleasesRelease();
    $item->getFromDB($_POST["plugin_releases_releases_id"]);
-   if($_POST["status"]>$item->getField('status')){
-      $update = [$_POST["field"]=>$_POST["value"],"id"=>$item->getID(),'status'=>$_POST["status"]];
-   }else{
-      $update = [$_POST["field"]=>$_POST["value"],"id"=>$item->getID()];
+   if ($_POST["status"] > $item->getField('status')) {
+      $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID(), 'status' => $_POST["status"]];
+   } else {
+      $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID()];
    }
    $item->update($update);
 }

@@ -141,7 +141,7 @@ class PluginReleasesReview extends CommonDBTM {
       }
       Html::showDateTimeField('real_date_release', ["value" => $this->getField('real_date_release'), 'canedit' => $canedit]);
       echo "</td>";
-      echo "<td>" . __('Conforming realization','releases') . "</td>";
+      echo "<td>" . __('Conforming realization', 'releases') . "</td>";
       echo "<td>";
       Dropdown::showYesNo("conforming_realization", $this->getField("conforming_realization"));
       echo "</td>";
@@ -150,7 +150,7 @@ class PluginReleasesReview extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name", ['id' => 'name' , "value" => $this->getField('name')]);
+      echo Html::input("name", ['id' => 'name', "value" => $this->getField('name')]);
 
       echo "</td>";
       echo "<td>" . __('Incidents during process', 'releases') . "</td>";
@@ -242,13 +242,13 @@ class PluginReleasesReview extends CommonDBTM {
       $this->showFormButtons($options);
       $release = new PluginReleasesRelease();
       $release->getFromDB($options["plugin_releases_releases_id"]);
-      if($release->getField("status")==PluginReleasesRelease::REVIEW){
+      if ($release->getField("status") == PluginReleasesRelease::REVIEW) {
          echo "<form method='post' action='" . $this->getFormURL() . "'>";
          echo "<br><table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2 center'>";
-         echo "<input type=\"hidden\" name=\"_glpi_csrf_token\" value=".Session::getNewCSRFToken()." \">";
-         echo "<input type='hidden' name='plugin_releases_releases_id' value='".$options["plugin_releases_releases_id"]."'>";
-         echo "<td><input type='submit' name='conclude' value=\""._sx('button', 'Conclude the review','releases')."\" class='submit'>";
+         echo "<input type=\"hidden\" name=\"_glpi_csrf_token\" value=" . Session::getNewCSRFToken() . " \">";
+         echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
+         echo "<td><input type='submit' name='conclude' value=\"" . _sx('button', 'Conclude the review', 'releases') . "\" class='submit'>";
          echo "</td></tr>";
          echo "</table>";
       }
@@ -260,27 +260,28 @@ class PluginReleasesReview extends CommonDBTM {
    function prepareInputForAdd($input) {
       $release = new PluginReleasesRelease();
       $release->getFromDB($input["plugin_releases_releases_id"]);
-      $input["entities_id"] = $release->getField("entities_id") ;
+      $input["entities_id"] = $release->getField("entities_id");
       return $input;
    }
 
    /**
     * @param $ID
     * @param $entity
+    *
     * @return ID|int|the
     */
    static function transfer($ID, $entity) {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
-         $items = $self->find(["plugin_releases_releases_id"=>$ID]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $self  = new self();
+         $items = $self->find(["plugin_releases_releases_id" => $ID]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $self->update($input);
-            self::transferDocument($id,$entity);
+            self::transferDocument($id, $entity);
          }
          return true;
 
@@ -292,12 +293,12 @@ class PluginReleasesReview extends CommonDBTM {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
+         $self      = new self();
          $documents = new Document_Item();
-         $items = $documents->find(["items_id"=>$ID,"itemtype"=>self::getType()]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $documents->update($input);
          }

@@ -1,8 +1,8 @@
 {
-    "name": "infotel/releases",
-    "type": "project",
-    "license": "GPLv2+",
-    "require": {
-        "atoum/atoum": "^3.3"
-    }
+  "name": "infotel/releases",
+  "type": "project",
+  "license": "GPLv2+",
+  "require": {
+    "atoum/atoum": "^3.3"
+  }
 }

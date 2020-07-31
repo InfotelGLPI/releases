@@ -217,7 +217,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '4',
          'table'         => 'glpi_plugin_releases_risks',
          'field'         => 'id',
-         'name'          => _x('quantity','Number of risks', 'releases'),
+         'name'          => _x('quantity', 'Number of risks', 'releases'),
          'datatype'      => 'count',
          'forcegroupby'  => true,
          'usehaving'     => true,
@@ -230,7 +230,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '5',
          'table'         => 'glpi_plugin_releases_rollbacks',
          'field'         => 'id',
-         'name'          => _x('quantity','Number of rollbacks', 'releases'),
+         'name'          => _x('quantity', 'Number of rollbacks', 'releases'),
          'datatype'      => 'count',
          'forcegroupby'  => true,
          'usehaving'     => true,
@@ -243,7 +243,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '6',
          'table'         => 'glpi_plugin_releases_tests',
          'field'         => 'id',
-         'name'          => _x('quantity','Number of tests', 'releases'),
+         'name'          => _x('quantity', 'Number of tests', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'count',
          'forcegroupby'  => true,
@@ -257,7 +257,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '7',
          'table'         => 'glpi_plugin_releases_deploytasks',
          'field'         => 'id',
-         'name'          => _x('quantity','Number of tasks', 'releases'),
+         'name'          => _x('quantity', 'Number of tasks', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'count',
          'forcegroupby'  => true,
@@ -562,7 +562,7 @@ class PluginReleasesRelease extends CommonITILObject {
     * @return void
     **/
    function post_addItem() {
-      global $DB,$CFG_GLPI;
+      global $DB, $CFG_GLPI;
 
       if (isset($this->input["releasetemplates_id"])) {
          $template = new PluginReleasesReleasetemplate();
@@ -865,7 +865,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
          $input['target'] = [];
       }
-      if(isset($input["communication_type"])){
+      if (isset($input["communication_type"])) {
          $input['target'] = json_encode($input['target']);
       }
 
@@ -1981,7 +1981,7 @@ class PluginReleasesRelease extends CommonITILObject {
                //         $item_i = reset($items_i);
                foreach ($items_i as $item_d) {
                   $items_i    = $d->find(["id" => $item_d["documents_id"]]);
-                  $item_i_     = reset($items_i);
+                  $item_i_    = reset($items_i);
                   $foreignKey = "plugin_releases_reviews_id";
                   $pics_url   = $CFG_GLPI['root_doc'] . "/pics/timeline";
 
@@ -2000,11 +2000,11 @@ class PluginReleasesRelease extends CommonITILObject {
                      echo "'/>&nbsp;";
 
                      echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i_['id']
-                        . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
+                          . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
                      if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i_['filepath'])) {
                         echo "<div class='timeline_img_preview2'>";
                         echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i_['id']
-                           . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
+                             . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
                         echo "</div>";
                      }
                      echo "</a>";
@@ -2017,16 +2017,16 @@ class PluginReleasesRelease extends CommonITILObject {
                   }
                   echo "<span class='buttons'>";
                   echo "<a href='" . Document::getFormURLWithID($item_i_['id']) . "' class='edit_document fa fa-eye pointer' title='" .
-                     _sx("button", "Show") . "'>";
+                       _sx("button", "Show") . "'>";
                   echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
 
                   $doc = new Document();
                   $doc->getFromDB($item_i_['id']);
                   if ($doc->can($item_i_['id'], UPDATE)) {
                      echo "<a href='" . static::getFormURL() .
-                        "?delete_document&documents_id=" . $item_i_['id'] .
-                        "&$foreignKey=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
-                        _sx("button", "Delete permanently") . "'>";
+                          "?delete_document&documents_id=" . $item_i_['id'] .
+                          "&$foreignKey=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
+                          _sx("button", "Delete permanently") . "'>";
                      echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
                   }
                   echo "</span>";
@@ -2323,7 +2323,7 @@ class PluginReleasesRelease extends CommonITILObject {
       //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
       $menu['icon'] = static::getIcon();
       if (self::canCreate()) {
-            $menu['links']['add'] = "/plugins/releases/front/creationrelease.php";
+         $menu['links']['add'] = "/plugins/releases/front/creationrelease.php";
       }
 
 
@@ -3117,10 +3117,12 @@ class PluginReleasesRelease extends CommonITILObject {
          unset($this->updates[$key]);
       }
    }
-  public static function getTimelinePosition($items_id, $sub_type, $users_id){
+
+   public static function getTimelinePosition($items_id, $sub_type, $users_id) {
       return self::TIMELINE_RIGHT;
 
-  }
+   }
+
    /**
     * @param null $checkitem
     *
@@ -3141,6 +3143,7 @@ class PluginReleasesRelease extends CommonITILObject {
       }
       return $actions;
    }
+
    /**
     * @param MassiveAction $ma
     *
@@ -3153,7 +3156,7 @@ class PluginReleasesRelease extends CommonITILObject {
    static function showMassiveActionsSubForm(MassiveAction $ma) {
 
       switch ($ma->getAction()) {
-          case "transfer" :
+         case "transfer" :
             Dropdown::show('Entity');
             echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
             return true;
@@ -3186,18 +3189,17 @@ class PluginReleasesRelease extends CommonITILObject {
                   $item->getFromDB($key);
 
 
-
                   unset($values);
                   $values["id"]          = $key;
                   $values["entities_id"] = $input['entities_id'];
 
                   if ($item->update($values)) {
-                     PluginReleasesDeploytask::transfer($key,$input["entities_id"]);
-                     PluginReleasesTest::transfer($key,$input["entities_id"]);
-                     PluginReleasesRisk::transfer($key,$input["entities_id"]);
-                     PluginReleasesRollback::transfer($key,$input["entities_id"]);
-                     PluginReleasesReview::transfer($key,$input["entities_id"]);
-                     self::transferDocument($key,$input["entities_id"]);
+                     PluginReleasesDeploytask::transfer($key, $input["entities_id"]);
+                     PluginReleasesTest::transfer($key, $input["entities_id"]);
+                     PluginReleasesRisk::transfer($key, $input["entities_id"]);
+                     PluginReleasesRollback::transfer($key, $input["entities_id"]);
+                     PluginReleasesReview::transfer($key, $input["entities_id"]);
+                     self::transferDocument($key, $input["entities_id"]);
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                   } else {
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3208,16 +3210,17 @@ class PluginReleasesRelease extends CommonITILObject {
       }
       parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
    }
+
    static function transferDocument($ID, $entity) {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
+         $self      = new self();
          $documents = new Document_Item();
-         $items = $documents->find(["items_id"=>$ID,"itemtype"=>self::getType()]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $documents->update($input);
          }
@@ -3234,7 +3237,7 @@ class PluginReleasesRelease extends CommonITILObject {
     * @return array
     */
    public function getAssociatedDocumentsCriteria($bypass_rights = false): array {
-      $task_class = PluginReleasesDeploytask::getType();
+      $task_class   = PluginReleasesDeploytask::getType();
       $review_class = PluginReleasesReview::getType();
 
       $or_crits = [
@@ -3244,8 +3247,6 @@ class PluginReleasesRelease extends CommonITILObject {
             Document_Item::getTableField('items_id') => $this->getID(),
          ],
       ];
-
-
 
 
       // documents associated to tasks
