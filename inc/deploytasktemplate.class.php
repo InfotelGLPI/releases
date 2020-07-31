@@ -167,102 +167,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       return Session::haveRight(static::$rightname, READ);
    }
 
-//   public function showForm($ID, $options = []) {
-//      $rand_text      = mt_rand();
-//      $rand_name      = mt_rand();
-//      $rand_type      = mt_rand();
-//      $rand_state     = mt_rand();
-//      $rand_risk     = mt_rand();
-//      $rand_time     = mt_rand();
-//
-//      $this->initForm($ID, $options);
-//      $this->showFormHeader($options);
-//
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>" . __('Name') . "</td>";
-//      echo "<td>";
-//      echo Html::input("name",["id"=>"name".$rand_name,"value"=>$this->getField('name'),  'rand'      => $rand_name,]);
-//      echo "</td>";
-//      echo "<td colspan='2'>";
-//      echo "</td>";
-//
-//      echo "</tr>";
-//
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>";
-//      echo __("Deploy task type",'releases');
-//      echo "</td>";
-//
-//      echo "<td>";
-//
-//      $value = $this->fields["plugin_releases_typedeploytasks_id"];
-//
-//      Dropdown::show(PluginReleasesTypeDeployTask::getType(), ['rand'=>$rand_type,'name' => "plugin_releases_typedeploytasks_id",
-//         'value' => $value]);
-//      echo "</td>";
-//      echo "<td>";
-//      echo __('Status');
-//      echo "</td>";
-//      echo "<td>";
-//      PluginReleasesRelease::dropdownStateItem("state", $this->fields["state"], true, ['rand' => $rand_state]);
-//      echo "</td>";
-//
-//      echo "</tr>";
-//
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>";
-//      echo __("Associated risk",'releases');
-//      echo "</td>";
-//
-//      echo "<td>";
-//
-//      $value = $this->fields["plugin_releases_risks_id"];
-//
-//      Dropdown::show(PluginReleasesTypeDeployTask::getType(), ['rand'=>$rand_risk,'name' => "plugin_releases_risks_id",
-//         'value' => $value]);
-//      echo "</td>";
-//      echo "<td>";
-//      echo __('Private');
-//      echo "</td>";
-//      echo "<td>";
-//      Dropdown::showYesNo("is_private",$this->fields["is_private"]);
-//      echo "</td>";
-//
-//      echo "</tr>";
-//
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>";
-//      echo __("Duration");
-//      echo "</td>";
-//
-//      echo "<td>";
-//
-//      $toadd = [];
-//      for ($i=9; $i<=100; $i++) {
-//         $toadd[] = $i*HOUR_TIMESTAMP;
-//      }
-//
-//      Dropdown::showTimeStamp("actiontime", ['min'             => 0,
-//         'max'             => 8*HOUR_TIMESTAMP,
-//         'value'           => $this->fields["actiontime"],
-//         'rand'            => $rand_time,
-//         'addfirstminutes' => true,
-//         'inhours'         => true,
-//         'toadd'           => $toadd,
-//         'width'  => '']);
-//      echo "</td>";
-//      echo "<td>";
-////      echo __('Private');
-//      echo "</td>";
-//      echo "<td>";
-////      Dropdown::showYesNo("is_private",$this->fields["is_private"]);
-//      echo "</td>";
-//
-//      echo "</tr>";
-//
-//
-//      $this->showFormButtons($options);
-//   }
+
    function showForm($ID, $options = []) {
 
       global $CFG_GLPI;
@@ -324,8 +229,18 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       echo "<td >" . __("Previous task", "releases") . "</td>";
       echo "<td>";
       $id_release = isset($options['plugin_releases_releasetemplates_id'])?$options['plugin_releases_releasetemplates_id']:$this->fields["plugin_releases_releasetemplates_id"];
-      Dropdown::show(PluginReleasesDeploytasktemplate::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release, "NOT" => ["id" => $this->getID()]], "value" => $this->fields["plugin_releases_deploytasktemplates_id"]]);
-      echo "</td>";
+
+      if($ID != -1 && $ID != 0){
+         $forbidden_id = self::getAllDescendant($this->getID());
+         Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release,
+                                                                              "NOT"                         => ["id" => $forbidden_id]],
+                                                              "value"     => $this->fields["plugin_releases_deploytasktemplates_id"], "comments"  => false]);
+      }else{
+         Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release,
+                                                                              "NOT"                         => ["id" => $this->getID()]],
+                                                              "value"     => $this->fields["plugin_releases_deploytasktemplates_id"],
+                                                              "comments"  => false]);
+      }echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
@@ -550,6 +465,31 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
       $_SESSION['releases']["template"][Session::getLoginUserID()] = 'task';
    }
 
+   function post_updateItem($history = 1) {
+      parent::post_updateItem($history); // TODO: Change the autogenerated stub
+      $task = new self();
+      if(!isset($this->input['no_leveling'])) {
+         if ($task->getFromDB($this->getField("plugin_releases_deploytasktemplates_id"))) {
+            self::leveling_task($this->getID(), $task);
+         } else {
+            self::leveling_task($this->getID(), null);
+         }
+      }
+   }
+
+   public function post_deleteFromDB() {
+      parent::post_deleteFromDB(); // TODO: Change the autogenerated stub
+      $task = new self();
+      $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $this->getID()]);
+      foreach ($tasks as $t){
+         $input = [];
+         $input['id'] = $t["id"];
+         $input['plugin_releases_deploytasktemplates_id'] = $this->getField('plugin_releases_deploytasktemplates_id');
+         $input['_disablenotif'] = true;
+         $task->update($input);
+      }
+   }
+
    /**
     * @param $ID
     * @param $entity
@@ -571,5 +511,40 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
       }
       return 0;
+   }
+
+   static function leveling_task($id, $previous_task){
+
+      $task = new PluginReleasesDeploytask();
+      $input = [];
+      $input['id'] = $id;
+      $input['_disablenotif'] = true;
+      $input['no_leveling'] = true;
+      if($previous_task != null){
+         $input["level"] = $previous_task->getField('level') +1;
+      }else{
+         $input["level"] = 0;
+      }
+
+
+      $task->update($input);
+      $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
+      $task->getFromDB($id);
+      foreach ($tasks as $t){
+         self::leveling_task($t['id'],$task);
+      }
+
+   }
+
+   static function getAllDescendant($id){
+      $childrens = [];
+      $task = new PluginReleasesDeploytask();
+      $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
+      $childrens[] = $id;
+      foreach ($tasks as $t){
+         $childs = self::getAllDescendant($t['id']);
+         $childrens = array_merge($childrens,$childs);
+      }
+      return $childrens;
    }
 }

@@ -66,11 +66,27 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 //      $data = parent::getDataForObject($item, $options, $simple);
       $objettype = strtolower($item->getType());
 
+
       $data["##$objettype.title##"]        = $item->getField('name');
       $data["##$objettype.content##"]      = $item->getField('content');
       $data["##$objettype.description##"]  = $item->getField('content');
       $data["##$objettype.id##"]           = sprintf("%07d", $item->getField("id"));
 
+
+      $data["##review.realproductiondate##"]           = "";
+      $data["##review.conformrealization##"]           = "";
+      $data["##review.name##"]           = "";
+      $data["##review.incident##"]           = "";
+      $data["##review.incidentdescription##"]           = "";
+
+      $review = new PluginReleasesReview();
+      if($review->getFromDBByCrit(["plugin_releases_release_id"=>$item->getField('id')])){
+         $data["##review.realproductiondate##"]           = Html::convDateTime($review->getField("real_date_release"));
+         $data["##review.conformrealization##"]           =  Dropdown::getYesNo($review->getField('conforming_realization'));
+         $data["##review.name##"]           = Html::clean($review->getField('name'));
+         $data["##review.incident##"]           = Dropdown::getYesNo($review->getField('incident'));
+         $data["##review.incidentdescription##"]           = Html::clean($review->getField('incident_description'));
+      }
       $data["##$objettype.url##"]
          = $this->formatURL($options['additionnaloption']['usertype'],
          $objettype."_".$item->getField("id"));
@@ -517,7 +533,9 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
             $tmp['##test.author##']       = Html::clean(getUserName($test['users_id']));
             $tmp['##test.name##']       = Html::clean($test['name']);
-
+            $tmp_taskcatinfo = Dropdown::getDropdownName('glpi_plugin_releases_typetests',
+                                                         $risk['plugin_releases_typetests_id'], true, true, false);
+            $tmp['##risk.type##']        = $tmp_taskcatinfo['name'];
 
             $tmp['##test.date##']         = Html::convDateTime($test['date_creation']);
             $tmp['##test.description##']  = $test['content'];
@@ -546,7 +564,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       if($item->getField("communication")){
          $data["##$objettype.communicationtype##"]   = $item->getField("communication_type");
          $targets = [];
-         $obj = new $item->getField("communication_type");
+         $ie = $item->getField("communication_type");
+         $obj = new $ie;
          $t = json_decode($item->getField("target"));
          foreach ($t as $target=>$val){
             $targets[] = $obj->getName($val);
@@ -685,20 +704,25 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          'risk.description'                  => __('Description'),
          'risk.type'                   => _n('Risk type', 'Risk types', 1, 'releases'),
          'risk.state'                       => __('State'),
-         $objettype.'.numberofrisk'         => _x('quantity', 'Number of risks','releases'),
+         $objettype.'.numberofrisks'         => _x('quantity', 'Number of risks','releases'),
          'rollback.name'                       => __('Name'),
          'rollback.author'                       => __('Writer'),
          'rollback.date'                         => __('Opening date'),
          'rollback.description'                  => __('Description'),
          'rollback.state'                       => __('State'),
-         $objettype.'.numberofrollback'         => _x('quantity', 'Number of rollbacks','releases'),
+         $objettype.'.numberofrollbacks'         => _x('quantity', 'Number of rollbacks','releases'),
          'test.name'                       => __('Name'),
          'test.author'                       => __('Writer'),
          'test.date'                         => __('Opening date'),
          'test.description'                  => __('Description'),
          'test.type'                   => _n('Test type', 'Test types', 1, 'releases'),
          'test.status'                       => __('Status'),
-         $objettype.'.numberoftest'         => _x('quantity', 'Number of tests','releases'),
+         $objettype.'.numberoftests'         => _x('quantity', 'Number of tests','releases'),
+         "review.realproductiondate" =>__("Real production run date", 'releases'),
+         "review.conformrealization"=>  __('Conforming realization','releases'),
+        "review.name"=> __('Name'),
+         "review.incident"=>__('Incidents during process', 'releases'),
+        "review.incidentdescription"=> __('Description'),
          ];
 
       foreach ($tags as $tag => $label) {
@@ -808,7 +832,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          'task.begin'                        => __('Start date'),
          'task.end'                          => __('End date'),
          'task.status'                       => __('Status'),
-         $objettype.'.numberoftasks'         => _x('quantity', 'Number of tasks'),
+         $objettype.'.numberoftasks'         => _x('quantity', 'Number of tasks','releases'),
          $objettype.'.entity.phone'          => sprintf(__('%1$s (%2$s)'),
             __('Entity'), __('Phone')),
          $objettype.'.entity.fax'            => sprintf(__('%1$s (%2$s)'),

@@ -217,7 +217,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '4',
          'table'         => 'glpi_plugin_releases_risks',
          'field'         => 'id',
-         'name'          => __('Number of risks', 'releases'),
+         'name'          => _x('quantity','Number of risks', 'releases'),
          'datatype'      => 'count',
          'forcegroupby'  => true,
          'usehaving'     => true,
@@ -230,7 +230,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '5',
          'table'         => 'glpi_plugin_releases_rollbacks',
          'field'         => 'id',
-         'name'          => __('Number of rollbacks', 'releases'),
+         'name'          => _x('quantity','Number of rollbacks', 'releases'),
          'datatype'      => 'count',
          'forcegroupby'  => true,
          'usehaving'     => true,
@@ -243,7 +243,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '6',
          'table'         => 'glpi_plugin_releases_tests',
          'field'         => 'id',
-         'name'          => __('Number of tests', 'releases'),
+         'name'          => _x('quantity','Number of tests', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'count',
          'forcegroupby'  => true,
@@ -257,7 +257,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'            => '7',
          'table'         => 'glpi_plugin_releases_deploytasks',
          'field'         => 'id',
-         'name'          => __('Number of tasks', 'releases'),
+         'name'          => _x('quantity','Number of tasks', 'releases'),
          'massiveaction' => false,
          'datatype'      => 'count',
          'forcegroupby'  => true,
@@ -3236,6 +3236,7 @@ class PluginReleasesRelease extends CommonITILObject {
     */
    public function getAssociatedDocumentsCriteria($bypass_rights = false): array {
       $task_class = PluginReleasesDeploytask::getType();
+      $review_class = PluginReleasesReview::getType();
 
       $or_crits = [
          // documents associated to ITIL item directly
@@ -3253,11 +3254,7 @@ class PluginReleasesRelease extends CommonITILObject {
          $tasks_crit = [
             $this->getForeignKeyField() => $this->getID(),
          ];
-         if (!$bypass_rights && !Session::haveRight($task_class::$rightname, CommonITILTask::SEEPRIVATE)) {
-            $tasks_crit[] = [
-               'OR' => [0, 'users_id' => Session::getLoginUserID()],
-            ];
-         }
+
          $or_crits[] = [
             'glpi_documents_items.itemtype' => $task_class::getType(),
             'glpi_documents_items.items_id' => new QuerySubQuery(
@@ -3265,6 +3262,23 @@ class PluginReleasesRelease extends CommonITILObject {
                   'SELECT' => 'id',
                   'FROM'   => $task_class::getTable(),
                   'WHERE'  => $tasks_crit,
+               ]
+            ),
+         ];
+      }
+
+      if ($bypass_rights || $review_class::canView()) {
+         $reviews_crit = [
+            $this->getForeignKeyField() => $this->getID(),
+         ];
+
+         $or_crits[] = [
+            'glpi_documents_items.itemtype' => $review_class::getType(),
+            'glpi_documents_items.items_id' => new QuerySubQuery(
+               [
+                  'SELECT' => 'id',
+                  'FROM'   => $review_class::getTable(),
+                  'WHERE'  => $reviews_crit,
                ]
             ),
          ];

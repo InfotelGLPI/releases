@@ -117,12 +117,12 @@ class PluginReleasesDeploytask extends CommonITILTask {
       Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
       if (isset($input["plan"])) {
-         $input["begin"]         = $input['plan']["begin"];
-         $input["end"]           = $input['plan']["end"];
+         $input["begin"] = $input['plan']["begin"];
+         $input["end"]   = $input['plan']["end"];
 
-         $timestart              = strtotime($input["begin"]);
-         $timeend                = strtotime($input["end"]);
-         $input["actiontime"]    = $timeend-$timestart;
+         $timestart           = strtotime($input["begin"]);
+         $timeend             = strtotime($input["end"]);
+         $input["actiontime"] = $timeend - $timestart;
 
          unset($input["plan"]);
          if (!$this->test_valid_date($input)) {
@@ -137,7 +137,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
          $input["users_id"] = $uid;
       }
 
-      $release           = new PluginReleasesRelease();
+      $release = new PluginReleasesRelease();
       $release->getFromDB($input["plugin_releases_releases_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
@@ -168,11 +168,14 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
       // Add document if needed, without notification
       $this->input = $this->addFiles($this->input, ['force_update' => true]);
+      $itemtype    = $this->getItilObjectItemType();
+      $item        = new $itemtype();
+      $item->getFromDB($this->fields[$item->getForeignKeyField()]);
       $donotif = !isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"];
       if ($donotif) {
-         $options = ['task_id'             => $this->fields["id"],
-            'is_private'          => $this->isPrivate()];
-         NotificationEvent::raiseEvent('add_task', $this->input["_job"], $options);
+         $options = ['task_id'    => $this->fields["id"],
+                     'is_private' => 0];
+         NotificationEvent::raiseEvent('add_task', $item, $options);
       }
    }
 
@@ -187,11 +190,11 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
       Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
-      if (isset($input["plugin_releases_deploytasks_id"]) && $input["plugin_releases_deploytasks_id"] != 0) {
-         $task = new self();
-         $task->getFromDB($input["plugin_releases_deploytasks_id"]);
-         $input["level"] = $task->getField("level") + 1;
-      }
+//      if (isset($input["plugin_releases_deploytasks_id"]) && $input["plugin_releases_deploytasks_id"] != 0) {
+//         $task = new self();
+//         $task->getFromDB($input["plugin_releases_deploytasks_id"]);
+//         $input["level"] = $task->getField("level") + 1;
+//      }
 
       if (isset($input['_planningrecall'])) {
          PlanningRecall::manageDatas($input['_planningrecall']);
@@ -355,10 +358,18 @@ class PluginReleasesDeploytask extends CommonITILTask {
       echo "</td>";
       echo "<td >" . __("Previous task", "releases") . "</td>";
       echo "<td>";
-      Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
-                                                                           "NOT"                         => ["id" => $this->getID()]],
-                                                           "value"     => $this->fields["plugin_releases_deploytasks_id"],
-                                                           "comments"=>false]);
+      if($ID != -1 && $ID != 0){
+         $forbidden_id = self::getAllDescendant($this->getID());
+         Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
+                                                                              "NOT"                         => ["id" => $forbidden_id]],
+                                                              "value"     => $this->fields["plugin_releases_deploytasks_id"], "comments"  => false]);
+      }else{
+         Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releases_id" => $this->fields['plugin_releases_releases_id'],
+                                                                              "NOT"                         => ["id" => $this->getID()]],
+                                                              "value"     => $this->fields["plugin_releases_deploytasks_id"],
+                                                              "comments"  => false]);
+      }
+
       echo "</td>";
       echo "</tr>";
 
@@ -408,11 +419,11 @@ class PluginReleasesDeploytask extends CommonITILTask {
                echo "'/>&nbsp;";
 
                echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
-                  . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
+                    . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
                if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
                   echo "<div class='timeline_img_preview'>";
                   echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
-                     . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
+                       . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
                   echo "</div>";
                }
                echo "</a>";
@@ -425,16 +436,16 @@ class PluginReleasesDeploytask extends CommonITILTask {
             }
             echo "<span class='buttons'>";
             echo "<a href='" . Document::getFormURLWithID($item_i['id']) . "' class='edit_document fa fa-eye pointer' title='" .
-               _sx("button", "Show") . "'>";
+                 _sx("button", "Show") . "'>";
             echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
 
             $doc = new Document();
             $doc->getFromDB($item_i['id']);
             if ($doc->can($item_i['id'], UPDATE)) {
                echo "<a href='" . static::getFormURL() .
-                  "?delete_document&documents_id=" . $item_i['id'] .
-                  "&$foreignKey=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
-                  _sx("button", "Delete permanently") . "'>";
+                    "?delete_document&documents_id=" . $item_i['id'] .
+                    "&$foreignKey=" . $this->getID() . "' class='delete_document fas fa-trash-alt pointer' title='" .
+                    _sx("button", "Delete permanently") . "'>";
                echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
             }
             echo "</span>";
@@ -444,14 +455,14 @@ class PluginReleasesDeploytask extends CommonITILTask {
       echo "</td>";
 
       echo "<td style='vertical-align: middle'>";
-      if($ID<0) {
+      if ($ID < 0) {
          echo "<div class='fa-label'>
             <i class='fas fa-reply fa-fw'
                title='" . _n('Task template', 'Task templates', 1, 'releases') . "'></i>";
-         PluginReleasesDeploytasktemplate::dropdown(['value' => $this->fields['plugin_releases_deploytasktemplates_id'],
-            'entity' => $this->getEntityID(),
-            'rand' => $rand_template,
-            'on_change' => 'tasktemplate_update(this.value)']);
+         PluginReleasesDeploytasktemplate::dropdown(['value'     => $this->fields['plugin_releases_deploytasktemplates_id'],
+                                                     'entity'    => $this->getEntityID(),
+                                                     'rand'      => $rand_template,
+                                                     'on_change' => 'tasktemplate_update(this.value)']);
          echo "</div>";
          echo Html::scriptBlock('
          function tasktemplate_update(value) {
@@ -766,30 +777,30 @@ class PluginReleasesDeploytask extends CommonITILTask {
          for ($i = 0; $data = $DB->fetchArray($result); $i++) {
 
             $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_releases";
-            $output[$key]['color']            = isset($parm['color'])?$parm['color']:null;
-            $output[$key]['event_type_color'] = isset($parm['event_type_color'])?$parm['event_type_color']:null;;
-            $output[$key]["id"]               = $data["id"];
-            $output[$key]["users_id_tech"]    = $data["users_id_tech"];
-            $output[$key]["begin"]            = $data["begin"];
-            $output[$key]["end"]              = $data["end"];
-            $output[$key]["name"]             = $data["name"];
-            $output[$key]["editable"]         = true;
-            $output[$key]["content"]          = Html::resume_text($data["content"], $CFG_GLPI["cut"]);
-            $output[$key]["itemtype"]         = 'PluginReleasesDeploytask';
-            $url_id                           = $data["plugin_releases_releases_id"];
-            $output[$key]["parentitemtype"]   = 'PluginReleasesRelease';
+            $output[$key]['color']            = isset($parm['color']) ? $parm['color'] : null;
+            $output[$key]['event_type_color'] = isset($parm['event_type_color']) ? $parm['event_type_color'] : null;;
+            $output[$key]["id"]             = $data["id"];
+            $output[$key]["users_id_tech"]  = $data["users_id_tech"];
+            $output[$key]["begin"]          = $data["begin"];
+            $output[$key]["end"]            = $data["end"];
+            $output[$key]["name"]           = $data["name"];
+            $output[$key]["editable"]       = true;
+            $output[$key]["content"]        = Html::resume_text($data["content"], $CFG_GLPI["cut"]);
+            $output[$key]["itemtype"]       = 'PluginReleasesDeploytask';
+            $url_id                         = $data["plugin_releases_releases_id"];
+            $output[$key]["parentitemtype"] = 'PluginReleasesRelease';
 
-            $parentitemtype                   = new $output[$key]["parentitemtype"]();
-            $output[$key]["url"]              = $CFG_GLPI["url_base"] .
-                                                $parentitemtype::getFormURLWithID($url_id, false);
-            $output[$key]["parentid"]         = $data["plugin_releases_releases_id"];
-            $output[$key]["ajaxurl"]          = $CFG_GLPI["root_doc"] . "/ajax/planning.php" .
-                                                "?action=edit_event_form" .
-                                                "&itemtype=" . $output[$key]["itemtype"] .
-                                                "&parentitemtype=" . $output[$key]["parentitemtype"] .
-                                                "&parentid=" . $data["plugin_releases_releases_id"] .
-                                                "&id=" . $data['id'] .
-                                                "&url=" . $output[$key]["url"];
+            $parentitemtype           = new $output[$key]["parentitemtype"]();
+            $output[$key]["url"]      = $CFG_GLPI["url_base"] .
+                                        $parentitemtype::getFormURLWithID($url_id, false);
+            $output[$key]["parentid"] = $data["plugin_releases_releases_id"];
+            $output[$key]["ajaxurl"]  = $CFG_GLPI["root_doc"] . "/ajax/planning.php" .
+                                        "?action=edit_event_form" .
+                                        "&itemtype=" . $output[$key]["itemtype"] .
+                                        "&parentitemtype=" . $output[$key]["parentitemtype"] .
+                                        "&parentid=" . $data["plugin_releases_releases_id"] .
+                                        "&id=" . $data['id'] .
+                                        "&url=" . $output[$key]["url"];
          }
       }
 
@@ -865,16 +876,25 @@ class PluginReleasesDeploytask extends CommonITILTask {
    function post_updateItem($history = 1) {
       global $CFG_GLPI;
 
-      $options = [
-         'force_update' => true,
-         'name' => 'content',
+      $task = new self();
+      if(!isset($this->input['no_leveling'])) {
+         if ($task->getFromDB($this->getField("plugin_releases_deploytasks_id"))) {
+            self::leveling_task($this->getID(), $task);
+         } else {
+            self::leveling_task($this->getID(), null);
+         }
+      }
+
+      $options     = [
+         'force_update'  => true,
+         'name'          => 'content',
          'content_field' => 'content',
       ];
       $this->input = $this->addFiles($this->input, $options);
 
       if (in_array("begin", $this->updates)) {
          PlanningRecall::managePlanningUpdates($this->getType(), $this->getID(),
-            $this->fields["begin"]);
+                                               $this->fields["begin"]);
       }
 
       if (isset($this->input['_planningrecall'])) {
@@ -894,7 +914,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
          //Also check if item status has changed
          if (!$proceed) {
             if (isset($this->input['_status'])
-               && $this->input['status'] != $item->getField('status')
+                && $this->input['status'] != $item->getField('status')
             ) {
                $proceed = true;
             }
@@ -904,7 +924,8 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
             //todo change for notifications
             if (!isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"]) {
-               $options = ['task_id'    => $this->fields["id"]];
+               $options = ['task_id'    => $this->fields["id"],
+                           'is_private' => 0];
                NotificationEvent::raiseEvent('update_task', $item, $options);
             }
 
@@ -919,28 +940,29 @@ class PluginReleasesDeploytask extends CommonITILTask {
             $this->fields['id'],
          ];
          Log::history($this->getField($item->getForeignKeyField()), $itemtype, $changes,
-            $this->getType(), Log::HISTORY_UPDATE_SUBITEM);
+                      $this->getType(), Log::HISTORY_UPDATE_SUBITEM);
       }
    }
 
    /**
     * @param $ID
     * @param $entity
+    *
     * @return ID|int|the
     */
    static function transfer($ID, $entity) {
       global $DB;
 
       if ($ID > 0) {
-        $self = new self();
-        $items = $self->find(["plugin_releases_releases_id"=>$ID]);
-        foreach ($items as $id => $vals){
-           $input = [];
-           $input["id"] = $id;
-           $input["entities_id"] = $entity;
-           $self->update($input);
-           self::transferDocument($id,$entity);
-        }
+         $self  = new self();
+         $items = $self->find(["plugin_releases_releases_id" => $ID]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
+            $input["entities_id"] = $entity;
+            $self->update($input);
+            self::transferDocument($id, $entity);
+         }
          return true;
 
       }
@@ -951,12 +973,12 @@ class PluginReleasesDeploytask extends CommonITILTask {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
+         $self      = new self();
          $documents = new Document_Item();
-         $items = $documents->find(["items_id"=>$ID,"itemtype"=>self::getType()]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $documents->update($input);
          }
@@ -987,7 +1009,15 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
    function post_deleteFromDB() {
       global $CFG_GLPI;
-
+      $task = new self();
+      $tasks = $task->find(["plugin_releases_deploytasks_id" => $this->getID()]);
+      foreach ($tasks as $t){
+         $input = [];
+         $input['id'] = $t["id"];
+         $input['plugin_releases_deploytasks_id'] = $this->getField('plugin_releases_deploytasks_id');
+         $input['_disablenotif'] = true;
+         $task->update($input);
+      }
       $itemtype = $this->getItilObjectItemType();
       $item     = new $itemtype();
       $item->getFromDB($this->fields[$item->getForeignKeyField()]);
@@ -1000,18 +1030,54 @@ class PluginReleasesDeploytask extends CommonITILTask {
          $this->fields['id'],
       ];
       Log::history($this->getField($item->getForeignKeyField()), $this->getItilObjectItemType(),
-         $changes, $this->getType(), Log::HISTORY_DELETE_SUBITEM);
+                   $changes, $this->getType(), Log::HISTORY_DELETE_SUBITEM);
 
       if (!isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"]) {
          $options = ['task_id'             => $this->fields["id"],
-            // Force is_private with data / not available
-            'is_private'          => $this->isPrivate(),
-            // Pass users values
-            'task_users_id'       => $this->fields['users_id'],
-            'task_users_id_tech'  => $this->fields['users_id_tech'],
-            'task_groups_id_tech' => $this->fields['groups_id_tech']];
+                     // Force is_private with data / not available
+                     'is_private'          => 0,
+                     // Pass users values
+                     'task_users_id'       => $this->fields['users_id'],
+                     'task_users_id_tech'  => $this->fields['users_id_tech'],
+                     'task_groups_id_tech' => $this->fields['groups_id_tech']];
          NotificationEvent::raiseEvent('delete_task', $item, $options);
       }
+   }
+
+
+   static function leveling_task($id, $previous_task){
+
+      $task = new PluginReleasesDeploytask();
+      $input = [];
+      $input['id'] = $id;
+      $input['_disablenotif'] = true;
+      $input['no_leveling'] = true;
+      if($previous_task != null){
+         $input["level"] = $previous_task->getField('level') +1;
+      }else{
+         $input["level"] = 0;
+      }
+
+
+      $task->update($input);
+      $tasks = $task->find(["plugin_releases_deploytasks_id" => $id]);
+      $task->getFromDB($id);
+      foreach ($tasks as $t){
+         self::leveling_task($t['id'],$task);
+      }
+
+   }
+
+   static function getAllDescendant($id){
+      $childrens = [];
+      $task = new PluginReleasesDeploytask();
+      $tasks = $task->find(["plugin_releases_deploytasks_id" => $id]);
+      $childrens[] = $id;
+      foreach ($tasks as $t){
+         $childs = self::getAllDescendant($t['id']);
+         $childrens = array_merge($childrens,$childs);
+      }
+      return $childrens;
    }
 }
 

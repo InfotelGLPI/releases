@@ -82,8 +82,9 @@ if (isset($_POST["add"])) {
    $input["id"] = $_POST["plugin_releases_releases_id"];
    $input["status"] = PluginReleasesRelease::CLOSED;
    $r->update($input);
+   $r->getFromDBByCrit(["plugin_releases_releases_id"=>$_POST["plugin_releases_releases_id"]]);
    if ($CFG_GLPI['use_notifications']) {
-      NotificationEvent::raiseEvent('closeRelease', $this);
+      NotificationEvent::raiseEvent('closeRelease', $r);
    }
    Html::back();
 }else{
