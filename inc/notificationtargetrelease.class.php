@@ -877,7 +877,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                $objettype . '.entity'             => __('Entity'),
                $objettype . '.nocategoryassigned' => __('No defined category'),
                $objettype . '.log'                => __('Historical'),
-               $objettype . '.tasks'              => _n('Task', 'Tasks', Session::getPluralNumber(), 'release'),
+               $objettype . '.tasks'              => _n('Deploy task', 'Deploy tasks', Session::getPluralNumber(), 'releases'),
                $objettype . '.tests'              => _n('Test', 'Tests', Session::getPluralNumber(), 'release'),
                $objettype . '.risks'              => _n('Risk', 'Risks', Session::getPluralNumber(), 'release'),
                $objettype . '.rollbacks'          => _n('Rollback', 'Rollbacks', Session::getPluralNumber(), 'release'),
