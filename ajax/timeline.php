@@ -147,7 +147,5 @@ switch ($_REQUEST['action']) {
          $release->update(['id' => $release->getID(), 'status' => PluginReleasesRelease::RISKDEFINITION]);
       }
 
-
-
       break;
 }

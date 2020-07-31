@@ -41,23 +41,24 @@ if (!defined('GLPI_ROOT')) {
 class PluginReleasesReleasetemplate extends CommonDropdown {
 
    // From CommonDBTM
-   public $dohistory          = true;
-   public $can_be_translated  = true;
-   public    $userlinkclass     = 'PluginReleasesReleasetemplate_User'; //todo chnage after table create for template
-   public    $grouplinkclass    = 'PluginReleasesGroup_Releasetemplate';//todo chnage after table create for template
-   public    $supplierlinkclass = 'PluginReleasesReleasetemplate_Supplier';//todo chnage after table create for template
+   public $dohistory         = true;
+   public $can_be_translated = true;
+   public $userlinkclass     = 'PluginReleasesReleasetemplate_User'; //todo chnage after table create for template
+   public $grouplinkclass    = 'PluginReleasesGroup_Releasetemplate';//todo chnage after table create for template
+   public $supplierlinkclass = 'PluginReleasesReleasetemplate_Supplier';//todo chnage after table create for template
 
-   static $rightname          = 'plugin_releases_releases';
+   static $rightname = 'plugin_releases_releases';
 
    /// Use user entity to select entity of the object
    protected $userentity_oncreate = false;
-   protected $users       = [];
+   protected $users               = [];
    /// Groups by type
-   protected $groups      = [];
+   protected $groups = [];
    /// Suppliers by type
-   protected $suppliers      = [];
+   protected $suppliers = [];
+
    static function getTypeName($nb = 0) {
-      return _n('Release template', 'Release templates', $nb,'releases');
+      return _n('Release template', 'Release templates', $nb, 'releases');
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -67,7 +68,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             case __CLASS__ :
                $timeline    = $item->getTimelineItems();
                $nb_elements = count($timeline);
-//               $nb_elements = 0;
+               //               $nb_elements = 0;
 
                $ong = [
                   1 => __("Processing release", 'releases') . " <sup class='tab_nb'>$nb_elements</sup>",
@@ -79,19 +80,20 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
       return '';
    }
+
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       switch ($item->getType()) {
          case __CLASS__ :
             switch ($tabnum) {
                case 1 :
-                  if(!$withtemplate){
+                  if (!$withtemplate) {
                      echo "<div class='timeline_box'>";
                      $rand = mt_rand();
                      $item->showTimelineForm($rand);
                      $item->showTimeline($rand);
                      echo "</div>";
-                  }else{
+                  } else {
                      echo "<div class='timeline_box'>";
                      $rand = mt_rand();
                      $item->showTimeline($rand);
@@ -106,12 +108,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
       return true;
    }
+
    function defineTabs($options = []) {
 
       $ong = [];
       $this->addStandardTab(self::getType(), $ong, $options);
       $this->addDefaultFormTab($ong);
-//      $this->defineDefaultObjectTabs($ong, $options);
+      //      $this->defineDefaultObjectTabs($ong, $options);
       $this->addStandardTab('PluginReleasesReleasetemplate_Item', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
@@ -121,44 +124,45 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $this->addStandardTab('Log', $ong, $options);
       return $ong;
    }
+
    function getAdditionalFields() {
 
       return [
          ['name'  => 'content',
-            'label' => __('Description', 'releases'),
-            'type'  => 'textarea',
-            'rows' => 10],
+          'label' => __('Description', 'releases'),
+          'type'  => 'textarea',
+          'rows'  => 10],
          ['name'  => 'date_preproduction',
-            'label' => __('Pre-production run date', 'releases'),
-            'type'  => 'date',
-            ],
+          'label' => __('Pre-production run date', 'releases'),
+          'type'  => 'date',
+         ],
          ['name'  => 'date_production',
-            'label' => __('Production run date', 'releases'),
-            'type'  => 'date',
-            ],
+          'label' => __('Production run date', 'releases'),
+          'type'  => 'date',
+         ],
          ['name'  => 'service_shutdown',
-            'label' => __('Service shutdown', 'releases'),
-            'type'  => 'bool',
-            ],
+          'label' => __('Service shutdown', 'releases'),
+          'type'  => 'bool',
+         ],
          ['name'  => 'service_shutdown_details',
-            'label' => __('Service shutdown details', 'releases'),
-            'type'  => 'textarea',
-            'rows' => 10],
+          'label' => __('Service shutdown details', 'releases'),
+          'type'  => 'textarea',
+          'rows'  => 10],
          ['name'  => 'hour_type',
-            'label' => __('Non-working hours', 'releases'),
-            'type'  => 'bool',
+          'label' => __('Non-working hours', 'releases'),
+          'type'  => 'bool',
          ],
          ['name'  => 'tests',
-            'label' => _n('Test','Tests', 2,'releases'),
-            'type'  => 'dropdownTests',
+          'label' => _n('Test', 'Tests', 2, 'releases'),
+          'type'  => 'dropdownTests',
          ],
          ['name'  => 'rollbacks',
-            'label' => _n('Rollback','Rollbacks',2, 'releases'),
-            'type'  => 'dropdownRollbacks',
+          'label' => _n('Rollback', 'Rollbacks', 2, 'releases'),
+          'type'  => 'dropdownRollbacks',
          ],
          ['name'  => 'tasks',
-            'label' => _n('Deploy task','Deploy tasks',2, 'releases'),
-            'type'  => 'dropdownTasks',
+          'label' => _n('Deploy task', 'Deploy tasks', 2, 'releases'),
+          'type'  => 'dropdownTasks',
          ],
       ];
    }
@@ -168,20 +172,20 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $tab = parent::rawSearchOptions();
 
       $tab[] = [
-         'id'                 => '4',
-         'name'               => __('Content'),
-         'field'              => 'content',
-         'table'              => $this->getTable(),
-         'datatype'           => 'text',
-         'htmltext'           => true
+         'id'       => '4',
+         'name'     => __('Content'),
+         'field'    => 'content',
+         'table'    => $this->getTable(),
+         'datatype' => 'text',
+         'htmltext' => true
       ];
 
       $tab[] = [
-         'id'                 => '3',
-         'name'               => __('Deploy Task type'),
-         'field'              => 'name',
-         'table'              => getTableForItemType('PluginReleasesTypeDeployTask'),
-         'datatype'           => 'dropdown'
+         'id'       => '3',
+         'name'     => __('Deploy Task type'),
+         'field'    => 'name',
+         'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
+         'datatype' => 'dropdown'
       ];
 
       return $tab;
@@ -196,77 +200,78 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       switch ($field['type']) {
          case 'dropdownRollbacks' :
-            $item = new PluginReleasesRollbacktemplate();
+            $item      = new PluginReleasesRollbacktemplate();
             $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-           $rolltemp = new PluginReleasesRollbacktemplate();
-           $alltemps = $rolltemp->find($condition);
-           $rolls = [];
-           foreach ($alltemps as $roll){
-              $rolls[$roll["id"]] = $roll["name"];
-           }
+            $rolltemp  = new PluginReleasesRollbacktemplate();
+            $alltemps  = $rolltemp->find($condition);
+            $rolls     = [];
+            foreach ($alltemps as $roll) {
+               $rolls[$roll["id"]] = $roll["name"];
+            }
 
-           $val = $this->getField("rollbacks");
-           $val = json_decode($val);
-           if($val == ""){
-              $val = [];
-           }
-           Dropdown::showFromArray("rollbacks", $rolls, array('id' => 'rollbacks', 'multiple' => true, 'values' => $val, "display" => true));
+            $val = $this->getField("rollbacks");
+            $val = json_decode($val);
+            if ($val == "") {
+               $val = [];
+            }
+            Dropdown::showFromArray("rollbacks", $rolls, array('id' => 'rollbacks', 'multiple' => true, 'values' => $val, "display" => true));
 
             break;
          case 'dropdownTests' :
-            $item = new PluginReleasesTesttemplate();
+            $item      = new PluginReleasesTesttemplate();
             $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $testtemp = new PluginReleasesTesttemplate();
-            $alltemps = $testtemp->find($condition);
-            $tests = [];
-            foreach ($alltemps as $test){
+            $testtemp  = new PluginReleasesTesttemplate();
+            $alltemps  = $testtemp->find($condition);
+            $tests     = [];
+            foreach ($alltemps as $test) {
                $tests[$test["id"]] = $test["name"];
             }
 
             $val = $this->getField("tests");
             $val = json_decode($val);
-            if($val == ""){
+            if ($val == "") {
                $val = [];
             }
             Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
             break;
          case 'dropdownTasks' :
-            $item = new PluginReleasesDeploytasktemplate();
+            $item      = new PluginReleasesDeploytasktemplate();
             $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $tasktemp = new PluginReleasesDeploytasktemplate();
-            $alltemps = $tasktemp->find($condition);
-            $tasks = [];
-            foreach ($alltemps as $task){
+            $tasktemp  = new PluginReleasesDeploytasktemplate();
+            $alltemps  = $tasktemp->find($condition);
+            $tasks     = [];
+            foreach ($alltemps as $task) {
                $tasks[$task["id"]] = $task["name"];
             }
 
             $val = $this->getField("tasks");
             $val = json_decode($val);
-            if($val == ""){
+            if ($val == "") {
                $val = [];
             }
             Dropdown::showFromArray("tasks", $tasks, array('id' => 'tasks', 'multiple' => true, 'values' => $val, "display" => true));
             break;
          case 'actiontime' :
             $toadd = [];
-            for ($i=9; $i<=100; $i++) {
-               $toadd[] = $i*HOUR_TIMESTAMP;
+            for ($i = 9; $i <= 100; $i++) {
+               $toadd[] = $i * HOUR_TIMESTAMP;
             }
             Dropdown::showTimeStamp(
                "actiontime", [
-                  'min'             => 0,
-                  'max'             => 8*HOUR_TIMESTAMP,
-                  'value'           => $this->fields["actiontime"],
-                  'addfirstminutes' => true,
-                  'inhours'         => true,
-                  'toadd'           => $toadd
-               ]
+                              'min'             => 0,
+                              'max'             => 8 * HOUR_TIMESTAMP,
+                              'value'           => $this->fields["actiontime"],
+                              'addfirstminutes' => true,
+                              'inhours'         => true,
+                              'toadd'           => $toadd
+                           ]
             );
             break;
       }
    }
+
    static function canCreate() {
-      return Session::haveRightsOr(static::$rightname, [UPDATE,CREATE]);
+      return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
    }
 
    /**
@@ -283,7 +288,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    }
 
    function prepareInputForAdd($input) {
-     $input =  parent::prepareInputForAdd($input);
+      $input = parent::prepareInputForAdd($input);
       //      $input = parent::prepareInputForUpdate($input);
       if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
          $input['target'] = [];
@@ -297,10 +302,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          }
       }
       if (($uid = Session::getLoginUserID())
-         && !isset($input['_auto_import'])) {
+          && !isset($input['_auto_import'])) {
          $input["users_id_recipient"] = $uid;
       } else if (isset($input["_users_id_requester"]) && $input["_users_id_requester"]
-         && !isset($input["users_id_recipient"])) {
+                 && !isset($input["users_id_recipient"])) {
          if (!is_array($input['_users_id_requester'])) {
             $input["users_id_recipient"] = $input["_users_id_requester"];
          }
@@ -314,22 +319,22 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
          $input['target'] = [];
       }
-      if(isset($input["communication_type"])){
-         if(isset($input['target'])){
+      if (isset($input["communication_type"])) {
+         if (isset($input['target'])) {
             $input['target'] = json_encode($input['target']);
-         }else{
+         } else {
             $input['target'] = json_encode([]);
          }
 
       }
 
-      $release_user = new PluginReleasesReleasetemplate_User();
+      $release_user     = new PluginReleasesReleasetemplate_User();
       $release_supplier = new PluginReleasesReleasetemplate_Supplier();
-      $group_release = new PluginReleasesGroup_Releasetemplate();
+      $group_release    = new PluginReleasesGroup_Releasetemplate();
 
-      $release_user->deleteByCriteria(["plugin_releases_releasetemplates_id"=>$this->getID()]);
-      $release_supplier->deleteByCriteria(["plugin_releases_releasetemplates_id"=>$this->getID()]);
-      $group_release->deleteByCriteria(["plugin_releases_releasetemplates_id"=>$this->getID()]);
+      $release_user->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
+      $release_supplier->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
+      $group_release->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
       $useractors = null;
       // Add user groups linked to ITIL objects
       if (!empty($this->userlinkclass)) {
@@ -371,9 +376,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                }
 
                $input2 = [
-                     'users_id' => $requester,
-                     'type'     => CommonITILActor::REQUESTER,
-                  ] + $user_input;
+                            'users_id' => $requester,
+                            'type'     => CommonITILActor::REQUESTER,
+                         ] + $user_input;
 
                if (isset($this->input["_users_id_requester_notif"])) {
                   foreach ($this->input["_users_id_requester_notif"] as $key => $val) {
@@ -385,8 +390,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
                //empty actor
                if ($input2['users_id'] == 0
-                  && (!isset($input2['alternative_email'])
-                     || empty($input2['alternative_email']))) {
+                   && (!isset($input2['alternative_email'])
+                       || empty($input2['alternative_email']))) {
                   continue;
                } else if ($requester != 0) {
                   $requesterToAdd[] = $requester;
@@ -413,9 +418,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                }
 
                $input2 = [
-                     'users_id' => $observer,
-                     'type'     => CommonITILActor::OBSERVER,
-                  ] + $user_input;
+                            'users_id' => $observer,
+                            'type'     => CommonITILActor::OBSERVER,
+                         ] + $user_input;
 
                if (isset($this->input["_users_id_observer_notif"])) {
                   foreach ($this->input["_users_id_observer_notif"] as $key => $val) {
@@ -427,8 +432,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
                //empty actor
                if ($input2['users_id'] == 0
-                  && (!isset($input2['alternative_email'])
-                     || empty($input2['alternative_email']))) {
+                   && (!isset($input2['alternative_email'])
+                       || empty($input2['alternative_email']))) {
                   continue;
                } else if ($observer != 0) {
                   $observerToAdd[] = $observer;
@@ -455,9 +460,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                }
 
                $input2 = [
-                     'users_id' => $assign,
-                     'type'     => CommonITILActor::ASSIGN,
-                  ] + $user_input;
+                            'users_id' => $assign,
+                            'type'     => CommonITILActor::ASSIGN,
+                         ] + $user_input;
 
                if (isset($this->input["_users_id_assign_notif"])) {
                   foreach ($this->input["_users_id_assign_notif"] as $key => $val) {
@@ -469,8 +474,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
                //empty actor
                if ($input2['users_id'] == 0
-                  && (!isset($input2['alternative_email'])
-                     || empty($input2['alternative_email']))) {
+                   && (!isset($input2['alternative_email'])
+                       || empty($input2['alternative_email']))) {
                   continue;
                } else if ($assign != 0) {
                   $assignToAdd[] = $assign;
@@ -552,7 +557,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          ];
 
          if (isset($this->input["_suppliers_id_assign"])
-            && ($this->input["_suppliers_id_assign"] > 0)) {
+             && ($this->input["_suppliers_id_assign"] > 0)) {
 
             if (is_array($this->input["_suppliers_id_assign"])) {
                $tab_assign = $this->input["_suppliers_id_assign"];
@@ -568,9 +573,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                   continue;
                }
                $input3 = [
-                     'suppliers_id' => $assign,
-                     'type'         => CommonITILActor::ASSIGN,
-                  ] + $supplier_input;
+                            'suppliers_id' => $assign,
+                            'type'         => CommonITILActor::ASSIGN,
+                         ] + $supplier_input;
 
                if (isset($this->input["_suppliers_id_assign_notif"])) {
                   foreach ($this->input["_suppliers_id_assign_notif"] as $key => $val) {
@@ -580,8 +585,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
                //empty supplier
                if ($input3['suppliers_id'] == 0
-                  && (!isset($input3['alternative_email'])
-                     || empty($input3['alternative_email']))) {
+                   && (!isset($input3['alternative_email'])
+                       || empty($input3['alternative_email']))) {
                   continue;
                } else if ($assign != 0) {
                   $supplierToAdd[] = $assign;
@@ -606,7 +611,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      echo Html::input("name",["value"=>$this->getField('name')]);
+      echo Html::input("name", ["value" => $this->getField('name')]);
 
       echo "</td>";
       echo "<td colspan='2'>";
@@ -614,156 +619,156 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Release area','releases') . "</td>";
+      echo "<td>" . __('Release area', 'releases') . "</td>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"=>"content",
-                      "enable_richtext"=>true,
-                      "value"=>$this->getField('content')]);
+      Html::textarea(["name"            => "content",
+                      "enable_richtext" => true,
+                      "value"           => $this->getField('content')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Pre-production planned date','releases') . "</td>";
+      echo "<td>" . __('Pre-production planned date', 'releases') . "</td>";
       echo "<td >";
-      $date_preprod =  Html::convDateTime($this->getField('date_preproduction'));
-      Html::showDateTimeField("date_preproduction",["value"=>$date_preprod]);
+      $date_preprod = Html::convDateTime($this->getField('date_preproduction'));
+      Html::showDateTimeField("date_preproduction", ["value" => $date_preprod]);
       echo "</td>";
-      echo "<td>" . __('Production planned date','releases') . "</td>";
+      echo "<td>" . __('Production planned date', 'releases') . "</td>";
       echo "<td >";
-      $date_prod =  Html::convDateTime($this->getField('date_production'));
-      Html::showDateTimeField("date_production",["value"=>$date_prod]);
+      $date_prod = Html::convDateTime($this->getField('date_production'));
+      Html::showDateTimeField("date_production", ["value" => $date_prod]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Location') . "</td>";
       echo "<td >";
-      Dropdown::show(Location::getType(),["name"=>"locations_id","value"=>$this->getField('locations_id')]);
+      Dropdown::show(Location::getType(), ["name" => "locations_id", "value" => $this->getField('locations_id')]);
       echo "</td>";
-      echo "<td>" . __('Service shutdown','releases') . "</td>";
+      echo "<td>" . __('Service shutdown', 'releases') . "</td>";
       echo "<td >";
-      Dropdown::showYesNo("service_shutdown",$this->getField('service_shutdown'));
+      Dropdown::showYesNo("service_shutdown", $this->getField('service_shutdown'));
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Service shutdown details','releases') . "</td>";
+      echo "<td>" . __('Service shutdown details', 'releases') . "</td>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"=>"service_shutdown_details","enable_richtext"=>true,"value"=>$this->getField('service_shutdown_details')]);
+      Html::textarea(["name" => "service_shutdown_details", "enable_richtext" => true, "value" => $this->getField('service_shutdown_details')]);
       echo "</td>";
       echo "</tr>";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hours','releases') . "</td>";
+      echo "<td>" . __('Non-working hours', 'releases') . "</td>";
       echo "<td >";
-      Dropdown::showYesNo("hour_type",$this->getField('hour_type'));
+      Dropdown::showYesNo("hour_type", $this->getField('hour_type'));
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td >";
-//      echo "<td>" . __('Communication','releases') . "</td>";
-//      echo "<td >";
-//      Dropdown::showYesNo("communication",$this->getField('communication'));
-//      echo "</td>";
+      //      echo "<td>" . __('Communication','releases') . "</td>";
+      //      echo "<td >";
+      //      Dropdown::showYesNo("communication",$this->getField('communication'));
+      //      echo "</td>";
       echo "</tr>";
       $dbu = new DbUtils();
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo _n('Test','Tests', 2,'releases');
+      echo _n('Test', 'Tests', 2, 'releases');
 
 
       echo "</td>";
 
       echo "<td>";
-            $item = new PluginReleasesRollbacktemplate();
-            $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-           $rolltemp = new PluginReleasesRollbacktemplate();
-           $alltemps = $rolltemp->find($condition);
-           $rolls = [];
-           foreach ($alltemps as $roll){
-              $rolls[$roll["id"]] = $roll["name"];
-           }
+      $item      = new PluginReleasesRollbacktemplate();
+      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+      $rolltemp  = new PluginReleasesRollbacktemplate();
+      $alltemps  = $rolltemp->find($condition);
+      $rolls     = [];
+      foreach ($alltemps as $roll) {
+         $rolls[$roll["id"]] = $roll["name"];
+      }
 
-           $val = $this->getField("rollbacks");
-           $val = json_decode($val);
-           if($val == ""){
-              $val = [];
-           }
-           Dropdown::showFromArray("rollbacks", $rolls, array('id' => 'rollbacks', 'multiple' => true, 'values' => $val, "display" => true));
-
-      echo "</td>";
-      echo "<td>";
-      echo _n('Rollback','Rollbacks',2, 'releases');
-
+      $val = $this->getField("rollbacks");
+      $val = json_decode($val);
+      if ($val == "") {
+         $val = [];
+      }
+      Dropdown::showFromArray("rollbacks", $rolls, array('id' => 'rollbacks', 'multiple' => true, 'values' => $val, "display" => true));
 
       echo "</td>";
       echo "<td>";
+      echo _n('Rollback', 'Rollbacks', 2, 'releases');
 
-            $item = new PluginReleasesTesttemplate();
-            $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $testtemp = new PluginReleasesTesttemplate();
-            $alltemps = $testtemp->find($condition);
-            $tests = [];
-            foreach ($alltemps as $test){
-               $tests[$test["id"]] = $test["name"];
-            }
 
-            $val = $this->getField("tests");
-            $val = json_decode($val);
-            if($val == ""){
-               $val = [];
-            }
-            Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
+      echo "</td>";
+      echo "<td>";
+
+      $item      = new PluginReleasesTesttemplate();
+      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+      $testtemp  = new PluginReleasesTesttemplate();
+      $alltemps  = $testtemp->find($condition);
+      $tests     = [];
+      foreach ($alltemps as $test) {
+         $tests[$test["id"]] = $test["name"];
+      }
+
+      $val = $this->getField("tests");
+      $val = json_decode($val);
+      if ($val == "") {
+         $val = [];
+      }
+      Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
       echo "</td>";
       echo "</tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
-      echo  _n('Deploy task','Deploy tasks',2, 'releases');
+      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
       echo "</td>";
       echo "<td>";
-            $item = new PluginReleasesDeploytasktemplate();
-            $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $tasktemp = new PluginReleasesDeploytasktemplate();
-            $alltemps = $tasktemp->find($condition);
-            $tasks = [];
-            foreach ($alltemps as $task){
-               $tasks[$task["id"]] = $task["name"];
-            }
+      $item      = new PluginReleasesDeploytasktemplate();
+      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+      $tasktemp  = new PluginReleasesDeploytasktemplate();
+      $alltemps  = $tasktemp->find($condition);
+      $tasks     = [];
+      foreach ($alltemps as $task) {
+         $tasks[$task["id"]] = $task["name"];
+      }
 
-            $val = $this->getField("tasks");
-            $val = json_decode($val);
-            if($val == ""){
-               $val = [];
-            }
-            Dropdown::showFromArray("tasks", $tasks, array('id' => 'tasks', 'multiple' => true, 'values' => $val, "display" => true));
+      $val = $this->getField("tasks");
+      $val = json_decode($val);
+      if ($val == "") {
+         $val = [];
+      }
+      Dropdown::showFromArray("tasks", $tasks, array('id' => 'tasks', 'multiple' => true, 'values' => $val, "display" => true));
       echo "</td>";
       echo "<td colspan='2'>";
       echo "</td>";
       echo "</tr>";
 
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>" . __('Communication type','releases') . "</td>";
-//      echo "<td >";
-//      $types   = ['Entity'=>'Entity', 'Group'=>'Group', 'Profile'=>'Profile', 'User'=>'User','Location'=>'Location'];
-//      $addrand = Dropdown::showItemTypes('communication_type', $types,["id"=>"communication_type","value"=>$this->getField('communication_type')]);
-//      echo "</td>";
-//      $targets = [];
-//      $targets = json_decode($this->getField('target'));
-////      $targets = $this->getField('target');
-//      echo "<td>" ._n('Target', 'Targets',
-//            Session::getPluralNumber()) . "</td>";
-//
-//
-//      echo "<td id='targets'>";
-//
-//
-//      echo "</td>";
-//      Ajax::updateItem( "targets",
-//         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-//         ['type' => $this->getField('communication_type'),'current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
-//      Ajax::updateItemOnSelectEvent("dropdown_communication_type".$addrand, "targets",
-//         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-//         ['type' => '__VALUE__','current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
-//      echo "</tr>";
+      //      echo "<tr class='tab_bg_1'>";
+      //      echo "<td>" . __('Communication type','releases') . "</td>";
+      //      echo "<td >";
+      //      $types   = ['Entity'=>'Entity', 'Group'=>'Group', 'Profile'=>'Profile', 'User'=>'User','Location'=>'Location'];
+      //      $addrand = Dropdown::showItemTypes('communication_type', $types,["id"=>"communication_type","value"=>$this->getField('communication_type')]);
+      //      echo "</td>";
+      //      $targets = [];
+      //      $targets = json_decode($this->getField('target'));
+      ////      $targets = $this->getField('target');
+      //      echo "<td>" ._n('Target', 'Targets',
+      //            Session::getPluralNumber()) . "</td>";
+      //
+      //
+      //      echo "<td id='targets'>";
+      //
+      //
+      //      echo "</td>";
+      //      Ajax::updateItem( "targets",
+      //         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+      //         ['type' => $this->getField('communication_type'),'current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
+      //      Ajax::updateItemOnSelectEvent("dropdown_communication_type".$addrand, "targets",
+      //         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+      //         ['type' => '__VALUE__','current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
+      //      echo "</tr>";
       $this->showFormButtons($options);
       return true;
    }
@@ -789,7 +794,6 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
 
-
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
       $default_values = self::getDefaultValues();
@@ -810,26 +814,22 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
 
-
       // In percent
       $colsize1 = '13';
       $colsize2 = '37';
-
-
 
 
       echo "<tr class='tab_bg_1'>";
       echo "<th>" . __('Location') . "</th>";
       echo "<td >";
       Dropdown::show(Location::getType(), ["name"  => "locations_id",
-         "value" => $this->fields["locations_id"]]);
+                                           "value" => $this->fields["locations_id"]]);
       echo "</td>";
       echo "<th>" . __('Non-working hours', 'releases') . "</th>";
       echo "<td >";
       Dropdown::showYesNo("hour_type", $this->fields["hour_type"]);
       echo "</td>";
       echo "</tr>";
-
 
 
       echo "<tr class='tab_bg_1'>";
@@ -848,8 +848,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<th width='$colsize1%'>" . __('Release area', 'releases') . "</th>";
       echo "<td colspan='3'>";
       Html::textarea(["name"            => "content",
-         "enable_richtext" => true,
-         "value"           => $this->fields["content"]]);
+                      "enable_richtext" => true,
+                      "value"           => $this->fields["content"]]);
       echo "</td>";
       echo "</tr>";
       echo "</table>";
@@ -872,13 +872,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
       Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
-         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
+                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
 
       echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
       echo "<td colspan='3'>";
       Html::textarea(["name"            => "service_shutdown_details",
-         "enable_richtext" => true,
-         "value"           => $this->fields["service_shutdown_details"]]);
+                      "enable_richtext" => true,
+                      "value"           => $this->fields["service_shutdown_details"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -891,10 +891,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<th width='$colsize1%'>" . __('Communication type', 'releases') . "</th>";
       echo "<td>";
       $types   = ['Entity'   => 'Entity',
-         'Group'    => 'Group',
-         'Profile'  => 'Profile',
-         'User'     => 'User',
-         'Location' => 'Location'];
+                  'Group'    => 'Group',
+                  'Profile'  => 'Profile',
+                  'User'     => 'User',
+                  'Location' => 'Location'];
       $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->fields["communication_type"]]);
       echo "</td>";
 
@@ -905,23 +905,23 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $targets = json_decode($this->fields["target"]);
 
       echo "<th>" . _n('Target', 'Targets',
-            Session::getPluralNumber()) . "</th>";
+                       Session::getPluralNumber()) . "</th>";
 
       echo "<td id='targets'>";
 
       echo "</td>";
       Ajax::updateItem("targets",
-         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-         ['type'         => $this->fields["communication_type"],
-            'current_type' => $this->fields["communication_type"],
-            'values'       => $targets],
-         true);
+                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                       ['type'         => $this->fields["communication_type"],
+                        'current_type' => $this->fields["communication_type"],
+                        'values'       => $targets],
+                       true);
       Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-         ['type'         => '__VALUE__',
-            'current_type' => $this->fields["communication_type"],
-            'values'       => $targets],
-         true);
+                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                                    ['type'         => '__VALUE__',
+                                     'current_type' => $this->fields["communication_type"],
+                                     'values'       => $targets],
+                                    true);
       echo "</td>";
 
       echo "<th></th>";
@@ -930,36 +930,35 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</tr>";
 
 
-
-
       $this->showFormButtons($options);
 
       return true;
    }
+
    function displayMenu($ID, $options = []) {
       echo "<div class='center'>";
       echo "<table class='tab_cadre'>";
       echo "<tr  class='tab_bg_1'>";
-      echo "<th>" . __("Release","releases") . "</th>";
+      echo "<th>" . __("Release", "releases") . "</th>";
       echo "</tr>";
 
       echo "<tr  class='tab_bg_1'>";
       echo "<td class='center b' >";
-      $dbu = new DbUtils();
-      $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(),'','',true);
-      $template = new PluginReleasesReleasetemplate();
+      $dbu       = new DbUtils();
+      $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', true);
+      $template  = new PluginReleasesReleasetemplate();
       $templates = $template->find($condition);
-      if(count($templates) != 0) {
+      if (count($templates) != 0) {
 
 
          self::dropdown(["name" => "releasetemplates_id"] + $condition);
 
          echo "<br/><br/>";
       }
-         $url = PluginReleasesRelease::getFormURL();
-         echo "<a  id='link' href='$url'>";
-         $url = $url . "?template_id=";
-         $script = "
+      $url = PluginReleasesRelease::getFormURL();
+      echo "<a  id='link' href='$url'>";
+      $url    = $url . "?template_id=";
+      $script = "
       var link = function (id,linkurl) {
          var link = linkurl+id;
          $(\"a#link\").attr(\"href\", link);
@@ -968,7 +967,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          link($(\"select[name='releasetemplates_id']\").val(),'$url');
          });";
 
-         echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
+      echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
 
       echo __("Create a release", 'releases');
       echo "</a>";
@@ -982,7 +981,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       $objType    = self::getType();
       $foreignKey = self::getForeignKeyField();
-//      $foreignKey =  "plugin_releases_releases_id";
+      //      $foreignKey =  "plugin_releases_releases_id";
 
       $timeline = [];
 
@@ -1002,9 +1001,6 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $user = new User();
 
 
-
-
-
       //checks rights
 
       //add risks to timeline
@@ -1014,8 +1010,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             $risk_obj->getFromDB($risks_id);
             $risk['can_edit']                                   = $risk_obj->canUpdateItem();
             $timeline[$risk['date_mod'] . "_risk_" . $risks_id] = ['type'     => $riskClass,
-               'item'     => $risk,
-               'itiltype' => 'Risk'];
+                                                                   'item'     => $risk,
+                                                                   'itiltype' => 'Risk'];
          }
       }
 
@@ -1025,8 +1021,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             $rollback_obj->getFromDB($rollbacks_id);
             $rollback['can_edit']                                       = $rollback_obj->canUpdateItem();
             $timeline[$risk['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
-               'item'     => $rollback,
-               'itiltype' => 'Rollback'];
+                                                                           'item'     => $rollback,
+                                                                           'itiltype' => 'Rollback'];
          }
       }
 
@@ -1038,8 +1034,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             $task['can_edit']                                                      = $task_obj->canUpdateItem();
             $rand                                                                  = mt_rand();
             $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type'     => $taskClass,
-               'item'     => $task,
-               'itiltype' => 'Task'];
+                                                                                      'item'     => $task,
+                                                                                      'itiltype' => 'Task'];
          }
       }
 
@@ -1049,8 +1045,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             $test_obj->getFromDB($tests_id);
             $test['can_edit']                                   = $test_obj->canUpdateItem();
             $timeline[$risk['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
-               'item'     => $test,
-               'itiltype' => 'test'];
+                                                                   'item'     => $test,
+                                                                   'itiltype' => 'test'];
          }
       }
 
@@ -1094,13 +1090,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $test->fields['items_id'] = $this->getID();
 
       $canadd_risk = $risk->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
-            $this->getClosedStatusArray());
+                                                               $this->getClosedStatusArray());
 
       $canadd_rollback = $rollback->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
-            $this->getClosedStatusArray());
+                                                                       $this->getClosedStatusArray());
 
       $canadd_task = $task->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
-            $this->getClosedStatusArray());
+                                                               $this->getClosedStatusArray());
 
       $canadd_test = $test->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $this->getClosedStatusArray());
 
@@ -1153,13 +1149,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       function viewAddSubitem" . $this->fields['id'] . "$rand(itemtype) {\n";
 
       $params = ['action'     => 'viewsubitem',
-         'type'       => 'itemtype',
-         'parenttype' => $objType,
-         $foreignKey  => $this->fields['id'],
-         'id'         => -1];
+                 'type'       => 'itemtype',
+                 'parenttype' => $objType,
+                 $foreignKey  => $this->fields['id'],
+                 'id'         => -1];
       $out    = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php",
-         $params, "", false);
+                                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php",
+                                       $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
       echo "};
       ";
@@ -1175,40 +1171,34 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "<li class='risk'>";
       echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
-         "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
+           "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
       if ($canadd_risk) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
 
-
       echo "<li class='rollback'>";
       echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
-         "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
+           "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
       if ($canadd_rollback) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
 
-
-
-
       echo "<li class='task'>";
       echo "<a href='#' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
-         "'><i class='fas fa-check-square'></i>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . " (" . $taskClass::countForItem($release) . ")</a></li>";
+           "'><i class='fas fa-check-square'></i>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
 
-
       echo "<li class='test'>";
       echo "<a href='#' data-type='test' title='" . $testClass::getTypeName(2) .
-         "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
+           "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
       if ($canadd_test) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
-
 
 
       echo "</ul>"; // timeline_choices
@@ -1221,8 +1211,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<div class='ajax_box' id='viewitem" . $this->fields['id'] . "$rand'></div>\n";
    }
 
-   static function isAllowedStatus($old,$new){
-      if($old != PluginReleasesRelease::CLOSED && $old != PluginReleasesRelease::REVIEW){
+   static function isAllowedStatus($old, $new) {
+      if ($old != PluginReleasesRelease::CLOSED && $old != PluginReleasesRelease::REVIEW) {
          return true;
       }
       return false;
@@ -1231,35 +1221,35 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    /**
     * is the current user could reopen the current change
     *
+    * @return boolean
     * @since 9.4.0
     *
-    * @return boolean
     */
    function canReopen() {
       return Session::haveRight('plugin_releases_releases', CREATE)
-         && in_array($this->fields["status"], $this->getClosedStatusArray());
+             && in_array($this->fields["status"], $this->getClosedStatusArray());
    }
 
    /**
     * Get the ITIL object closed status list
     *
-    * @since 0.83
-    *
     * @return array
-    **/
+    **@since 0.83
+    *
+    */
    static function getClosedStatusArray() {
 
 
-      $tab = [PluginReleasesRelease::CLOSED,PluginReleasesRelease::REVIEW];
+      $tab = [PluginReleasesRelease::CLOSED, PluginReleasesRelease::REVIEW];
       return $tab;
    }
 
    /**
     * Get the ITIL object closed, solved or waiting status list
     *
+    * @return array
     * @since 9.4.0
     *
-    * @return array
     */
    static function getReopenableStatusArray() {
       return [PluginReleasesRelease::CLOSED];
@@ -1270,20 +1260,20 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $table = CommonDBTM::getTable($class);
       if ($state) {
          return $dbu->countElementsInTable($table,
-            ["plugin_releases_releasetemplates_id" => $ID, "state" => 2]);
+                                           ["plugin_releases_releasetemplates_id" => $ID, "state" => 2]);
       }
       return $dbu->countElementsInTable($table,
-         ["plugin_releases_releasetemplates_id" => $ID]);
+                                        ["plugin_releases_releasetemplates_id" => $ID]);
    }
 
    /**
-    * @since 9.4.0
-    *
     * @param CommonDBTM $item The item whose form should be shown
-    * @param integer $id ID of the item
-    * @param mixed[] $params Array of extra parameters
+    * @param integer    $id ID of the item
+    * @param mixed[]    $params Array of extra parameters
     *
     * @return void
+    * @since 9.4.0
+    *
     */
    static function showSubForm(CommonDBTM $item, $id, $params) {
 
@@ -1291,7 +1281,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          Document_Item::showAddFormForItem($params['parent'], '');
 
       } else if (method_exists($item, "showForm")
-         && $item->can(-1, CREATE, $params)) {
+                 && $item->can(-1, CREATE, $params)) {
          $item->showForm($id, $params);
       }
    }
@@ -1311,20 +1301,20 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       $riskClass = "PluginReleasesRisk";
       echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
-         "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
+           "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
       $rollbackClass = "PluginReleasesRollback";
       echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
-         "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
+           "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
       $taskClass = "PluginReleasesDeploytask";
       echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
-         "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
+           "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
       $testClass = "PluginReleasesTest";
       echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
-         "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
+           "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
       echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __('Followup') .
-         "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
+           "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
       echo "<li><a href='#' class=' filterEle fa fa-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
-         "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
+           "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
       echo "</ul>";
       echo "</div>";
 
@@ -1382,12 +1372,11 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          }
 
          // set item position depending on field timeline_position
-         if($item['itiltype'] == "Followup"){
+         if ($item['itiltype'] == "Followup") {
             $user_position = 'right';
-         }else{
+         } else {
             $user_position = 'left'; // default position
          }
-
 
 
          echo "<div class='h_item $user_position'>";
@@ -1402,7 +1391,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
                echo "<div class='tooltip_picture_border'>";
                echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='" .
-                  User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
+                    User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
                echo "</div>";
 
                echo "<span class='h_user_name'>";
@@ -1427,16 +1416,15 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          $fa    = null;
          $class = "h_content";
-         if($item['itiltype'] == "Followup"){
+         if ($item['itiltype'] == "Followup") {
             if (isset($item['itiltype'])) {
                $class .= " ITIL{$item['itiltype']}";
             } else {
                $class .= " {$item['type']}";
             }
-         }else{
+         } else {
             $class .= " {$item['type']::getCssClass()}";
          }
-
 
 
          //         $class .= " {$item_i['state']}";
@@ -1453,7 +1441,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          echo "<div class='displayed_content'>";
          echo "<div class='h_controls'>";
          if ($item_i['can_edit']
-            && !in_array($this->fields['status'], $this->getClosedStatusArray())
+             && !in_array($this->fields['status'], $this->getClosedStatusArray())
          ) {
             // merge/split icon
 
@@ -1465,10 +1453,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          echo "</div>";
          if (isset($item_i['content'])) {
-            if (isset($item_i["name"])){
+            if (isset($item_i["name"])) {
                $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
-            }else{
-               $content =  $item_i['content'];
+            } else {
+               $content = $item_i['content'];
             }
 
             $content = Toolbox::getHtmlToDisplay($content);
@@ -1498,25 +1486,25 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          echo "<div class='b_right'>";
 
          if (isset($item_i['plugin_releases_typedeploytasks_id'])
-            && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
+             && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
             echo Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id']) . "<br>";
          }
          if (isset($item_i['plugin_releases_typerisks_id'])
-            && !empty($item_i['plugin_releases_typerisks_id'])) {
+             && !empty($item_i['plugin_releases_typerisks_id'])) {
             echo Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id']) . "<br>";
          }
          if (isset($item_i['plugin_releases_typetests_id'])
-            && !empty($item_i['plugin_releases_typetests_id'])) {
+             && !empty($item_i['plugin_releases_typetests_id'])) {
             echo Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id']) . "<br>";
          }
          if (isset($item_i['plugin_releases_risks_id'])
-            && !empty($item_i['plugin_releases_risks_id'])) {
-            echo __("Associated with",'releases') . " ";
+             && !empty($item_i['plugin_releases_risks_id'])) {
+            echo __("Associated with", 'releases') . " ";
             echo Dropdown::getDropdownName("glpi_plugin_releases_risktemplates", $item_i['plugin_releases_risks_id']) . "<br>";
          }
 
          if (isset($item_i['actiontime'])
-            && !empty($item_i['actiontime'])) {
+             && !empty($item_i['actiontime'])) {
             echo "<span class='actiontime'>";
             echo Html::timestampToString($item_i['actiontime'], false);
             echo "</span>";
@@ -1530,7 +1518,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          }
 
          if (isset($item_i['users_id_editor'])
-            && $item_i['users_id_editor'] > 0) {
+             && $item_i['users_id_editor'] > 0) {
             echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
             $user->getFromDB($item_i['users_id_editor']);
             $userdata = getUserName($item_i['users_id_editor'], 2);
@@ -1541,7 +1529,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                   $user->getLink()
                );
             echo Html::showToolTip($userdata["comment"],
-               ['link' => $userdata['link']]);
+                                   ['link' => $userdata['link']]);
             echo "</div>";
          }
 
@@ -1554,15 +1542,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          $timeline_index++;
       }
-      if(count($timeline) == 0){
-         echo "<table class=\"tab_cadre_fixehov\">";
-         echo "<tr >";
-         echo "<th class='center'>";
-         echo __("No data available",'releases');
-         echo "</th>";
-         echo "</tr>";
-         echo "</table>";
-      }else{
+      if (count($timeline) == 0) {
+         $display = "<br><br><div align='center'><h3 class='noinfo'>";
+         $display .= __("No data available", 'releases');
+         $display .= "</h3></div>";
+         echo $display;
+      } else {
          if (isset($_SESSION["releases"]["template"][Session::getLoginUserID()])) {
             $catToLoad = $_SESSION["releases"]["template"][Session::getLoginUserID()];
          } else {
@@ -1586,60 +1571,63 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       // end timeline
       echo "</div>"; // h_item $user_position
    }
+
    /**
     * Displays the timeline header (filters)
     *
+    * @return void
     * @since 9.4.0
     *
-    * @return void
     */
    function showTimelineHeader() {
 
-      echo "<h2>".__("Release actions details",'releases')." : </h2>";
+      echo "<h2>" . __("Release actions details", 'releases') . " : </h2>";
       $this->filterTimeline();
    }
+
    function canAddFollowups() {
-    return Session::haveRightsOr("plugin_releases_releases",[CREATE,UPDATE]);
+      return Session::haveRightsOr("plugin_releases_releases", [CREATE, UPDATE]);
    }
+
    static function getDefaultValues($entity = 0) {
       global $CFG_GLPI;
 
-         $users_id_requester = 0;
-         $users_id_assign    = 0;
-         $requesttype        = $CFG_GLPI['default_requesttypes_id'];
+      $users_id_requester = 0;
+      $users_id_assign    = 0;
+      $requesttype        = $CFG_GLPI['default_requesttypes_id'];
 
       $default_use_notif = Entity::getUsedConfig('is_notif_enable_default', $entity, '', 1);
       // Set default values...
       return ['_users_id_requester'        => $users_id_requester,
-         '_users_id_requester_notif'  => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         '_groups_id_requester'       => 0,
-         '_users_id_assign'           => $users_id_assign,
-         '_users_id_assign_notif'     => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         '_groups_id_assign'          => 0,
-         '_users_id_observer'         => 0,
-         '_users_id_observer_notif'   => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         '_groups_id_observer'        => 0,
-         '_link'                      => ['tickets_id_2' => '',
-            'link'         => ''],
-         '_suppliers_id_assign'       => 0,
-         '_suppliers_id_assign_notif' => ['use_notification'  => [$default_use_notif],
-            'alternative_email' => ['']],
-         'name'                       => '',
-         'content'                    => '',
-         'date_preproduction'         => null,
-         'date_production'            => null,
-         'entities_id'                => $entity,
-         'status'                     => PluginReleasesRelease::NEWRELEASE,
-         'service_shutdown'           => false,
-         'service_shutdown_details'   => '',
-         'hour_type'                  => 0,
-         'communication'              => false,
-         'communication_type'         => false,
-         'target'                     => "",
-         'locations_id'               => 0,
+              '_users_id_requester_notif'  => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              '_groups_id_requester'       => 0,
+              '_users_id_assign'           => $users_id_assign,
+              '_users_id_assign_notif'     => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              '_groups_id_assign'          => 0,
+              '_users_id_observer'         => 0,
+              '_users_id_observer_notif'   => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              '_groups_id_observer'        => 0,
+              '_link'                      => ['tickets_id_2' => '',
+                                               'link'         => ''],
+              '_suppliers_id_assign'       => 0,
+              '_suppliers_id_assign_notif' => ['use_notification'  => [$default_use_notif],
+                                               'alternative_email' => ['']],
+              'name'                       => '',
+              'content'                    => '',
+              'date_preproduction'         => null,
+              'date_production'            => null,
+              'entities_id'                => $entity,
+              'status'                     => PluginReleasesRelease::NEWRELEASE,
+              'service_shutdown'           => false,
+              'service_shutdown_details'   => '',
+              'hour_type'                  => 0,
+              'communication'              => false,
+              'communication_type'         => false,
+              'target'                     => "",
+              'locations_id'               => 0,
       ];
    }
 
@@ -1659,21 +1647,21 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       if (isset($options['entities_id'])) {
          $options['_default_use_notification'] = Entity::getUsedConfig('is_notif_enable_default', $options['entities_id'], '', 1);
       }
-      if($ID){
-         $release_user = new PluginReleasesReleasetemplate_User();
+      if ($ID) {
+         $release_user     = new PluginReleasesReleasetemplate_User();
          $release_supplier = new PluginReleasesReleasetemplate_Supplier();
-         $group_release = new PluginReleasesGroup_Releasetemplate();
-         $users = $release_user->find(['plugin_releases_releasetemplates_id'=>$ID]);
-         $suppliers = $release_supplier->find(['plugin_releases_releasetemplates_id'=>$ID]);
-         $groups = $group_release->find(['plugin_releases_releasetemplates_id'=>$ID]);
-         foreach ($users as $user){
-            $options["_users_id_".self::getActorFieldNameType($user["type"])] = $user["users_id"];
+         $group_release    = new PluginReleasesGroup_Releasetemplate();
+         $users            = $release_user->find(['plugin_releases_releasetemplates_id' => $ID]);
+         $suppliers        = $release_supplier->find(['plugin_releases_releasetemplates_id' => $ID]);
+         $groups           = $group_release->find(['plugin_releases_releasetemplates_id' => $ID]);
+         foreach ($users as $user) {
+            $options["_users_id_" . self::getActorFieldNameType($user["type"])] = $user["users_id"];
          }
-         foreach ($suppliers as $supplier){
-            $options["_suppliers_id_".self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
+         foreach ($suppliers as $supplier) {
+            $options["_suppliers_id_" . self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
          }
-         foreach ($groups as $group){
-            $options["_groups_id_".self::getActorFieldNameType($group["type"])] = $group["groups_id"];
+         foreach ($groups as $group) {
+            $options["_groups_id_" . self::getActorFieldNameType($group["type"])] = $group["groups_id"];
          }
       }
 
@@ -1681,28 +1669,28 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $can_admin = $this->canAdminActors();
       // on creation can select actor
 
-         $can_admin = true;
+      $can_admin = true;
 
 
       $can_assign     = $this->canAssign();
       $can_assigntome = $this->canAssignToMe();
 
       if (isset($options['_noupdate']) && !$options['_noupdate']) {
-         $can_admin       = false;
-         $can_assign      = false;
-         $can_assigntome  = false;
+         $can_admin      = false;
+         $can_assign     = false;
+         $can_assigntome = false;
       }
 
       // Manage actors
       echo "<div class='tab_actors tab_cadre_fixe' id='mainformtable5'>";
-      echo "<div class='responsive_hidden actor_title'>".__('Actor')."</div>";
+      echo "<div class='responsive_hidden actor_title'>" . __('Actor') . "</div>";
 
       // ====== Requesters BLOC ======
       //
       //
       echo "<span class='actor-bloc'>";
       echo "<div class='actor-head'>";
-         echo __('Requester');
+      echo __('Requester');
 
       echo "</div>"; // end .actor-head
 
@@ -1710,67 +1698,66 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       // Requester
 
-         $reqdisplay = false;
-         if ($can_admin) {
+      $reqdisplay = false;
+      if ($can_admin) {
 
+         $this->showActorAddFormOnCreate(CommonITILActor::REQUESTER, $options);
+         $reqdisplay = true;
+      } else {
+         $delegating = User::getDelegateGroupsForUser($options['entities_id']);
+         if (count($delegating)) {
+            //$this->getDefaultActor(CommonITILActor::REQUESTER);
+            $options['_right'] = "delegate";
             $this->showActorAddFormOnCreate(CommonITILActor::REQUESTER, $options);
             $reqdisplay = true;
-         } else {
-            $delegating = User::getDelegateGroupsForUser($options['entities_id']);
-            if (count($delegating)) {
-               //$this->getDefaultActor(CommonITILActor::REQUESTER);
-               $options['_right'] = "delegate";
-               $this->showActorAddFormOnCreate(CommonITILActor::REQUESTER, $options);
+         } else { // predefined value
+            if (isset($options["_users_id_requester"]) && $options["_users_id_requester"]) {
+               echo static::getActorIcon('user', CommonITILActor::REQUESTER) . "&nbsp;";
+               echo Dropdown::getDropdownName("glpi_users", $options["_users_id_requester"]);
+               echo "<input type='hidden' name='_users_id_requester' value=\"" .
+                    $options["_users_id_requester"] . "\">";
+               echo '<br>';
                $reqdisplay = true;
-            } else { // predefined value
-               if (isset($options["_users_id_requester"]) && $options["_users_id_requester"]) {
-                  echo static::getActorIcon('user', CommonITILActor::REQUESTER)."&nbsp;";
-                  echo Dropdown::getDropdownName("glpi_users", $options["_users_id_requester"]);
-                  echo "<input type='hidden' name='_users_id_requester' value=\"".
-                     $options["_users_id_requester"]."\">";
-                  echo '<br>';
-                  $reqdisplay=true;
-               }
             }
          }
+      }
 
-         if ($this->userentity_oncreate
-            && isset($this->countentitiesforuser)
-            && ($this->countentitiesforuser > 1)) {
-            echo "<br>";
-            $rand = Entity::dropdown(['value'     => $this->fields["entities_id"],
-               'entity'    => $this->userentities,
-               'on_change' => 'this.form.submit()']);
-         } else {
-            echo "<input type='hidden' name='entities_id' value='".$this->fields["entities_id"]."'>";
-         }
-         if ($reqdisplay) {
-            echo '<hr>';
-         }
-
+      if ($this->userentity_oncreate
+          && isset($this->countentitiesforuser)
+          && ($this->countentitiesforuser > 1)) {
+         echo "<br>";
+         $rand = Entity::dropdown(['value'     => $this->fields["entities_id"],
+                                   'entity'    => $this->userentities,
+                                   'on_change' => 'this.form.submit()']);
+      } else {
+         echo "<input type='hidden' name='entities_id' value='" . $this->fields["entities_id"] . "'>";
+      }
+      if ($reqdisplay) {
+         echo '<hr>';
+      }
 
 
       // Requester Group
 
-         if ($can_admin) {
-            echo static::getActorIcon('group', CommonITILActor::REQUESTER);
+      if ($can_admin) {
+         echo static::getActorIcon('group', CommonITILActor::REQUESTER);
 
-            Group::dropdown([
-               'name'      => '_groups_id_requester',
-               'value'     => $options["_groups_id_requester"],
-               'entity'    => $this->fields["entities_id"],
-               'condition' => ['is_requester' => 1]
-            ]);
+         Group::dropdown([
+                            'name'      => '_groups_id_requester',
+                            'value'     => $options["_groups_id_requester"],
+                            'entity'    => $this->fields["entities_id"],
+                            'condition' => ['is_requester' => 1]
+                         ]);
 
-         } else { // predefined value
-            if (isset($options["_groups_id_requester"]) && $options["_groups_id_requester"]) {
-               echo static::getActorIcon('group', CommonITILActor::REQUESTER)."&nbsp;";
-               echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_requester"]);
-               echo "<input type='hidden' name='_groups_id_requester' value=\"".
-                  $options["_groups_id_requester"]."\">";
-               echo '<br>';
-            }
+      } else { // predefined value
+         if (isset($options["_groups_id_requester"]) && $options["_groups_id_requester"]) {
+            echo static::getActorIcon('group', CommonITILActor::REQUESTER) . "&nbsp;";
+            echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_requester"]);
+            echo "<input type='hidden' name='_groups_id_requester' value=\"" .
+                 $options["_groups_id_requester"] . "\">";
+            echo '<br>';
          }
+      }
 
       echo "</div>"; // end .actor-content
       echo "</span>"; // end .actor-bloc
@@ -1787,40 +1774,40 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       // Observer
 
-         if ($can_admin) {
-            $this->showActorAddFormOnCreate(CommonITILActor::OBSERVER, $options);
+      if ($can_admin) {
+         $this->showActorAddFormOnCreate(CommonITILActor::OBSERVER, $options);
+         echo '<hr>';
+      } else { // predefined value
+         if (isset($options["_users_id_observer"][0]) && $options["_users_id_observer"][0]) {
+            echo static::getActorIcon('user', CommonITILActor::OBSERVER) . "&nbsp;";
+            echo Dropdown::getDropdownName("glpi_users", $options["_users_id_observer"][0]);
+            echo "<input type='hidden' name='_users_id_observer' value=\"" .
+                 $options["_users_id_observer"][0] . "\">";
             echo '<hr>';
-         } else { // predefined value
-            if (isset($options["_users_id_observer"][0]) && $options["_users_id_observer"][0]) {
-               echo static::getActorIcon('user', CommonITILActor::OBSERVER)."&nbsp;";
-               echo Dropdown::getDropdownName("glpi_users", $options["_users_id_observer"][0]);
-               echo "<input type='hidden' name='_users_id_observer' value=\"".
-                  $options["_users_id_observer"][0]."\">";
-               echo '<hr>';
-            }
          }
+      }
 
 
       // Observer Group
 
-         if ($can_admin) {
-            echo static::getActorIcon('group', CommonITILActor::OBSERVER);
+      if ($can_admin) {
+         echo static::getActorIcon('group', CommonITILActor::OBSERVER);
 
-            Group::dropdown([
-               'name'      => '_groups_id_observer',
-               'value'     => $options["_groups_id_observer"],
-               'entity'    => $this->fields["entities_id"],
-               'condition' => ['is_requester' => 1]
-            ]);
-         } else { // predefined value
-            if (isset($options["_groups_id_observer"]) && $options["_groups_id_observer"]) {
-               echo static::getActorIcon('group', CommonITILActor::OBSERVER)."&nbsp;";
-               echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_observer"]);
-               echo "<input type='hidden' name='_groups_id_observer' value=\"".
-                  $options["_groups_id_observer"]."\">";
-               echo '<br>';
-            }
+         Group::dropdown([
+                            'name'      => '_groups_id_observer',
+                            'value'     => $options["_groups_id_observer"],
+                            'entity'    => $this->fields["entities_id"],
+                            'condition' => ['is_requester' => 1]
+                         ]);
+      } else { // predefined value
+         if (isset($options["_groups_id_observer"]) && $options["_groups_id_observer"]) {
+            echo static::getActorIcon('group', CommonITILActor::OBSERVER) . "&nbsp;";
+            echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_observer"]);
+            echo "<input type='hidden' name='_groups_id_observer' value=\"" .
+                 $options["_groups_id_observer"] . "\">";
+            echo '<br>';
          }
+      }
 
       echo "</div>"; // end .actor-content
       echo "</span>"; // end .actor-bloc
@@ -1830,7 +1817,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<span class='actor-bloc'>";
       echo "<div class='actor-head'>";
 
-         echo __('Assigned to');
+      echo __('Assigned to');
 
 
       echo "</div>"; // end .actor-head
@@ -1840,85 +1827,82 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       // Assign User
 
-         if ($can_assign
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            $this->showActorAddFormOnCreate(CommonITILActor::ASSIGN, $options);
-            echo '<hr>';
+      if ($can_assign
+          && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+         $this->showActorAddFormOnCreate(CommonITILActor::ASSIGN, $options);
+         echo '<hr>';
 
-         } else if ($can_assigntome
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            echo static::getActorIcon('user', CommonITILActor::ASSIGN)."&nbsp;";
-            User::dropdown(['name'        => '_users_id_assign',
-               'value'       => $options["_users_id_assign"],
-               'entity'      => $this->fields["entities_id"],
-               'ldap_import' => true]);
-            echo '<hr>';
+      } else if ($can_assigntome
+                 && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+         echo static::getActorIcon('user', CommonITILActor::ASSIGN) . "&nbsp;";
+         User::dropdown(['name'        => '_users_id_assign',
+                         'value'       => $options["_users_id_assign"],
+                         'entity'      => $this->fields["entities_id"],
+                         'ldap_import' => true]);
+         echo '<hr>';
 
-         } else { // predefined value
-            if (isset($options["_users_id_assign"]) && $options["_users_id_assign"]
-               && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-               echo static::getActorIcon('user', CommonITILActor::ASSIGN)."&nbsp;";
-               echo Dropdown::getDropdownName("glpi_users", $options["_users_id_assign"]);
-               echo "<input type='hidden' name='_users_id_assign' value=\"".
-                  $options["_users_id_assign"]."\">";
-               echo '<hr>';
-            }
+      } else { // predefined value
+         if (isset($options["_users_id_assign"]) && $options["_users_id_assign"]
+             && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+            echo static::getActorIcon('user', CommonITILActor::ASSIGN) . "&nbsp;";
+            echo Dropdown::getDropdownName("glpi_users", $options["_users_id_assign"]);
+            echo "<input type='hidden' name='_users_id_assign' value=\"" .
+                 $options["_users_id_assign"] . "\">";
+            echo '<hr>';
          }
-
+      }
 
 
       // Assign Groups
 
-         if ($can_assign
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            echo static::getActorIcon('group', CommonITILActor::ASSIGN);
+      if ($can_assign
+          && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+         echo static::getActorIcon('group', CommonITILActor::ASSIGN);
 
-            $rand   = mt_rand();
-            $params = [
-               'name'      => '_groups_id_assign',
-               'value'     => $options["_groups_id_assign"],
-               'entity'    => $this->fields["entities_id"],
-               'condition' => ['is_assign' => 1],
-               'rand'      => $rand
-            ];
-
-
-            Group::dropdown($params);
+         $rand   = mt_rand();
+         $params = [
+            'name'      => '_groups_id_assign',
+            'value'     => $options["_groups_id_assign"],
+            'entity'    => $this->fields["entities_id"],
+            'condition' => ['is_assign' => 1],
+            'rand'      => $rand
+         ];
 
 
+         Group::dropdown($params);
+
+
+         echo '<hr>';
+      } else { // predefined value
+         if (isset($options["_groups_id_assign"])
+             && $options["_groups_id_assign"]
+             && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+            echo static::getActorIcon('group', CommonITILActor::ASSIGN) . "&nbsp;";
+            echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_assign"]);
+            echo "<input type='hidden' name='_groups_id_assign' value=\"" .
+                 $options["_groups_id_assign"] . "\">";
             echo '<hr>';
-         } else { // predefined value
-            if (isset($options["_groups_id_assign"])
-               && $options["_groups_id_assign"]
-               && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-               echo static::getActorIcon('group', CommonITILActor::ASSIGN)."&nbsp;";
-               echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_assign"]);
-               echo "<input type='hidden' name='_groups_id_assign' value=\"".
-                  $options["_groups_id_assign"]."\">";
-               echo '<hr>';
-            }
          }
-
+      }
 
 
       // Assign Suppliers
 
 
-         if ($can_assign
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            $this->showSupplierAddFormOnCreate($options);
-         } else { // predefined value
-            if (isset($options["_suppliers_id_assign"])
-               && $options["_suppliers_id_assign"]
-               && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-               echo static::getActorIcon('supplier', CommonITILActor::ASSIGN)."&nbsp;";
-               echo Dropdown::getDropdownName("glpi_suppliers", $options["_suppliers_id_assign"]);
-               echo "<input type='hidden' name='_suppliers_id_assign' value=\"".
-                  $options["_suppliers_id_assign"]."\">";
-               echo '<hr>';
-            }
+      if ($can_assign
+          && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+         $this->showSupplierAddFormOnCreate($options);
+      } else { // predefined value
+         if (isset($options["_suppliers_id_assign"])
+             && $options["_suppliers_id_assign"]
+             && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
+            echo static::getActorIcon('supplier', CommonITILActor::ASSIGN) . "&nbsp;";
+            echo Dropdown::getDropdownName("glpi_suppliers", $options["_suppliers_id_assign"]);
+            echo "<input type='hidden' name='_suppliers_id_assign' value=\"" .
+                 $options["_suppliers_id_assign"] . "\">";
+            echo '<hr>';
          }
-
+      }
 
 
       echo "</div>"; // end .actor-content
@@ -1946,7 +1930,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     */
    function canAssign() {
       if (isset($this->fields['is_deleted']) && ($this->fields['is_deleted'] == 1)
-         || isset($this->fields['status']) && in_array($this->fields['status'], $this->getClosedStatusArray())
+          || isset($this->fields['status']) && in_array($this->fields['status'], $this->getClosedStatusArray())
       ) {
          return false;
       }
@@ -1961,7 +1945,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     */
    function canAssignToMe() {
       if (isset($this->fields['is_deleted']) && $this->fields['is_deleted'] == 1
-         || isset($this->fields['status']) && in_array($this->fields['status'], $this->getClosedStatusArray())
+          || isset($this->fields['status']) && in_array($this->fields['status'], $this->getClosedStatusArray())
       ) {
          return false;
       }
@@ -1986,14 +1970,14 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                              $withgroup = true, $withsupplier = false, $inobject = true) {
       global $CFG_GLPI;
 
-      $types = ['user'  => __('User')];
+      $types = ['user' => __('User')];
 
       if ($withgroup) {
          $types['group'] = __('Group');
       }
 
       if ($withsupplier
-         && ($type == CommonITILActor::ASSIGN)) {
+          && ($type == CommonITILActor::ASSIGN)) {
          $types['supplier'] = __('Supplier');
       }
 
@@ -2025,7 +2009,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                unset($types['group']);
             }
             if (isset($types['supplier'])
-               && isset($is_hidden['_suppliers_id_assign']) && $is_hidden['_suppliers_id_assign']) {
+                && isset($is_hidden['_suppliers_id_assign']) && $is_hidden['_suppliers_id_assign']) {
                unset($types['supplier']);
             }
             break;
@@ -2034,22 +2018,22 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             return false;
       }
 
-      echo "<div ".($inobject?"style='display:none'":'')." id='itilactor$rand_type' class='actor-dropdown'>";
-      $rand   = Dropdown::showFromArray("_itil_".$typename."[_type]", $types,
-         ['display_emptychoice' => true]);
+      echo "<div " . ($inobject ? "style='display:none'" : '') . " id='itilactor$rand_type' class='actor-dropdown'>";
+      $rand   = Dropdown::showFromArray("_itil_" . $typename . "[_type]", $types,
+                                        ['display_emptychoice' => true]);
       $params = ['type'            => '__VALUE__',
-         'actortype'       => $typename,
-         'itemtype'        => $this->getType(),
-         'allow_email'     => (($type == CommonITILActor::OBSERVER)
-            || $type == CommonITILActor::REQUESTER),
-         'entity_restrict' => $entities_id,
-         'use_notif'       => Entity::getUsedConfig('is_notif_enable_default', $entities_id, '', 1)];
+                 'actortype'       => $typename,
+                 'itemtype'        => $this->getType(),
+                 'allow_email'     => (($type == CommonITILActor::OBSERVER)
+                                       || $type == CommonITILActor::REQUESTER),
+                 'entity_restrict' => $entities_id,
+                 'use_notif'       => Entity::getUsedConfig('is_notif_enable_default', $entities_id, '', 1)];
 
-      Ajax::updateItemOnSelectEvent("dropdown__itil_".$typename."[_type]$rand",
-         "showitilactor".$typename."_$rand",
-         $CFG_GLPI["root_doc"]."/ajax/dropdownItilActors.php",
-         $params);
-      echo "<span id='showitilactor".$typename."_$rand' class='actor-dropdown'>&nbsp;</span>";
+      Ajax::updateItemOnSelectEvent("dropdown__itil_" . $typename . "[_type]$rand",
+                                    "showitilactor" . $typename . "_$rand",
+                                    $CFG_GLPI["root_doc"] . "/ajax/dropdownItilActors.php",
+                                    $params);
+      echo "<span id='showitilactor" . $typename . "_$rand' class='actor-dropdown'>&nbsp;</span>";
       if ($inobject) {
          echo "<hr>";
       }
@@ -2062,10 +2046,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     *
     * @param $type      integer : user type
     *
-    * @since 0.84.6
-    *
     * @return string|boolean Field part or false if not applicable
-    **/
+    **@since 0.84.6
+    *
+    */
    static function getActorFieldNameType($type) {
 
       switch ($type) {
@@ -2099,11 +2083,11 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       if (User::canView()) {
          $showuserlink = 2;
       }
-      $usericon  = static::getActorIcon('user', $type);
-      $user      = new User();
-      $linkuser  = new $this->userlinkclass();
+      $usericon = static::getActorIcon('user', $type);
+      $user     = new User();
+      $linkuser = new $this->userlinkclass();
 
-      $typename  = static::getActorFieldNameType($type);
+      $typename = static::getActorFieldNameType($type);
 
       $candelete = true;
       $mandatory = '';
@@ -2119,13 +2103,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             if ($k) {
                $userdata = getUserName($k, 2);
             } else {
-               $email         = $d['alternative_email'];
-               $userdata      = "<a href='mailto:$email'>$email</a>";
+               $email    = $d['alternative_email'];
+               $userdata = "<a href='mailto:$email'>$email</a>";
             }
 
             if (Entity::getUsedConfig('anonymize_support_agents')
-               && Session::getCurrentInterface() == 'helpdesk'
-               && $type == CommonITILActor::ASSIGN
+                && Session::getCurrentInterface() == 'helpdesk'
+                && $type == CommonITILActor::ASSIGN
             ) {
                echo __("Helpdesk");
             } else {
@@ -2134,19 +2118,18 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                   if ($showuserlink) {
                      $param['link'] = $userdata["link"];
                   }
-                  echo $userdata['name']."&nbsp;".Html::showToolTip($userdata["comment"], $param);
+                  echo $userdata['name'] . "&nbsp;" . Html::showToolTip($userdata["comment"], $param);
                } else {
                   echo $userdata;
                }
             }
 
 
-
             if ($canedit && $candelete) {
                Html::showSimpleForm($linkuser->getFormURL(), 'delete',
-                  _x('button', 'Delete permanently'),
-                  ['id' => $d['id']],
-                  'fa-times-circle');
+                                    _x('button', 'Delete permanently'),
+                                    ['id' => $d['id']],
+                                    'fa-times-circle');
             }
             echo "</div>";
          }
@@ -2165,7 +2148,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       switch ($user_group) {
          case 'user' :
-            $icontitle = __s('User').' - '.$type; // should never be used
+            $icontitle = __s('User') . ' - ' . $type; // should never be used
             switch ($type) {
                case CommonITILActor::REQUESTER :
                   $icontitle = __s('Requester user');
@@ -2193,17 +2176,17 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                   break;
 
                case CommonITILActor::ASSIGN :
-                  $icontitle = __s('Group in charge of the release','releases');
+                  $icontitle = __s('Group in charge of the release', 'releases');
                   break;
             }
 
             return "<i class='fas fa-users' title='$icontitle'></i>" .
-               "<span class='sr-only'>$icontitle</span>";
+                   "<span class='sr-only'>$icontitle</span>";
 
          case 'supplier' :
             $icontitle = __('Supplier');
-            return  "<i class='fas fa-dolly' title='$icontitle'></i>" .
-                    "<span class='sr-only'>$icontitle</span>";
+            return "<i class='fas fa-dolly' title='$icontitle'></i>" .
+                   "<span class='sr-only'>$icontitle</span>";
 
       }
       return '';
@@ -2225,7 +2208,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $group     = new Group();
       $linkclass = new $this->grouplinkclass();
 
-      $typename  = static::getActorFieldNameType($type);
+      $typename = static::getActorFieldNameType($type);
 
       $candelete = true;
       $mandatory = '';
@@ -2238,8 +2221,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             echo "$mandatory$groupicon&nbsp;";
             if ($group->getFromDB($k)) {
                if (Entity::getUsedConfig('anonymize_support_agents')
-                  && Session::getCurrentInterface() == 'helpdesk'
-                  && $type == CommonITILActor::ASSIGN
+                   && Session::getCurrentInterface() == 'helpdesk'
+                   && $type == CommonITILActor::ASSIGN
                ) {
                   echo __("Helpdesk group");
                } else {
@@ -2248,18 +2231,19 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             }
             if ($canedit && $candelete) {
                Html::showSimpleForm($linkclass->getFormURL(), 'delete',
-                  _x('button', 'Delete permanently'),
-                  ['id' => $d['id']],
-                  'fa-times-circle');
+                                    _x('button', 'Delete permanently'),
+                                    ['id' => $d['id']],
+                                    'fa-times-circle');
             }
             echo "</div>";
          }
       }
    }
+
    /**
     * Is a user linked to the object ?
     *
-    * @param integer $type     type to search (see constants)
+    * @param integer $type type to search (see constants)
     * @param integer $users_id user ID
     *
     * @return boolean
@@ -2280,14 +2264,14 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    /**
     * show suppliers associated
     *
-    * @since 0.84
-    *
     * @param $type      integer : user type
     * @param $canedit   boolean : can edit ?
     * @param $options   array    options for default values ($options of showForm)
     *
     * @return void
-    **/
+    **@since 0.84
+    *
+    */
    function showSuppliersAssociated($type, $canedit, array $options = []) {
       global $CFG_GLPI;
 
@@ -2300,10 +2284,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $supplier     = new Supplier();
       $linksupplier = new $this->supplierlinkclass();
 
-      $typename     = static::getActorFieldNameType($type);
+      $typename = static::getActorFieldNameType($type);
 
-      $candelete    = true;
-      $mandatory    = '';
+      $candelete = true;
+      $mandatory = '';
 
 
       if (isset($this->suppliers[$type]) && count($this->suppliers[$type])) {
@@ -2331,12 +2315,11 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             }
 
 
-
             if ($canedit && $candelete) {
                Html::showSimpleForm($linksupplier->getFormURL(), 'delete',
-                  _x('button', 'Delete permanently'),
-                  ['id' => $d['id']],
-                  'fa-times-circle');
+                                    _x('button', 'Delete permanently'),
+                                    ['id' => $d['id']],
+                                    'fa-times-circle');
             }
 
             echo '</div>';
@@ -2345,272 +2328,272 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    }
 
    function post_addItem() {
-   parent::post_addItem();
-   $useractors = null;
-   // Add user groups linked to ITIL objects
-   if (!empty($this->userlinkclass)) {
-      $useractors = new $this->userlinkclass();
-   }
-   $groupactors = null;
-   if (!empty($this->grouplinkclass)) {
-      $groupactors = new $this->grouplinkclass();
-   }
-   $supplieractors = null;
-   if (!empty($this->supplierlinkclass)) {
-      $supplieractors = new $this->supplierlinkclass();
-   }
+      parent::post_addItem();
+      $useractors = null;
+      // Add user groups linked to ITIL objects
+      if (!empty($this->userlinkclass)) {
+         $useractors = new $this->userlinkclass();
+      }
+      $groupactors = null;
+      if (!empty($this->grouplinkclass)) {
+         $groupactors = new $this->grouplinkclass();
+      }
+      $supplieractors = null;
+      if (!empty($this->supplierlinkclass)) {
+         $supplieractors = new $this->supplierlinkclass();
+      }
 
-   // "do not compute" flag set by business rules for "takeintoaccount_delay_stat" field
-   $do_not_compute_takeintoaccount = $this->isTakeIntoAccountComputationBlocked($this->input);
+      // "do not compute" flag set by business rules for "takeintoaccount_delay_stat" field
+      $do_not_compute_takeintoaccount = $this->isTakeIntoAccountComputationBlocked($this->input);
 
-   if (!is_null($useractors)) {
-      $user_input = [
-         $useractors->getItilObjectForeignKey() => $this->fields['id'],
-         '_do_not_compute_takeintoaccount'      => $do_not_compute_takeintoaccount,
-         '_from_object'                         => true,
-      ];
+      if (!is_null($useractors)) {
+         $user_input = [
+            $useractors->getItilObjectForeignKey() => $this->fields['id'],
+            '_do_not_compute_takeintoaccount'      => $do_not_compute_takeintoaccount,
+            '_from_object'                         => true,
+         ];
 
-      if (isset($this->input["_users_id_requester"])) {
+         if (isset($this->input["_users_id_requester"])) {
 
-         if (is_array($this->input["_users_id_requester"])) {
-            $tab_requester = $this->input["_users_id_requester"];
-         } else {
-            $tab_requester   = [];
-            $tab_requester[] = $this->input["_users_id_requester"];
-         }
-
-         $requesterToAdd = [];
-         foreach ($tab_requester as $key_requester => $requester) {
-            if (in_array($requester, $requesterToAdd)) {
-               // This requester ID is already added;
-               continue;
+            if (is_array($this->input["_users_id_requester"])) {
+               $tab_requester = $this->input["_users_id_requester"];
+            } else {
+               $tab_requester   = [];
+               $tab_requester[] = $this->input["_users_id_requester"];
             }
 
-            $input2 = [
-                  'users_id' => $requester,
-                  'type'     => CommonITILActor::REQUESTER,
-               ] + $user_input;
+            $requesterToAdd = [];
+            foreach ($tab_requester as $key_requester => $requester) {
+               if (in_array($requester, $requesterToAdd)) {
+                  // This requester ID is already added;
+                  continue;
+               }
 
-            if (isset($this->input["_users_id_requester_notif"])) {
-               foreach ($this->input["_users_id_requester_notif"] as $key => $val) {
-                  if (isset($val[$key_requester])) {
-                     $input2[$key] = $val[$key_requester];
+               $input2 = [
+                            'users_id' => $requester,
+                            'type'     => CommonITILActor::REQUESTER,
+                         ] + $user_input;
+
+               if (isset($this->input["_users_id_requester_notif"])) {
+                  foreach ($this->input["_users_id_requester_notif"] as $key => $val) {
+                     if (isset($val[$key_requester])) {
+                        $input2[$key] = $val[$key_requester];
+                     }
                   }
                }
+
+               //empty actor
+               if ($input2['users_id'] == 0
+                   && (!isset($input2['alternative_email'])
+                       || empty($input2['alternative_email']))) {
+                  continue;
+               } else if ($requester != 0) {
+                  $requesterToAdd[] = $requester;
+               }
+
+               $useractors->add($input2);
+            }
+         }
+
+         if (isset($this->input["_users_id_observer"])) {
+
+            if (is_array($this->input["_users_id_observer"])) {
+               $tab_observer = $this->input["_users_id_observer"];
+            } else {
+               $tab_observer   = [];
+               $tab_observer[] = $this->input["_users_id_observer"];
             }
 
-            //empty actor
-            if ($input2['users_id'] == 0
-               && (!isset($input2['alternative_email'])
-                  || empty($input2['alternative_email']))) {
-               continue;
-            } else if ($requester != 0) {
-               $requesterToAdd[] = $requester;
+            $observerToAdd = [];
+            foreach ($tab_observer as $key_observer => $observer) {
+               if (in_array($observer, $observerToAdd)) {
+                  // This observer ID is already added;
+                  continue;
+               }
+
+               $input2 = [
+                            'users_id' => $observer,
+                            'type'     => CommonITILActor::OBSERVER,
+                         ] + $user_input;
+
+               if (isset($this->input["_users_id_observer_notif"])) {
+                  foreach ($this->input["_users_id_observer_notif"] as $key => $val) {
+                     if (isset($val[$key_observer])) {
+                        $input2[$key] = $val[$key_observer];
+                     }
+                  }
+               }
+
+               //empty actor
+               if ($input2['users_id'] == 0
+                   && (!isset($input2['alternative_email'])
+                       || empty($input2['alternative_email']))) {
+                  continue;
+               } else if ($observer != 0) {
+                  $observerToAdd[] = $observer;
+               }
+
+               $useractors->add($input2);
+            }
+         }
+
+         if (isset($this->input["_users_id_assign"])) {
+
+            if (is_array($this->input["_users_id_assign"])) {
+               $tab_assign = $this->input["_users_id_assign"];
+            } else {
+               $tab_assign   = [];
+               $tab_assign[] = $this->input["_users_id_assign"];
             }
 
-            $useractors->add($input2);
+            $assignToAdd = [];
+            foreach ($tab_assign as $key_assign => $assign) {
+               if (in_array($assign, $assignToAdd)) {
+                  // This assigned user ID is already added;
+                  continue;
+               }
+
+               $input2 = [
+                            'users_id' => $assign,
+                            'type'     => CommonITILActor::ASSIGN,
+                         ] + $user_input;
+
+               if (isset($this->input["_users_id_assign_notif"])) {
+                  foreach ($this->input["_users_id_assign_notif"] as $key => $val) {
+                     if (isset($val[$key_assign])) {
+                        $input2[$key] = $val[$key_assign];
+                     }
+                  }
+               }
+
+               //empty actor
+               if ($input2['users_id'] == 0
+                   && (!isset($input2['alternative_email'])
+                       || empty($input2['alternative_email']))) {
+                  continue;
+               } else if ($assign != 0) {
+                  $assignToAdd[] = $assign;
+               }
+
+               $useractors->add($input2);
+            }
          }
       }
 
-      if (isset($this->input["_users_id_observer"])) {
+      if (!is_null($groupactors)) {
+         $group_input = [
+            $groupactors->getItilObjectForeignKey() => $this->fields['id'],
+            '_do_not_compute_takeintoaccount'       => $do_not_compute_takeintoaccount,
+            '_from_object'                          => true,
+         ];
 
-         if (is_array($this->input["_users_id_observer"])) {
-            $tab_observer = $this->input["_users_id_observer"];
-         } else {
-            $tab_observer   = [];
-            $tab_observer[] = $this->input["_users_id_observer"];
-         }
-
-         $observerToAdd = [];
-         foreach ($tab_observer as $key_observer => $observer) {
-            if (in_array($observer, $observerToAdd)) {
-               // This observer ID is already added;
-               continue;
-            }
-
-            $input2 = [
-                  'users_id' => $observer,
-                  'type'     => CommonITILActor::OBSERVER,
-               ] + $user_input;
-
-            if (isset($this->input["_users_id_observer_notif"])) {
-               foreach ($this->input["_users_id_observer_notif"] as $key => $val) {
-                  if (isset($val[$key_observer])) {
-                     $input2[$key] = $val[$key_observer];
-                  }
-               }
-            }
-
-            //empty actor
-            if ($input2['users_id'] == 0
-               && (!isset($input2['alternative_email'])
-                  || empty($input2['alternative_email']))) {
-               continue;
-            } else if ($observer != 0) {
-               $observerToAdd[] = $observer;
-            }
-
-            $useractors->add($input2);
-         }
-      }
-
-      if (isset($this->input["_users_id_assign"])) {
-
-         if (is_array($this->input["_users_id_assign"])) {
-            $tab_assign = $this->input["_users_id_assign"];
-         } else {
-            $tab_assign   = [];
-            $tab_assign[] = $this->input["_users_id_assign"];
-         }
-
-         $assignToAdd = [];
-         foreach ($tab_assign as $key_assign => $assign) {
-            if (in_array($assign, $assignToAdd)) {
-               // This assigned user ID is already added;
-               continue;
-            }
-
-            $input2 = [
-                  'users_id' => $assign,
-                  'type'     => CommonITILActor::ASSIGN,
-               ] + $user_input;
-
-            if (isset($this->input["_users_id_assign_notif"])) {
-               foreach ($this->input["_users_id_assign_notif"] as $key => $val) {
-                  if (isset($val[$key_assign])) {
-                     $input2[$key] = $val[$key_assign];
-                  }
-               }
-            }
-
-            //empty actor
-            if ($input2['users_id'] == 0
-               && (!isset($input2['alternative_email'])
-                  || empty($input2['alternative_email']))) {
-               continue;
-            } else if ($assign != 0) {
-               $assignToAdd[] = $assign;
-            }
-
-            $useractors->add($input2);
-         }
-      }
-   }
-
-   if (!is_null($groupactors)) {
-      $group_input = [
-         $groupactors->getItilObjectForeignKey() => $this->fields['id'],
-         '_do_not_compute_takeintoaccount'       => $do_not_compute_takeintoaccount,
-         '_from_object'                          => true,
-      ];
-
-      if (isset($this->input["_groups_id_requester"])) {
-         $groups_id_requester = $this->input["_groups_id_requester"];
-         if (!is_array($this->input["_groups_id_requester"])) {
-            $groups_id_requester = [$this->input["_groups_id_requester"]];
-         } else {
+         if (isset($this->input["_groups_id_requester"])) {
             $groups_id_requester = $this->input["_groups_id_requester"];
-         }
-         foreach ($groups_id_requester as $groups_id) {
-            if ($groups_id > 0) {
-               $groupactors->add(
-                  [
-                     'groups_id' => $groups_id,
-                     'type'      => CommonITILActor::REQUESTER,
-                  ] + $group_input
-               );
+            if (!is_array($this->input["_groups_id_requester"])) {
+               $groups_id_requester = [$this->input["_groups_id_requester"]];
+            } else {
+               $groups_id_requester = $this->input["_groups_id_requester"];
             }
-         }
-      }
-
-      if (isset($this->input["_groups_id_assign"])) {
-         if (!is_array($this->input["_groups_id_assign"])) {
-            $groups_id_assign = [$this->input["_groups_id_assign"]];
-         } else {
-            $groups_id_assign = $this->input["_groups_id_assign"];
-         }
-         foreach ($groups_id_assign as $groups_id) {
-            if ($groups_id > 0) {
-               $groupactors->add(
-                  [
-                     'groups_id' => $groups_id,
-                     'type'      => CommonITILActor::ASSIGN,
-                  ] + $group_input
-               );
-            }
-         }
-      }
-
-      if (isset($this->input["_groups_id_observer"])) {
-         if (!is_array($this->input["_groups_id_observer"])) {
-            $groups_id_observer = [$this->input["_groups_id_observer"]];
-         } else {
-            $groups_id_observer = $this->input["_groups_id_observer"];
-         }
-         foreach ($groups_id_observer as $groups_id) {
-            if ($groups_id > 0) {
-               $groupactors->add(
-                  [
-                     'groups_id' => $groups_id,
-                     'type'      => CommonITILActor::OBSERVER,
-                  ] + $group_input
-               );
-            }
-         }
-      }
-   }
-
-   if (!is_null($supplieractors)) {
-      $supplier_input = [
-         $supplieractors->getItilObjectForeignKey() => $this->fields['id'],
-         '_do_not_compute_takeintoaccount'          => $do_not_compute_takeintoaccount,
-         '_from_object'                             => true,
-      ];
-
-      if (isset($this->input["_suppliers_id_assign"])
-         && ($this->input["_suppliers_id_assign"] > 0)) {
-
-         if (is_array($this->input["_suppliers_id_assign"])) {
-            $tab_assign = $this->input["_suppliers_id_assign"];
-         } else {
-            $tab_assign   = [];
-            $tab_assign[] = $this->input["_suppliers_id_assign"];
-         }
-
-         $supplierToAdd = [];
-         foreach ($tab_assign as $key_assign => $assign) {
-            if (in_array($assign, $supplierToAdd)) {
-               // This assigned supplier ID is already added;
-               continue;
-            }
-            $input3 = [
-                  'suppliers_id' => $assign,
-                  'type'         => CommonITILActor::ASSIGN,
-               ] + $supplier_input;
-
-            if (isset($this->input["_suppliers_id_assign_notif"])) {
-               foreach ($this->input["_suppliers_id_assign_notif"] as $key => $val) {
-                  $input3[$key] = $val[$key_assign];
+            foreach ($groups_id_requester as $groups_id) {
+               if ($groups_id > 0) {
+                  $groupactors->add(
+                     [
+                        'groups_id' => $groups_id,
+                        'type'      => CommonITILActor::REQUESTER,
+                     ] + $group_input
+                  );
                }
             }
+         }
 
-            //empty supplier
-            if ($input3['suppliers_id'] == 0
-               && (!isset($input3['alternative_email'])
-                  || empty($input3['alternative_email']))) {
-               continue;
-            } else if ($assign != 0) {
-               $supplierToAdd[] = $assign;
+         if (isset($this->input["_groups_id_assign"])) {
+            if (!is_array($this->input["_groups_id_assign"])) {
+               $groups_id_assign = [$this->input["_groups_id_assign"]];
+            } else {
+               $groups_id_assign = $this->input["_groups_id_assign"];
             }
+            foreach ($groups_id_assign as $groups_id) {
+               if ($groups_id > 0) {
+                  $groupactors->add(
+                     [
+                        'groups_id' => $groups_id,
+                        'type'      => CommonITILActor::ASSIGN,
+                     ] + $group_input
+                  );
+               }
+            }
+         }
 
-            $supplieractors->add($input3);
+         if (isset($this->input["_groups_id_observer"])) {
+            if (!is_array($this->input["_groups_id_observer"])) {
+               $groups_id_observer = [$this->input["_groups_id_observer"]];
+            } else {
+               $groups_id_observer = $this->input["_groups_id_observer"];
+            }
+            foreach ($groups_id_observer as $groups_id) {
+               if ($groups_id > 0) {
+                  $groupactors->add(
+                     [
+                        'groups_id' => $groups_id,
+                        'type'      => CommonITILActor::OBSERVER,
+                     ] + $group_input
+                  );
+               }
+            }
          }
       }
-   }
 
-   // Additional actors
-   $this->addAdditionalActors($this->input);
-}
+      if (!is_null($supplieractors)) {
+         $supplier_input = [
+            $supplieractors->getItilObjectForeignKey() => $this->fields['id'],
+            '_do_not_compute_takeintoaccount'          => $do_not_compute_takeintoaccount,
+            '_from_object'                             => true,
+         ];
+
+         if (isset($this->input["_suppliers_id_assign"])
+             && ($this->input["_suppliers_id_assign"] > 0)) {
+
+            if (is_array($this->input["_suppliers_id_assign"])) {
+               $tab_assign = $this->input["_suppliers_id_assign"];
+            } else {
+               $tab_assign   = [];
+               $tab_assign[] = $this->input["_suppliers_id_assign"];
+            }
+
+            $supplierToAdd = [];
+            foreach ($tab_assign as $key_assign => $assign) {
+               if (in_array($assign, $supplierToAdd)) {
+                  // This assigned supplier ID is already added;
+                  continue;
+               }
+               $input3 = [
+                            'suppliers_id' => $assign,
+                            'type'         => CommonITILActor::ASSIGN,
+                         ] + $supplier_input;
+
+               if (isset($this->input["_suppliers_id_assign_notif"])) {
+                  foreach ($this->input["_suppliers_id_assign_notif"] as $key => $val) {
+                     $input3[$key] = $val[$key_assign];
+                  }
+               }
+
+               //empty supplier
+               if ($input3['suppliers_id'] == 0
+                   && (!isset($input3['alternative_email'])
+                       || empty($input3['alternative_email']))) {
+                  continue;
+               } else if ($assign != 0) {
+                  $supplierToAdd[] = $assign;
+               }
+
+               $supplieractors->add($input3);
+            }
+         }
+      }
+
+      // Additional actors
+      $this->addAdditionalActors($this->input);
+   }
 
    /**
     * Check if input contains a flag set to prevent 'takeintoaccount' delay computation.
@@ -2621,7 +2604,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     */
    public function isTakeIntoAccountComputationBlocked($input) {
       return array_key_exists('_do_not_compute_takeintoaccount', $input)
-         && $input['_do_not_compute_takeintoaccount'];
+             && $input['_do_not_compute_takeintoaccount'];
    }
 
    /**
@@ -2657,8 +2640,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          // Requesters
          if (isset($input['_additional_groups_requesters'])
-            && is_array($input['_additional_groups_requesters'])
-            && count($input['_additional_groups_requesters'])) {
+             && is_array($input['_additional_groups_requesters'])
+             && count($input['_additional_groups_requesters'])) {
             foreach ($input['_additional_groups_requesters'] as $tmp) {
                if ($tmp > 0) {
                   $groupactors->add(
@@ -2673,8 +2656,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          // Observers
          if (isset($input['_additional_groups_observers'])
-            && is_array($input['_additional_groups_observers'])
-            && count($input['_additional_groups_observers'])) {
+             && is_array($input['_additional_groups_observers'])
+             && count($input['_additional_groups_observers'])) {
             foreach ($input['_additional_groups_observers'] as $tmp) {
                if ($tmp > 0) {
                   $groupactors->add(
@@ -2689,8 +2672,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          // Assigns
          if (isset($input['_additional_groups_assigns'])
-            && is_array($input['_additional_groups_assigns'])
-            && count($input['_additional_groups_assigns'])) {
+             && is_array($input['_additional_groups_assigns'])
+             && count($input['_additional_groups_assigns'])) {
             foreach ($input['_additional_groups_assigns'] as $tmp) {
                if ($tmp > 0) {
                   $groupactors->add(
@@ -2714,12 +2697,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          // Assigns
          if (isset($input['_additional_suppliers_assigns'])
-            && is_array($input['_additional_suppliers_assigns'])
-            && count($input['_additional_suppliers_assigns'])) {
+             && is_array($input['_additional_suppliers_assigns'])
+             && count($input['_additional_suppliers_assigns'])) {
 
             $input2 = [
-                  'type' => CommonITILActor::ASSIGN,
-               ] + $supplier_input;
+                         'type' => CommonITILActor::ASSIGN,
+                      ] + $supplier_input;
 
             foreach ($input["_additional_suppliers_assigns"] as $tmp) {
                if (isset($tmp['suppliers_id'])) {
@@ -2742,12 +2725,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          // Observers : for mailcollector
          if (isset($input["_additional_observers"])
-            && is_array($input["_additional_observers"])
-            && count($input["_additional_observers"])) {
+             && is_array($input["_additional_observers"])
+             && count($input["_additional_observers"])) {
 
             $input2 = [
-                  'type' => CommonITILActor::OBSERVER,
-               ] + $user_input;
+                         'type' => CommonITILActor::OBSERVER,
+                      ] + $user_input;
 
             foreach ($input["_additional_observers"] as $tmp) {
                if (isset($tmp['users_id'])) {
@@ -2760,12 +2743,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          }
 
          if (isset($input["_additional_assigns"])
-            && is_array($input["_additional_assigns"])
-            && count($input["_additional_assigns"])) {
+             && is_array($input["_additional_assigns"])
+             && count($input["_additional_assigns"])) {
 
             $input2 = [
-                  'type' => CommonITILActor::ASSIGN,
-               ] + $user_input;
+                         'type' => CommonITILActor::ASSIGN,
+                      ] + $user_input;
 
             foreach ($input["_additional_assigns"] as $tmp) {
                if (isset($tmp['users_id'])) {
@@ -2777,12 +2760,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             }
          }
          if (isset($input["_additional_requesters"])
-            && is_array($input["_additional_requesters"])
-            && count($input["_additional_requesters"])) {
+             && is_array($input["_additional_requesters"])
+             && count($input["_additional_requesters"])) {
 
             $input2 = [
-                  'type' => CommonITILActor::REQUESTER,
-               ] + $user_input;
+                         'type' => CommonITILActor::REQUESTER,
+                      ] + $user_input;
 
             foreach ($input["_additional_requesters"] as $tmp) {
                if (isset($tmp['users_id'])) {
@@ -2822,13 +2805,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
       if (!empty($this->userlinkclass)) {
-         $class        = new $this->userlinkclass();
-         $this->users  = $class->getActors($this->fields['id']);
+         $class       = new $this->userlinkclass();
+         $this->users = $class->getActors($this->fields['id']);
       }
 
       if (!empty($this->supplierlinkclass)) {
-         $class            = new $this->supplierlinkclass();
-         $this->suppliers  = $class->getActors($this->fields['id']);
+         $class           = new $this->supplierlinkclass();
+         $this->suppliers = $class->getActors($this->fields['id']);
       }
    }
 
@@ -2857,27 +2840,27 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
 
-      $rand   = mt_rand();
-      $actor_name = '_users_id_'.$typename;
+      $rand       = mt_rand();
+      $actor_name = '_users_id_' . $typename;
       if ($type == CommonITILActor::OBSERVER) {
-         $actor_name = '_users_id_'.$typename.'[]';
+         $actor_name = '_users_id_' . $typename . '[]';
       }
-      $params = ['name'        => $actor_name,
-         'value'       => $options["_users_id_".$typename],
-         'right'       => $right,
-         'rand'        => $rand,
-         'entity'      => (isset($options['entities_id'])
-            ? $options['entities_id']: $options['entity_restrict'])];
+      $params = ['name'   => $actor_name,
+                 'value'  => $options["_users_id_" . $typename],
+                 'right'  => $right,
+                 'rand'   => $rand,
+                 'entity' => (isset($options['entities_id'])
+                    ? $options['entities_id'] : $options['entity_restrict'])];
 
       //only for active ldap and corresponding right
       $ldap_methods = getAllDataFromTable('glpi_authldaps', ['is_active' => 1]);
       if (count($ldap_methods)
-         && Session::haveRight('user', User::IMPORTEXTAUTHUSERS)) {
+          && Session::haveRight('user', User::IMPORTEXTAUTHUSERS)) {
          $params['ldap_import'] = true;
       }
 
       if ($this->userentity_oncreate
-         && ($type == CommonITILActor::REQUESTER)) {
+          && ($type == CommonITILActor::REQUESTER)) {
          $params['on_change'] = 'this.form.submit()';
          unset($params['entity']);
       }
@@ -2886,8 +2869,6 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       if (isset($options['_user_index'])) {
          $params['_user_index'] = $options['_user_index'];
       }
-
-
 
 
       // List all users in the active entities
@@ -2913,14 +2894,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo static::getActorIcon('supplier', 'assign');
 
 
-
-
       $rand   = mt_rand();
-      $params = ['name'        => '_suppliers_id_assign',
-         'value'       => $options["_suppliers_id_assign"],
-         'rand'        => $rand];
-
-
+      $params = ['name'  => '_suppliers_id_assign',
+                 'value' => $options["_suppliers_id_assign"],
+                 'rand'  => $rand];
 
 
       Supplier::dropdown($params);
@@ -2950,18 +2927,19 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       if ($type == CommonITILActor::ASSIGN) {
          if (Session::haveRight(self::$rightname, UPDATE)
-            && $_SESSION['glpiset_default_tech']) {
+             && $_SESSION['glpiset_default_tech']) {
             return Session::getLoginUserID();
          }
       }
       if ($type == CommonITILActor::REQUESTER) {
          if (Session::haveRight(self::$rightname, CREATE)
-            && $_SESSION['glpiset_default_requester']) {
+             && $_SESSION['glpiset_default_requester']) {
             return Session::getLoginUserID();
          }
       }
       return 0;
    }
+
    /**
     * count users linked to object by type or global
     *
@@ -3014,15 +2992,16 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
       return 0;
    }
+
    /**
     * count suppliers linked to object by type or global
-    *
-    * @since 0.84
     *
     * @param integer $type type to search (see constants) / 0 for all (default 0)
     *
     * @return integer
-    **/
+    **@since 0.84
+    *
+    */
    function countSuppliers($type = 0) {
 
       if ($type > 0) {
@@ -3062,6 +3041,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
       return $actions;
    }
+
    /**
     * @param MassiveAction $ma
     *
@@ -3107,17 +3087,16 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                   $item->getFromDB($key);
 
 
-
                   unset($values);
                   $values["id"]          = $key;
                   $values["entities_id"] = $input['entities_id'];
 
                   if ($item->update($values)) {
-                     PluginReleasesDeploytasktemplate::transfer($key,$input["entities_id"]);
-                     PluginReleasesTesttemplate::transfer($key,$input["entities_id"]);
-                     PluginReleasesRisktemplate::transfer($key,$input["entities_id"]);
-                     PluginReleasesRollbacktemplate::transfer($key,$input["entities_id"]);
-                     self::transferDocument($key,$input["entities_id"]);
+                     PluginReleasesDeploytasktemplate::transfer($key, $input["entities_id"]);
+                     PluginReleasesTesttemplate::transfer($key, $input["entities_id"]);
+                     PluginReleasesRisktemplate::transfer($key, $input["entities_id"]);
+                     PluginReleasesRollbacktemplate::transfer($key, $input["entities_id"]);
+                     self::transferDocument($key, $input["entities_id"]);
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                   } else {
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
@@ -3133,12 +3112,12 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       global $DB;
 
       if ($ID > 0) {
-         $self = new self();
+         $self      = new self();
          $documents = new Document_Item();
-         $items = $documents->find(["items_id"=>$ID,"itemtype"=>self::getType()]);
-         foreach ($items as $id => $vals){
-            $input = [];
-            $input["id"] = $id;
+         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
+         foreach ($items as $id => $vals) {
+            $input                = [];
+            $input["id"]          = $id;
             $input["entities_id"] = $entity;
             $documents->update($input);
          }

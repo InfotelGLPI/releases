@@ -208,27 +208,19 @@ class PluginReleasesFinalization extends CommonDBTM {
   </article>
   ";
 
-      $dateEnd = (!empty($release->fields["date_end"]))? Html::convDateTime($release->fields["date_end"]):__("Not yet completed",'releases');
-         //         $date = date_parse($release->getField("date_end"));
-         //         $dateObj   = DateTime::createFromFormat('!m', $date["month"]);
-         //         $monthName = $dateObj->format('F'); // March
-         echo "<article>
+      $dateEnd = (!empty($release->fields["date_end"])) ? Html::convDateTime($release->fields["date_end"]) : __("Not yet completed", 'releases');
+
+      echo "<article>
          <div class=\"inner\" >
             <span class=\"bulle bulleMarge\">
               <span><i class=\"fas fa-3x fa-stop\"></i></span>
             </span>
             <h2 class='dateColor'>" . __("End date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-            <p>" . $dateEnd . "</p>
-       </div>
-     </article>";
+            <p>" . $dateEnd . "<br><br>";
 
-
-
-      echo "</section>";
-      echo "</td>";
-      echo "</tr>";
-      echo "</table>";
-      if ((empty($release->fields["date_end"]) || $release->fields["status"] < PluginReleasesRelease::REVIEW) && $this->canUpdate()) {
+      if ((empty($release->fields["date_end"])
+           || $release->fields["status"] < PluginReleasesRelease::REVIEW)
+          && $this->canUpdate()) {
          if ($deployTaskFail == 0 && $testFail == 0) {
             $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
                          && ($deployTaskTotal == $deployTaskDone)
@@ -242,14 +234,14 @@ class PluginReleasesFinalization extends CommonDBTM {
                $text .= "<br>";
             }
             //         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
-            echo '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
+            $link = '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
             echo Html::scriptBlock(
                "$('#finalize').click(function(){
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+            $msg        = "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
             $srcImg     = "fas fa-info-circle";
             $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
@@ -294,14 +286,14 @@ class PluginReleasesFinalization extends CommonDBTM {
          } else {
             $text = "";
             //         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
-            echo '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
+            $link = '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Html::scriptBlock(
                "$('#finalize').click(function(){
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            echo "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . "</div>";
+            $msg        = "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . "</div>";
             $srcImg     = "fas fa-times";
             $color      = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);
@@ -342,5 +334,15 @@ class PluginReleasesFinalization extends CommonDBTM {
             //         }
          }
       }
+
+      echo $link . "</p>
+       </div>
+     </article>";
+      echo $msg;
+
+      echo "</section>";
+      echo "</td>";
+      echo "</tr>";
+      echo "</table>";
    }
 }
