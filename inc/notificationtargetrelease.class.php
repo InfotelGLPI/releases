@@ -80,7 +80,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       $data["##review.incidentdescription##"] = "";
 
       $review = new PluginReleasesReview();
-      if ($review->getFromDBByCrit(["plugin_releases_release_id" => $item->getField('id')])) {
+      if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
          $data["##review.realproductiondate##"]  = Html::convDateTime($review->getField("real_date_release"));
          $data["##review.conformrealization##"]  = Dropdown::getYesNo($review->getField('conforming_realization'));
          $data["##review.name##"]                = Html::clean($review->getField('name'));
