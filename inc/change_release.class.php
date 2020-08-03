@@ -247,7 +247,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       global $CFG_GLPI, $DB;
 
       PluginReleasesRelease::showCreateRelease($item);
-
+      echo "<br/><br/>";
       $ID      = $item->getID();
       $canedit = PluginReleasesRelease::canUpdate();
       $rand    = mt_rand();
@@ -290,10 +290,11 @@ class PluginReleasesChange_Release extends CommonDBRelation {
                                  'container'     => 'mass' . __CLASS__ . $rand];
          Html::showMassiveActions($massiveactionparams);
       }
-      echo "<table class='tab_cadre_fixehov'>";
-      echo "<tr class='noHover'><th colspan='8'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
-      echo "</tr>";
       if ($numrows) {
+         echo "<table class='tab_cadre_fixehov'>";
+         echo "<tr class='noHover'><th colspan='8'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
+         echo "</tr>";
+
          echo "<tr  class='tab_bg_1'>";
          if ($canedit && $numrows) {
 
@@ -356,12 +357,13 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo "</td >";
             echo "</tr>";
          }
-      }
-      echo "</table>";
-      if ($canedit && $numrows) {
-         $massiveactionparams['ontop'] = false;
-         Html::showMassiveActions($massiveactionparams);
-         Html::closeForm();
+
+         echo "</table>";
+         if ($canedit && $numrows) {
+            $massiveactionparams['ontop'] = false;
+            Html::showMassiveActions($massiveactionparams);
+            Html::closeForm();
+         }
       }
    }
 }
