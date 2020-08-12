@@ -539,13 +539,21 @@ class PluginReleasesRelease extends CommonITILObject {
       $override_input['items_id'] = $this->getID();
       foreach ($relations_classes as $classname) {
          if (!is_a($classname, CommonDBConnexity::class, true)) {
-            Toolbox::logWarning(
-               sprintf(
-                  'Unable to clone elements of class %s as it does not extends "CommonDBConnexity"',
-                  $classname
-               )
-            );
-            continue;
+            $item = new $classname();
+            $items = $item->find(['plugin_releases_releases_id'=>$source->getID()]);
+            foreach ($items as $input){
+               unset($input["id"]);
+               $input["plugin_releases_releases_id"] = $this->getID();
+               $item->add($input);
+            }
+//            Toolbox::logWarning(
+//               sprintf(
+//                  'Unable to clone elements of class %s as it does not extends "CommonDBConnexity"',
+//                  $classname
+//               )
+//            );
+//            continue;
+
          } else {
             $relation_items = $classname::getItemsAssociatedTo($this->getType(), $source->getID());
             foreach ($relation_items as $relation_item) {
