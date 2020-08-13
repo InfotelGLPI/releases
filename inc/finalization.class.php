@@ -246,8 +246,8 @@ class PluginReleasesFinalization extends CommonDBTM {
             $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
 
-            $msg.= Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
-            $msg.= Html::scriptBlock("$( '#alert-message' ).dialog({
+            $msg .= Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
+            $msg .= Html::scriptBlock("$( '#alert-message' ).dialog({
                  autoOpen: false,
                  height: " . 200 . ",
                  width: " . 300 . ",

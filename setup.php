@@ -58,7 +58,7 @@ function plugin_init_releases() {
          $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
       }
    }
-   
+
    $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeploytask', 'populatePlanning'];
    $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeploytask', 'displayPlanningItem'];
    $plugin                                        = new Plugin();

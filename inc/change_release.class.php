@@ -140,7 +140,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
 
       while ($data = $iterator->next()) {
          $changes[$data['id']] = $data;
-         $used[$data['id']] = $data['id'];
+         $used[$data['id']]    = $data['id'];
 
       }
       $statues = Change::getNotSolvedStatusArray();
@@ -154,7 +154,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "<tr class='tab_bg_2'><td>";
          echo "<input type='hidden' name='plugin_releases_releases_id' value='$ID'>";
          Change::dropdown([
-                             'used' => $used,
+                             'used'   => $used,
                              'entity' => $release->getEntityID(), 'condition' => ['status' => Change::getNotSolvedStatusArray()]]);
          echo "</td><td class='center'>";
          echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
