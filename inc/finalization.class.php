@@ -236,18 +236,18 @@ class PluginReleasesFinalization extends CommonDBTM {
             //         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
             $link = '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
-            echo Html::scriptBlock(
+            $msg= Html::scriptBlock(
                "$('#finalize').click(function(){
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            $msg        = "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
+            $msg        .= "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") ."<p>". Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false,"canedit"=>true, "display" => false]) . "</p></div>";
             $srcImg     = "fas fa-info-circle";
             $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
 
-            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
-            echo Html::scriptBlock("$( '#alert-message' ).dialog({
+            $msg .= Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
+            $msg .= Html::scriptBlock("$( '#alert-message' ).dialog({
                  autoOpen: false,
                  height: " . 200 . ",
                  width: " . 300 . ",
@@ -260,8 +260,8 @@ class PluginReleasesFinalization extends CommonDBTM {
                },
                  buttons: {
                   '" . __("Ok") . "': function() {
-                     if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
-                 
+                     if(($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined) && ($(\"[name = '_date_production']\").val() == '' || $(\"[name = '_date_production']\").val() === undefined) ){
+                        console.log($(\"[name = 'date_production']\").val());
                        $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
                      }else{  
                         var date = $(\"[name = 'date_production']\").val();
@@ -288,18 +288,18 @@ class PluginReleasesFinalization extends CommonDBTM {
             //         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
             $link = '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
-            echo Html::scriptBlock(
+            $msg = Html::scriptBlock(
                "$('#finalize').click(function(){
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            $msg        = "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . "</div>";
+            $msg        .= "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . "</div>";
             $srcImg     = "fas fa-times";
             $color      = "firebrick";
             $alertTitle = _n("Information", "Informations", 1);
 
-            echo Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed", 'releases') . " \";");
-            echo Html::scriptBlock("$( '#alert-message' ).dialog({
+            $msg .= Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed", 'releases') . " \";");
+            $msg .= Html::scriptBlock("$( '#alert-message' ).dialog({
                  autoOpen: false,
                  height: " . 200 . ",
                  width: " . 300 . ",
@@ -333,6 +333,9 @@ class PluginReleasesFinalization extends CommonDBTM {
              })");
             //         }
          }
+      }else{
+         $link = "";
+         $msg = "";
       }
 
       echo $link . "</p>

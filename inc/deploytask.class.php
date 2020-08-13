@@ -774,7 +774,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
       $result = $DB->query($query);
 
       if ($DB->numrows($result) > 0) {
-         for ($i = 0; $data = $DB->fetchArray($result); $i++) {
+         for ($i = 0; $data = $DB->fetch_array($result); $i++) {
 
             $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_releases";
             $output[$key]['color']            = isset($parm['color']) ? $parm['color'] : null;
@@ -855,7 +855,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
                $val["users_id_tech"] . "'";
       $user = new User();
       $user->getFromDB($val["users_id_tech"]);
-      $html .= ">" . $user->getFriendlyName() . "</a>";
+      $html .= ">" . $user->getRawName() . "</a>";
 
       $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
       if ($val["end"]) {

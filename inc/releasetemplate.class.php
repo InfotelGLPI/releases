@@ -800,7 +800,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       // Restore saved value or override with page parameter
       $saved                  = $this->restoreInput();
-      $options['entities_id'] = Session::getActiveEntity();
+      $options['entities_id'] = $_SESSION['glpiactive_entity'];
       foreach ($default_values as $name => $value) {
          if (!isset($this->fields[$name])) {
             if (isset($saved[$name])) {
@@ -1471,7 +1471,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
             echo "<div class='rich_text_container'>";
             $richtext = Html::setRichTextContent('', $content, '', true);
-            $richtext = Html::replaceImagesByGallery($richtext);
+            $richtext = PluginReleasesRelease::replaceImagesByGallery($richtext);
             echo $richtext;
             echo "</div>";
 
@@ -2853,7 +2853,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                     ? $options['entities_id'] : $options['entity_restrict'])];
 
       //only for active ldap and corresponding right
-      $ldap_methods = getAllDataFromTable('glpi_authldaps', ['is_active' => 1]);
+      $dbu = new DbUtils();
+      $ldap_methods = $dbu->getAllDataFromTable('glpi_authldaps', ['is_active' => 1]);
       if (count($ldap_methods)
           && Session::haveRight('user', User::IMPORTEXTAUTHUSERS)) {
          $params['ldap_import'] = true;

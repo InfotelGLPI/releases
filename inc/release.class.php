@@ -146,15 +146,14 @@ class PluginReleasesRelease extends CommonITILObject {
    function defineTabs($options = []) {
 
       $ong = [];
-      $this->defineDefaultObjectTabs($ong, $options);
+      $this->addStandardTab(__CLASS__, $ong, $options);
+      $this->addDefaultFormTab($ong, $options);
       $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
       $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
 
-      if ($this->hasImpactTab()) {
-         $this->addStandardTab('Impact', $ong, $options); // todo hide in template
-      }
+
       $this->addStandardTab('PluginReleasesFinalization', $ong, $options);
       $this->addStandardTab('PluginReleasesReview', $ong, $options);
       $this->addStandardTab('Notepad', $ong, $options);
@@ -422,7 +421,7 @@ class PluginReleasesRelease extends CommonITILObject {
                if (is_array($items)) {
                   foreach ($items as $item) {
                      $user->getFromDB($item);
-                     $text .= $user->getFriendlyName() . "<br />";
+                     $text .= $user->getRawName() . "<br />";
                   }
                }
                return $text;
@@ -434,7 +433,7 @@ class PluginReleasesRelease extends CommonITILObject {
                if (is_array($items)) {
                   foreach ($items as $item) {
                      $profile->getFromDB($item);
-                     $text .= $profile->getFriendlyName() . "<br />";
+                     $text .= $profile->getRawName() . "<br />";
                   }
                }
                return $text;
@@ -446,7 +445,7 @@ class PluginReleasesRelease extends CommonITILObject {
                if (is_array($items)) {
                   foreach ($items as $item) {
                      $group->getFromDB($item);
-                     $text .= $group->getFriendlyName() . "<br />";
+                     $text .= $group->getRawName() . "<br />";
                   }
                }
                return $text;
@@ -458,7 +457,7 @@ class PluginReleasesRelease extends CommonITILObject {
                if (is_array($items)) {
                   foreach ($items as $item) {
                      $entity->getFromDB($item);
-                     $text .= $entity->getFriendlyName() . "<br />";
+                     $text .= $entity->getRawName() . "<br />";
                   }
                }
                return $text;
@@ -470,7 +469,7 @@ class PluginReleasesRelease extends CommonITILObject {
                if (is_array($items)) {
                   foreach ($items as $item) {
                      $location->getFromDB($item);
-                     $text .= $location->getFriendlyName() . "<br />";
+                     $text .= $location->getRawName() . "<br />";
                   }
                }
                return $text;
@@ -517,43 +516,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
    }
 
-   /**
-    * @see CommonDBTM::post_clone
-    **/
-   function post_clone($source, $history) {
-      //TODO imagine how to modify computer clone because elements are not DBConnexity
-      parent::post_clone($source, $history);
-      $relations_classes = [
-         PluginReleasesRisk::class,
-         PluginReleasesTest::class,
-         PluginReleasesDeploytask::class,
-         PluginReleasesRollback::class,
-         PluginReleasesReview::class,
-         PluginReleasesFinalization::class,
-         Notepad::class,
-         KnowbaseItem_Item::class,
-         Document_Item::class
 
-      ];
-
-      $override_input['items_id'] = $this->getID();
-      foreach ($relations_classes as $classname) {
-         if (!is_a($classname, CommonDBConnexity::class, true)) {
-            Toolbox::logWarning(
-               sprintf(
-                  'Unable to clone elements of class %s as it does not extends "CommonDBConnexity"',
-                  $classname
-               )
-            );
-            continue;
-         } else {
-            $relation_items = $classname::getItemsAssociatedTo($this->getType(), $source->getID());
-            foreach ($relation_items as $relation_item) {
-               $newId = $relation_item->clone($override_input, $history);
-            }
-         }
-      }
-   }
 
 
    /**
@@ -679,10 +642,31 @@ class PluginReleasesRelease extends CommonITILObject {
                );
                continue;
             } else {
-               $relation_items = $classname::getItemsAssociatedTo($template->getType(), $template->getID());
-               foreach ($relation_items as $relation_item) {
-                  $newId = $relation_item->clone($override_input, 0);
+               if($classname != Notepad::class) {
+
+
+                  $classname::cloneItem($template->getType(), $template->getID(), $this->getID(), $this->getType());
+               }else{
+
+                     global $DB;
+                     $oldid = $template->getID();
+                     $itemtype = $template->getType();
+                     foreach ($DB->request('glpi_notepads',
+                                           ['WHERE'  => "`items_id` = '$oldid'
+                                          AND `itemtype` = '$itemtype'"]) as $data) {
+                        $cd               = new Notepad();
+                        unset($data['id']);
+                        $data['items_id'] = $this->getID();
+                        $data['itemtype'] = $this->getType();
+                        $data             = Toolbox::addslashes_deep($data);
+                        $cd->add($data);
+                     }
+
                }
+//               $relation_items = $classname::getItemsAssociatedTo($template->getType(), $template->getID());
+//               foreach ($relation_items as $relation_item) {
+//                  $newId = $relation_item->clone($override_input, 0);
+//               }
             }
 
          }
@@ -1126,14 +1110,14 @@ class PluginReleasesRelease extends CommonITILObject {
       if (!isset($options['template_preview'])) {
          $options['template_preview'] = 0;
       }
-      //      $this->fields["entities_id"] = Session::getActiveEntity();
+      //      $this->fields["entities_id"] = $_SESSION['glpiactive_entity'];
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
       $default_values = self::getDefaultValues();
 
       // Restore saved value or override with page parameter
       $saved                  = $this->restoreInput();
-      $options['entities_id'] = Session::getActiveEntity();
+      $options['entities_id'] = $_SESSION['glpiactive_entity'];
       foreach ($default_values as $name => $value) {
          if (!isset($this->fields[$name])) {
             if (isset($saved[$name])) {
@@ -1963,7 +1947,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
             echo "<div class='rich_text_container'>";
             $richtext = Html::setRichTextContent('', $content, '', true);
-            $richtext = Html::replaceImagesByGallery($richtext);
+            $richtext = self::replaceImagesByGallery($richtext);
             echo $richtext;
             echo "</div>";
 
@@ -2295,20 +2279,7 @@ class PluginReleasesRelease extends CommonITILObject {
       return $assets;
    }
 
-   /**
-    * Should impact tab be displayed? Check if there is a valid linked item
-    *
-    * @return boolean
-    */
-   protected function hasImpactTab() {
-      foreach ($this->getLinkedItems() as $linkedItem) {
-         $class = $linkedItem['itemtype'];
-         if (Impact::isEnabled($class) && Session::getCurrentInterface() === "central") {
-            return true;
-         }
-      }
-      return false;
-   }
+
 
    /**
     * @return array
@@ -3287,5 +3258,55 @@ class PluginReleasesRelease extends CommonITILObject {
       return ['OR' => $or_crits];
    }
 
+   function canAssign() {
+      return Session::haveRight(self::$rightname, UPDATE);
+   }
+
+
+   function canAssignToMe() {
+      return Session::haveRight(self::$rightname, UPDATE);
+   }
+
+   /**
+    * Replace images by gallery component in rich text.
+    *
+    * @since 9.5.0
+    *
+    * @param string  $richtext
+    *
+    * @return string
+    */
+   static function replaceImagesByGallery($richtext) {
+
+      $image_matches = [];
+      preg_match_all(
+         '/<a[^>]*>\s*<img[^>]*src=["\']([^"\']*document\.send\.php\?docid=([0-9]+)(?:&[^"\']+)?)["\'][^>]*>\s*<\/a>/',
+         $richtext,
+         $image_matches,
+         PREG_SET_ORDER
+      );
+      foreach ($image_matches as $image_match) {
+         $img_tag = $image_match[0];
+         $docsrc  = $image_match[1];
+         $docid   = $image_match[2];
+         $document = new Document();
+         if ($document->getFromDB($docid)) {
+            $docpath = GLPI_DOC_DIR . '/' . $document->fields['filepath'];
+            if (Document::isImage($docpath)) {
+               $imgsize = getimagesize($docpath);
+               $gallery = Html::imageGallery([
+                                                [
+                                                   'src' => $docsrc,
+                                                   'w'   => $imgsize[0],
+                                                   'h'   => $imgsize[1]
+                                                ]
+                                             ]);
+               $richtext = str_replace($img_tag, $gallery, $richtext);
+            }
+         }
+      }
+
+      return $richtext;
+   }
 }
 

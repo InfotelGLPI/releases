@@ -106,11 +106,11 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       $rand    = mt_rand();
 
       $iterator = $DB->request([
-                                  'SELECT'    => [
+                                  'SELECT DISTINCT'    => [
                                      'glpi_plugin_releases_changes_releases.id AS linkid',
                                      'glpi_changes.*'
                                   ],
-                                  'DISTINCT'  => true,
+
                                   'FROM'      => 'glpi_plugin_releases_changes_releases',
                                   'LEFT JOIN' => [
                                      'glpi_changes' => [
@@ -140,6 +140,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
 
       while ($data = $iterator->next()) {
          $changes[$data['id']] = $data;
+         $used[$data['id']] = $data['id'];
 
       }
       $statues = Change::getNotSolvedStatusArray();
@@ -153,7 +154,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "<tr class='tab_bg_2'><td>";
          echo "<input type='hidden' name='plugin_releases_releases_id' value='$ID'>";
          Change::dropdown([
-                             //            'used' => $used,
+                              'used' => $used,
                              'entity' => $release->getEntityID(), 'condition' => ['status' => Change::getNotSolvedStatusArray()]]);
          echo "</td><td class='center'>";
          echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
@@ -253,11 +254,11 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       $rand    = mt_rand();
 
       $iterator = $DB->request([
-                                  'SELECT'    => [
+                                  'SELECT DISTINCT'    => [
                                      'glpi_plugin_releases_changes_releases.id AS linkid',
                                      'glpi_plugin_releases_releases.*'
                                   ],
-                                  'DISTINCT'  => true,
+
                                   'FROM'      => 'glpi_plugin_releases_changes_releases',
                                   'LEFT JOIN' => [
                                      'glpi_plugin_releases_releases' => [

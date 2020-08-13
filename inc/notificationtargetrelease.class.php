@@ -302,9 +302,10 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $followup_restrict['is_private'] = 0;
          }
          $followup_restrict['itemtype'] = $objettype;
+         $dbu = new DbUtils();
 
          //Followup infos
-         $followups         = getAllDataFromTable(
+         $followups         = $dbu->getAllDataFromTable(
             'glpi_itilfollowups', [
                                    'WHERE' => $followup_restrict,
                                    'ORDER' => ['date_mod DESC', 'id ASC']
@@ -410,7 +411,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $tasks         = getAllDataFromTable(
+         $tasks         = $dbu->getAllDataFromTable(
             $taskobj->getTable(), [
                                    'WHERE' => $restrict,
                                    'ORDER' => ['date_mod DESC', 'id ASC']
@@ -455,7 +456,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $risks         = getAllDataFromTable(
+         $risks         = $dbu->getAllDataFromTable(
             $riskobj->getTable(), [
                                    'WHERE' => $restrict,
                                    'ORDER' => ['date_mod DESC', 'id ASC']
@@ -488,7 +489,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict     = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $rollbacks         = getAllDataFromTable(
+         $rollbacks         = $dbu->getAllDataFromTable(
             $rollbackobj->getTable(), [
                                        'WHERE' => $restrict,
                                        'ORDER' => ['date_mod DESC', 'id ASC']
@@ -518,7 +519,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
 
-         $tests         = getAllDataFromTable(
+         $tests         = $dbu->getAllDataFromTable(
             $testobj->getTable(), [
                                    'WHERE' => $restrict,
                                    'ORDER' => ['date_mod DESC', 'id ASC']
@@ -581,7 +582,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = ['plugin_releases_releases_id' => $item->getField('id')];
 
 
-         $items = getAllDataFromTable('glpi_plugin_releases_releases_items', $restrict);
+         $items = $dbu->getAllDataFromTable('glpi_plugin_releases_releases_items', $restrict);
 
          $data['items'] = [];
          if (count($items)) {
@@ -641,7 +642,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $restrict = ['plugin_releases_releases_id' => $item->getField('id')];
 
 
-         $changes         = getAllDataFromTable('glpi_plugin_releases_changes_releases', $restrict);
+         $changes         = $dbu->getAllDataFromTable('glpi_plugin_releases_changes_releases', $restrict);
          $data['changes'] = [];
          if (count($changes)) {
             $change = new Change();

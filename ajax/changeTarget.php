@@ -54,7 +54,7 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
       foreach ($items as $vals) {
          if ($_POST["type"] == User::getType()) {
             $item->getFromDB($vals["id"]);
-            $data[$vals["id"]] = $item->getFriendlyName();
+            $data[$vals["id"]] = $item->getRawName();
          } else {
             $data[$vals["id"]] = $vals["name"];
          }
