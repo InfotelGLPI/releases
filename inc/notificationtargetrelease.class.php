@@ -302,7 +302,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $followup_restrict['is_private'] = 0;
          }
          $followup_restrict['itemtype'] = $objettype;
-         $dbu = new DbUtils();
+         $dbu                           = new DbUtils();
 
          //Followup infos
          $followups         = $dbu->getAllDataFromTable(

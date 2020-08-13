@@ -2853,7 +2853,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                     ? $options['entities_id'] : $options['entity_restrict'])];
 
       //only for active ldap and corresponding right
-      $dbu = new DbUtils();
+      $dbu          = new DbUtils();
       $ldap_methods = $dbu->getAllDataFromTable('glpi_authldaps', ['is_active' => 1]);
       if (count($ldap_methods)
           && Session::haveRight('user', User::IMPORTEXTAUTHUSERS)) {

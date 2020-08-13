@@ -517,8 +517,6 @@ class PluginReleasesRelease extends CommonITILObject {
    }
 
 
-
-
    /**
     * Actions done after the ADD of the item in the database
     *
@@ -642,31 +640,31 @@ class PluginReleasesRelease extends CommonITILObject {
                );
                continue;
             } else {
-               if($classname != Notepad::class) {
+               if ($classname != Notepad::class) {
 
 
                   $classname::cloneItem($template->getType(), $template->getID(), $this->getID(), $this->getType());
-               }else{
+               } else {
 
-                     global $DB;
-                     $oldid = $template->getID();
-                     $itemtype = $template->getType();
-                     foreach ($DB->request('glpi_notepads',
-                                           ['WHERE'  => "`items_id` = '$oldid'
+                  global $DB;
+                  $oldid    = $template->getID();
+                  $itemtype = $template->getType();
+                  foreach ($DB->request('glpi_notepads',
+                                        ['WHERE' => "`items_id` = '$oldid'
                                           AND `itemtype` = '$itemtype'"]) as $data) {
-                        $cd               = new Notepad();
-                        unset($data['id']);
-                        $data['items_id'] = $this->getID();
-                        $data['itemtype'] = $this->getType();
-                        $data             = Toolbox::addslashes_deep($data);
-                        $cd->add($data);
-                     }
+                     $cd = new Notepad();
+                     unset($data['id']);
+                     $data['items_id'] = $this->getID();
+                     $data['itemtype'] = $this->getType();
+                     $data             = Toolbox::addslashes_deep($data);
+                     $cd->add($data);
+                  }
 
                }
-//               $relation_items = $classname::getItemsAssociatedTo($template->getType(), $template->getID());
-//               foreach ($relation_items as $relation_item) {
-//                  $newId = $relation_item->clone($override_input, 0);
-//               }
+               //               $relation_items = $classname::getItemsAssociatedTo($template->getType(), $template->getID());
+               //               foreach ($relation_items as $relation_item) {
+               //                  $newId = $relation_item->clone($override_input, 0);
+               //               }
             }
 
          }
@@ -2280,7 +2278,6 @@ class PluginReleasesRelease extends CommonITILObject {
    }
 
 
-
    /**
     * @return array
     */
@@ -3270,11 +3267,11 @@ class PluginReleasesRelease extends CommonITILObject {
    /**
     * Replace images by gallery component in rich text.
     *
-    * @since 9.5.0
-    *
-    * @param string  $richtext
+    * @param string $richtext
     *
     * @return string
+    * @since 9.5.0
+    *
     */
    static function replaceImagesByGallery($richtext) {
 
@@ -3286,21 +3283,21 @@ class PluginReleasesRelease extends CommonITILObject {
          PREG_SET_ORDER
       );
       foreach ($image_matches as $image_match) {
-         $img_tag = $image_match[0];
-         $docsrc  = $image_match[1];
-         $docid   = $image_match[2];
+         $img_tag  = $image_match[0];
+         $docsrc   = $image_match[1];
+         $docid    = $image_match[2];
          $document = new Document();
          if ($document->getFromDB($docid)) {
             $docpath = GLPI_DOC_DIR . '/' . $document->fields['filepath'];
             if (Document::isImage($docpath)) {
-               $imgsize = getimagesize($docpath);
-               $gallery = Html::imageGallery([
-                                                [
-                                                   'src' => $docsrc,
-                                                   'w'   => $imgsize[0],
-                                                   'h'   => $imgsize[1]
-                                                ]
-                                             ]);
+               $imgsize  = getimagesize($docpath);
+               $gallery  = Html::imageGallery([
+                                                 [
+                                                    'src' => $docsrc,
+                                                    'w'   => $imgsize[0],
+                                                    'h'   => $imgsize[1]
+                                                 ]
+                                              ]);
                $richtext = str_replace($img_tag, $gallery, $richtext);
             }
          }

@@ -236,12 +236,12 @@ class PluginReleasesFinalization extends CommonDBTM {
             //         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
             $link = '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
 
-            $msg= Html::scriptBlock(
+            $msg        = Html::scriptBlock(
                "$('#finalize').click(function(){
                   $( '#alert-message' ).dialog( 'open' );
          
                   });");
-            $msg        .= "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") ."<p>". Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false,"canedit"=>true, "display" => false]) . "</p></div>";
+            $msg        .= "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . "<p>" . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "canedit" => true, "display" => false]) . "</p></div>";
             $srcImg     = "fas fa-info-circle";
             $color      = "forestgreen";
             $alertTitle = _n("Information", "Informations", 1);
@@ -288,7 +288,7 @@ class PluginReleasesFinalization extends CommonDBTM {
             //         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
             $link = '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
 
-            $msg = Html::scriptBlock(
+            $msg        = Html::scriptBlock(
                "$('#finalize').click(function(){
                   $( '#alert-message' ).dialog( 'open' );
          
@@ -333,9 +333,9 @@ class PluginReleasesFinalization extends CommonDBTM {
              })");
             //         }
          }
-      }else{
+      } else {
          $link = "";
-         $msg = "";
+         $msg  = "";
       }
 
       echo $link . "</p>
