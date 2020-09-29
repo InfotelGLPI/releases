@@ -1,5 +1,9 @@
 # Releases
-Plugin Release for GLPI
+Plugin Releases for GLPI
+
+![Plugin Releases](https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases.png "Plugin Releases")
+
+![Plugin Releases](https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases_finalize.png "Plugin Releases")
 
 Ce plugin est disponible en 9.5.x.
 
