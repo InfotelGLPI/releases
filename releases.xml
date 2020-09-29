@@ -9,10 +9,20 @@
          <fr><![CDATA[Plugin de gestion de mises en procduction de changements]]></fr>
          <en><![CDATA[Change releases management plugin]]></en>
       </short>
-      <long>
-         <fr><![CDATA[Plugin de gestion de mises en procduction de changements]]></fr>
-         <en><![CDATA[Change releases management plugin]]></en>
-       </long>
+      <fr><![CDATA[Plugin de gestion de mises en production de changements.
+Le plugin permet de créer des mises en productions de changement ayant lieu au sein du service informatique.
+Le plugin permet :
+        <br />- De lancer la mise en production de changements grâce à des modèles prédéfinis
+        <br />- De définir des risques, retours arrières, tâches de déploiements et des tests
+        <br />- De finaliser les mises en productions ou de les marquer comme échouées
+   ]]></fr>
+      <en><![CDATA[Plugin for managing changes in production.
+The plugin allows you to create productions of change taking place within the IT department.
+The plugin allows:
+         <br /> - To start the production of changes thanks to predefined models
+         <br /> - Define risks, backtracking, deployment tasksand tests
+         <br /> - To finalize the releases or to mark them as failed
+    ]]></en>
    </description>
    <homepage>https://github.com/InfotelGLPI/releases</homepage>
    <download>https://github.com/InfotelGLPI/releases/releases</download>
@@ -45,4 +55,8 @@
             <tag>itil</tag>
          </en>
    </tags>
+   <screenshots>
+      <screenshot>https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases_finalize.png</screenshot>
+   </screenshots>
 </root>
