@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+   <name>Releases management</name>
+   <key>releases</key>
+   <state>stable</state>
+   <logo>https://raw.githubusercontent.com/InfotelGLPI/releases/master/releases.png</logo>
+   <description>
+      <short>
+         <fr><![CDATA[Plugin de gestion de mises en procduction de changements]]></fr>
+         <en><![CDATA[Change releases management plugin]]></en>
+      </short>
+      <long>
+         <fr><![CDATA[Plugin de gestion de mises en procduction de changements]]></fr>
+         <en><![CDATA[Change releases management plugin]]></en>
+       </long>
+   </description>
+   <homepage>https://github.com/InfotelGLPI/releases</homepage>
+   <download>https://github.com/InfotelGLPI/releases/releases</download>
+   <issues>https://github.com/InfotelGLPI/releases/issues</issues>
+   <readme>https://raw.githubusercontent.com/InfotelGLPI/releases/master/README.md</readme>
+   <authors>
+      <author>Alban Lesellier</author>
+      <author>Infotel</author>
+   </authors>
+   <versions>
+       <version>
+           <num>1.0.0</num>
+           <compatibility>9.5</compatibility>
+       </version>
+       <version>
+
+     </versions>
+    <langs>
+        <lang>en_GB</lang>
+        <lang>fr_FR</lang>
+    </langs>
+   <license><![CDATA[GPLv2+]]></license>
+      <tags>
+         <fr>
+            <tag>changement</tag>
+            <tag>production</tag>
+            <tag>itil</tag>
+         </fr>
+         <en>
+            <tag>change</tag>
+            <tag>production</tag>
+            <tag>itil</tag>
+         </en>
+   </tags>
+</root>
