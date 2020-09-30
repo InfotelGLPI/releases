@@ -24,7 +24,7 @@ The plugin allows:
          <br /> - Define risks, backtracking, deployment tasksand tests
          <br /> - To finalize the releases or to mark them as failed
     ]]></en>
-    </long>
+       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/releases</homepage>
    <download>https://github.com/InfotelGLPI/releases/releases</download>

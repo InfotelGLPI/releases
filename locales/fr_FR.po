@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: GLPI - Release plugin 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-31 16:10+0200\n"
-"PO-Revision-Date: 2020-07-31 16:41+0200\n"
+"PO-Revision-Date: 2020-09-30 10:13+0200\n"
 "Last-Translator: Alban Lesellier <alban.lesellier@infotel.com>, 2020\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12376/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #: setup.php:82 front/change_release.form.php:48
 #: inc/notificationtargetrelease.class.php:884 inc/profile.class.php:52
@@ -147,7 +147,7 @@ msgstr "%s / %s retours arrière"
 #: inc/finalization.class.php:191
 #, php-format
 msgid "%s / %s deploy tasks"
-msgstr "%s / %s tâches de déploiement échouées"
+msgstr "%s / %s tâches de déploiement"
 
 #: inc/finalization.class.php:192
 #, php-format
