@@ -218,6 +218,8 @@ class PluginReleasesFinalization extends CommonDBTM {
             <h2 class='dateColor'>" . __("End date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
             <p>" . $dateEnd . "<br><br>";
 
+      $link = '';
+      $msg = '';
       if ((empty($release->fields["date_end"])
            || $release->fields["status"] < PluginReleasesRelease::REVIEW)
           && $this->canUpdate()) {
