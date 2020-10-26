@@ -3295,5 +3295,8 @@ class PluginReleasesRelease extends CommonITILObject {
       return ['OR' => $or_crits];
    }
 
+   public static function getItemLinkClass(): string {
+      return PluginReleasesRelease_Item::class;
+   }
 }
 
