@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - Release plugin 1.0.0\n"
+"Project-Id-Version: GLPI - Release plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-03 09:25+0200\n"
+"POT-Creation-Date: 2020-11-02 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ajax/finalize.php:93 ajax/finalize.php:108
+#: ajax/finalize.php:93 ajax/finalize.php:108 inc/finalization.class.php:192
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr ""
@@ -145,11 +145,6 @@ msgstr ""
 msgid "%s / %s deploy tasks"
 msgstr ""
 
-#: inc/finalization.class.php:192
-#, php-format
-msgid "%s  deploy tasks failed"
-msgstr ""
-
 #: inc/finalization.class.php:202 inc/notificationtargetrelease.class.php:861
 #: inc/notificationtargetrelease.class.php:881
 #: inc/releasetemplate.class.php:156 inc/releasetemplate.class.php:676
@@ -173,24 +168,24 @@ msgstr ""
 msgid "Not yet completed"
 msgstr ""
 
-#: inc/finalization.class.php:232
+#: inc/finalization.class.php:234
 msgid "Care all steps are not finish !"
 msgstr ""
 
-#: inc/finalization.class.php:237 inc/finalization.class.php:249
+#: inc/finalization.class.php:239 inc/finalization.class.php:251
 msgid "Finalize"
 msgstr ""
 
-#: inc/finalization.class.php:244 inc/release.class.php:282
+#: inc/finalization.class.php:246 inc/release.class.php:282
 #: inc/releasetemplate.class.php:140
 msgid "Production run date"
 msgstr ""
 
-#: inc/finalization.class.php:289 inc/finalization.class.php:301
+#: inc/finalization.class.php:291 inc/finalization.class.php:303
 msgid "Mark as failed"
 msgstr ""
 
-#: inc/finalization.class.php:314
+#: inc/finalization.class.php:316
 msgid "Confirm"
 msgstr ""
 
