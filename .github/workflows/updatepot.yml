@@ -17,7 +17,7 @@ jobs:
 
     - name: install xgettext with npm
     
-      run:  apt-get update;apt-get upgrade;apt-get install gettext;
+      run:  sudo apt-get update;sudo apt-get upgrade;sudo apt-get install gettext;
     - name: Update POT
       run: sh tools/extract_template.sh;
 
