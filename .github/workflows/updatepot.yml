@@ -14,13 +14,10 @@ jobs:
     steps: 
     - name: Checkout repo
       uses: actions/checkout@v2 
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.2
-      with:
-        node-version: '12'
+
     - name: install xgettext with npm
     
-      run:  npm install -g xgettext
+      run:  apt-get update;apt-get upgrade;apt-get install gettext;
     - name: Update POT
       run: sh tools/extract_template.sh;
 
