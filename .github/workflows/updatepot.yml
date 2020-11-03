@@ -2,8 +2,6 @@ name: Update POT
 on:
   push:
     branches: [ master ]
-    paths:
-    - '!/locales**'
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
