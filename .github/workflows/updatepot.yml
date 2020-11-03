@@ -20,7 +20,7 @@ jobs:
         node-version: '12'
     - name: install xgettext with npm
     
-      run:  npm install -g xgettext-template
+      run:  npm install -g xgettext
     - name: Update POT
       run: sh tools/extract_template.sh;
 
