@@ -1,0 +1,30 @@
+name: Update POT
+on:
+  push:
+    branches: [ master ]
+    paths:
+    - '!/locales**'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+jobs: 
+  run:
+    
+    name: Update POT
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Checkout repo
+      uses: actions/checkout@v2 
+      
+    - name: Generate mo
+      run: sh tools/extract_template.sh;
+
+
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v5.1.0
+      with:
+        message: "Generate mo"
+    - name: Push changes
+ 
+      uses: actions-go/push@v1
+  
