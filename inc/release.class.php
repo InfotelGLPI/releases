@@ -1397,7 +1397,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</tr>";
 
 
-      if ($ID != "") {
+      if ($ID > 0) {
          echo "<tr class='tab_bg_1'>";
          echo "<td colspan='4'>";
          echo " <div class=\"container-fluid\">
