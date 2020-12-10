@@ -1248,7 +1248,7 @@ class PluginReleasesRelease extends CommonITILObject {
       Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->fields["status"]]);
       echo "</td>";
 
-      if (!$ID) {
+      if (empty($ID) || $ID < 0) {
          echo "<th width='$colsize1%'>";
          echo __('Associated change', 'releases');
          echo "</th>";
@@ -1397,7 +1397,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</tr>";
 
 
-      if ($ID != "") {
+      if (!empty($ID) && $ID > 0) {
          echo "<tr class='tab_bg_1'>";
          echo "<td colspan='4'>";
          echo " <div class=\"container-fluid\">
