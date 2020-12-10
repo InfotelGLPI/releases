@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-04 11:08+0000\n"
+"POT-Creation-Date: 2020-12-10 17:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: setup.php:83 front/change_release.form.php:48
+#: setup.php:86 front/change_release.form.php:48
 #: inc/notificationtargetrelease.class.php:884 inc/profile.class.php:52
 #: inc/release.class.php:72 inc/releasetemplate.class.php:942
 msgid "Release"
