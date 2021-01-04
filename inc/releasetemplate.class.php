@@ -182,7 +182,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       $tab[] = [
          'id'       => '3',
-         'name'     => __('Deploy Task type'),
+         'name'     => __('Deploy Task type','releases'),
          'field'    => 'name',
          'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
          'datatype' => 'dropdown'
@@ -1020,7 +1020,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          foreach ($rollbacks as $rollbacks_id => $rollback) {
             $rollback_obj->getFromDB($rollbacks_id);
             $rollback['can_edit']                                       = $rollback_obj->canUpdateItem();
-            $timeline[$risk['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
+            $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
                                                                            'item'     => $rollback,
                                                                            'itiltype' => 'Rollback'];
          }
@@ -1186,8 +1186,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
 
       echo "<li class='task'>";
-      echo "<a href='#' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
-           "'><i class='fas fa-check-square'></i>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . " (" . $taskClass::countForItem($release) . ")</a></li>";
+      echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
+           "'><i class='fas fa-check-square'></i>" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }

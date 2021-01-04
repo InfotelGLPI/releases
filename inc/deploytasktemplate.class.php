@@ -96,9 +96,17 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
       $tab[] = [
          'id'       => '3',
-         'name'     => __('Deploy Task type'),
+         'name'     =>PluginReleasesTypeDeployTask::getTypeName(),
          'field'    => 'name',
          'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
+         'datatype' => 'dropdown'
+      ];
+
+      $tab[] = [
+         'id'       => '5',
+         'name'     => PluginReleasesReleasetemplate::getTypeName(),
+         'field'    => 'name',
+         'table'    => getTableForItemType('PluginReleasesReleasetemplate'),
          'datatype' => 'dropdown'
       ];
 
@@ -230,11 +238,11 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
       if ($ID != -1 && $ID != 0) {
          $forbidden_id = self::getAllDescendant($this->getID());
-         Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release,
+         Dropdown::show(PluginReleasesDeploytasktemplate::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release,
                                                                               "NOT"                                 => ["id" => $forbidden_id]],
                                                               "value"     => $this->fields["plugin_releases_deploytasktemplates_id"], "comments" => false]);
       } else {
-         Dropdown::show(PluginReleasesDeploytask::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release,
+         Dropdown::show(PluginReleasesDeploytasktemplate::getType(), ["condition" => ["plugin_releases_releasetemplates_id" => $id_release,
                                                                               "NOT"                                 => ["id" => $this->getID()]],
                                                               "value"     => $this->fields["plugin_releases_deploytasktemplates_id"],
                                                               "comments"  => false]);
@@ -423,7 +431,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
       $input = parent::prepareInputForAdd($input);
 
-      $input["users_id"] = Session::getLoginUserID();
+//      $input["users_id"] = Session::getLoginUserID();
 
       if ($input["plugin_releases_deploytasktemplates_id"] != 0) {
          $task = new self();
@@ -538,7 +546,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
 
    static function getAllDescendant($id) {
       $childrens   = [];
-      $task        = new PluginReleasesDeploytask();
+      $task        = new PluginReleasesDeploytasktemplate();
       $tasks       = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
       $childrens[] = $id;
       foreach ($tasks as $t) {
