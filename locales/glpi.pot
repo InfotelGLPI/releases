@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-10 17:09+0000\n"
+"POT-Creation-Date: 2021-01-04 15:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,8 +72,7 @@ msgstr ""
 #: inc/notificationtargetrelease.class.php:860
 #: inc/notificationtargetrelease.class.php:880 inc/release.class.php:1651
 #: inc/release.class.php:1652 inc/releasetemplate.class.php:164
-#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1189
-#: inc/releasetemplate.class.php:1190 inc/releasetemplate.class.php:1309
+#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1309
 #: inc/releasetemplate.class.php:1310
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
@@ -85,7 +84,7 @@ msgstr[1] ""
 msgid "Failed"
 msgstr ""
 
-#: inc/deploytask.class.php:359 inc/deploytasktemplate.class.php:227
+#: inc/deploytask.class.php:359 inc/deploytasktemplate.class.php:235
 msgid "Previous task"
 msgstr ""
 
@@ -95,7 +94,7 @@ msgid_plural "Task templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/deploytask.class.php:539 inc/deploytasktemplate.class.php:289
+#: inc/deploytask.class.php:539 inc/deploytasktemplate.class.php:297
 #: inc/finalization.class.php:172 inc/notificationtargetrelease.class.php:735
 #: inc/notificationtargetrelease.class.php:862
 #: inc/notificationtargetrelease.class.php:882 inc/risk.class.php:49
@@ -111,7 +110,7 @@ msgid_plural "Deploy Task templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/deploytasktemplate.class.php:63
+#: inc/deploytasktemplate.class.php:63 inc/releasetemplate.class.php:185
 msgid "Deploy Task type"
 msgstr ""
 
