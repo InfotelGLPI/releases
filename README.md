@@ -8,7 +8,7 @@ Plugin Releases for GLPI
 Ce plugin est disponible en 9.5.x.
 
 Ce plugin est sur Transifex - Aidez-nous à le traduire :
-https://www.transifex.com/tsmr/GLPI_releases/
+https://www.transifex.com/infotelglpi/GLPI_releases/
 
 Ce plugin vous permet d'ajouter la gestion de mise en production à GLPI d'y associer des changements, des articles de la base de connaissance.
 > * description des risques
@@ -20,7 +20,7 @@ Ce plugin vous permet d'ajouter la gestion de mise en production à GLPI d'y ass
 This plugin is available for 9.5.x.
 
 This plugin is on Transifex - Help us to translate :
-https://www.transifex.com/tsmr/GLPI_releases/
+https://www.transifex.com/infotelglpi/GLPI_releases/
 
 This plugin allows you to add the management of release to GLPI to associate changes, articles from the knowledge base.
 > * description of risks
