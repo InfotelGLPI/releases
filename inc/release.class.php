@@ -146,7 +146,7 @@ class PluginReleasesRelease extends CommonITILObject {
    function defineTabs($options = []) {
 
       $ong = [];
-      $this->defineDefaultObjectTabs($ong, $options);
+      $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
@@ -1298,7 +1298,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</tr>";
 
       echo "</table>";
-      $this->showActorsPartForm($ID, $options);
+//      $this->showActorsPartForm($ID, $options);
       echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
 
       echo "<tr class='tab_bg_1'>";
@@ -1318,6 +1318,8 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<td colspan='3'>";
       Html::textarea(["name"            => "content",
                       "enable_richtext" => true,
+                      'enable_fileupload' => false,
+                      'enable_images'     => false,
                       "value"           => $this->fields["content"]]);
       echo "</td>";
       echo "</tr>";
@@ -1345,6 +1347,8 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<td colspan='3'>";
       Html::textarea(["name"            => "service_shutdown_details",
                       "enable_richtext" => true,
+                      'enable_fileupload' => false,
+                      'enable_images'     => false,
                       "value"           => $this->fields["service_shutdown_details"]]);
       echo "</td>";
       echo "</tr>";
@@ -2137,7 +2141,7 @@ class PluginReleasesRelease extends CommonITILObject {
    }
 
 
-   function getTimelineItems() {
+   function getTimelineItems(array $options = []) {
 
       $objType    = self::getType();
       $foreignKey = self::getForeignKeyField();
@@ -2604,7 +2608,7 @@ class PluginReleasesRelease extends CommonITILObject {
       if ($number > 0) {
          self::commonListHeader(Search::HTML_OUTPUT);
 
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             Session::addToNavigateListItems('PluginReleasesRelease', $data["id"]);
             self::showShort($data["id"]);
          }
@@ -2639,7 +2643,7 @@ class PluginReleasesRelease extends CommonITILObject {
          if ($number > 0) {
             self::commonListHeader(Search::HTML_OUTPUT);
 
-            while ($data = $iterator->next()) {
+            foreach ($iterator as $data) {
                // Session::addToNavigateListItems(TRACKING_TYPE,$data["id"]);
                self::showShort($data["id"]);
             }
@@ -2723,7 +2727,11 @@ class PluginReleasesRelease extends CommonITILObject {
     * @param integer $output_type Output type
     * @param string  $mass_id id of the form to check all
     */
-   static function commonListHeader($output_type = Search::HTML_OUTPUT, $mass_id = '') {
+   static function commonListHeader(
+      $output_type = Search::HTML_OUTPUT,
+      $mass_id = '',
+      array $params = []
+   ) {
 
       // New Line for Header Items Line
       echo Search::showNewLine($output_type);
@@ -3297,6 +3305,14 @@ class PluginReleasesRelease extends CommonITILObject {
 
    public static function getItemLinkClass(): string {
       return PluginReleasesRelease_Item::class;
+   }
+
+   public static function getTaskClass() {
+      // TODO: Implement getTaskClass() method.
+   }
+
+   public static function getContentTemplatesParametersClass(): string {
+      // TODO: Implement getContentTemplatesParametersClass() method.
    }
 }
 

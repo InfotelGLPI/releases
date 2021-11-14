@@ -133,8 +133,8 @@ class PluginReleasesRelease_Item extends CommonDBRelation {
                                                                $release->fields['entities_id'])
                                                    : $release->fields['entities_id'])]);
          echo "</td><td class='center' width='30%'>";
-         echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
-         echo "<input type='hidden' name='plugin_releases_releases_id' value='$instID'>";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
+         echo Html::hidden('plugin_releases_releases_id', ['value' => $instID]);
          echo "</td></tr>";
          echo "</table>";
          Html::closeForm();
@@ -177,7 +177,7 @@ class PluginReleasesRelease_Item extends CommonDBRelation {
             $nb       = count($iterator);
 
             $prem = true;
-            while ($data = $iterator->next()) {
+            foreach ($iterator as $data) {
                $name = $data["name"];
                if ($_SESSION["glpiis_ids_visible"]
                    || empty($data["name"])) {

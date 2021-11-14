@@ -99,7 +99,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown {
    /**
     * @see CommonDropdown::displaySpecificTypeField()
     **/
-   function displaySpecificTypeField($ID, $field = []) {
+   function displaySpecificTypeField($ID, $field = [], array $options = []) {
 
       switch ($field['type']) {
          //         case 'dropdownRollbacks' :

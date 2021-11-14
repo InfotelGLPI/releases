@@ -84,15 +84,15 @@ function plugin_version_releases() {
 
    return [
       'name'           => _n('Release', 'Releases', 2, 'releases'),
-      'version'        => '1.0.1',
+      'version'        => '2.0.0',
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>, Alban Lesellier",
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
-      'minGlpiVersion' => '9.5',// For compatibility / no install in version < 9.3
+      'minGlpiVersion' => '10.0',// For compatibility / no install
       'requirements'   => [
          'glpi' => [
-            'min' => '9.5',
-            'max' => '9.6'
+            'min' => '10.0',
+            'max' => '11.0'
          ]
       ]
    ];
@@ -104,9 +104,9 @@ function plugin_version_releases() {
  * @return bool
  */
 function plugin_releases_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.5', 'lt')
-       || version_compare(GLPI_VERSION, '9.6', 'ge')) {
-      echo __('This plugin requires GLPI >= 9.5');
+   if (version_compare(GLPI_VERSION, '10.0', 'lt')
+       || version_compare(GLPI_VERSION, '11.0', 'ge')) {
+      echo __('This plugin requires GLPI >= 10.0');
       return false;
    }
 

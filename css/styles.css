@@ -4669,7 +4669,7 @@ section#timeline article div.inner span.bulle span {
 }
 
 .bulleMarge span {
-   margin-top: 8px;
+   /*margin-top: 8px;*/
 }
 
 section#timeline article div.inner span.bulle span.percent {

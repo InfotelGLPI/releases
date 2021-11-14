@@ -138,7 +138,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       //      }
 
 
-      while ($data = $iterator->next()) {
+      foreach ($iterator as $data) {
          $changes[$data['id']] = $data;
          $used[$data['id']]    = $data['id'];
 
@@ -152,12 +152,12 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a change') . "</th></tr>";
          echo "<tr class='tab_bg_2'><td>";
-         echo "<input type='hidden' name='plugin_releases_releases_id' value='$ID'>";
+         echo Html::hidden('plugin_releases_releases_id', ['value' => $ID]);
          Change::dropdown([
                              'used'   => $used,
                              'entity' => $release->getEntityID(), 'condition' => ['status' => Change::getNotSolvedStatusArray()]]);
          echo "</td><td class='center'>";
-         echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+         echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
          echo "</td><td>";
 
          echo "</td></tr></table>";
@@ -279,7 +279,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
       $changes = [];
       $used    = [];
       $numrows = count($iterator);
-      while ($data = $iterator->next()) {
+      foreach ($iterator as $data) {
          $changes[$data['id']] = $data;
 
       }

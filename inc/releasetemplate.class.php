@@ -195,7 +195,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    /**
     * @see CommonDropdown::displaySpecificTypeField()
     **/
-   function displaySpecificTypeField($ID, $field = []) {
+   function displaySpecificTypeField($ID, $field = [], array $options = []) {
       $dbu = new DbUtils();
 
       switch ($field['type']) {
@@ -1714,8 +1714,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             if (isset($options["_users_id_requester"]) && $options["_users_id_requester"]) {
                echo static::getActorIcon('user', CommonITILActor::REQUESTER) . "&nbsp;";
                echo Dropdown::getDropdownName("glpi_users", $options["_users_id_requester"]);
-               echo "<input type='hidden' name='_users_id_requester' value=\"" .
-                    $options["_users_id_requester"] . "\">";
+               echo Html::hidden('_users_id_requester', ['value' => $options["_users_id_requester"]]);
                echo '<br>';
                $reqdisplay = true;
             }
@@ -1730,7 +1729,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                                    'entity'    => $this->userentities,
                                    'on_change' => 'this.form.submit()']);
       } else {
-         echo "<input type='hidden' name='entities_id' value='" . $this->fields["entities_id"] . "'>";
+         echo Html::hidden('entities_id', ['value' => $this->fields["entities_id"]]);
       }
       if ($reqdisplay) {
          echo '<hr>';
@@ -1753,8 +1752,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          if (isset($options["_groups_id_requester"]) && $options["_groups_id_requester"]) {
             echo static::getActorIcon('group', CommonITILActor::REQUESTER) . "&nbsp;";
             echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_requester"]);
-            echo "<input type='hidden' name='_groups_id_requester' value=\"" .
-                 $options["_groups_id_requester"] . "\">";
+            echo Html::hidden('_groups_id_requester', ['value' => $options["_groups_id_requester"]]);
             echo '<br>';
          }
       }
@@ -1781,8 +1779,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          if (isset($options["_users_id_observer"][0]) && $options["_users_id_observer"][0]) {
             echo static::getActorIcon('user', CommonITILActor::OBSERVER) . "&nbsp;";
             echo Dropdown::getDropdownName("glpi_users", $options["_users_id_observer"][0]);
-            echo "<input type='hidden' name='_users_id_observer' value=\"" .
-                 $options["_users_id_observer"][0] . "\">";
+            echo Html::hidden('_users_id_observer', ['value' => $options["_users_id_observer"][0]]);
             echo '<hr>';
          }
       }
@@ -1803,8 +1800,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          if (isset($options["_groups_id_observer"]) && $options["_groups_id_observer"]) {
             echo static::getActorIcon('group', CommonITILActor::OBSERVER) . "&nbsp;";
             echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_observer"]);
-            echo "<input type='hidden' name='_groups_id_observer' value=\"" .
-                 $options["_groups_id_observer"] . "\">";
+            echo Html::hidden('_groups_id_observer', ['value' => $options["_groups_id_observer"]]);
             echo '<br>';
          }
       }
@@ -1846,8 +1842,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
              && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
             echo static::getActorIcon('user', CommonITILActor::ASSIGN) . "&nbsp;";
             echo Dropdown::getDropdownName("glpi_users", $options["_users_id_assign"]);
-            echo "<input type='hidden' name='_users_id_assign' value=\"" .
-                 $options["_users_id_assign"] . "\">";
+            echo Html::hidden('_users_id_assign', ['value' => $options["_users_id_assign"]]);
             echo '<hr>';
          }
       }
@@ -1879,8 +1874,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
              && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
             echo static::getActorIcon('group', CommonITILActor::ASSIGN) . "&nbsp;";
             echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_assign"]);
-            echo "<input type='hidden' name='_groups_id_assign' value=\"" .
-                 $options["_groups_id_assign"] . "\">";
+            echo Html::hidden('_groups_id_assign', ['value' => $options["_groups_id_assign"]]);
             echo '<hr>';
          }
       }
@@ -1898,8 +1892,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
              && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
             echo static::getActorIcon('supplier', CommonITILActor::ASSIGN) . "&nbsp;";
             echo Dropdown::getDropdownName("glpi_suppliers", $options["_suppliers_id_assign"]);
-            echo "<input type='hidden' name='_suppliers_id_assign' value=\"" .
-                 $options["_suppliers_id_assign"] . "\">";
+            echo Html::hidden('_suppliers_id_assign', ['value' => $options["_suppliers_id_assign"]]);
             echo '<hr>';
          }
       }

@@ -152,7 +152,7 @@ class PluginReleasesRollback extends CommonDBTM {
       $this->showFormHeader($options);
 
       echo "<tr class='tab_bg_1'>";
-      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
+      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
       echo "</tr>";
       if ($ID < 0) {
          echo "<tr class='tab_bg_1'>";

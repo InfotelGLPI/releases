@@ -201,7 +201,7 @@ class PluginReleasesRisk extends CommonDBTM {
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
       echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
-      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
+      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
       echo "</td>";
 
       echo "<td>";

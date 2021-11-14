@@ -127,7 +127,7 @@ class PluginReleasesReview extends CommonDBTM {
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
 
-      echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
+      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
       $rand = mt_rand();
       echo "<tr class='tab_bg_1'>";
       echo "<td>";
@@ -246,9 +246,10 @@ class PluginReleasesReview extends CommonDBTM {
          echo "<form method='post' action='" . $this->getFormURL() . "'>";
          echo "<br><table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2 center'>";
-         echo "<input type=\"hidden\" name=\"_glpi_csrf_token\" value=" . Session::getNewCSRFToken() . " \">";
-         echo "<input type='hidden' name='plugin_releases_releases_id' value='" . $options["plugin_releases_releases_id"] . "'>";
-         echo "<td><input type='submit' name='conclude' value=\"" . _sx('button', 'Conclude the review', 'releases') . "\" class='submit'>";
+         echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
+         echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
+         echo "<td>";
+         echo Html::submit(_sx('button', 'Conclude the review', 'releases'), ['name' => 'conclude', 'class' => 'btn btn-primary']);
          echo "</td></tr>";
          echo "</table>";
       }

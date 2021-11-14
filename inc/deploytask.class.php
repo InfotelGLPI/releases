@@ -390,7 +390,8 @@ class PluginReleasesDeploytask extends CommonITILTask {
                       'cols'              => $cols,
                       'rows'              => $rows]);
 
-      echo "<input type='hidden' name='$fkfield' value='" . $this->fields[$fkfield] . "'>";
+      echo Html::hidden($fkfield, ['value' => $this->fields[$fkfield]]);
+
       $document = new Document_Item();
       $type     = self::getType();
 

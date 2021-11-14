@@ -372,7 +372,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          if ($item->getType() == 'Ticket') {
             $addtodownloadurl = "%2526tickets_id=" . $item->fields['id'];
          }
-         while ($row = $iterator->next()) {
+         foreach ($iterator as $data) {
             $tmp                      = [];
             $tmp['##document.id##']   = $row['id'];
             $tmp['##document.name##'] = $row['name'];
@@ -965,7 +965,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $criteria['WHERE']["$tasktable.id"] = $options['task_id'];
 
          $iterator = $DB->request($criteria);
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             $this->addToRecipientsList($data);
          }
       }
@@ -1001,7 +1001,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $criteria['WHERE']["$tasktable.id"] = $options['task_id'];
 
          $iterator = $DB->request($criteria);
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             $this->addToRecipientsList($data);
          }
       }
@@ -1036,7 +1036,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
                                       ],
                                       'WHERE'      => ["$tasktable.id" => $options['task_id']]
                                    ]);
-         while ($data = $iterator->next()) {
+         foreach ($iterator as $data) {
             $this->addForGroup(0, $data['groups_id_tech']);
          }
       }

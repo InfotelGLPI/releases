@@ -117,7 +117,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
    /**
     * @see CommonDropdown::displaySpecificTypeField()
     **/
-   function displaySpecificTypeField($ID, $field = []) {
+   function displaySpecificTypeField($ID, $field = [], array $options = []) {
 
       switch ($field['type']) {
          case 'state' :
@@ -311,9 +311,9 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown {
          echo "<div class='fa-label'>
             <i class='fas fa-lock fa-fw' title='" . __('Private') . "'></i>
             <span class='switch pager_controls'>
-               <label for='is_privateswitch$rand_is_private' title='" . __('Private') . "'>
-                  <input type='hidden' name='is_private' value='0'>
-                  <input type='checkbox' id='is_privateswitch$rand_is_private' name='is_private' value='1'" .
+               <label for='is_privateswitch$rand_is_private' title='" . __('Private') . "'>";
+         echo Html::hidden('is_private', ['value' => 0]);
+         echo "<input type='checkbox' id='is_privateswitch$rand_is_private' name='is_private' value='1'" .
               ($this->fields["is_private"]
                  ? "checked='checked'"
                  : "") . "
