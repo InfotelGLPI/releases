@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-14 14:24+0000\n"
+"POT-Creation-Date: 2021-11-14 16:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,15 +63,15 @@ msgid "Real production run date"
 msgstr ""
 
 #: inc/change_release.class.php:311 inc/release.class.php:290
-#: inc/release.class.php:1327 inc/releasetemplate.class.php:144
+#: inc/release.class.php:1329 inc/releasetemplate.class.php:144
 #: inc/releasetemplate.class.php:648 inc/releasetemplate.class.php:860
 msgid "Service shutdown"
 msgstr ""
 
 #: inc/deploytask.class.php:51 inc/finalization.class.php:190
 #: inc/notificationtargetrelease.class.php:860
-#: inc/notificationtargetrelease.class.php:880 inc/release.class.php:1651
-#: inc/release.class.php:1652 inc/releasetemplate.class.php:164
+#: inc/notificationtargetrelease.class.php:880 inc/release.class.php:1655
+#: inc/release.class.php:1656 inc/releasetemplate.class.php:164
 #: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1309
 #: inc/releasetemplate.class.php:1310
 msgid "Deploy task"
@@ -79,7 +79,7 @@ msgid_plural "Deploy tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/deploytask.class.php:289 inc/deploytask.class.php:1000
+#: inc/deploytask.class.php:289 inc/deploytask.class.php:1001
 #: inc/release.class.php:745 inc/test.class.php:303 inc/test.class.php:342
 msgid "Failed"
 msgstr ""
@@ -88,13 +88,13 @@ msgstr ""
 msgid "Previous task"
 msgstr ""
 
-#: inc/deploytask.class.php:461
+#: inc/deploytask.class.php:462
 msgid "Task template"
 msgid_plural "Task templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/deploytask.class.php:539 inc/deploytasktemplate.class.php:297
+#: inc/deploytask.class.php:540 inc/deploytasktemplate.class.php:297
 #: inc/finalization.class.php:172 inc/notificationtargetrelease.class.php:735
 #: inc/notificationtargetrelease.class.php:862
 #: inc/notificationtargetrelease.class.php:882 inc/risk.class.php:49
@@ -261,18 +261,18 @@ msgstr ""
 msgid "Pre-production run date"
 msgstr ""
 
-#: inc/release.class.php:298 inc/release.class.php:1344
+#: inc/release.class.php:298 inc/release.class.php:1346
 #: inc/releasetemplate.class.php:148 inc/releasetemplate.class.php:655
 #: inc/releasetemplate.class.php:877
 msgid "Service shutdown details"
 msgstr ""
 
-#: inc/release.class.php:307 inc/release.class.php:1353
+#: inc/release.class.php:307 inc/release.class.php:1357
 #: inc/releasetemplate.class.php:886
 msgid "Communication"
 msgstr ""
 
-#: inc/release.class.php:315 inc/release.class.php:1358
+#: inc/release.class.php:315 inc/release.class.php:1362
 #: inc/releasetemplate.class.php:891
 msgid "Communication type"
 msgstr ""
@@ -327,39 +327,39 @@ msgstr ""
 msgid "Non-working hours"
 msgstr ""
 
-#: inc/release.class.php:2063 inc/releasetemplate.class.php:1502
+#: inc/release.class.php:2067 inc/releasetemplate.class.php:1502
 msgid "Associated with"
 msgstr ""
 
-#: inc/release.class.php:2109 inc/releasetemplate.class.php:1547
+#: inc/release.class.php:2113 inc/releasetemplate.class.php:1547
 msgid "No data available"
 msgstr ""
 
-#: inc/release.class.php:2251
+#: inc/release.class.php:2255
 msgid "From this change"
 msgstr ""
 
-#: inc/release.class.php:2268 inc/releasetemplate.class.php:972
+#: inc/release.class.php:2272 inc/releasetemplate.class.php:972
 msgid "Create a release"
 msgstr ""
 
-#: inc/release.class.php:2462 inc/releasetemplate.class.php:1584
+#: inc/release.class.php:2466 inc/releasetemplate.class.php:1584
 msgid "Release actions details"
 msgstr ""
 
 #. TRANS : %d is the number of problems
-#: inc/release.class.php:2596
+#: inc/release.class.php:2600
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:2601 inc/release.class.php:2648
+#: inc/release.class.php:2605 inc/release.class.php:2652
 msgid "No release found."
 msgstr ""
 
-#: inc/release.class.php:2636
+#: inc/release.class.php:2640
 msgid "Releases on linked items"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgstr[1] ""
 msgid "Description"
 msgstr ""
 
-#: inc/releasetemplate.class.php:2179
+#: inc/releasetemplate.class.php:2172
 msgid "Group in charge of the release"
 msgstr ""
 
@@ -387,7 +387,7 @@ msgstr[1] ""
 msgid "Technical Support Document"
 msgstr ""
 
-#: inc/review.class.php:251
+#: inc/review.class.php:252
 msgctxt "button"
 msgid "Conclude the review"
 msgstr ""
