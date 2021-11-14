@@ -1184,8 +1184,8 @@ class PluginReleasesRelease extends CommonITILObject {
 
                $this->fields["name"]    = $c->getField("name");
                $options["name"]         = $c->getField("name");
-               $this->fields["content"] = $c->getField("content");
-               $options["content"]      = $c->getField("content");
+               $this->fields["content"] = Toolbox::stripslashes_deep($c->getField("content"));
+               $options["content"]      = Toolbox::stripslashes_deep($c->getField("content"));
 
             }
             $options['entities_id']      = $c->getField("entities_id");

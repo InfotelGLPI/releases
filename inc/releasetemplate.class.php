@@ -1282,7 +1282,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       } else if (method_exists($item, "showForm")
                  && $item->can(-1, CREATE, $params)) {
-         $item->showForm($id, $params);
+         $item->showForm($id);
       }
    }
 

@@ -61,8 +61,7 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
       $item->getFromDB($id);
    }
    $url = $_REQUEST['type']::getFormURL();
-   $item->showForm($id, [$foreignKey => $_POST[$foreignKey],
-                         'target'    => $url, 'parent' => $parent]);
+   $item->showForm($id);
 
 } else {
    echo __('Access denied');
