@@ -98,25 +98,3 @@ function plugin_version_releases() {
    ];
 
 }
-
-// Optional : check prerequisites before install : may print errors or add to message after redirect
-/**
- * @return bool
- */
-function plugin_releases_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '10.0', 'lt')
-       || version_compare(GLPI_VERSION, '11.0', 'ge')) {
-      echo __('This plugin requires GLPI >= 10.0');
-      return false;
-   }
-
-   return true;
-}
-
-// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
-/**
- * @return bool
- */
-function plugin_releases_check_config() {
-   return true;
-}

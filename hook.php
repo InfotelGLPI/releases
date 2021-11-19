@@ -37,7 +37,7 @@ function plugin_releases_install() {
 
    if (!$DB->tableExists("glpi_plugin_releases_releases")) {
 
-      $DB->runFile(GLPI_ROOT . "/plugins/releases/sql/empty-1.0.0.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/releases/sql/empty-2.0.0.sql");
       install_notifications();
    }
    $rep_files_release = GLPI_PLUGIN_DOC_DIR . "/releases";

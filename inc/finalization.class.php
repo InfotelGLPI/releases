@@ -236,7 +236,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                $text .= "<br>";
             }
             //         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
-            $link = '<a id="finalize" class="vsubmit"> ' . __("Finalize", 'releases') . '</a>';
+            $link = '<a id="finalize" class="btn btn-primary"> ' . __("Finalize", 'releases') . '</a>';
 
             echo Html::scriptBlock(
                "$('#finalize').click(function(){
@@ -288,7 +288,7 @@ class PluginReleasesFinalization extends CommonDBTM {
          } else {
             $text = "";
             //         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
-            $link = '<a id="finalize" class="vsubmit"> ' . __("Mark as failed", 'releases') . '</a>';
+            $link = '<a id="finalize" class="btn btn-primary"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Html::scriptBlock(
                "$('#finalize').click(function(){

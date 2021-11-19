@@ -2256,7 +2256,7 @@ class PluginReleasesRelease extends CommonITILObject {
                                                "name"       => "releasetemplates_id"] + $condition);
       $url = PluginReleasesRelease::getFormURL();
       echo "<br/><br/>";
-      echo "<a class='vsubmit' id='link' href='$url?changes_id=" . $item->getID() . "'>";
+      echo "<a class='btn btn-primary' id='link' href='$url?changes_id=" . $item->getID() . "'>";
       $url    = $url . "?changes_id=" . $item->getID() . "&template_id=";
       $script = "
       var link = function (id,linkurl) {
@@ -2273,7 +2273,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</a>";
       //      echo "<form name='form' method='post' action='".$this->getFormURL()."'  enctype=\"multipart/form-data\">";
       //      echo Html::hidden("changes_id",["value"=>$item->getID()]);
-      ////      echo '<a class="vsubmit"> '.__("Create a releases from this change",'release').'</a>';
+      ////      echo '<a class="btn btn-primary"> '.__("Create a releases from this change",'release').'</a>';
       //      echo Html::submit(__("Create a release from this change",'releases'), ['name' => 'createRelease']);
       //      Html::closeForm();
    }

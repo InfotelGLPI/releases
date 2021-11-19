@@ -679,7 +679,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
 
             if ($canplan) {
                echo "<div id='plan$rand_text'  onClick='showPlanUpdate$rand_text()'>\n";
-               echo "<span class='vsubmit'>" . __('Plan this task') . "</span>";
+               echo "<span class='btn btn-primary'>" . __('Plan this task') . "</span>";
                echo "</div>\n";
                echo "<div id='viewplan$rand_text'></div>\n";
             }
