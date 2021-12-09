@@ -166,7 +166,8 @@ class PluginReleasesRelease_Item extends CommonDBRelation {
       echo $header_begin . $header_top . $header_end;
 
       $totalnb = 0;
-      while ($row = $types_iterator->next()) {
+      foreach ($types_iterator as $row) {
+//      while ($row = $types_iterator->next()) {
          $itemtype = $row['itemtype'];
          if (!($item = getItemForItemtype($itemtype))) {
             continue;
@@ -211,6 +212,7 @@ class PluginReleasesRelease_Item extends CommonDBRelation {
             }
             $totalnb += $nb;
          }
+         $types_iterator->next();
       }
 
       if ($number) {

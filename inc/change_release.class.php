@@ -337,7 +337,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo $var;
             echo "</td >";
             echo "<td >";
-            echo Html::resume_text(Html::Clean($d["content"]));
+            echo Html::resume_text(Glpi\Toolbox\RichText::getTextFromHtml($d["content"]));
             echo "</td >";
             echo "<td >";
             echo Html::convDateTime($d["date_preproduction"]);

@@ -3008,7 +3008,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
          if ($p['output_type'] == Search::HTML_OUTPUT) {
             $eigth_column = sprintf(__('%1$s %2$s'), $eigth_column,
-                                    Html::showToolTip(Html::clean(Html::entity_decode_deep($item->fields["content"])),
+                                    Html::showToolTip(Glpi\Toolbox\RichText::getSafeHtml($item->fields["content"]),
                                                       ['display' => false,
                                                        'applyto' => $item->getType() . $item->fields["id"] .
                                                                     $rand]));

@@ -83,9 +83,9 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
          $data["##review.realproductiondate##"]  = Html::convDateTime($review->getField("real_date_release"));
          $data["##review.conformrealization##"]  = Dropdown::getYesNo($review->getField('conforming_realization'));
-         $data["##review.name##"]                = Html::clean($review->getField('name'));
+         $data["##review.name##"]                = $review->getField('name');
          $data["##review.incident##"]            = Dropdown::getYesNo($review->getField('incident'));
-         $data["##review.incidentdescription##"] = Html::clean($review->getField('incident_description'));
+         $data["##review.incidentdescription##"] = Glpi\Toolbox\RichText::getTextFromHtml($review->getField('incident_description'));
       }
       $data["##$objettype.url##"]
          = $this->formatURL($options['additionnaloption']['usertype'],
@@ -321,7 +321,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             ) {
                $tmp['##followup.author##'] = __("Helpdesk");
             } else {
-               $tmp['##followup.author##'] = Html::clean(getUserName($followup['users_id']));
+               $tmp['##followup.author##'] = getUserName($followup['users_id']);
             }
 
             $tmp['##followup.requesttype##'] = Dropdown::getDropdownName('glpi_requesttypes',
@@ -372,7 +372,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          if ($item->getType() == 'Ticket') {
             $addtodownloadurl = "%2526tickets_id=" . $item->fields['id'];
          }
-         foreach ($iterator as $data) {
+         foreach ($iterator as $row) {
             $tmp                      = [];
             $tmp['##document.id##']   = $row['id'];
             $tmp['##document.name##'] = $row['name'];
@@ -421,8 +421,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp                = [];
             $tmp['##task.id##'] = $task['id'];
 
-            $tmp['##task.author##'] = Html::clean(getUserName($task['users_id']));
-            $tmp['##task.name##']   = Html::clean($task['name']);
+            $tmp['##task.author##'] = getUserName($task['users_id']);
+            $tmp['##task.name##']   = $task['name'];
 
             $tmp_taskcatinfo      = Dropdown::getDropdownName('glpi_plugin_releases_typedeploytasks',
                                                               $task['plugin_releases_typedeploytasks_id'], true, true, false);
@@ -433,10 +433,9 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp['##task.time##']        = Ticket::getActionTime($task['actiontime']);
             $tmp['##task.status##']      = PluginReleasesDeploytask::getState($task['state']);
 
-            $tmp['##task.user##']  = Html::clean(getUserName($task['users_id_tech']));
+            $tmp['##task.user##']  = getUserName($task['users_id_tech']);
             $tmp['##task.group##']
-                                   = Html::clean(Toolbox::clean_cross_side_scripting_deep(Dropdown::getDropdownName("glpi_groups",
-                                                                                                                    $task['groups_id_tech'])), true, 2, false);
+                                   = Dropdown::getDropdownName("glpi_groups",$task['groups_id_tech']);
             $tmp['##task.begin##'] = "";
             $tmp['##task.end##']   = "";
             if (!is_null($task['begin'])) {
@@ -466,8 +465,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp                = [];
             $tmp['##risk.id##'] = $risk['id'];
 
-            $tmp['##risk.author##'] = Html::clean(getUserName($risk['users_id']));
-            $tmp['##risk.name##']   = Html::clean($risk['name']);
+            $tmp['##risk.author##'] = getUserName($risk['users_id']);
+            $tmp['##risk.name##']   = $risk['name'];
 
             $tmp_taskcatinfo      = Dropdown::getDropdownName('glpi_plugin_releases_typerisks',
                                                               $risk['plugin_releases_typerisks_id'], true, true, false);
@@ -499,8 +498,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp                    = [];
             $tmp['##rollback.id##'] = $rollback['id'];
 
-            $tmp['##rollback.author##'] = Html::clean(getUserName($rollback['users_id']));
-            $tmp['##rollback.name##']   = Html::clean($rollback['name']);
+            $tmp['##rollback.author##'] = getUserName($rollback['users_id']);
+            $tmp['##rollback.name##']   = $rollback['name'];
 
 
             $tmp['##rollback.date##']        = Html::convDateTime($rollback['date_creation']);
@@ -529,8 +528,8 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp                = [];
             $tmp['##test.id##'] = $test['id'];
 
-            $tmp['##test.author##'] = Html::clean(getUserName($test['users_id']));
-            $tmp['##test.name##']   = Html::clean($test['name']);
+            $tmp['##test.author##'] = getUserName($test['users_id']);
+            $tmp['##test.name##']   = $test['name'];
             $tmp_taskcatinfo        = Dropdown::getDropdownName('glpi_plugin_releases_typetests',
                                                                 $risk['plugin_releases_typetests_id'], true, true, false);
             $tmp['##risk.type##']   = $tmp_taskcatinfo['name'];

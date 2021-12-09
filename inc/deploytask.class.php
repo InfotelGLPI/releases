@@ -867,7 +867,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
       //            $val["type"] . "<br>";
       //      }
       if ($val["content"]) {
-         $html .= "<strong>" . __('Description') . "</strong> : " . Html::clean($val["content"]);
+         $html .= "<strong>" . __('Description') . "</strong> : " . Glpi\Toolbox\RichText::getTextFromHtml($val["content"]);
       }
       $html .= "</div>";
 
