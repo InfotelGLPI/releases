@@ -144,7 +144,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
 
    static function getMenuOptions($menu) {
 
-      $plugin_page = '/plugins/release/front/typetest.php';
+      $plugin_page = PLUGIN_RELEASES_NOTFULL_WEBDIR.'/front/typetest.php';
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -153,7 +153,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = '/plugins/release/front/typetest.form.php\';';
+         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR.'/front/typetest.form.php\';';
       }
 
       return $menu;

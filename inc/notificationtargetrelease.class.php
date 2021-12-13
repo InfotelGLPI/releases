@@ -85,7 +85,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $data["##review.conformrealization##"]  = Dropdown::getYesNo($review->getField('conforming_realization'));
          $data["##review.name##"]                = $review->getField('name');
          $data["##review.incident##"]            = Dropdown::getYesNo($review->getField('incident'));
-         $data["##review.incidentdescription##"] = Glpi\Toolbox\RichText::getTextFromHtml($review->getField('incident_description'));
+         $data["##review.incidentdescription##"] = Glpi\RichText\RichText::getTextFromHtml($review->getField('incident_description'));
       }
       $data["##$objettype.url##"]
          = $this->formatURL($options['additionnaloption']['usertype'],

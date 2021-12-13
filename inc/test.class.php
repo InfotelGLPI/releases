@@ -190,7 +190,7 @@ class PluginReleasesTest extends CommonDBTM {
          echo Html::scriptBlock('
          function tasktemplate_update(value) {
             $.ajax({
-               url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/test.php",
+               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/test.php",
                type: "POST",
                data: {
                   templates_id: value

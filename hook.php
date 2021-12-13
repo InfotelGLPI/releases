@@ -33,11 +33,9 @@
 function plugin_releases_install() {
    global $DB;
 
-   //   include_once(GLPI_ROOT . "/plugins/release/inc/profile.class.php");
-
    if (!$DB->tableExists("glpi_plugin_releases_releases")) {
 
-      $DB->runFile(GLPI_ROOT . "/plugins/releases/sql/empty-2.0.0.sql");
+      $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/empty-2.0.0.sql");
       install_notifications();
    }
    $rep_files_release = GLPI_PLUGIN_DOC_DIR . "/releases";

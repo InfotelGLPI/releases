@@ -1341,7 +1341,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
       Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
-                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
+                                    PLUGIN_RELEASES_WEBDIR . "/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
 
       echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
       echo "<td colspan='3'>";
@@ -1382,13 +1382,13 @@ class PluginReleasesRelease extends CommonITILObject {
 
       echo "</td>";
       Ajax::updateItem("targets",
-                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                       PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
                        ['type'         => $this->fields["communication_type"],
                         'current_type' => $this->fields["communication_type"],
                         'values'       => $targets],
                        true);
       Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-                                    $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
+                                    PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
                                     ['type'         => '__VALUE__',
                                      'current_type' => $this->fields["communication_type"],
                                      'values'       => $targets],
@@ -1522,7 +1522,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
       echo "<script type='text/javascript' >
       function change_task_state(items_id, target, itemtype) {
-         $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
+         $.post('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
                 {'action':     'change_task_state',
                   'items_id':   items_id,
                   'itemtype':   itemtype,
@@ -1536,7 +1536,7 @@ class PluginReleasesRelease extends CommonITILObject {
                 });
       }
       function done_fail(items_id, target, itemtype,newStatus) {
-         $.post('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
+         $.post('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
                 {'action':     'done_fail',
                   'items_id':   items_id,
                   'itemtype':   itemtype,
@@ -1578,7 +1578,7 @@ class PluginReleasesRelease extends CommonITILObject {
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('" . $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php',
+                                                 .load('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
@@ -1604,7 +1604,7 @@ class PluginReleasesRelease extends CommonITILObject {
                  $foreignKey  => $this->fields['id'],
                  'id'         => -1];
       $out    = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-                                       $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/timeline.php",
+                                       PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php",
                                        $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
       echo "};
@@ -2331,11 +2331,11 @@ class PluginReleasesRelease extends CommonITILObject {
       $menu['page']            = self::getSearchURL(false);
       $menu['links']['search'] = self::getSearchURL(false);
 
-      $menu['links']['template'] = "/plugins/releases/front/releasetemplate.php";
+      $menu['links']['template'] = PLUGIN_RELEASES_NOTFULL_WEBDIR."/front/releasetemplate.php";
       //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
       $menu['icon'] = static::getIcon();
       if (self::canCreate()) {
-         $menu['links']['add'] = "/plugins/releases/front/creationrelease.php";
+         $menu['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR."/front/creationrelease.php";
       }
 
 
@@ -2344,7 +2344,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
 
    static function getIcon() {
-      return "fas fa-tags";
+      return "ti ti-building-factory";
    }
 
    static function getDefaultValues($entity = 0) {
@@ -3008,7 +3008,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
          if ($p['output_type'] == Search::HTML_OUTPUT) {
             $eigth_column = sprintf(__('%1$s %2$s'), $eigth_column,
-                                    Html::showToolTip(Glpi\Toolbox\RichText::getSafeHtml($item->fields["content"]),
+                                    Html::showToolTip(Glpi\RichText\RichText::getSafeHtml($item->fields["content"]),
                                                       ['display' => false,
                                                        'applyto' => $item->getType() . $item->fields["id"] .
                                                                     $rand]));

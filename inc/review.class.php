@@ -77,7 +77,7 @@ class PluginReleasesReview extends CommonDBTM {
                $ID = 0;
             }
             $self->showForm($ID, ['plugin_releases_releases_id' => $item->getField('id'),
-                                  'target'                      => $CFG_GLPI['root_doc'] . "/plugins/releases/front/review.form.php"]);
+                                  'target'                      => PLUGIN_RELEASES_WEBDIR . "/front/review.form.php"]);
          }
       }
    }

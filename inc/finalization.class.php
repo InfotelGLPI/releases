@@ -268,7 +268,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                      }else{  
                         var date = $(\"[name = 'date_production']\").val();
                         $.ajax({
-                           url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
+                           url:  '" . PLUGIN_RELEASES_WEBDIR . "/ajax/finalize.php',
                            data: {'id' : " . $release->getID() . ",'date' : date},
                            success: function() {
                               document.location.reload();
@@ -317,7 +317,7 @@ class PluginReleasesFinalization extends CommonDBTM {
                 
                         var date = $(\"[name = 'date_production']\").val();
                         $.ajax({
-                           url:  '" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/finalize.php',
+                           url:  '" . PLUGIN_RELEASES_WEBDIR . "/ajax/finalize.php',
                            data: {'id' : " . $release->getID() . ",'failedtasks' : $deployTaskFail , 'failedtests' : $testFail},
                            success: function() {
                               document.location.reload();

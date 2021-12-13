@@ -171,7 +171,7 @@ class PluginReleasesRollback extends CommonDBTM {
          echo Html::scriptBlock('
          function tasktemplate_update(value) {
             $.ajax({
-               url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/rollback.php",
+               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/rollback.php",
                type: "POST",
                data: {
                   templates_id: value

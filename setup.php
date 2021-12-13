@@ -27,6 +27,14 @@
  --------------------------------------------------------------------------
  */
 
+if (!defined("PLUGIN_RELEASES_DIR")) {
+   define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
+   define("PLUGIN_RELEASES_NOTFULL_DIR", Plugin::getPhpDir("releases",false));
+   define("PLUGIN_RELEASES_WEBDIR", Plugin::getWebDir("releases"));
+   define("PLUGIN_RELEASES_NOTFULL_WEBDIR", Plugin::getWebDir("releases",false));
+}
+
+
 // Init the hooks of the plugins -Needed
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
@@ -37,7 +45,7 @@ function plugin_init_releases() {
 
    if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
-      $PLUGIN_HOOKS["javascript"]['releases']     = ["/plugins/releases/js/releases.js"];
+      $PLUGIN_HOOKS["javascript"]['releases']     = [PLUGIN_RELEASES_NOTFULL_DIR."/js/releases.js"];
       $PLUGIN_HOOKS['add_javascript']['releases'] = 'js/releases.js';
       $PLUGIN_HOOKS['add_css']['releases'][]      = "css/styles.css";
    }

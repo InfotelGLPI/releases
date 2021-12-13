@@ -323,7 +323,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo "</td>";
 
             echo "<td class='center'>";
-            echo "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/front/release.form.php?id=" . $idc . "'>";
+            echo "<a href='" . PLUGIN_RELEASES_WEBDIR . "/front/release.form.php?id=" . $idc . "'>";
             echo $d["name"];
             if ($_SESSION["glpiis_ids_visible"] || empty($d["name"])) {
                echo " (" . $idc . ")";
@@ -337,7 +337,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo $var;
             echo "</td >";
             echo "<td >";
-            echo Html::resume_text(Glpi\Toolbox\RichText::getTextFromHtml($d["content"]));
+            echo Html::resume_text(Glpi\RichText\RichText::getTextFromHtml($d["content"]));
             echo "</td >";
             echo "<td >";
             echo Html::convDateTime($d["date_preproduction"]);

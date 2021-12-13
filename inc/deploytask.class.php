@@ -468,7 +468,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
          echo Html::scriptBlock('
          function tasktemplate_update(value) {
             $.ajax({
-               url: "' . $CFG_GLPI["root_doc"] . '/plugins/releases/ajax/deploytask.php",
+               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/deploytask.php",
                type: "POST",
                data: {
                   tasktemplates_id: value
@@ -821,7 +821,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
       $html = "";
 
       $rand = mt_rand();
-      $html .= "<a href='" . $CFG_GLPI["root_doc"] . "/plugins/releases/front/deploytask.form.php?id=" . $val["id"] . "'";
+      $html .= "<a href='" . PLUGIN_RELEASES_WEBDIR . "/front/deploytask.form.php?id=" . $val["id"] . "'";
 
       $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
                onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
@@ -867,7 +867,7 @@ class PluginReleasesDeploytask extends CommonITILTask {
       //            $val["type"] . "<br>";
       //      }
       if ($val["content"]) {
-         $html .= "<strong>" . __('Description') . "</strong> : " . Glpi\Toolbox\RichText::getTextFromHtml($val["content"]);
+         $html .= "<strong>" . __('Description') . "</strong> : " . Glpi\RichText\RichText::getTextFromHtml($val["content"]);
       }
       $html .= "</div>";
 
