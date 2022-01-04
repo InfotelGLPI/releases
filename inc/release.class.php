@@ -602,6 +602,8 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($risk["state"]);
             $old_id = $risk["id"];
             unset($risk["id"]);
+            $risk["content"]                        = Toolbox::addslashes_deep($risk["content"]);
+            $risk["content"]                        = Toolbox::addslashes_deep($risk["content"]);
             $corresRisks[$old_id] = $releaseRisk->add($risk);
          }
          foreach ($tests as $test) {
@@ -610,7 +612,9 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($test["date_creation"]);
             unset($test["state"]);
             $old_id                           = $test["id"];
-            $test["plugin_releases_risks_id"] = isset($corresRisks[$test["plugin_releases_risks_id"]]) ? $corresRisks[$test["plugin_releases_risks_id"]] : 0;
+            $test["name"]                        = Toolbox::addslashes_deep($test["name"]);
+            $test["content"]                        = Toolbox::addslashes_deep($test["content"]);
+            $test["plugin_releases_risks_id"] = $corresRisks[$test["plugin_releases_risks_id"]] ?? 0;
             unset($test["id"]);
             $corresTests[$old_id] = $releaseTest->add($test);
 
@@ -621,8 +625,10 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($task["date_creation"]);
             unset($task["state"]);
             $old_id                                 = $task["id"];
-            $task["plugin_releases_risks_id"]       = isset($corresRisks[$task["plugin_releases_risks_id"]]) ? $corresRisks[$task["plugin_releases_risks_id"]] : 0;
-            $task["plugin_releases_deploytasks_id"] = isset($corresTasks[$task["plugin_releases_deploytasktemplates_id"]]) ? $corresTasks[$task["plugin_releases_deploytasktemplates_id"]] : 0;
+            $task["name"]                        = Toolbox::addslashes_deep($task["name"]);
+            $task["content"]                        = Toolbox::addslashes_deep($task["content"]);
+            $task["plugin_releases_risks_id"]       = $corresRisks[$task["plugin_releases_risks_id"]] ?? 0;
+            $task["plugin_releases_deploytasks_id"] = $corresTasks[$task["plugin_releases_deploytasktemplates_id"]] ?? 0;
             unset($task["id"]);
             $corresTasks[$old_id] = $releaseTask->add($task);
 
@@ -634,6 +640,8 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($rollback["state"]);
             $old_id = $rollback["id"];
             unset($rollback["id"]);
+            $rollback["name"]                        = Toolbox::addslashes_deep($rollback["name"]);
+            $rollback["content"]                        = Toolbox::addslashes_deep($rollback["content"]);
             $corresRollbacks[$old_id] = $releaseRollback->add($rollback);
          }
          foreach ($items as $item) {
@@ -1298,7 +1306,7 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "</tr>";
 
       echo "</table>";
-//      $this->showActorsPartForm($ID, $options);
+      //      $this->showActorsPartForm($ID, $options);
       echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
 
       echo "<tr class='tab_bg_1'>";
@@ -1316,11 +1324,11 @@ class PluginReleasesRelease extends CommonITILObject {
       echo "<tr class='tab_bg_1'>";
       echo "<th width='$colsize1%'>" . __('Release area', 'releases') . "</th>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"            => "content",
-                      "enable_richtext" => true,
+      Html::textarea(["name"              => "content",
+                      "enable_richtext"   => true,
                       'enable_fileupload' => false,
                       'enable_images'     => false,
-                      "value"           => $this->fields["content"]]);
+                      "value"             => $this->fields["content"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -1345,11 +1353,11 @@ class PluginReleasesRelease extends CommonITILObject {
 
       echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
       echo "<td colspan='3'>";
-      Html::textarea(["name"            => "service_shutdown_details",
-                      "enable_richtext" => true,
+      Html::textarea(["name"              => "service_shutdown_details",
+                      "enable_richtext"   => true,
                       'enable_fileupload' => false,
                       'enable_images'     => false,
-                      "value"           => $this->fields["service_shutdown_details"]]);
+                      "value"             => $this->fields["service_shutdown_details"]]);
       echo "</td>";
       echo "</tr>";
 
@@ -2331,11 +2339,11 @@ class PluginReleasesRelease extends CommonITILObject {
       $menu['page']            = self::getSearchURL(false);
       $menu['links']['search'] = self::getSearchURL(false);
 
-      $menu['links']['template'] = PLUGIN_RELEASES_NOTFULL_WEBDIR."/front/releasetemplate.php";
+      $menu['links']['template'] = PLUGIN_RELEASES_NOTFULL_WEBDIR . "/front/releasetemplate.php";
       //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
       $menu['icon'] = static::getIcon();
       if (self::canCreate()) {
-         $menu['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR."/front/creationrelease.php";
+         $menu['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR . "/front/creationrelease.php";
       }
 
 
@@ -3174,7 +3182,7 @@ class PluginReleasesRelease extends CommonITILObject {
       switch ($ma->getAction()) {
          case "transfer" :
             Dropdown::show('Entity');
-            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
             return true;
             break;
       }
@@ -3193,7 +3201,7 @@ class PluginReleasesRelease extends CommonITILObject {
     *
     */
    static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,
-                                                       array $ids) {
+                                                       array         $ids) {
 
 
       switch ($ma->getAction()) {

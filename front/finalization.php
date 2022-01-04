@@ -2,41 +2,37 @@
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- databases plugin for GLPI
- Copyright (C) 2009-2016 by the databases Development Team.
+ Releases plugin for GLPI
+ Copyright (C) 2018 by the Releases Development Team.
 
- https://github.com/InfotelGLPI/databases
+ https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of databases.
+ This file is part of Releases.
 
- databases is free software; you can redistribute it and/or modify
+ Releases is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
 
- databases is distributed in the hope that it will be useful,
+ releases is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with databases. If not, see <http://www.gnu.org/licenses/>.
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'], "finalize.php")) {
-   $AJAX_INCLUDE = 1;
-   include('../../../inc/includes.php');
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
-}
+include('../../../inc/includes.php');
+Session::checkLoginUser();
 
-Session::checkCentralAccess();
+Html::popHeader(__("Release finalization", 'releases'), $_SERVER['PHP_SELF']);
 
-if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
+if (isset($_REQUEST["id"]) && isset($_REQUEST["date_production"])) {
    $release         = new PluginReleasesRelease();
    $val             = [];
    $val['id']       = $_REQUEST["id"];
@@ -49,7 +45,7 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $_REQUEST["id"]])) {
       $val                           = [];
       $val['id']                     = $review->getID();
-      $val['real_date_release']      = $_REQUEST["date"];
+      $val['real_date_release']      = $_REQUEST["date_production"];
       $val['name']                   = PluginReleasesReview::getTypeName() . " - " . $release->getField("name");
       $val['date_lock']              = 1;
       $val['conforming_realization'] = 1;
@@ -60,7 +56,7 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
    } else {
       $val                                = [];
       $val['plugin_releases_releases_id'] = $_REQUEST["id"];
-      $val['real_date_release']           = $_REQUEST["date"];
+      $val['real_date_release']           = $_REQUEST["date_production"];
       $val['name']                        = PluginReleasesReview::getTypeName() . " - " . $release->getField("name");
       $val['date_lock']                   = 1;
       $val['conforming_realization']      = 1;
@@ -70,7 +66,9 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
       $review->add($val);
    }
 
-   echo "ok";
+   echo '<div class="alert alert-important alert-success d-flex">';
+   echo __("The release has been finalized", "releases") . '</div>';
+
 } else if (isset($_REQUEST["id"])
            && isset($_REQUEST["failedtasks"])
            && isset($_REQUEST["failedtests"])) {
@@ -112,5 +110,10 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date"])) {
       }
       $review->add($val);
    }
+} else if (isset($_REQUEST["release_id"])) {
+
+   PluginReleasesFinalization::showFinalizeForm($_REQUEST);
 
 }
+
+Html::popFooter();

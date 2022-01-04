@@ -96,7 +96,8 @@ class PluginReleasesFinalization extends CommonDBTM {
    }
 
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
+
+
       $release = new PluginReleasesRelease();
       $release->getFromDB($ID);
 
@@ -155,58 +156,58 @@ class PluginReleasesFinalization extends CommonDBTM {
       $rollbackTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesRollback::class);
 
       echo "<section id=\"timeline\">
-  <article>
-    <div class=\"inner\" >
-            <span class=\"bulle bulleMarge\">
-              <span style=\"margin-left: 5px;\"><i class=\"fas fa-3x fa-play\"></i></span>
+        <article>
+          <div class=\"inner\" >
+                  <span class=\"bulle bulleMarge\">
+                    <span style=\"margin-left: 5px;\"><i class=\"fas fa-3x fa-play\"></i></span>
+                  </span>
+                  <h2 class='dateColor'>" . __("Creation date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
+                  <p>" . Html::convDateTime($release->fields["date_creation"]) . "</p>
+             </div>
+        </article>
+        <article>
+          <div class=\"inner\" >
+            <span class=\"bulle riskBulle bulleMarge\">
+              " . self::getStateItem($risk_state) . "
             </span>
-            <h2 class='dateColor'>" . __("Creation date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-            <p>" . Html::convDateTime($release->fields["date_creation"]) . "</p>
-       </div>
-  </article>
-  <article>
-    <div class=\"inner\" >
-      <span class=\"bulle riskBulle bulleMarge\">
-        " . self::getStateItem($risk_state) . "
-      </span>
-      <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s risks', 'releases'), $riskDone, $riskTotal) . "</p>
-    </div>
-  </article>
-  <article>
-    <div class=\"inner\">
-      <span class=\"bulle rollbackBulle bulleMarge\">
-        " . self::getStateItem($rollback_state) . "
-      </span>
-      <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s rollbacks', 'releases'), $rollbackDone, $rollbackTotal) . "</p>
-    </div>
-  </article>
-  <article>
-    <div class=\"inner\">
-      <span class=\"bulle taskBulle $taskfailed bulleMarge\">
-      " . self::getStateItem($task_state) . "
-      </span>
-      <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s deploy tasks', 'releases'), $deployTaskDone, $deployTaskTotal) . "</br>
-      " . sprintf(__('%s deploy tasks failed', 'releases'), $deployTaskFail) . "<p><span class='percent' style=\"float: right;\">
-            " . Html::formatNumber($pourcentageTask) . " %
-        </span></p></p>
-    </div>
-  </article>
-  <article>
-    <div class=\"inner\">
-    <span class=\"bulle testBulle $testfailed bulleMarge\">
-      " . self::getStateItem($test_state) . "
-      </span>
-      <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
-      <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
-      " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<p><span class='percent' style=\"float: right;\">
-            " . Html::formatNumber($pourcentageTest) . " %
-        </span></p></p>
-    </div>
-  </article>
-  ";
+            <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
+            <p>" . sprintf(__('%s / %s risks', 'releases'), $riskDone, $riskTotal) . "</p>
+          </div>
+        </article>
+        <article>
+          <div class=\"inner\">
+            <span class=\"bulle rollbackBulle bulleMarge\">
+              " . self::getStateItem($rollback_state) . "
+            </span>
+            <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
+            <p>" . sprintf(__('%s / %s rollbacks', 'releases'), $rollbackDone, $rollbackTotal) . "</p>
+          </div>
+        </article>
+        <article>
+          <div class=\"inner\">
+            <span class=\"bulle taskBulle $taskfailed bulleMarge\">
+            " . self::getStateItem($task_state) . "
+            </span>
+            <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
+            <p>" . sprintf(__('%s / %s deploy tasks', 'releases'), $deployTaskDone, $deployTaskTotal) . "</br>
+            " . sprintf(__('%s deploy tasks failed', 'releases'), $deployTaskFail) . "<p><span class='percent' style=\"float: right;\">
+                  " . Html::formatNumber($pourcentageTask) . " %
+              </span></p></p>
+          </div>
+        </article>
+        <article>
+          <div class=\"inner\">
+          <span class=\"bulle testBulle $testfailed bulleMarge\">
+            " . self::getStateItem($test_state) . "
+            </span>
+            <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
+            <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
+            " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<p><span class='percent' style=\"float: right;\">
+                  " . Html::formatNumber($pourcentageTest) . " %
+              </span></p></p>
+          </div>
+        </article>
+        ";
 
       $dateEnd = (!empty($release->fields["date_end"])) ? Html::convDateTime($release->fields["date_end"]) : __("Not yet completed", 'releases');
 
@@ -219,121 +220,25 @@ class PluginReleasesFinalization extends CommonDBTM {
             <p>" . $dateEnd . "<br><br>";
 
       $link = '';
-      $msg = '';
+      $msg  = '';
       if ((empty($release->fields["date_end"])
            || $release->fields["status"] < PluginReleasesRelease::REVIEW)
           && $this->canUpdate()) {
          if ($deployTaskFail == 0 && $testFail == 0) {
-            $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
-                         && ($deployTaskTotal == $deployTaskDone)
-                         && ($testTotal == $testDone)
-                         && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
 
-            $text = "";
-            if (!$allfinish) {
-               $text .= '<span class="center"><i class=\'fas fa-exclamation-triangle fa-1x\' style=\'color: orange\'></i> ' . __("Care all steps are not finish !", "releases") . '</span>';
-               $text .= "<br>";
-               $text .= "<br>";
-            }
-            //         if ($release->getField('status') < PluginReleasesRelease::FINALIZE) {
-            $link = '<a id="finalize" class="btn btn-primary"> ' . __("Finalize", 'releases') . '</a>';
+            $link = '<a href="#" id="finalize" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Finalize", 'releases') . '</a>';
 
-            echo Html::scriptBlock(
-               "$('#finalize').click(function(){
-                  $( '#alert-message' ).dialog( 'open' );
-         
-                  });");
-            $msg        = "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . __("Production run date", "releases") . Html::showDateTimeField("date_production", ["id" => "date_production", "maybeempty" => false, "display" => false]) . "</div>";
-            $srcImg     = "fas fa-info-circle";
-            $color      = "forestgreen";
-            $alertTitle = _n("Information", "Informations", 1);
-
-            $msg .= Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Finalize", 'releases') . " \";");
-            $msg .= Html::scriptBlock("$( '#alert-message' ).dialog({
-                 autoOpen: false,
-                 height: " . 200 . ",
-                 width: " . 300 . ",
-                 modal: true,
-                 open: function (){
-                  $(this)
-                     .parent()
-                     .children('.ui-dialog-titlebar')
-                     .html(mTitle);
-               },
-                 buttons: {
-                  '" . __("Ok") . "': function() {
-                     if($(\"[name = 'date_production']\").val() == '' || $(\"[name = 'date_production']\").val() === undefined){
-                 
-                       $(\"[name = 'date_production']\").siblings(':first').css('border-color','red')
-                     }else{  
-                        var date = $(\"[name = 'date_production']\").val();
-                        $.ajax({
-                           url:  '" . PLUGIN_RELEASES_WEBDIR . "/ajax/finalize.php',
-                           data: {'id' : " . $release->getID() . ",'date' : date},
-                           success: function() {
-                              document.location.reload();
-                           }
-                        });
-                        
-                     }
-                  
-                  },
-                  '" . __("Cancel") . "': function() {
-                        $( this ).dialog( 'close' );
-                   }
-               },
-               
-             })");
-            //         }
+            echo Ajax::createIframeModalWindow('alert-message',
+                                               PLUGIN_RELEASES_WEBDIR . "/front/finalization.php?release_id=" . $release->fields['id'] . "&confirm=1",
+                                               ['title'   => __("Finalize", 'releases'),
+                                                'display' => false]);
          } else {
-            $text = "";
-            //         if ($release->getField('status') < PluginReleasesRelease::FAIL) {
-            $link = '<a id="finalize" class="btn btn-primary"> ' . __("Mark as failed", 'releases') . '</a>';
+            $link = '<a href="#" id="finalize" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Mark as failed", 'releases') . '</a>';
 
-            echo Html::scriptBlock(
-               "$('#finalize').click(function(){
-                  $( '#alert-message' ).dialog( 'open' );
-         
-                  });");
-            $msg        = "<div id='alert-message' class='tab_cadre_navigation_center' style='display:none;'>" . $text . "</div>";
-            $srcImg     = "fas fa-times";
-            $color      = "firebrick";
-            $alertTitle = _n("Information", "Informations", 1);
-
-            $msg .= Html::scriptBlock("var mTitle =  \"<i class='" . $srcImg . " fa-1x' style='color:" . $color . "'></i>&nbsp;" . __("Mark as failed", 'releases') . " \";");
-            $msg .= Html::scriptBlock("$( '#alert-message' ).dialog({
-                 autoOpen: false,
-                 height: " . 200 . ",
-                 width: " . 300 . ",
-                 modal: true,
-                 open: function (){
-                  $(this)
-                     .parent()
-                     .children('.ui-dialog-titlebar')
-                     .html(mTitle);
-               },
-                 buttons: {
-                  '" . __("Confirm", 'releases') . "': function() {
-                
-                        var date = $(\"[name = 'date_production']\").val();
-                        $.ajax({
-                           url:  '" . PLUGIN_RELEASES_WEBDIR . "/ajax/finalize.php',
-                           data: {'id' : " . $release->getID() . ",'failedtasks' : $deployTaskFail , 'failedtests' : $testFail},
-                           success: function() {
-                              document.location.reload();
-                           }
-                        });
-                        
-                     
-                  
-                  },
-                  '" . __("Cancel") . "': function() {
-                        $( this ).dialog( 'close' );
-                   }
-               },
-               
-             })");
-            //         }
+            echo Ajax::createIframeModalWindow('alert-message',
+                                               PLUGIN_RELEASES_WEBDIR . "/front/finalization.php?release_id=" . $release->fields['id'] . "&failed=1",
+                                               ['title'   => __("Mark as failed", 'releases'),
+                                                'display' => false]);
          }
       }
 
@@ -346,5 +251,51 @@ class PluginReleasesFinalization extends CommonDBTM {
       echo "</td>";
       echo "</tr>";
       echo "</table>";
+   }
+
+   static function showFinalizeForm($params) {
+
+      $release = new PluginReleasesRelease();
+      $ID      = $params["release_id"];
+      $release->getFromDB($ID);
+      $deployTaskDone  = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, PluginReleasesDeploytask::DONE);
+      $deployTaskTotal = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class);
+      $testDone        = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class, PluginReleasesTest::DONE);
+      $testTotal       = PluginReleasesRelease::countForItem($ID, PluginReleasesTest::class);
+      $testFail        = PluginReleasesTest::countFailForItem($release);
+      $deployTaskFail  = PluginReleasesDeploytask::countFailForItem($release);
+
+      $allfinish = (PluginReleasesRisk::countForItem($release) == PluginReleasesRisk::countDoneForItem($release))
+                   && ($deployTaskTotal == $deployTaskDone)
+                   && ($testTotal == $testDone)
+                   && (PluginReleasesRollback::countForItem($release) == PluginReleasesRollback::countDoneForItem($release));
+
+      if (!$allfinish) {
+         echo '<div class="alert alert-important alert-warning d-flex">';
+         echo __("Care all steps are not finish !", "releases") . '</div>';
+      }
+      $target = PLUGIN_RELEASES_WEBDIR . "/front/finalization.php";
+      echo "<form name='release_form' id='release_form' method='post'
+                action='" . $target . "'>";
+
+      echo __("Production run date", "releases");
+      Html::showDateTimeField("date_production", ["id"         => "date_production",
+                                                  "maybeempty" => false, "size" => 40]);
+
+
+      if (isset($params["failed"])) {
+
+         echo Html::submit(__("Mark as failed", 'releases'), ['name' => 'failed', 'class' => 'btn btn-danger']);
+         echo Html::hidden('id', ['value' => $ID]);
+         echo Html::hidden('failedtasks', ['value' => $deployTaskFail]);
+         echo Html::hidden('failedtests', ['value' => $testFail]);
+
+      } else {
+
+         echo Html::submit(__("Finalize", 'releases'), ['name' => 'finalize', 'class' => 'btn btn-success']);
+         echo Html::hidden('id', ['value' => $ID]);
+
+      }
+      Html::closeForm();
    }
 }
