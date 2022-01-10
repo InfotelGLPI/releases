@@ -34,6 +34,8 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\ContentTemplates\TemplateManager;
 /**
  * Template for task
  * @since 9.1
@@ -226,5 +228,26 @@ class PluginReleasesRisktemplate extends CommonDropdown {
 
       }
       return 0;
+   }
+
+   /**
+    * Get content rendered by template engine, using given ITIL item to build parameters.
+    *
+    * @param CommonITILObject $itil_item
+    *
+    * @return string
+    */
+   public function getRenderedContent(CommonITILObject $itil_item): string
+   {
+      $html = TemplateManager::renderContentForCommonITIL(
+         $itil_item,
+         $this->fields['content']
+      );
+
+      if (!$html) {
+         $html = $this->fields['content'];
+      }
+
+      return $html;
    }
 }

@@ -31,6 +31,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+use Glpi\Application\View\TemplateRenderer;
 /**
  * Class PluginReleasesTest
  */
@@ -111,8 +112,10 @@ class PluginReleasesTest extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
+      $input["plugin_releases_releases_id"] = $input["items_id"];
+
       $release           = new PluginReleasesRelease();
-      $release->getFromDB($input["plugin_releases_releases_id"]);
+      $release->getFromDB($input["items_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
       return $input;
@@ -160,132 +163,142 @@ class PluginReleasesTest extends CommonDBTM {
     * @return bool
     */
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
 
-      $rand_template = mt_rand();
-      $rand_text     = mt_rand();
-      $rand_name     = mt_rand();
-      $rand_type     = mt_rand();
-      $rand_risk     = mt_rand();
-      $rand_state    = mt_rand();
 
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
-      if ($ID < 0) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td>";
-         echo _n('Test template', 'Test templates', 1, 'releases');
-         echo "</td>";
-         echo "<td style='vertical-align: middle' >";
-         //      echo "<div class='fa-label'>
-         //            <i class='fas fa-reply fa-fw'
-         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-         PluginReleasesTesttemplate::dropdown(['value'     => '',
-                                               'entity'    => $this->getEntityID(),
-                                               'rand'      => $rand_template,
-                                               'on_change' => 'tasktemplate_update(this.value)']);
-         echo "</div>";
-         echo Html::scriptBlock('
-         function tasktemplate_update(value) {
-            $.ajax({
-               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/test.php",
-               type: "POST",
-               data: {
-                  templates_id: value
-               }
-            }).done(function(data) {
-               var plugin_releases_typetests_id = isNaN(parseInt(data.plugin_releases_typetests_id))
-                  ? 0
-                  : parseInt(data.plugin_releases_typetests_id);
-                  
-                  
-
-               // set textarea content
-               $("#content' . $rand_text . '").html(data.content);
-               // set name
-               $("#name' . $rand_name . '").val(data.name);
-               $("#dropdown_plugin_releases_typetests_id' . $rand_type . '").trigger("setValue", plugin_releases_typetests_id);
-              
-               // set also tinmyce (if enabled)
-               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
-                  tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
-               }
-               
-            });
-         }
-      ');
-         echo "</td>";
-         echo "<td colspan='2'>";
-         echo "</td>";
-         echo "</tr>";
+      if ($this->isNewItem()) {
+         $this->getEmpty();
       }
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
-      echo "</td>";
 
-      echo "<td>";
-      echo __("Test type", 'releases');
-      echo "</td>";
-
-      echo "<td>";
-      if (isset($_GET["typetestid"])) {
-         $value = $_GET["typetestid"];
-      } else {
-         $value = $this->fields["plugin_releases_typetests_id"];
-      }
-      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'  => $rand_type, 'name' => "plugin_releases_typetests_id",
-                                                         'value' => $value]);
-      echo "</td>";
+      TemplateRenderer::getInstance()->display('@releases/form_test.html.twig', [
+         'item'      => $options['parent'],
+         'subitem'   => $this
+      ]);
 
 
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo __("Associated risk", 'releases');
-      echo "</td>";
-      echo "<td>";
-      Dropdown::show(PluginReleasesRisk::getType(), ['rand'  => $rand_risk, 'name' => "plugin_releases_risks_id", "condition" => ["plugin_releases_releases_id" => $options['plugin_releases_releases_id']],
-                                                     'value' => $this->fields["plugin_releases_risks_id"]]);
-      echo "</td>";
-      echo "<td>";
-      echo __('Status');
-      echo "</td>";
-
-      echo "<td>";
-      if (isset($this->fields["state"])) {
-         echo "<div class='fa-label'>
-            <i class='fas fa-tasks fa-fw'
-               title='" . __('Status') . "'></i>";
-         self::dropdownStateTest("state", $this->fields["state"], true, ['rand' => $rand_state]);
-         echo "</div>";
-      }
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Description') . "</td>";
-      echo "<td colspan='3'>";
-      //       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
-      $content_id = "content$rand_text";
-      $cols       = 100;
-      $rows       = 10;
-      Html::textarea(['name'              => 'content',
-                      'value'             => $this->fields["content"],
-                      'rand'              => $rand_text,
-                      'editor_id'         => $content_id,
-                      'enable_fileupload' => false,
-                      'enable_richtext'   => true,
-                      'cols'              => $cols,
-                      'rows'              => $rows]);
-      echo "</td>";
-      echo "</tr>";
-
-      $this->showFormButtons($options);
-
-      return true;
+//      $rand_template = mt_rand();
+//      $rand_text     = mt_rand();
+//      $rand_name     = mt_rand();
+//      $rand_type     = mt_rand();
+//      $rand_risk     = mt_rand();
+//      $rand_state    = mt_rand();
+//
+//      $this->initForm($ID, $options);
+//      $this->showFormHeader($options);
+//
+//      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
+//      if ($ID < 0) {
+//         echo "<tr class='tab_bg_1'>";
+//         echo "<td>";
+//         echo _n('Test template', 'Test templates', 1, 'releases');
+//         echo "</td>";
+//         echo "<td style='vertical-align: middle' >";
+//         //      echo "<div class='fa-label'>
+//         //            <i class='fas fa-reply fa-fw'
+//         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
+//         PluginReleasesTesttemplate::dropdown(['value'     => '',
+//                                               'entity'    => $this->getEntityID(),
+//                                               'rand'      => $rand_template,
+//                                               'on_change' => 'tasktemplate_update(this.value)']);
+//         echo "</div>";
+//         echo Html::scriptBlock('
+//         function tasktemplate_update(value) {
+//            $.ajax({
+//               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/test.php",
+//               type: "POST",
+//               data: {
+//                  templates_id: value
+//               }
+//            }).done(function(data) {
+//               var plugin_releases_typetests_id = isNaN(parseInt(data.plugin_releases_typetests_id))
+//                  ? 0
+//                  : parseInt(data.plugin_releases_typetests_id);
+//
+//
+//
+//               // set textarea content
+//               $("#content' . $rand_text . '").html(data.content);
+//               // set name
+//               $("#name' . $rand_name . '").val(data.name);
+//               $("#dropdown_plugin_releases_typetests_id' . $rand_type . '").trigger("setValue", plugin_releases_typetests_id);
+//
+//               // set also tinmyce (if enabled)
+//               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
+//                  tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
+//               }
+//
+//            });
+//         }
+//      ');
+//         echo "</td>";
+//         echo "<td colspan='2'>";
+//         echo "</td>";
+//         echo "</tr>";
+//      }
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>" . __('Name') . "</td>";
+//      echo "<td>";
+//      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
+//      echo "</td>";
+//
+//      echo "<td>";
+//      echo __("Test type", 'releases');
+//      echo "</td>";
+//
+//      echo "<td>";
+//      if (isset($_GET["typetestid"])) {
+//         $value = $_GET["typetestid"];
+//      } else {
+//         $value = $this->fields["plugin_releases_typetests_id"];
+//      }
+//      Dropdown::show(PluginReleasesTypeTest::getType(), ['rand'  => $rand_type, 'name' => "plugin_releases_typetests_id",
+//                                                         'value' => $value]);
+//      echo "</td>";
+//
+//
+//      echo "</tr>";
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>";
+//      echo __("Associated risk", 'releases');
+//      echo "</td>";
+//      echo "<td>";
+//      Dropdown::show(PluginReleasesRisk::getType(), ['rand'  => $rand_risk, 'name' => "plugin_releases_risks_id", "condition" => ["plugin_releases_releases_id" => $options['plugin_releases_releases_id']],
+//                                                     'value' => $this->fields["plugin_releases_risks_id"]]);
+//      echo "</td>";
+//      echo "<td>";
+//      echo __('Status');
+//      echo "</td>";
+//
+//      echo "<td>";
+//      if (isset($this->fields["state"])) {
+//         echo "<div class='fa-label'>
+//            <i class='fas fa-tasks fa-fw'
+//               title='" . __('Status') . "'></i>";
+//         self::dropdownStateTest("state", $this->fields["state"], true, ['rand' => $rand_state]);
+//         echo "</div>";
+//      }
+//      echo "</td>";
+//      echo "</tr>";
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>" . __('Description') . "</td>";
+//      echo "<td colspan='3'>";
+//      //       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
+//      $content_id = "content$rand_text";
+//      $cols       = 100;
+//      $rows       = 10;
+//      Html::textarea(['name'              => 'content',
+//                      'value'             => $this->fields["content"],
+//                      'rand'              => $rand_text,
+//                      'editor_id'         => $content_id,
+//                      'enable_fileupload' => false,
+//                      'enable_richtext'   => true,
+//                      'cols'              => $cols,
+//                      'rows'              => $rows]);
+//      echo "</td>";
+//      echo "</tr>";
+//
+//      $this->showFormButtons($options);
+//
+//      return true;
    }
 
    /**

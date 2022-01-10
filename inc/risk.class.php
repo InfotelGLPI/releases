@@ -31,6 +31,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+use Glpi\Application\View\TemplateRenderer;
 /**
  * Class PluginReleasesRisk
  */
@@ -87,8 +88,9 @@ class PluginReleasesRisk extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
+      $input["plugin_releases_releases_id"] = $input["items_id"];
       $release           = new PluginReleasesRelease();
-      $release->getFromDB($input["plugin_releases_releases_id"]);
+      $release->getFromDB($input["items_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
 
@@ -97,8 +99,6 @@ class PluginReleasesRisk extends CommonDBTM {
 
    function post_addItem() {
       parent::post_addItem();
-
-      $release = new PluginReleasesRelease();
 
       if (isset($this->input["create_test"]) && $this->input["create_test"] == 1) {
          $test                                     = new PluginReleasesTest();
@@ -135,113 +135,123 @@ class PluginReleasesRisk extends CommonDBTM {
 
 
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
-
-      $rand_template = mt_rand();
-      $rand_text     = mt_rand();
-      $rand_name     = mt_rand();
-      $rand_type     = mt_rand();
-
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-      if ($ID < 0) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td>";
-         echo _n('Risk template', 'Risk templates', 1, 'releases');
-         echo "</td>";
-         echo "<td style='vertical-align: middle' >";
-         //      echo
-         //         "<div class='fa-label'>
-         //            <i class='fas fa-reply fa-fw'
-         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-         PluginReleasesRisktemplate::dropdown(['value'     => '',
-                                               'entity'    => $this->getEntityID(),
-                                               'rand'      => $rand_template,
-                                               'on_change' => 'tasktemplate_update(this.value)']);
-         //      echo "</div>";
-         echo Html::scriptBlock('
-            function tasktemplate_update(value) {
-               $.ajax({
-                  url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/risk.php",
-                  type: "POST",
-                  data: {
-                     templates_id: value
-                  }
-               }).done(function(data) {
-                  var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
-                     ? 0
-                     : parseInt(data.plugin_releases_typerisks_id);
-   
-                  // set textarea content
-                  $("#content' . $rand_text . '").html(data.content);
-                  // set name
-                  $("#name' . $rand_name . '").val(data.name);
-                  $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
-                  // set also tinmyce (if enabled)
-                  if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
-                     tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
-                  }
-                  
-               });
-            }
-         ');
-         echo "</td>";
-         echo "<td>";
-         echo __("Create a test from this risk", "releases");
-         echo "</td>";
-         echo "<td>";
-         Html::showCheckbox(["name" => "create_test"]);
-         echo "</td>";
 
 
-         echo "</tr>";
+      if ($this->isNewItem()) {
+         $this->getEmpty();
       }
-      echo "<tr class='tab_bg_1'>";
 
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
-      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
-      echo "</td>";
-
-      echo "<td>";
-      echo __("Risk type", 'releases');
-      echo "</td>";
-
-      echo "<td>";
-      if (isset($_GET["typeriskid"])) {
-         $value = $_GET["typeriskid"];
-      } else {
-         $value = $this->fields["plugin_releases_typerisks_id"];
-      }
-      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name'  => "plugin_releases_typerisks_id",
-                                                         'value' => $value, 'rand' => $rand_type]);
-      echo "</td>";
+      TemplateRenderer::getInstance()->display('@releases/form_risk.html.twig', [
+         'item'      => $options['parent'],
+         'subitem'   => $this
+      ]);
 
 
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Description') . "</td>";
-      echo "<td colspan='3'>";
-      //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
-      $content_id = "content$rand_text";
-      $cols       = 100;
-      $rows       = 10;
-      Html::textarea(['name'              => 'content',
-                      'value'             => $this->fields["content"],
-                      'rand'              => $rand_text,
-                      'editor_id'         => $content_id,
-                      'enable_fileupload' => false,
-                      'enable_richtext'   => true,
-                      'cols'              => $cols,
-                      'rows'              => $rows]);
-      echo "</td>";
-      echo "</tr>";
-
-      $this->showFormButtons($options);
-
-      return true;
+//      $rand_template = mt_rand();
+//      $rand_text     = mt_rand();
+//      $rand_name     = mt_rand();
+//      $rand_type     = mt_rand();
+//
+//      $this->initForm($ID, $options);
+//      $this->showFormHeader($options);
+//      if ($ID < 0) {
+//         echo "<tr class='tab_bg_1'>";
+//         echo "<td>";
+//         echo _n('Risk template', 'Risk templates', 1, 'releases');
+//         echo "</td>";
+//         echo "<td style='vertical-align: middle' >";
+//         //      echo
+//         //         "<div class='fa-label'>
+//         //            <i class='fas fa-reply fa-fw'
+//         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
+//         PluginReleasesRisktemplate::dropdown(['value'     => '',
+//                                               'entity'    => $this->getEntityID(),
+//                                               'rand'      => $rand_template,
+//                                               'on_change' => 'tasktemplate_update(this.value)']);
+//         //      echo "</div>";
+//         echo Html::scriptBlock('
+//            function tasktemplate_update(value) {
+//               $.ajax({
+//                  url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/risk.php",
+//                  type: "POST",
+//                  data: {
+//                     templates_id: value
+//                  }
+//               }).done(function(data) {
+//                  var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
+//                     ? 0
+//                     : parseInt(data.plugin_releases_typerisks_id);
+//
+//                  // set textarea content
+//                  $("#content' . $rand_text . '").html(data.content);
+//                  // set name
+//                  $("#name' . $rand_name . '").val(data.name);
+//                  $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
+//                  // set also tinmyce (if enabled)
+//                  if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
+//                     tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
+//                  }
+//
+//               });
+//            }
+//         ');
+//         echo "</td>";
+//         echo "<td>";
+//         echo __("Create a test from this risk", "releases");
+//         echo "</td>";
+//         echo "<td>";
+//         Html::showCheckbox(["name" => "create_test"]);
+//         echo "</td>";
+//
+//
+//         echo "</tr>";
+//      }
+//      echo "<tr class='tab_bg_1'>";
+//
+//      echo "<td>" . __('Name') . "</td>";
+//      echo "<td>";
+//      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
+//      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
+//      echo "</td>";
+//
+//      echo "<td>";
+//      echo __("Risk type", 'releases');
+//      echo "</td>";
+//
+//      echo "<td>";
+//      if (isset($_GET["typeriskid"])) {
+//         $value = $_GET["typeriskid"];
+//      } else {
+//         $value = $this->fields["plugin_releases_typerisks_id"];
+//      }
+//      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name'  => "plugin_releases_typerisks_id",
+//                                                         'value' => $value, 'rand' => $rand_type]);
+//      echo "</td>";
+//
+//
+//      echo "</tr>";
+//
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>" . __('Description') . "</td>";
+//      echo "<td colspan='3'>";
+//      //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
+//      $content_id = "content$rand_text";
+//      $cols       = 100;
+//      $rows       = 10;
+//      Html::textarea(['name'              => 'content',
+//                      'value'             => $this->fields["content"],
+//                      'rand'              => $rand_text,
+//                      'editor_id'         => $content_id,
+//                      'enable_fileupload' => false,
+//                      'enable_richtext'   => true,
+//                      'cols'              => $cols,
+//                      'rows'              => $rows]);
+//      echo "</td>";
+//      echo "</tr>";
+//
+//      $this->showFormButtons($options);
+//
+//      return true;
    }
 
    /**

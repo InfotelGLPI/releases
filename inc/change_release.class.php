@@ -35,9 +35,9 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Change_Ticket Class
+ * Change_Release Class
  *
- * Relation between Changes and Tickets
+ * Relation between Changes and Releases
  **/
 class PluginReleasesChange_Release extends CommonDBRelation {
 

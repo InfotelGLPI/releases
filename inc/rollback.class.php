@@ -31,6 +31,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+use Glpi\Application\View\TemplateRenderer;
 /**
  * Class PluginReleasesRollback
  */
@@ -96,8 +97,9 @@ class PluginReleasesRollback extends CommonDBTM {
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
+      $input["plugin_releases_releases_id"] = $input["items_id"];
       $release           = new PluginReleasesRelease();
-      $release->getFromDB($input["plugin_releases_releases_id"]);
+      $release->getFromDB($input["items_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
       return $input;
@@ -142,95 +144,103 @@ class PluginReleasesRollback extends CommonDBTM {
     * @return bool
     */
    function showForm($ID, $options = []) {
-      global $CFG_GLPI;
 
-      $rand_template = mt_rand();
-      $rand_text     = mt_rand();
-      $rand_name     = mt_rand();
-
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-      echo "<tr class='tab_bg_1'>";
-      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
-      echo "</tr>";
-      if ($ID < 0) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td>";
-         echo _n('Rollback template', 'Rollback templates', 1, 'releases');
-         echo "</td>";
-         echo "<td style='vertical-align: middle' >";
-         //      echo "<div class='fa-label'>
-         //            <i class='fas fa-reply fa-fw'
-         //               title='".."'></i>";
-         PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
-                                                   'entity'    => $this->getEntityID(),
-                                                   'rand'      => $rand_template,
-                                                   'on_change' => 'tasktemplate_update(this.value)']);
-         echo "</div>";
-         echo Html::scriptBlock('
-         function tasktemplate_update(value) {
-            $.ajax({
-               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/rollback.php",
-               type: "POST",
-               data: {
-                  templates_id: value
-               }
-            }).done(function(data) {
-               
-
-               // set textarea content
-               $("#content' . $rand_text . '").html(data.content);
-               // set name
-               $("#name' . $rand_name . '").val(data.name);
-               // set also tinmyce (if enabled)
-               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
-                  tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
-               }
-               
-            });
-         }
-      ');
-         echo "</td>";
-         echo "<td colspan='2'>";
-         echo "</td>";
-         //      echo "<td>";
-         //      echo "</td>";
-         echo "</tr>";
+      if ($this->isNewItem()) {
+         $this->getEmpty();
       }
-      echo "<tr class='tab_bg_1'>";
 
+      TemplateRenderer::getInstance()->display('@releases/form_rollback.html.twig', [
+         'item'      => $options['parent'],
+         'subitem'   => $this
+      ]);
 
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]);
-      echo "</td>";
-      echo "<td colspan='2'>";
-      echo "</td>";
-
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Description') . "</td>";
-      echo "<td colspan='3'>";
-      //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
-      $content_id = "content$rand_text";
-      $cols       = 100;
-      $rows       = 10;
-      Html::textarea(['name'              => 'content',
-                      'value'             => $this->fields["content"],
-                      'rand'              => $rand_text,
-                      'editor_id'         => $content_id,
-                      'enable_fileupload' => false,
-                      'enable_richtext'   => true,
-                      'cols'              => $cols,
-                      'rows'              => $rows]);
-      echo "</td>";
-      echo "</tr>";
-
-      $this->showFormButtons($options);
-
-      return true;
+//      $rand_template = mt_rand();
+//      $rand_text     = mt_rand();
+//      $rand_name     = mt_rand();
+//
+//      $this->initForm($ID, $options);
+//      $this->showFormHeader($options);
+//
+//      echo "<tr class='tab_bg_1'>";
+//      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
+//      echo "</tr>";
+//      if ($ID < 0) {
+//         echo "<tr class='tab_bg_1'>";
+//         echo "<td>";
+//         echo _n('Rollback template', 'Rollback templates', 1, 'releases');
+//         echo "</td>";
+//         echo "<td style='vertical-align: middle' >";
+//         //      echo "<div class='fa-label'>
+//         //            <i class='fas fa-reply fa-fw'
+//         //               title='".."'></i>";
+//         PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
+//                                                   'entity'    => $this->getEntityID(),
+//                                                   'rand'      => $rand_template,
+//                                                   'on_change' => 'tasktemplate_update(this.value)']);
+//         echo "</div>";
+//         echo Html::scriptBlock('
+//         function tasktemplate_update(value) {
+//            $.ajax({
+//               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/rollback.php",
+//               type: "POST",
+//               data: {
+//                  templates_id: value
+//               }
+//            }).done(function(data) {
+//
+//
+//               // set textarea content
+//               $("#content' . $rand_text . '").html(data.content);
+//               // set name
+//               $("#name' . $rand_name . '").val(data.name);
+//               // set also tinmyce (if enabled)
+//               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
+//                  tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
+//               }
+//
+//            });
+//         }
+//      ');
+//         echo "</td>";
+//         echo "<td colspan='2'>";
+//         echo "</td>";
+//         //      echo "<td>";
+//         //      echo "</td>";
+//         echo "</tr>";
+//      }
+//      echo "<tr class='tab_bg_1'>";
+//
+//
+//      echo "<td>" . __('Name') . "</td>";
+//      echo "<td>";
+//      echo Html::input("name", ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]);
+//      echo "</td>";
+//      echo "<td colspan='2'>";
+//      echo "</td>";
+//
+//      echo "</tr>";
+//
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>" . __('Description') . "</td>";
+//      echo "<td colspan='3'>";
+//      //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
+//      $content_id = "content$rand_text";
+//      $cols       = 100;
+//      $rows       = 10;
+//      Html::textarea(['name'              => 'content',
+//                      'value'             => $this->fields["content"],
+//                      'rand'              => $rand_text,
+//                      'editor_id'         => $content_id,
+//                      'enable_fileupload' => false,
+//                      'enable_richtext'   => true,
+//                      'cols'              => $cols,
+//                      'rows'              => $rows]);
+//      echo "</td>";
+//      echo "</tr>";
+//
+//      $this->showFormButtons($options);
+//
+//      return true;
    }
 
    /**

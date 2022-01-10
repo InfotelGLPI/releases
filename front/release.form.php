@@ -34,7 +34,7 @@ Session::checkLoginUser();
 use Glpi\Event;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+   $_GET["id"] = 0;
 }
 if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";

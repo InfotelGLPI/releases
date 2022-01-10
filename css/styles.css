@@ -151,42 +151,58 @@ div.workflow li {
 }
 
 
-.timeline_choices li.risk {
-   background-color: #FFCF48;
+.action-Risk {
+   color: #ff3c10!important;
+}
+
+.timeline-item.PluginReleasesRisk .timeline-content {
+   background-color: #ff3c1096;
+}
+
+.Finalization-Risk {
+   background-color: #ff3c10;
    color: #535353;
 }
 
-.timeline_choices li.test {
+.action-Test {
+   color: #2385bb!important;
+}
+
+.timeline-item.PluginReleasesTest .timeline-content {
+   background-color: #9FDDFF;
+}
+
+.Finalization-Test {
    background-color: #9FDDFF;
    color: #535353;
 }
 
-.timeline_choices li.rollback {
-   background-color: #e0e0e0;
+.action-Rollback {
+   color: #8fd57c!important;
+}
+
+.timeline-item.PluginReleasesRollback .timeline-content {
+   background-color: #8fd57c;
+}
+
+.Finalization-Rollback {
+   background-color: #8fd57c;
    color: #3a5d4e;
 }
 
-.risk {
-   /*background-color: #F39F18;*/
-   background-color: #FFCF48;
+.action-Deploytask {
+   color: #ff9d24!important;
+}
+
+.timeline-item.PluginReleasesDeploytask .timeline-content {
+   background-color: #fda02d8f;
+}
+
+.Finalization-Deploytask {
+   background-color: #ff9d24;
    color: #535353;
 }
 
-.task {
-   background-color: #FEDA90;
-   color: #535353;
-}
-
-.test {
-   /*background-color: #77b5fe;*/
-   background-color: #9FDDFF;
-   color: #535353;
-}
-
-.rollback {
-   background-color: #e0e0e0;
-   color: #3a5d4e;
-}
 
 .newrelease {
    color: #49bf4d;

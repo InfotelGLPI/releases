@@ -31,6 +31,7 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
+use Glpi\Application\View\TemplateRenderer;
 
 /**
  * Class PluginReleasesRelease
@@ -89,15 +90,20 @@ class PluginReleasesRelease extends CommonITILObject {
 
       if (static::canView()) {
          switch ($item->getType()) {
-            case __CLASS__ :
-               $timeline    = $item->getTimelineItems();
-               $nb_elements = count($timeline);
-
-               $ong = [
-                  1 => __("Processing release", 'releases') . " <sup class='tab_nb'>$nb_elements</sup>",
-               ];
-
-               return $ong;
+            //            case __CLASS__ :
+            //               $timeline    = $item->getTimelineItems();
+            //               $nb_elements = count($timeline);
+            //
+            //               $ong = [
+            //                  1 => __("Processing release", 'releases') . " <span class='badge'>$nb_elements</span>",
+            //               ];
+            //               $timeline    = $this->getTimelineItems(['with_logs' => false]);
+            //               $nb_elements = count($timeline);
+            //               $label = $this->getTypeName(1);
+            //               if ($nb_elements > 0) {
+            //                  $label .= " <span class='badge'>$nb_elements</span>";
+            //               }
+            //               return $ong;
             case "Change" :
                return self::createTabEntry(self::getTypeName(2), self::countItemForAChange($item));
          }
@@ -109,26 +115,25 @@ class PluginReleasesRelease extends CommonITILObject {
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       switch ($item->getType()) {
-         case __CLASS__ :
-            switch ($tabnum) {
-               case 1 :
-                  if (!$withtemplate) {
-                     echo "<div class='timeline_box'>";
-                     $rand = mt_rand();
-                     $item->showTimelineForm($rand);
-                     $item->showTimeline($rand);
-                     echo "</div>";
-                  } else {
-                     echo "<div class='timeline_box'>";
-                     $rand = mt_rand();
-                     $item->showTimeline($rand);
-                     echo "</div>";
-                  }
-
-                  break;
-
-            }
-            break;
+         //         case __CLASS__ :
+         //            switch ($tabnum) {
+         //               case 1 :
+         //                  if (!$withtemplate) {
+         //                     echo "<div class='timeline_box'>";
+         //                     $rand = mt_rand();
+         //                     $item->showTimelineForm($rand);
+         //                     $item->showTimeline($rand);
+         //                     echo "</div>";
+         //                  } else {
+         //                     echo "<div class='timeline_box'>";
+         //                     $rand = mt_rand();
+         //                     $item->showTimeline($rand);
+         //                     echo "</div>";
+         //                  }
+         //
+         //                  break;
+         //            }
+         //            break;
          case "Change" :
             PluginReleasesChange_Release::showReleaseFromChange($item);
             break;
@@ -146,12 +151,12 @@ class PluginReleasesRelease extends CommonITILObject {
    function defineTabs($options = []) {
 
       $ong = [];
+      //      $this->addStandardTab(self::getType(), $ong, $options);
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
       $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
-
       if ($this->hasImpactTab()) {
          $this->addStandardTab('Impact', $ong, $options); // todo hide in template
       }
@@ -308,13 +313,19 @@ class PluginReleasesRelease extends CommonITILObject {
          'massiveaction' => false,
          'datatype'      => 'bool'
       ];
+      $types = ['Entity'   => 'Entity',
+                'Group'    => 'Group',
+                'Profile'  => 'Profile',
+                'User'     => 'User',
+                'Location' => 'Location'];
       $tab[] = [
          'id'            => '13',
          'table'         => $this->getTable(),
          'field'         => 'communication_type',
          'name'          => __('Communication type', 'releases'),
          'massiveaction' => false,
-         'datatype'      => 'specific'
+         'datatype'      => 'itemtypename',
+         'itemtype_list' => $types,
       ];
       $tab[] = [
          'id'            => '14',
@@ -349,7 +360,8 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'datetime',
          'massiveaction' => false
       ];
-      $tab   = array_merge($tab, Location::rawSearchOptionsToAdd());
+
+      $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
       return $tab;
 
    }
@@ -399,7 +411,7 @@ class PluginReleasesRelease extends CommonITILObject {
          //            return PluginReleasesTest::countDoneForItem($self) . " / ".PluginReleasesTest::countForItem($self);
          //            break;
          case 'communication_type':
-            if ($values["communication_type"] == "0") {
+            if ($values["communication_type"] == "0" || $values["communication_type"] == "ALL") {
                return " ";
             }
             return $values["communication_type"]::getTypeName();
@@ -602,8 +614,8 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($risk["state"]);
             $old_id = $risk["id"];
             unset($risk["id"]);
-            $risk["content"]                        = Toolbox::addslashes_deep($risk["content"]);
-            $risk["content"]                        = Toolbox::addslashes_deep($risk["content"]);
+            $risk["content"]      = Toolbox::addslashes_deep($risk["content"]);
+            $risk["content"]      = Toolbox::addslashes_deep($risk["content"]);
             $corresRisks[$old_id] = $releaseRisk->add($risk);
          }
          foreach ($tests as $test) {
@@ -612,8 +624,8 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($test["date_creation"]);
             unset($test["state"]);
             $old_id                           = $test["id"];
-            $test["name"]                        = Toolbox::addslashes_deep($test["name"]);
-            $test["content"]                        = Toolbox::addslashes_deep($test["content"]);
+            $test["name"]                     = Toolbox::addslashes_deep($test["name"]);
+            $test["content"]                  = Toolbox::addslashes_deep($test["content"]);
             $test["plugin_releases_risks_id"] = $corresRisks[$test["plugin_releases_risks_id"]] ?? 0;
             unset($test["id"]);
             $corresTests[$old_id] = $releaseTest->add($test);
@@ -625,7 +637,7 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($task["date_creation"]);
             unset($task["state"]);
             $old_id                                 = $task["id"];
-            $task["name"]                        = Toolbox::addslashes_deep($task["name"]);
+            $task["name"]                           = Toolbox::addslashes_deep($task["name"]);
             $task["content"]                        = Toolbox::addslashes_deep($task["content"]);
             $task["plugin_releases_risks_id"]       = $corresRisks[$task["plugin_releases_risks_id"]] ?? 0;
             $task["plugin_releases_deploytasks_id"] = $corresTasks[$task["plugin_releases_deploytasktemplates_id"]] ?? 0;
@@ -640,8 +652,8 @@ class PluginReleasesRelease extends CommonITILObject {
             unset($rollback["state"]);
             $old_id = $rollback["id"];
             unset($rollback["id"]);
-            $rollback["name"]                        = Toolbox::addslashes_deep($rollback["name"]);
-            $rollback["content"]                        = Toolbox::addslashes_deep($rollback["content"]);
+            $rollback["name"]         = Toolbox::addslashes_deep($rollback["name"]);
+            $rollback["content"]      = Toolbox::addslashes_deep($rollback["content"]);
             $corresRollbacks[$old_id] = $releaseRollback->add($rollback);
          }
          foreach ($items as $item) {
@@ -1119,8 +1131,166 @@ class PluginReleasesRelease extends CommonITILObject {
       }
    }
 
+   public function getTimelineItemtypes(): array {
+      $itemtypes              = [];
+      $solved_statuses        = static::getSolvedStatusArray();
+      $closed_statuses        = static::getClosedStatusArray();
+      $solved_closed_statuses = array_merge($solved_statuses, $closed_statuses);
+
+      $obj_type    = static::getType();
+      $foreign_key = static::getForeignKeyField();
+
+      //check sub-items rights
+      $tmp = [$foreign_key => $this->getID()];
+
+      $fup = new ITILFollowup();
+      $fup->getEmpty();
+      $fup->fields['itemtype'] = $obj_type;
+      //      $fup->fields['items_id'] = $this->getID();
+      $canadd_fup = $fup->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $solved_closed_statuses, true);
+
+      if ($canadd_fup) {
+         $itemtypes['answer'] = [
+            'type'     => 'ITILFollowup',
+            'class'    => 'ITILFollowup',
+            'icon'     => 'ti ti-message-circle',
+            'label'    => _x('button', 'Add a followup', 'releases'),
+            'template' => 'components/itilobject/timeline/form_followup.html.twig',
+            'item'     => $fup
+         ];
+      }
+
+      $risk = new PluginReleasesRisk();
+
+      $canadd_risk = $risk->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $solved_closed_statuses, true);
+
+      if ($canadd_risk) {
+         $itemtypes['Risk'] = [
+            'type'     => 'PluginReleasesRisk',
+            'class'    => 'PluginReleasesRisk',
+            'icon'     => 'ti ti-bug',
+            'label'    => _x('button', 'Add a risk', 'releases'),
+            'template' => '@releases/form_risk.html.twig',
+            'item'     => $risk
+         ];
+      }
+
+      $rollback = new PluginReleasesRollback();
+
+      $canadd_roll = $rollback->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $solved_closed_statuses, true);
+
+      if ($canadd_roll) {
+         $itemtypes['Rollback'] = [
+            'type'     => 'PluginReleasesRollback',
+            'class'    => 'PluginReleasesRollback',
+            'icon'     => 'ti ti-arrow-back-up',
+            'label'    => _x('button', 'Add a rollback', 'releases'),
+            'template' => '@releases/form_rollback.html.twig',
+            'item'     => $rollback
+         ];
+      }
+
+      $task = new PluginReleasesDeploytask();
+
+      $canadd_task = $task->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $solved_closed_statuses, true);
+
+      if ($canadd_task) {
+         $itemtypes['Deploytask'] = [
+            'type'     => 'PluginReleasesDeploytask',
+            'class'    => 'PluginReleasesDeploytask',
+            'icon'     => 'ti ti-checkbox',
+            'label'    => _x('button', 'Add a deployment task', 'releases'),
+            'template' => '@releases/form_deploytask.html.twig',
+            'item'     => $task
+         ];
+      }
+
+      $test = new PluginReleasesTest();
+
+      $canadd_test = $test->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $solved_closed_statuses, true);
+
+      if ($canadd_test) {
+         $itemtypes['Test'] = [
+            'type'     => 'PluginReleasesTest',
+            'class'    => 'PluginReleasesTest',
+            'icon'     => 'ti ti-check',
+            'label'    => _x('button', 'Add a test', 'releases'),
+            'template' => '@releases/form_test.html.twig',
+            'item'     => $test
+         ];
+      }
+
+      return $itemtypes;
+   }
+
    function showForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
+
+      if (!static::canView()) {
+         return false;
+      }
+
+      $default_values = self::getDefaultValues();
+
+      // Restore saved value or override with page parameter
+      $saved = $this->restoreInput();
+
+      // Restore saved values and override $this->fields
+      $this->restoreSavedValues($saved);
+
+      // Set default options
+      if (!$ID) {
+         foreach ($default_values as $key => $val) {
+            if (!isset($options[$key])) {
+               if (isset($saved[$key])) {
+                  $options[$key] = $saved[$key];
+               } else {
+                  $options[$key] = $val;
+               }
+            }
+         }
+
+         if (isset($options["template_id"]) && $options["template_id"] > 0) {
+            $this->prepareField($options["template_id"]);
+            $this->fields["status"] = self::NEWRELEASE;
+            $release_user           = new PluginReleasesReleasetemplate_User();
+            $release_supplier       = new PluginReleasesReleasetemplate_Supplier();
+            $group_release          = new PluginReleasesGroup_Releasetemplate();
+            $users                  = $release_user->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
+            $suppliers              = $release_supplier->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
+            $groups                 = $group_release->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
+            foreach ($users as $user) {
+               $options["_users_id_" . self::getActorFieldNameType($user["type"])] = $user["users_id"];
+            }
+            foreach ($suppliers as $supplier) {
+               $options["_suppliers_id_" . self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
+            }
+            foreach ($groups as $group) {
+               $options["_groups_id_" . self::getActorFieldNameType($group["type"])] = $group["groups_id"];
+            }
+            echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
+         }
+
+
+         $select_changes = [];
+         if (isset($options["changes_id"])) {
+            $select_changes = [$options["changes_id"]];
+            $c              = new Change();
+            if ($c->getFromDB($options["changes_id"])) {
+               if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
+
+                  $this->fields["name"]    = $c->getField("name");
+                  $options["name"]         = $c->getField("name");
+                  $this->fields["content"] = Toolbox::stripslashes_deep($c->getField("content"));
+                  $options["content"]      = Toolbox::stripslashes_deep($c->getField("content"));
+
+               }
+               $options['entities_id']      = $c->getField("entities_id");
+               $this->fields["entities_id"] = $c->getField("entities_id");
+            }
+
+         }
+      }
+
 
       if ($ID > 0) {
          $this->check($ID, READ);
@@ -1128,6 +1298,8 @@ class PluginReleasesRelease extends CommonITILObject {
          // Create item
          $this->check(-1, CREATE, $options);
       }
+
+      $canupdate = !$ID || (Session::getCurrentInterface() == "central" && $this->canUpdateItem());
 
       if (!$this->isNewItem()) {
          $options['formtitle'] = sprintf(
@@ -1142,299 +1314,338 @@ class PluginReleasesRelease extends CommonITILObject {
       if (!isset($options['template_preview'])) {
          $options['template_preview'] = 0;
       }
-      //      $this->fields["entities_id"] = Session::getActiveEntity();
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-      $default_values = self::getDefaultValues();
 
-      // Restore saved value or override with page parameter
-      $saved                  = $this->restoreInput();
-      $options['entities_id'] = Session::getActiveEntity();
-      foreach ($default_values as $name => $value) {
-         if (!isset($this->fields[$name])) {
-            if (isset($saved[$name])) {
-               $this->fields[$name] = $saved[$name];
-               $options[$name]      = $saved[$name];
-            } else {
-               $this->fields[$name] = $value;
-               $options[$name]      = $value;
-            }
-         }
-      }
-      if (isset($options["template_id"]) && $options["template_id"] > 0) {
-         $this->prepareField($options["template_id"]);
-         $this->fields["status"] = self::NEWRELEASE;
-         $release_user           = new PluginReleasesReleasetemplate_User();
-         $release_supplier       = new PluginReleasesReleasetemplate_Supplier();
-         $group_release          = new PluginReleasesGroup_Releasetemplate();
-         $users                  = $release_user->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
-         $suppliers              = $release_supplier->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
-         $groups                 = $group_release->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
-         foreach ($users as $user) {
-            $options["_users_id_" . self::getActorFieldNameType($user["type"])] = $user["users_id"];
-         }
-         foreach ($suppliers as $supplier) {
-            $options["_suppliers_id_" . self::getActorFieldNameType($supplier["type"])] = $supplier["suppliers_id"];
-         }
-         foreach ($groups as $group) {
-            $options["_groups_id_" . self::getActorFieldNameType($group["type"])] = $group["groups_id"];
-         }
-         echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
-      }
-
-
-      $select_changes = [];
-      if (isset($options["changes_id"])) {
-         $select_changes = [$options["changes_id"]];
-         $c              = new Change();
-         if ($c->getFromDB($options["changes_id"])) {
-            if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
-
-               $this->fields["name"]    = $c->getField("name");
-               $options["name"]         = $c->getField("name");
-               $this->fields["content"] = Toolbox::stripslashes_deep($c->getField("content"));
-               $options["content"]      = Toolbox::stripslashes_deep($c->getField("content"));
-
-            }
-            $options['entities_id']      = $c->getField("entities_id");
-            $this->fields["entities_id"] = $c->getField("entities_id");
-         }
-
-      }
-
-      // In percent
-      $colsize1 = '13';
-      $colsize2 = '37';
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th class='left' width='$colsize1%'>";
-      echo __('Opening date');
-      echo "</th>";
-      echo "<td class='left' width='$colsize2%'>";
-      $date = $this->fields["date"];
-      if (!$ID) {
-         $date = date("Y-m-d H:i:s");
-      }
-      Html::showDateTimeField(
-         "date", [
-                  'value'      => $date,
-                  'maybeempty' => false,
-                  'required'   => (!$ID)
-               ]
+      // Load template if available :
+      $tt = $this->getITILTemplateToUse(
+         $options['template_preview'],
+         $this->getType(),
+         0,
+         ($ID ? $this->fields['entities_id'] : $options['entities_id'])
       );
-      echo "</td>";
 
-      echo "<th width='$colsize1%'>" . __('By') . "</th>";
-      echo "<td class='left'>";
-      User::dropdown(['name'   => 'users_id_recipient',
-                      'value'  => $this->fields["users_id_recipient"],
-                      'entity' => $this->fields["entities_id"],
-                      'right'  => 'all']);
-      echo "</td></tr>";
-      $showuserlink = 0;
-      if (User::canView()) {
-         $showuserlink = 1;
-      }
-      if ($ID) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<th>" . __('Last update') . "</th>";
-         echo "<td >" . Html::convDateTime($this->fields["date_mod"]) . "\n";
-         if ($this->fields['users_id_lastupdater'] > 0) {
-            printf(__('%1$s: %2$s'), __('By'),
-                   getUserName($this->fields["users_id_lastupdater"], $showuserlink));
-         }
-         echo "</td><th></th><td></td></tr>";
-      }
-
-      echo "</table>";
-
-      echo "<table class='tab_cadre_fixe' id='mainformtable2'>";
-      echo "<tr class='tab_bg_1'>";
-
-      echo "<th width='$colsize1%'>" . __('Status') . "</th>";
-      echo "<td width='$colsize2%' >";
-      Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->fields["status"]]);
-      echo "</td>";
-
-      if (empty($ID) || $ID < 0) {
-         echo "<th width='$colsize1%'>";
-         echo __('Associated change', 'releases');
-         echo "</th>";
-         echo "<td>";
-         $change                  = new Change();
-         $condition["status"]     = Change::getNotSolvedStatusArray();
-         $condition["is_deleted"] = 0;
-         $condition[]             = getEntitiesRestrictCriteria($change->getTable(), '', $options["entities_id"], true);
-         $changes                 = $change->find($condition);
-         $list                    = [];
-         foreach ($changes as $ch) {
-            $list[$ch["id"]] = $ch["name"];
-         }
-         Dropdown::showFromArray("changes", $list, ["multiple" => true, "values" => $select_changes]);
-         //      Change::dropdown([
-         ////            'used' => $used,
-         //         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
-         echo "</td>";
+      // Predefined fields from template : reset them
+      if (isset($options['_predefined_fields'])) {
+         $options['_predefined_fields']
+            = Toolbox::decodeArrayFromInput($options['_predefined_fields']);
       } else {
-         echo "<th width='$colsize1%'></th>";
-         echo "<td></td>";
-      }
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
-      echo "<td>";
-      Html::showDateTimeField("date_preproduction", ["value" => $this->fields["date_preproduction"]]);
-      echo "</td>";
-      echo "<th>" . __('Production planned date', 'releases') . "</th>";
-      echo "<td>";
-      Html::showDateTimeField("date_production", ["value" => $this->fields["date_production"]]);
-      echo "</td>";
-
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>" . __('Location') . "</th>";
-      echo "<td >";
-      Dropdown::show(Location::getType(), ["name"  => "locations_id",
-                                           "value" => $this->fields["locations_id"]]);
-      echo "</td>";
-      echo "<th>" . __('Non-working hours', 'releases') . "</th>";
-      echo "<td >";
-      Dropdown::showYesNo("hour_type", $this->fields["hour_type"]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "</table>";
-      //      $this->showActorsPartForm($ID, $options);
-      echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th style='width:$colsize1%'>" . __('Title') . "</th>";
-      echo "<td colspan='3'>";
-      $opt = [
-         'value'     => $this->fields['name'],
-         'maxlength' => 250,
-         'style'     => 'width:98%',
-      ];
-      echo Html::input("name", $opt);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th width='$colsize1%'>" . __('Release area', 'releases') . "</th>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name"              => "content",
-                      "enable_richtext"   => true,
-                      'enable_fileupload' => false,
-                      'enable_images'     => false,
-                      "value"             => $this->fields["content"]]);
-      echo "</td>";
-      echo "</tr>";
-
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>" . __('Service shutdown', 'releases') . "</th>";
-      echo "<td width='$colsize1%'>";
-      $rand = mt_rand();
-      Dropdown::showYesNo("service_shutdown", $this->fields["service_shutdown"], -1, ["rand" => $rand]);
-      echo "</td>";
-      echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
-      echo "</tr>";
-
-      $hidden = "";
-      if ($this->fields["service_shutdown"] == 0) {
-         $hidden = "hidden='true'";
+         $options['_predefined_fields'] = [];
       }
 
-      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
-      Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
-                                    PLUGIN_RELEASES_WEBDIR . "/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
-
-      echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name"              => "service_shutdown_details",
-                      "enable_richtext"   => true,
-                      'enable_fileupload' => false,
-                      'enable_images'     => false,
-                      "value"             => $this->fields["service_shutdown_details"]]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th width='$colsize1%'>" . __('Communication', 'releases') . "</th>";
-      echo "<td width='$colsize2%'>";
-      Dropdown::showYesNo("communication", $this->fields["communication"]);
-      echo "</td>";
-
-      echo "<th width='$colsize1%'>" . __('Communication type', 'releases') . "</th>";
-      echo "<td>";
-      $types   = ['Entity'   => 'Entity',
-                  'Group'    => 'Group',
-                  'Profile'  => 'Profile',
-                  'User'     => 'User',
-                  'Location' => 'Location'];
-      $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->fields["communication_type"]]);
-      echo "</td>";
-
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-
-      $targets = json_decode($this->fields["target"]);
-
-      echo "<th>" . _n('Target', 'Targets',
-                       Session::getPluralNumber()) . "</th>";
-
-      echo "<td id='targets'>";
-
-      echo "</td>";
-      Ajax::updateItem("targets",
-                       PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
-                       ['type'         => $this->fields["communication_type"],
-                        'current_type' => $this->fields["communication_type"],
-                        'values'       => $targets],
-                       true);
-      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-                                    PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
-                                    ['type'         => '__VALUE__',
-                                     'current_type' => $this->fields["communication_type"],
-                                     'values'       => $targets],
-                                    true);
-      echo "</td>";
-
-      echo "<th></th>";
-      echo "<td></td>";
-
-      echo "</tr>";
-
-
-      if (!empty($ID) && $ID > 0) {
-         echo "<tr class='tab_bg_1'>";
-         echo "<td colspan='4'>";
-         echo " <div class=\"container-fluid\">
-                              <ul class=\"list-unstyled multi-steps\">";
-
-         for ($i = 1; $i <= 12; $i++) {
-            $class = "";
-            //
-            //            if ($value["ranking"] < $ranking) {
-            ////                     $class = "class = active2";
-            //
-            //            } else
-            if ($this->fields["status"] == $i) {
-               //               $class = "class='current'";
-               $class = "class='is-active'";
+      // Store predefined fields to be able not to take into account on change template
+      // Only manage predefined values on ticket creation
+      $predefined_fields = [];
+      $tpl_key           = $this->getTemplateFormFieldName();
+      if (!$ID) {
+         if (isset($tt->predefined) && count($tt->predefined)) {
+            foreach ($tt->predefined as $predeffield => $predefvalue) {
+               if (isset($default_values[$predeffield])) {
+                  // Is always default value : not set
+                  // Set if already predefined field
+                  // Set if ticket template change
+                  if (
+                     ((count($options['_predefined_fields']) == 0)
+                      && ($options[$predeffield] == $default_values[$predeffield]))
+                     || (isset($options['_predefined_fields'][$predeffield])
+                         && ($options[$predeffield] == $options['_predefined_fields'][$predeffield]))
+                     || (isset($options[$tpl_key])
+                         && ($options[$tpl_key] != $tt->getID()))
+                     // user pref for requestype can't overwrite requestype from template
+                     // when change category
+                     || (($predeffield == 'requesttypes_id')
+                         && empty($saved))
+                     || (isset($ticket) && $options[$predeffield] == $ticket->getField($predeffield))
+                     || (isset($problem) && $options[$predeffield] == $problem->getField($predeffield))
+                  ) {
+                     // Load template data
+                     $options[$predeffield]           = $predefvalue;
+                     $this->fields[$predeffield]      = $predefvalue;
+                     $predefined_fields[$predeffield] = $predefvalue;
+                  }
+               }
             }
-            $name = self::getStatus($i);
-            echo "<li $class>" . $name . "</li>";
+            // All predefined override : add option to say predifined exists
+            if (count($predefined_fields) == 0) {
+               $predefined_fields['_all_predefined_override'] = 1;
+            }
+         } else { // No template load : reset predefined values
+            if (count($options['_predefined_fields'])) {
+               foreach ($options['_predefined_fields'] as $predeffield => $predefvalue) {
+                  if ($options[$predeffield] == $predefvalue) {
+                     $options[$predeffield] = $default_values[$predeffield];
+                  }
+               }
+            }
          }
-         echo " </ul></div>";
-         echo "</td>";
-         echo "</tr>";
       }
 
-      $this->showFormButtons($options);
+      foreach ($default_values as $name => $value) {
+         if (!isset($options[$name])) {
+            if (isset($saved[$name])) {
+               $options[$name] = $saved[$name];
+            } else {
+               $options[$name] = $value;
+            }
+         }
+      }
+
+      // Put ticket template on $options for actors
+      $options[str_replace('s_id', '', $tpl_key)] = $tt;
+
+      if ($options['template_preview']) {
+         // Add all values to fields of tickets for template preview
+         foreach ($options as $key => $val) {
+            if (!isset($this->fields[$key])) {
+               $this->fields[$key] = $val;
+            }
+         }
+      }
+
+      TemplateRenderer::getInstance()->display('@releases/layout.html.twig', [
+         'item'                    => $this,
+         'timeline_itemtypes'      => $this->getTimelineItemtypes(),
+         'legacy_timeline_actions' => $this->getLegacyTimelineActionsHTML(),
+         'params'                  => $options,
+         'timeline'                => $this->getTimelineItems(),
+         'itiltemplate_key'        => $tpl_key,
+         'itiltemplate'            => $tt,
+         'predefined_fields'       => Toolbox::prepareArrayForInput($predefined_fields),
+         'canupdate'               => $canupdate,
+         'canpriority'             => $canupdate,
+         'canassign'               => $canupdate,
+      ]);
+      //       In percent
+      //      $colsize1 = '13';
+      //      $colsize2 = '37';
+
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th class='left' width='$colsize1%'>";
+      //            echo __('Opening date');
+      //            echo "</th>";
+      //            echo "<td class='left' width='$colsize2%'>";
+      //            $date = $this->fields["date"];
+      //            if (!$ID) {
+      //               $date = date("Y-m-d H:i:s");
+      //            }
+      //            Html::showDateTimeField(
+      //               "date", [
+      //                        'value'      => $date,
+      //                        'maybeempty' => false,
+      //                        'required'   => (!$ID)
+      //                     ]
+      //            );
+      //            echo "</td>";
+      //
+      //            echo "<th width='$colsize1%'>" . __('By') . "</th>";
+      //            echo "<td class='left'>";
+      //            User::dropdown(['name'   => 'users_id_recipient',
+      //                            'value'  => $this->fields["users_id_recipient"],
+      //                            'entity' => $this->fields["entities_id"],
+      //                            'right'  => 'all']);
+      //            echo "</td></tr>";
+      //            $showuserlink = 0;
+      //            if (User::canView()) {
+      //               $showuserlink = 1;
+      //            }
+      //            if ($ID) {
+      //               echo "<tr class='tab_bg_1'>";
+      //               echo "<th>" . __('Last update') . "</th>";
+      //               echo "<td >" . Html::convDateTime($this->fields["date_mod"]) . "\n";
+      //               if ($this->fields['users_id_lastupdater'] > 0) {
+      //                  printf(__('%1$s: %2$s'), __('By'),
+      //                         getUserName($this->fields["users_id_lastupdater"], $showuserlink));
+      //               }
+      //               echo "</td><th></th><td></td></tr>";
+      //            }
+
+      //            echo "</table>";
+
+      //            echo "<table class='tab_cadre_fixe' id='mainformtable2'>";
+      //            echo "<tr class='tab_bg_1'>";
+      //
+      //            echo "<th width='$colsize1%'>" . __('Status') . "</th>";
+      //            echo "<td width='$colsize2%' >";
+      //            Dropdown::showFromArray('status', self::getAllStatusArray(false), ['value' => $this->fields["status"]]);
+      //            echo "</td>";
+
+      //            if (empty($ID) || $ID < 0) {
+      //               echo "<th width='$colsize1%'>";
+      //               echo __('Associated change', 'releases');
+      //               echo "</th>";
+      //               echo "<td>";
+      //               $change                  = new Change();
+      //               $condition["status"]     = Change::getNotSolvedStatusArray();
+      //               $condition["is_deleted"] = 0;
+      //               $condition[]             = getEntitiesRestrictCriteria($change->getTable(), '', $options["entities_id"], true);
+      //               $changes                 = $change->find($condition);
+      //               $list                    = [];
+      //               foreach ($changes as $ch) {
+      //                  $list[$ch["id"]] = $ch["name"];
+      //               }
+      //               Dropdown::showFromArray("changes", $list, ["multiple" => true, "values" => $select_changes]);
+      //               //      Change::dropdown([
+      //               ////            'used' => $used,
+      //               //         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
+      //               echo "</td>";
+      //            } else {
+      //               echo "<th width='$colsize1%'></th>";
+      //               echo "<td></td>";
+      //            }
+      //            echo "</tr>";
+
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
+      //            echo "<td>";
+      //            Html::showDateTimeField("date_preproduction", ["value" => $this->fields["date_preproduction"]]);
+      //            echo "</td>";
+      //            echo "<th>" . __('Production planned date', 'releases') . "</th>";
+      //            echo "<td>";
+      //            Html::showDateTimeField("date_production", ["value" => $this->fields["date_production"]]);
+      //            echo "</td>";
+      //
+      //            echo "</tr>";
+      //
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th>" . __('Location') . "</th>";
+      //            echo "<td >";
+      //            Dropdown::show(Location::getType(), ["name"  => "locations_id",
+      //                                                 "value" => $this->fields["locations_id"]]);
+      //            echo "</td>";
+      //            echo "<th>" . __('Non-working hours', 'releases') . "</th>";
+      //            echo "<td >";
+      //            Dropdown::showYesNo("hour_type", $this->fields["hour_type"]);
+      //            echo "</td>";
+      //            echo "</tr>";
+      //
+      //            echo "</table>";
+      //      $this->showActorsPartForm($ID, $options);
+      //            echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
+      //
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th style='width:$colsize1%'>" . __('Title') . "</th>";
+      //            echo "<td colspan='3'>";
+      //            $opt = [
+      //               'value'     => $this->fields['name'],
+      //               'maxlength' => 250,
+      //               'style'     => 'width:98%',
+      //            ];
+      //            echo Html::input("name", $opt);
+      //            echo "</td>";
+      //            echo "</tr>";
+      //
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th width='$colsize1%'>" . __('Release area', 'releases') . "</th>";
+      //            echo "<td colspan='3'>";
+      //            Html::textarea(["name"              => "content",
+      //                            "enable_richtext"   => true,
+      //                            'enable_fileupload' => false,
+      //                            'enable_images'     => false,
+      //                            "value"             => $this->fields["content"]]);
+      //            echo "</td>";
+      //            echo "</tr>";
+
+
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th>" . __('Service shutdown', 'releases') . "</th>";
+      //            echo "<td width='$colsize1%'>";
+      //            $rand = mt_rand();
+      //            Dropdown::showYesNo("service_shutdown", $this->fields["service_shutdown"], -1, ["rand" => $rand]);
+      //            echo "</td>";
+      //            echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
+      //            echo "</tr>";
+      //
+      //            $hidden = "";
+      //            if ($this->fields["service_shutdown"] == 0) {
+      //               $hidden = "hidden='true'";
+      //            }
+      //
+      //            echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
+      //            Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
+      //                                          PLUGIN_RELEASES_WEBDIR . "/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
+
+      //            echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
+      //            echo "<td colspan='3'>";
+      //            Html::textarea(["name"              => "service_shutdown_details",
+      //                            "enable_richtext"   => true,
+      //                            'enable_fileupload' => false,
+      //                            'enable_images'     => false,
+      //                            "value"             => $this->fields["service_shutdown_details"]]);
+      //            echo "</td>";
+      //            echo "</tr>";
+      //
+      //            echo "<tr class='tab_bg_1'>";
+      //            echo "<th width='$colsize1%'>" . __('Communication', 'releases') . "</th>";
+      //            echo "<td width='$colsize2%'>";
+      //            Dropdown::showYesNo("communication", $this->fields["communication"]);
+      //            echo "</td>";
+
+      //            echo "<th width='$colsize1%'>" . __('Communication type', 'releases') . "</th>";
+      //            echo "<td>";
+      //            $types   = ['Entity'   => 'Entity',
+      //                        'Group'    => 'Group',
+      //                        'Profile'  => 'Profile',
+      //                        'User'     => 'User',
+      //                        'Location' => 'Location'];
+      //            $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->fields["communication_type"]]);
+      //            echo "</td>";
+      //
+      //            echo "</tr>";
+      //
+      //            echo "<tr class='tab_bg_1'>";
+      //
+      //            $targets = json_decode($this->fields["target"]);
+      //
+      //            echo "<th>" . _n('Target', 'Targets',
+      //                             Session::getPluralNumber()) . "</th>";
+      //
+      //            echo "<td id='targets'>";
+      //
+      //            echo "</td>";
+      //            Ajax::updateItem("targets",
+      //                             PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
+      //                             ['type'         => $this->fields["communication_type"],
+      //                              'current_type' => $this->fields["communication_type"],
+      //                              'values'       => $targets],
+      //                             true);
+      //            Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
+      //                                          PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
+      //                                          ['type'         => '__VALUE__',
+      //                                           'current_type' => $this->fields["communication_type"],
+      //                                           'values'       => $targets],
+      //                                          true);
+      //            echo "</td>";
+      //
+      //            echo "<th></th>";
+      //            echo "<td></td>";
+      //
+      //            echo "</tr>";
+      //
+      //
+      //            if (!empty($ID) && $ID > 0) {
+      //               echo "<tr class='tab_bg_1'>";
+      //               echo "<td colspan='4'>";
+      //               echo " <div class=\"container-fluid\">
+      //                                    <ul class=\"list-unstyled multi-steps\">";
+      //
+      //               for ($i = 1; $i <= 12; $i++) {
+      //                  $class = "";
+      //                  //
+      //                  //            if ($value["ranking"] < $ranking) {
+      //                  ////                     $class = "class = active2";
+      //                  //
+      //                  //            } else
+      //                  if ($this->fields["status"] == $i) {
+      //                     //               $class = "class='current'";
+      //                     $class = "class='is-active'";
+      //                  }
+      //                  $name = self::getStatus($i);
+      //                  echo "<li $class>" . $name . "</li>";
+      //               }
+      //               echo " </ul></div>";
+      //               echo "</td>";
+      //               echo "</tr>";
+      //            }
+      //      //
+      //      $this->showFormButtons($options);
 
       return true;
    }
@@ -1915,7 +2126,7 @@ class PluginReleasesRelease extends CommonITILObject {
                $content = $item_i['content'];
             }
 
-            $content = Toolbox::getHtmlToDisplay($content);
+            $content = Glpi\RichText\RichText::getEnhancedHtml($content);
             $content = autolink($content, false);
 
             $long_text = "";
@@ -1982,8 +2193,8 @@ class PluginReleasesRelease extends CommonITILObject {
             echo "</p>";
 
             echo "<div class='rich_text_container'>";
-            $richtext = Html::setRichTextContent('', $content, '', true);
-            $richtext = Html::replaceImagesByGallery($richtext);
+            $richtext = Glpi\RichText\RichText::getEnhancedHtml($content);
+            //            $richtext = Html::replaceImagesByGallery($richtext);
             echo $richtext;
             echo "</div>";
 
@@ -2196,7 +2407,7 @@ class PluginReleasesRelease extends CommonITILObject {
             $followup['can_edit'] = $followup_obj->canUpdateItem();;
             $timeline[$followup['date'] . "_followup_" . $followups_id] = ['type'     => $fupClass,
                                                                            'item'     => $followup,
-                                                                           'itiltype' => 'Followup'];
+                                                                           'itiltype' => 'ITILFollowup'];
          }
       }
       //add risks to timeline
@@ -2207,7 +2418,7 @@ class PluginReleasesRelease extends CommonITILObject {
             $risk['can_edit']                                   = $risk_obj->canUpdate();
             $timeline[$risk['date_mod'] . "_risk_" . $risks_id] = ['type'     => $riskClass,
                                                                    'item'     => $risk,
-                                                                   'itiltype' => 'Risk'];
+                                                                   'itiltype' => 'PluginReleasesRisk'];
          }
       }
 
@@ -2218,7 +2429,7 @@ class PluginReleasesRelease extends CommonITILObject {
             $rollback['can_edit']                                           = $rollback_obj->canUpdate();
             $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
                                                                                'item'     => $rollback,
-                                                                               'itiltype' => 'Rollback'];
+                                                                               'itiltype' => 'PluginReleasesRollback'];
          }
       }
 
@@ -2231,7 +2442,7 @@ class PluginReleasesRelease extends CommonITILObject {
             $rand                                                                  = mt_rand();
             $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type'     => $taskClass,
                                                                                       'item'     => $task,
-                                                                                      'itiltype' => 'Task'];
+                                                                                      'itiltype' => 'PluginReleasesDeploytask'];
          }
       }
 
@@ -2242,7 +2453,7 @@ class PluginReleasesRelease extends CommonITILObject {
             $test['can_edit']                                   = $test_obj->canUpdate();
             $timeline[$test['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
                                                                    'item'     => $test,
-                                                                   'itiltype' => 'test'];
+                                                                   'itiltype' => 'PluginReleasesTest'];
          }
       }
 
@@ -2379,21 +2590,21 @@ class PluginReleasesRelease extends CommonITILObject {
       // Set default values...
       return ['_users_id_requester'        => $users_id_requester,
               '_users_id_requester_notif'  => ['use_notification'  => [$default_use_notif],
-                                               'alternative_email' => ['']],
+                                               'alternative_email' => ''],
               '_groups_id_requester'       => 0,
               '_users_id_assign'           => $users_id_assign,
               '_users_id_assign_notif'     => ['use_notification'  => [$default_use_notif],
-                                               'alternative_email' => ['']],
+                                               'alternative_email' => ''],
               '_groups_id_assign'          => 0,
               '_users_id_observer'         => 0,
               '_users_id_observer_notif'   => ['use_notification'  => [$default_use_notif],
-                                               'alternative_email' => ['']],
+                                               'alternative_email' => ''],
               '_groups_id_observer'        => 0,
               '_link'                      => ['tickets_id_2' => '',
                                                'link'         => ''],
               '_suppliers_id_assign'       => 0,
               '_suppliers_id_assign_notif' => ['use_notification'  => [$default_use_notif],
-                                               'alternative_email' => ['']],
+                                               'alternative_email' => ''],
               'name'                       => '',
               'content'                    => '',
               'date_preproduction'         => null,
@@ -2406,8 +2617,9 @@ class PluginReleasesRelease extends CommonITILObject {
               'hour_type'                  => 0,
               'communication'              => false,
               'communication_type'         => false,
-              'target'                     => "",
+              'target'                     => '',
               'locations_id'               => 0,
+              'items_id'                   => 0,
       ];
    }
 
@@ -3106,7 +3318,8 @@ class PluginReleasesRelease extends CommonITILObject {
                                            $this->getForeignKeyField() => $this->fields['id']
                                         ] + $RESTRICT
                           ])->next();
-      return (int)$row['cpt'];
+
+      return (isset($row['cpt']) && $row['cpt'] > 0) ? $row['cpt'] : 0;
    }
 
    function post_getEmpty() {

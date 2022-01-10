@@ -38,7 +38,7 @@ if (!defined('GLPI_ROOT')) {
  * Template for task
  * @since 9.1
  **/
-class PluginReleasesReleasetemplate extends CommonDropdown {
+class PluginReleasesReleasetemplate extends ITILTemplate {
 
    // From CommonDBTM
    public $dohistory         = true;
@@ -1044,7 +1044,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          foreach ($tests as $tests_id => $test) {
             $test_obj->getFromDB($tests_id);
             $test['can_edit']                                   = $test_obj->canUpdateItem();
-            $timeline[$risk['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
+            $timeline[$test['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
                                                                    'item'     => $test,
                                                                    'itiltype' => 'test'];
          }
@@ -1459,7 +1459,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                $content = $item_i['content'];
             }
 
-            $content = Toolbox::getHtmlToDisplay($content);
+            $content = Glpi\RichText\RichText::getEnhancedHtml($content);
             $content = autolink($content, false);
 
             $long_text = "";
@@ -1470,9 +1470,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             echo "<div class='item_content $long_text'>";
 
             echo "<div class='rich_text_container'>";
-            $richtext = Html::setRichTextContent('', $content, '', true);
-            $richtext = Html::replaceImagesByGallery($richtext);
-            echo $richtext;
+//            $richtext = Html::setRichTextContent('', $content, '', true);
+//            $richtext = Html::replaceImagesByGallery($richtext);
+            echo $content;
             echo "</div>";
 
             if (!empty($long_text)) {
@@ -3118,5 +3118,86 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       }
       return 0;
+   }
+
+   /**
+    * Retrieve an item from the database with additional datas
+    *
+    * @since 0.83
+    *
+    * @param $ID                    integer  ID of the item to get
+    * @param $withtypeandcategory   boolean  with type and category (true by default)
+    *
+    * @return true if succeed else false
+    **/
+   public function getFromDBWithData($ID, $withtypeandcategory = true)
+   {
+      if ($this->getFromDB($ID)) {
+         $itiltype = str_replace('Template', '', static::getType());
+         $itil_object  = new $itiltype();
+         $itemstable = $itil_object->getItemsTable();
+         $tth_class = $itiltype . 'TemplateHiddenField';
+         $tth          = new $tth_class();
+         $this->hidden = $tth->getHiddenFields($ID, $withtypeandcategory);
+
+         // Force items_id if itemtype is defined
+         if (
+            isset($this->hidden['itemtype'])
+            && !isset($this->hidden['items_id'])
+         ) {
+            $this->hidden['items_id'] = $itil_object->getSearchOptionIDByField(
+               'field',
+               'items_id',
+               $itemstable
+            );
+         }
+         // Always get all mandatory fields
+         $ttm_class = $itiltype . 'TemplateMandatoryField';
+         $ttm             = new $ttm_class();
+         $this->mandatory = $ttm->getMandatoryFields($ID);
+
+         // Force items_id if itemtype is defined
+         if (
+            isset($this->mandatory['itemtype'])
+            && !isset($this->mandatory['items_id'])
+         ) {
+            $this->mandatory['items_id'] = $itil_object->getSearchOptionIDByField(
+               'field',
+               'items_id',
+               $itemstable
+            );
+         }
+
+         $ttp_class = $itiltype . 'TemplatePredefinedField';
+         $ttp              = new $ttp_class();
+         $this->predefined = $ttp->getPredefinedFields($ID, $withtypeandcategory);
+         // Compute time_to_resolve
+         if (isset($this->predefined['time_to_resolve'])) {
+            $this->predefined['time_to_resolve']
+               = Html::computeGenericDateTimeSearch($this->predefined['time_to_resolve'], false);
+         }
+         if (isset($this->predefined['time_to_own'])) {
+            $this->predefined['time_to_own']
+               = Html::computeGenericDateTimeSearch($this->predefined['time_to_own'], false);
+         }
+
+         // Compute internal_time_to_resolve
+         if (isset($this->predefined['internal_time_to_resolve'])) {
+            $this->predefined['internal_time_to_resolve']
+               = Html::computeGenericDateTimeSearch($this->predefined['internal_time_to_resolve'], false);
+         }
+         if (isset($this->predefined['internal_time_to_own'])) {
+            $this->predefined['internal_time_to_own']
+               = Html::computeGenericDateTimeSearch($this->predefined['internal_time_to_own'], false);
+         }
+
+         // Compute date
+         if (isset($this->predefined['date'])) {
+            $this->predefined['date']
+               = Html::computeGenericDateTimeSearch($this->predefined['date'], false);
+         }
+         return true;
+      }
+      return false;
    }
 }

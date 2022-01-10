@@ -170,7 +170,7 @@ class PluginReleasesFinalization extends CommonDBTM {
             <span class=\"bulle riskBulle bulleMarge\">
               " . self::getStateItem($risk_state) . "
             </span>
-            <h2 class='risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
+            <h2 class='Finalization-Risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
             <p>" . sprintf(__('%s / %s risks', 'releases'), $riskDone, $riskTotal) . "</p>
           </div>
         </article>
@@ -179,7 +179,7 @@ class PluginReleasesFinalization extends CommonDBTM {
             <span class=\"bulle rollbackBulle bulleMarge\">
               " . self::getStateItem($rollback_state) . "
             </span>
-            <h2 class='rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
+            <h2 class='Finalization-Rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
             <p>" . sprintf(__('%s / %s rollbacks', 'releases'), $rollbackDone, $rollbackTotal) . "</p>
           </div>
         </article>
@@ -188,7 +188,7 @@ class PluginReleasesFinalization extends CommonDBTM {
             <span class=\"bulle taskBulle $taskfailed bulleMarge\">
             " . self::getStateItem($task_state) . "
             </span>
-            <h2 class='task'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
+            <h2 class='Finalization-Deploytask'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
             <p>" . sprintf(__('%s / %s deploy tasks', 'releases'), $deployTaskDone, $deployTaskTotal) . "</br>
             " . sprintf(__('%s deploy tasks failed', 'releases'), $deployTaskFail) . "<p><span class='percent' style=\"float: right;\">
                   " . Html::formatNumber($pourcentageTask) . " %
@@ -200,7 +200,7 @@ class PluginReleasesFinalization extends CommonDBTM {
           <span class=\"bulle testBulle $testfailed bulleMarge\">
             " . self::getStateItem($test_state) . "
             </span>
-            <h2 class='test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
+            <h2 class='Finalization-Test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
             <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
             " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<p><span class='percent' style=\"float: right;\">
                   " . Html::formatNumber($pourcentageTest) . " %

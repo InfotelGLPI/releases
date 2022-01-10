@@ -1,0 +1,274 @@
+{#
+# ---------------------------------------------------------------------
+# GLPI - Gestionnaire Libre de Parc Informatique
+# Copyright (C) 2015-2021 Teclib' and contributors.
+#
+# http://glpi-project.org
+#
+# based on GLPI - Gestionnaire Libre de Parc Informatique
+# Copyright (C) 2003-2014 by the INDEPNET Development Team.
+#
+# ---------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of GLPI.
+#
+# GLPI is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# GLPI is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GLPI. If not, see <http://www.gnu.org/licenses/>.
+# ---------------------------------------------------------------------
+#}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% set field_options = {
+    'full_width': true,
+    'fields_template': itiltemplate,
+    'disabled': (not canupdate)
+} %}
+
+<div class="accordion open accordion-flush" id="itil-data">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-main-ticket">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#ticket-main"
+                    aria-expanded="true" aria-controls="ticket-main">
+                <i class="ti ti-building-factory me-1"></i>
+                <span>{{ item.getTypeName(1) }}</span>
+            </button>
+        </h2>
+        <div id="ticket-main" class="accordion-collapse collapse show" aria-labelledby="heading-main-ticket">
+            <div class="accordion-body row m-0 mt-n2">
+
+                {% if is_multi_entities_mode() %}
+                    {% if item.isNewItem() %}
+                        {{ fields.dropdownField(
+                            'Entity',
+                            'entities_id',
+                            item.fields['entities_id'],
+                            _n('Entity', 'Entities', 1),
+                            field_options|merge({
+                                'entity': userentities,
+                                'on_change': 'this.form.submit()',
+                            })
+                        ) }}
+                    {% else %}
+                        {% set entity_html %}
+                            {{ call('Entity::badgeCompletename', [
+                                get_item_name('Entity', item.fields['entities_id'])
+                            ])|raw }}
+                        {% endset %}
+
+                        {{ fields.field(
+                            '',
+                            entity_html,
+                            _n('Entity', 'Entities', 1),
+                            field_options|merge({
+                                'add_field_class': 'd-flex align-items-center',
+                            })
+                        ) }}
+                    {% endif %}
+
+                    {% if item.isField('is_recursive') %}
+                        {{ fields.dropdownYesNo(
+                            'is_recursive',
+                            item.fields['is_recursive'],
+                            __('Child entities'),
+                            field_options
+                        ) }}
+                    {% endif %}
+                {% endif %}
+
+                {{ fields.datetimeField(
+                    'date',
+                    item.fields['date'],
+                    __('Opening date'),
+                    field_options
+                ) }}
+
+                {{ fields.datetimeField(
+                    'date_preproduction',
+                    item.fields['date_preproduction'],
+                    __('Pre-production planned date', 'releases'),
+                    field_options
+                ) }}
+
+                {{ fields.datetimeField(
+                    'date_production',
+                    item.fields['date_production'],
+                    __('Production planned date', 'releases'),
+                    field_options
+                ) }}
+
+                {{ include('components/itilobject/fields/status.html.twig') }}
+
+                {% if item.isField('locations_id') %}
+                    {{ fields.dropdownField(
+                        'Location',
+                        'locations_id',
+                        item.fields['locations_id'],
+                        'Location'|itemtype_name,
+                        field_options|merge({
+                            'hide_if_no_elements': true
+                        })
+                    ) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="heading-actor">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#actors"
+                    aria-expanded="true" aria-controls="actors">
+                <i class="ti ti-users me-1"></i>
+                <span>{{ __('Actors') }}</span>
+                <span class="badge bg-secondary ms-2">
+               {{ item.countActors() }}
+            </span>
+            </button>
+        </h2>
+        <div id="actors" class="accordion-collapse collapse show" aria-labelledby="heading-actor">
+            <div class="accordion-body accordion-actors row m-0 mt-n2">
+                {{ include('components/itilobject/actors/main.html.twig') }}
+            </div>
+        </div>
+    </div>
+
+    {% if release_item is defined and release_item is not null %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="items-heading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#items"
+                        aria-expanded="true" aria-controls="items">
+                    <i class="ti ti-clipboard-check me-1"></i>
+                    <span>{{ _n('Associated change', 'Associated changes', get_plural_number(), 'releases') }}</span>
+                    <span class="item-counter badge bg-secondary ms-2"></span>
+                </button>
+            </h2>
+            <div id="items" class="accordion-collapse collapse show" aria-labelledby="items-heading">
+                <div class="accordion-body accordion-items row m-0 mt-n2">
+                    {{ release_item.itemAddForm(item, params|default({})) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if item.getType() == 'PluginReleasesRelease' %}
+        {% set shutdowns_fields = {
+            'service_shutdown': __('Service shutdown', 'releases'),
+        } %}
+
+        {% set nb_shutdowns = 0 %}
+        {% for shutdowns_field, label in shutdowns_fields %}
+            {% if item.isField(shutdowns_field) and item.fields[shutdowns_field]|trim|length > 0 %}
+                {% set nb_shutdowns = nb_shutdowns + 1 %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="shutdowns-heading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#shutdowns"
+                        aria-expanded="true" aria-controls="shutdowns">
+                    <i class="ti ti-power me-1"></i>
+                    <span>{{ __('Service shutdown', 'releases') }}</span>
+                    {% if nb_shutdowns > 0 %}
+                        <span class="badge bg-secondary ms-2">{{ nb_shutdowns }}</span>
+                    {% endif %}
+                </button>
+            </h2>
+            <div id="shutdowns" class="accordion-collapse collapse" aria-labelledby="shutdowns-heading">
+                <div class="accordion-body row m-0 mt-n2">
+
+                    {{ fields.dropdownYesNo(
+                        'service_shutdown',
+                        item.fields['service_shutdown'],
+                        __('Service shutdown', 'releases'),
+                        field_options
+                    ) }}
+
+                    {{ fields.dropdownYesNo(
+                        'hour_type',
+                        item.fields['hour_type'],
+                        __('Non-working hours', 'releases'),
+                        field_options
+                    ) }}
+
+                    {{ fields.textareaField(
+                        'service_shutdown_details',
+                        item.fields['service_shutdown_details'],
+                        __('Service shutdown details', 'releases'),
+                        field_options|merge({
+                            'enable_richtext': true,
+                            'is_horizontal': false,
+                        })
+                    ) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if item.getType() == 'PluginReleasesRelease' %}
+        {% set communications_fields = {
+            'communication': __('Communication', 'releases'),
+        } %}
+
+        {% set nb_communications = 0 %}
+        {% for communications_field, label in communications_fields %}
+            {% if item.isField(communications_field) and item.fields[communications_field]|trim|length > 0 %}
+                {% set nb_communications = nb_communications + 1 %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="communications-heading">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#communications" aria-expanded="true" aria-controls="communications">
+                    <i class="ti ti-speakerphone me-1"></i>
+                    <span>{{ __('Communication', 'releases') }}</span>
+                    {% if nb_communications > 0 %}
+                        <span class="badge bg-secondary ms-2">{{ nb_communications }}</span>
+                    {% endif %}
+                </button>
+            </h2>
+            <div id="communications" class="accordion-collapse collapse" aria-labelledby="communications-heading">
+                <div class="accordion-body row m-0 mt-n2">
+
+                    {{ fields.dropdownYesNo(
+                        'communication',
+                        item.fields['communication'],
+                        __('Communication', 'releases'),
+                        field_options
+                    ) }}
+
+                    {{ fields.dropdownItemTypes(
+                        'communication_type',
+                        item.fields['communication_type'],
+                        __('Communication type', 'releases'),
+                        field_options|merge({
+                            'types': ['Entity', 'Group','Profile','User','Location']
+                        })
+                    ) }}
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+   $(function () {
+      if ($(window).width() < 768) { // medium breakpoint (Todo check if it's possible to get bootstrap breakpoints withint javascript)
+         $('#itil-data .accordion-collapse').each(function () {
+            $(this).removeClass('show');
+         });
+      }
+   });
+</script>
