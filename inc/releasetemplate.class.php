@@ -71,7 +71,7 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
                //               $nb_elements = 0;
 
                $ong = [
-                  1 => __("Processing release", 'releases') . " <sup class='tab_nb'>$nb_elements</sup>",
+                  1 => __("Processing release", 'releases') . " <span class='badge'>$nb_elements</span>",
                ];
 
                return $ong;
@@ -1035,7 +1035,7 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
             $rand                                                                  = mt_rand();
             $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type'     => $taskClass,
                                                                                       'item'     => $task,
-                                                                                      'itiltype' => 'Task'];
+                                                                                      'itiltype' => 'Deploytask'];
          }
       }
 
@@ -1046,12 +1046,12 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
             $test['can_edit']                                   = $test_obj->canUpdateItem();
             $timeline[$test['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
                                                                    'item'     => $test,
-                                                                   'itiltype' => 'test'];
+                                                                   'itiltype' => 'Test'];
          }
       }
 
       //reverse sort timeline items by key (date)
-      ksort($timeline);
+//      ksort($timeline);
 
       return $timeline;
    }
@@ -1105,8 +1105,6 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
       $foreignKey = self::getForeignKeyField();
 
       echo "<script type='text/javascript' >
-     
-     
 
       function viewEditSubitem" . $this->fields['id'] . "$rand(e, itemtype, items_id, o, domid) {
                domid = (typeof domid === 'undefined')
@@ -1169,33 +1167,33 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
       $release = new $objType();
       $release->getFromDB($this->getID());
 
-      echo "<li class='risk'>";
+      echo "<li class='PluginReleasesRisk'>";
       echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
-           "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
+           "'><i class='ti ti-bug'></i>&nbsp;" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
       if ($canadd_risk) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
 
-      echo "<li class='rollback'>";
+      echo "<li class='PluginReleasesRollback'>";
       echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
-           "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
+           "'><i class='ti ti-arrow-back-up'></i>&nbsp;" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
       if ($canadd_rollback) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
 
-      echo "<li class='task'>";
+      echo "<li class='PluginReleasesDeploytask'>";
       echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
-           "'><i class='fas fa-check-square'></i>" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
+           "'><i class='ti ti-checkbox'></i>&nbsp;" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
          echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
 
 
-      echo "<li class='test'>";
-      echo "<a href='#' data-type='test' title='" . $testClass::getTypeName(2) .
-           "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
+      echo "<li class='PluginReleasesTest'>";
+      echo "<a href='#' data-type='Test' title='" . $testClass::getTypeName(2) .
+           "'><i class='ti ti-check'></i>&nbsp;" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
       if ($canadd_test) {
          echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
       }
@@ -1378,21 +1376,27 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
             $user_position = 'left'; // default position
          }
 
+         $class = "";
+         if (isset($item['itiltype']) && $item['itiltype'] == "Followup") {
+            $class .= " ITIL{$item['itiltype']}";
+         } else {
+            $class .= " PluginReleases{$item['itiltype']}";
+         }
 
-         echo "<div class='h_item $user_position'>";
+         echo "<div class='h_item $user_position $class'>";
 
          echo "<div class='h_info'>";
 
-         echo "<div class='h_date'><i class='far fa-clock'></i>" . Html::convDateTime($date) . "</div>";
+         echo "<div class='h_date'><i class='far fa-clock'></i>&nbsp;" . Html::convDateTime($date) . "</div>";
          if ($item_i['users_id'] !== false) {
             echo "<div class='h_user'>";
             if (isset($item_i['users_id']) && ($item_i['users_id'] != 0)) {
                $user->getFromDB($item_i['users_id']);
 
-               echo "<div class='tooltip_picture_border'>";
-               echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='" .
-                    User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
-               echo "</div>";
+//               echo "<div class=''>";//tooltip_picture_border
+//               echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='" .
+//                    User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
+//               echo "</div>";
 
                echo "<span class='h_user_name'>";
                $userdata = getUserName($item_i['users_id'], 2);
@@ -1416,15 +1420,11 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
 
          $fa    = null;
          $class = "h_content";
-         if ($item['itiltype'] == "Followup") {
-            if (isset($item['itiltype'])) {
-               $class .= " ITIL{$item['itiltype']}";
-            } else {
-               $class .= " {$item['type']}";
-            }
-         } else {
-            $class .= " {$item['type']::getCssClass()}";
-         }
+//         if (isset($item['itiltype']) && $item['itiltype'] == "Followup") {
+//            $class .= " ITIL{$item['itiltype']}";
+//         } else {
+//            $class .= " PluginReleases{$item['itiltype']}";
+//         }
 
 
          //         $class .= " {$item_i['state']}";
@@ -1454,12 +1454,12 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
          echo "</div>";
          if (isset($item_i['content'])) {
             if (isset($item_i["name"])) {
-               $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
+               $content = "<h2>" . $item_i['name'] . "  </h2>" . Glpi\RichText\RichText::getEnhancedHtml($item_i['content']);
             } else {
-               $content = $item_i['content'];
+               $content = Glpi\RichText\RichText::getEnhancedHtml($item_i['content']);
             }
 
-            $content = Glpi\RichText\RichText::getEnhancedHtml($content);
+
             $content = autolink($content, false);
 
             $long_text = "";
@@ -1468,10 +1468,7 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
             }
 
             echo "<div class='item_content $long_text'>";
-
             echo "<div class='rich_text_container'>";
-//            $richtext = Html::setRichTextContent('', $content, '', true);
-//            $richtext = Html::replaceImagesByGallery($richtext);
             echo $content;
             echo "</div>";
 
@@ -1582,7 +1579,7 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
    function showTimelineHeader() {
 
       echo "<h2>" . __("Release actions details", 'releases') . " : </h2>";
-      $this->filterTimeline();
+//      $this->filterTimeline();
    }
 
    function canAddFollowups() {

@@ -87,6 +87,18 @@
                     {% endif %}
                 {% endif %}
 
+                {% if item.isNewItem() %}
+                {{ fields.dropdownField(
+                    'Change',
+                    'changes_id',
+                    params['changes_id'],
+                    __('For this change', 'releases'),
+                    field_options|merge({
+                        'hide_if_no_elements': true
+
+                    })
+                ) }}
+                {% endif %}
                 {{ fields.datetimeField(
                     'date',
                     item.fields['date'],
@@ -117,7 +129,8 @@
                         item.fields['locations_id'],
                         'Location'|itemtype_name,
                         field_options|merge({
-                            'hide_if_no_elements': true
+                            'hide_if_no_elements': true,
+
                         })
                     ) }}
                 {% endif %}
@@ -168,7 +181,7 @@
 
         {% set nb_shutdowns = 0 %}
         {% for shutdowns_field, label in shutdowns_fields %}
-            {% if item.isField(shutdowns_field) and item.fields[shutdowns_field]|trim|length > 0 %}
+            {% if item.isField(shutdowns_field) and item.fields[shutdowns_field] == 1 %}
                 {% set nb_shutdowns = nb_shutdowns + 1 %}
             {% endif %}
         {% endfor %}
@@ -222,7 +235,7 @@
 
         {% set nb_communications = 0 %}
         {% for communications_field, label in communications_fields %}
-            {% if item.isField(communications_field) and item.fields[communications_field]|trim|length > 0 %}
+            {% if item.isField(communications_field) and item.fields[communications_field] == 1 %}
                 {% set nb_communications = nb_communications + 1 %}
             {% endif %}
         {% endfor %}

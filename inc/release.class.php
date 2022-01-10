@@ -607,6 +607,7 @@ class PluginReleasesRelease extends CommonITILObject {
          $corresTests      = [];
          $corresRollbacks  = [];
          $corresTasks      = [];
+
          foreach ($risks as $risk) {
             $risk["plugin_releases_releases_id"] = $this->getID();
             unset($risk["date_mod"]);
@@ -664,16 +665,15 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
       }
-      if (isset($this->input["changes"])) {
+      if (isset($this->input["changes_id"])) {
 
-
-         foreach ($this->input["changes"] as $change) {
-            $release_change                      = new PluginReleasesChange_Release();
-            $vals                                = [];
-            $vals["changes_id"]                  = $change;
-            $vals["plugin_releases_releases_id"] = $this->getID();
-            $release_change->add($vals);
-         }
+         $release_change                      = new PluginReleasesChange_Release();
+         $vals["changes_id"]                  = $this->input["changes_id"];
+         $vals["plugin_releases_releases_id"] = $this->getID();
+         $release_change->add($vals);
+//         foreach ($this->input["changes"] as $change) {
+//
+//         }
       }
       //      $query = "INSERT INTO `glpi_plugin_release_globalstatues`
       //                             ( `plugin_release_releases_id`,`itemtype`, `status`)
@@ -1287,7 +1287,6 @@ class PluginReleasesRelease extends CommonITILObject {
                $options['entities_id']      = $c->getField("entities_id");
                $this->fields["entities_id"] = $c->getField("entities_id");
             }
-
          }
       }
 
@@ -2458,7 +2457,7 @@ class PluginReleasesRelease extends CommonITILObject {
       }
 
       //reverse sort timeline items by key (date)
-      ksort($timeline);
+      //      ksort($timeline);
 
       return $timeline;
    }
@@ -2471,7 +2470,7 @@ class PluginReleasesRelease extends CommonITILObject {
       $condition = $dbu->getEntitiesRestrictCriteria($item_t->getTable());
       PluginReleasesReleasetemplate::dropdown(["comments"   => false,
                                                "addicon"    => false,
-                                               "emptylabel" => __("From this change", "releases"),
+                                               "emptylabel" => __("For this change", "releases"),
                                                "name"       => "releasetemplates_id"] + $condition);
       $url = PluginReleasesRelease::getFormURL();
       echo "<br/><br/>";

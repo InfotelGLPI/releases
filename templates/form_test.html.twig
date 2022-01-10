@@ -207,9 +207,9 @@
                                     <i class="fas fa-tasks fa-fw me-1" title="{{ __('Status') }}"></i>
                                 {% endset %}
                                 {{ fields.dropdownArrayField('state', subitem.fields['state'], {
-                                    0: _n('Information', 'Information', 1),
                                     1: __('To do'),
-                                    2: __('Done')
+                                    2: __('Done'),
+                                    3: __('Failed', 'releases')
                                 }, task_state_lbl, {
                                     'full_width': true,
                                     'icon_label': true,
