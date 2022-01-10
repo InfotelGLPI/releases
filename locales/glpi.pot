@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-04 13:13+0000\n"
+"POT-Creation-Date: 2022-01-10 14:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: setup.php:94 front/change_release.form.php:48
 #: inc/notificationtargetrelease.class.php:883 inc/profile.class.php:52
-#: inc/release.class.php:72 inc/releasetemplate.class.php:942
+#: inc/release.class.php:73 inc/releasetemplate.class.php:942
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] ""
@@ -51,18 +51,16 @@ msgid_plural "Links Release/Change"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/change_release.class.php:307 inc/release.class.php:1325
-#: inc/releasetemplate.class.php:622 inc/releasetemplate.class.php:848
+#: inc/change_release.class.php:307 inc/releasetemplate.class.php:622
+#: inc/releasetemplate.class.php:848
 msgid "Release area"
 msgstr ""
 
-#: inc/change_release.class.php:308 inc/release.class.php:1285
-#: inc/releasetemplate.class.php:631
+#: inc/change_release.class.php:308 inc/releasetemplate.class.php:631
 msgid "Pre-production planned date"
 msgstr ""
 
-#: inc/change_release.class.php:309 inc/release.class.php:1289
-#: inc/releasetemplate.class.php:636
+#: inc/change_release.class.php:309 inc/releasetemplate.class.php:636
 msgid "Production planned date"
 msgstr ""
 
@@ -71,16 +69,16 @@ msgstr ""
 msgid "Real production run date"
 msgstr ""
 
-#: inc/change_release.class.php:311 inc/release.class.php:290
-#: inc/release.class.php:1337 inc/releasetemplate.class.php:144
-#: inc/releasetemplate.class.php:648 inc/releasetemplate.class.php:860
+#: inc/change_release.class.php:311 inc/release.class.php:295
+#: inc/releasetemplate.class.php:144 inc/releasetemplate.class.php:648
+#: inc/releasetemplate.class.php:860
 msgid "Service shutdown"
 msgstr ""
 
-#: inc/deploytask.class.php:51 inc/finalization.class.php:191
+#: inc/deploytask.class.php:52 inc/finalization.class.php:191
 #: inc/notificationtargetrelease.class.php:859
-#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1663
-#: inc/release.class.php:1664 inc/releasetemplate.class.php:164
+#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1874
+#: inc/release.class.php:1875 inc/releasetemplate.class.php:164
 #: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1309
 #: inc/releasetemplate.class.php:1310
 msgid "Deploy task"
@@ -88,30 +86,10 @@ msgid_plural "Deploy tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/deploytask.class.php:289 inc/deploytask.class.php:1001
-#: inc/release.class.php:753 inc/test.class.php:303 inc/test.class.php:342
+#: inc/deploytask.class.php:291 inc/deploytask.class.php:1013
+#: inc/release.class.php:765 inc/test.class.php:316 inc/test.class.php:355
 msgid "Failed"
 msgstr ""
-
-#: inc/deploytask.class.php:359 inc/deploytasktemplate.class.php:235
-msgid "Previous task"
-msgstr ""
-
-#: inc/deploytask.class.php:462
-msgid "Task template"
-msgid_plural "Task templates"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/deploytask.class.php:540 inc/deploytasktemplate.class.php:297
-#: inc/finalization.class.php:173 inc/notificationtargetrelease.class.php:734
-#: inc/notificationtargetrelease.class.php:861
-#: inc/notificationtargetrelease.class.php:881 inc/risk.class.php:49
-#: inc/testtemplate.class.php:62
-msgid "Risk"
-msgid_plural "Risk"
-msgstr[0] ""
-msgstr[1] ""
 
 #: inc/deploytasktemplate.class.php:51
 msgid "Deploy Task template"
@@ -122,6 +100,20 @@ msgstr[1] ""
 #: inc/deploytasktemplate.class.php:63 inc/releasetemplate.class.php:185
 msgid "Deploy Task type"
 msgstr ""
+
+#: inc/deploytasktemplate.class.php:235
+msgid "Previous task"
+msgstr ""
+
+#: inc/deploytasktemplate.class.php:297 inc/finalization.class.php:173
+#: inc/notificationtargetrelease.class.php:734
+#: inc/notificationtargetrelease.class.php:861
+#: inc/notificationtargetrelease.class.php:881 inc/risk.class.php:50
+#: inc/testtemplate.class.php:62
+msgid "Risk"
+msgid_plural "Risk"
+msgstr[0] ""
+msgstr[1] ""
 
 #: inc/finalization.class.php:54
 msgid "Finalization"
@@ -137,7 +129,7 @@ msgstr ""
 #: inc/notificationtargetrelease.class.php:862
 #: inc/notificationtargetrelease.class.php:882
 #: inc/releasetemplate.class.php:160 inc/releasetemplate.class.php:700
-#: inc/rollback.class.php:50
+#: inc/rollback.class.php:51
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] ""
@@ -156,7 +148,7 @@ msgstr ""
 #: inc/finalization.class.php:203 inc/notificationtargetrelease.class.php:860
 #: inc/notificationtargetrelease.class.php:880
 #: inc/releasetemplate.class.php:156 inc/releasetemplate.class.php:676
-#: inc/test.class.php:51
+#: inc/test.class.php:52
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] ""
@@ -190,7 +182,7 @@ msgstr ""
 msgid "Care all steps are not finish !"
 msgstr ""
 
-#: inc/finalization.class.php:281 inc/release.class.php:282
+#: inc/finalization.class.php:281 inc/release.class.php:287
 #: inc/releasetemplate.class.php:140
 msgid "Production run date"
 msgstr ""
@@ -211,32 +203,31 @@ msgstr ""
 msgid "Deleting a releases"
 msgstr ""
 
-#: inc/notificationtargetrelease.class.php:699 inc/risk.class.php:208
-#: inc/risktemplate.class.php:146 inc/typerisk.class.php:48
+#: inc/notificationtargetrelease.class.php:699 inc/risktemplate.class.php:148
+#: inc/typerisk.class.php:48
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/notificationtargetrelease.class.php:701 inc/release.class.php:220
+#: inc/notificationtargetrelease.class.php:701 inc/release.class.php:225
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr ""
 
-#: inc/notificationtargetrelease.class.php:707 inc/release.class.php:233
+#: inc/notificationtargetrelease.class.php:707 inc/release.class.php:238
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr ""
 
-#: inc/notificationtargetrelease.class.php:712 inc/test.class.php:231
-#: inc/testtemplate.class.php:58 inc/testtemplate.class.php:162
-#: inc/typetest.class.php:48
+#: inc/notificationtargetrelease.class.php:712 inc/testtemplate.class.php:58
+#: inc/testtemplate.class.php:162 inc/typetest.class.php:48
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/notificationtargetrelease.class.php:714 inc/release.class.php:246
+#: inc/notificationtargetrelease.class.php:714 inc/release.class.php:251
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr ""
@@ -255,118 +246,127 @@ msgid_plural "Deploy task types"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/notificationtargetrelease.class.php:828 inc/release.class.php:260
+#: inc/notificationtargetrelease.class.php:828 inc/release.class.php:265
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr ""
 
-#: inc/release.class.php:97 inc/releasetemplate.class.php:74
-msgid "Processing release"
-msgstr ""
-
-#: inc/release.class.php:212 inc/releasetemplate.class.php:136
+#: inc/release.class.php:217 inc/releasetemplate.class.php:136
 msgid "Pre-production run date"
 msgstr ""
 
-#: inc/release.class.php:298 inc/release.class.php:1354
-#: inc/releasetemplate.class.php:148 inc/releasetemplate.class.php:655
-#: inc/releasetemplate.class.php:877
+#: inc/release.class.php:303 inc/releasetemplate.class.php:148
+#: inc/releasetemplate.class.php:655 inc/releasetemplate.class.php:877
 msgid "Service shutdown details"
 msgstr ""
 
-#: inc/release.class.php:307 inc/release.class.php:1365
-#: inc/releasetemplate.class.php:886
+#: inc/release.class.php:312 inc/releasetemplate.class.php:886
 msgid "Communication"
 msgstr ""
 
-#: inc/release.class.php:315 inc/release.class.php:1370
-#: inc/releasetemplate.class.php:891
+#: inc/release.class.php:325 inc/releasetemplate.class.php:891
 msgid "Communication type"
 msgstr ""
 
-#: inc/release.class.php:743
+#: inc/release.class.php:755
 msgid "Release area defined"
 msgstr ""
 
-#: inc/release.class.php:744
+#: inc/release.class.php:756
 msgid "Dates defined"
 msgstr ""
 
-#: inc/release.class.php:745
+#: inc/release.class.php:757
 msgid "Changes defined"
 msgstr ""
 
-#: inc/release.class.php:746
+#: inc/release.class.php:758
 msgid "Risks defined"
 msgstr ""
 
-#: inc/release.class.php:747
+#: inc/release.class.php:759
 msgid "Rollbacks defined"
 msgstr ""
 
-#: inc/release.class.php:748
+#: inc/release.class.php:760
 msgid "Deployment tasks in progress"
 msgstr ""
 
-#: inc/release.class.php:749
+#: inc/release.class.php:761
 msgid "Tests in progress"
 msgstr ""
 
-#: inc/release.class.php:750
+#: inc/release.class.php:762
 msgid "To finalized"
 msgstr ""
 
-#: inc/release.class.php:751
+#: inc/release.class.php:763
 msgid "Reviewed"
 msgstr ""
 
-#: inc/release.class.php:752
+#: inc/release.class.php:764
 msgctxt "status"
 msgid "End"
 msgstr ""
 
-#: inc/release.class.php:1261
-msgid "Associated change"
+#: inc/release.class.php:1157
+msgctxt "button"
+msgid "Add a followup"
 msgstr ""
 
-#: inc/release.class.php:1302 inc/releasetemplate.class.php:152
-#: inc/releasetemplate.class.php:662 inc/releasetemplate.class.php:828
-msgid "Non-working hours"
+#: inc/release.class.php:1172
+msgctxt "button"
+msgid "Add a risk"
 msgstr ""
 
-#: inc/release.class.php:2075 inc/releasetemplate.class.php:1502
+#: inc/release.class.php:1187
+msgctxt "button"
+msgid "Add a rollback"
+msgstr ""
+
+#: inc/release.class.php:1202
+msgctxt "button"
+msgid "Add a deployment task"
+msgstr ""
+
+#: inc/release.class.php:1217
+msgctxt "button"
+msgid "Add a test"
+msgstr ""
+
+#: inc/release.class.php:2286 inc/releasetemplate.class.php:1502
 msgid "Associated with"
 msgstr ""
 
-#: inc/release.class.php:2121 inc/releasetemplate.class.php:1547
+#: inc/release.class.php:2332 inc/releasetemplate.class.php:1547
 msgid "No data available"
 msgstr ""
 
-#: inc/release.class.php:2263
+#: inc/release.class.php:2474
 msgid "From this change"
 msgstr ""
 
-#: inc/release.class.php:2280 inc/releasetemplate.class.php:972
+#: inc/release.class.php:2491 inc/releasetemplate.class.php:972
 msgid "Create a release"
 msgstr ""
 
-#: inc/release.class.php:2474 inc/releasetemplate.class.php:1584
+#: inc/release.class.php:2686 inc/releasetemplate.class.php:1584
 msgid "Release actions details"
 msgstr ""
 
 #. TRANS : %d is the number of problems
-#: inc/release.class.php:2608
+#: inc/release.class.php:2820
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:2613 inc/release.class.php:2660
+#: inc/release.class.php:2825 inc/release.class.php:2872
 msgid "No release found."
 msgstr ""
 
-#: inc/release.class.php:2648
+#: inc/release.class.php:2860
 msgid "Releases on linked items"
 msgstr ""
 
@@ -376,8 +376,17 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
+#: inc/releasetemplate.class.php:74
+msgid "Processing release"
+msgstr ""
+
 #: inc/releasetemplate.class.php:132
 msgid "Description"
+msgstr ""
+
+#: inc/releasetemplate.class.php:152 inc/releasetemplate.class.php:662
+#: inc/releasetemplate.class.php:828
+msgid "Non-working hours"
 msgstr ""
 
 #: inc/releasetemplate.class.php:2172
@@ -399,28 +408,24 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr ""
 
-#: inc/risk.class.php:150 inc/risktemplate.class.php:51
+#: inc/risktemplate.class.php:53
 msgid "Risk template"
 msgid_plural "Risk templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/risk.class.php:190
-msgid "Create a test from this risk"
-msgstr ""
-
-#: inc/rollback.class.php:160 inc/rollbacktemplate.class.php:51
+#: inc/rollbacktemplate.class.php:51
 msgid "Rollback template"
 msgid_plural "Rollback templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/test.class.php:179 inc/testtemplate.class.php:50
+#: inc/testtemplate.class.php:50
 msgid "Test template"
 msgid_plural "Test templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/test.class.php:248 inc/testtemplate.class.php:179
+#: inc/testtemplate.class.php:179
 msgid "Associated risk"
 msgstr ""
