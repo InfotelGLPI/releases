@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 14:16+0000\n"
+"POT-Creation-Date: 2022-01-10 17:45+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2022\n"
 "Language-Team: French (France) (https://www.transifex.com/infotelGLPI/teams/12376/fr_FR/)\n"
@@ -81,10 +81,10 @@ msgstr "Arrêt du service"
 
 #: inc/deploytask.class.php:52 inc/finalization.class.php:191
 #: inc/notificationtargetrelease.class.php:859
-#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1874
-#: inc/release.class.php:1875 inc/releasetemplate.class.php:164
-#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1309
-#: inc/releasetemplate.class.php:1310
+#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1873
+#: inc/release.class.php:1874 inc/releasetemplate.class.php:164
+#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1307
+#: inc/releasetemplate.class.php:1308
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Tâche de déploiement"
@@ -338,39 +338,39 @@ msgctxt "button"
 msgid "Add a test"
 msgstr "Ajouter un test"
 
-#: inc/release.class.php:2286 inc/releasetemplate.class.php:1502
+#: inc/release.class.php:2285 inc/releasetemplate.class.php:1499
 msgid "Associated with"
 msgstr "Associé avec"
 
-#: inc/release.class.php:2332 inc/releasetemplate.class.php:1547
+#: inc/release.class.php:2331 inc/releasetemplate.class.php:1544
 msgid "No data available"
 msgstr "Pas d'informations trouvées"
 
-#: inc/release.class.php:2474
-msgid "From this change"
-msgstr "A partir de ce changement"
+#: inc/release.class.php:2473
+msgid "For this change"
+msgstr "Pour ce changement"
 
-#: inc/release.class.php:2491 inc/releasetemplate.class.php:972
+#: inc/release.class.php:2490 inc/releasetemplate.class.php:972
 msgid "Create a release"
 msgstr "Créer une mise en production"
 
-#: inc/release.class.php:2686 inc/releasetemplate.class.php:1584
+#: inc/release.class.php:2685 inc/releasetemplate.class.php:1581
 msgid "Release actions details"
 msgstr "Détails des actions de la mise en production"
 
 #. TRANS : %d is the number of problems
-#: inc/release.class.php:2820
+#: inc/release.class.php:2819
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
 msgstr[0] "%d dernière mise en production"
 msgstr[1] "%d dernières mises en production"
 
-#: inc/release.class.php:2825 inc/release.class.php:2872
+#: inc/release.class.php:2824 inc/release.class.php:2871
 msgid "No release found."
 msgstr "Pas de mise en production trouvé."
 
-#: inc/release.class.php:2860
+#: inc/release.class.php:2859
 msgid "Releases on linked items"
 msgstr "Mise en production sur les objets liés"
 
@@ -393,7 +393,7 @@ msgstr "Description"
 msgid "Non-working hours"
 msgstr "Heures non travaillées"
 
-#: inc/releasetemplate.class.php:2172
+#: inc/releasetemplate.class.php:2169
 msgid "Group in charge of the release"
 msgstr "Groupe en charge de la mise en production"
 
