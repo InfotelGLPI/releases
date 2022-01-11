@@ -111,11 +111,21 @@
                     {% set col_md = get_current_interface() == 'central' ? 'col-md-9' : 'col-md-12' %}
                     <div class="col-12 {{ col_md }}">
 
-                        {{ fields.checkboxField(
-                            'create_test',
-                            create_test,
-                            __("Create a test from this risk", "releases"),
-                            field_options
+                        {% set fup_template_lbl %}
+                            <i class="ti ti-template fa-fw me-1"
+                               title="{{ _n('Risk template', 'Risk templates', get_plural_number(), 'releases') }}"></i>
+                        {% endset %}
+                        {{ fields.dropdownField(
+                            'PluginReleasesRisktemplate',
+                            'risktemplates_id',
+                            subitem.fields['risktemplates_id'],
+                            fup_template_lbl,
+                            {
+                                'full_width': true,
+                                'icon_label': true,
+                                'on_change': 'risktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/risk.php\")',
+                                'rand': rand,
+                            }
                         ) }}
 
                         {{ fields.textField(
@@ -125,6 +135,22 @@
                             {
                                 'full_width': true,
                                 'icon_label': true,
+                                'rand': rand,
+                            }
+                        ) }}
+
+                        {% set fup_source_lbl %}
+                            <i class="fas fa-inbox fa-fw me-1" title="{{ __("Risk type", 'releases') }}"></i>
+                        {% endset %}
+                        {{ fields.dropdownField(
+                            'PluginReleasesTypeRisk',
+                            'plugin_releases_typerisks_id',
+                            subitem.fields['plugin_releases_typerisks_id'],
+                            fup_source_lbl,
+                            {
+                                'full_width': true,
+                                'icon_label': true,
+                                'is_active': 1,
                                 'rand': rand,
                             }
                         ) }}
@@ -147,37 +173,11 @@
                         <div class="col-12 col-md-3 order-first order-md-last">
                             <div class="row">
 
-                                {% set fup_template_lbl %}
-                                    <i class="ti ti-template fa-fw me-1"
-                                       title="{{ _n('Risk template', 'Risk templates', get_plural_number(), 'releases') }}"></i>
-                                {% endset %}
-                                {{ fields.dropdownField(
-                                    'PluginReleasesRisktemplate',
-                                    'risktemplates_id',
-                                    subitem.fields['risktemplates_id'],
-                                    fup_template_lbl,
-                                    {
-                                        'full_width': true,
-                                        'icon_label': true,
-                                        'on_change': 'risktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/risk.php\")',
-                                        'rand': rand,
-                                    }
-                                ) }}
-
-                                {% set fup_source_lbl %}
-                                    <i class="fas fa-inbox fa-fw me-1" title="{{ __("Risk type", 'releases') }}"></i>
-                                {% endset %}
-                                {{ fields.dropdownField(
-                                    'PluginReleasesTypeRisk',
-                                    'plugin_releases_typerisks_id',
-                                    subitem.fields['plugin_releases_typerisks_id'],
-                                    fup_source_lbl,
-                                    {
-                                        'full_width': true,
-                                        'icon_label': true,
-                                        'is_active': 1,
-                                        'rand': rand,
-                                    }
+                                {{ fields.checkboxField(
+                                    'create_test',
+                                    create_test,
+                                    __("Create a test from this risk", "releases"),
+                                    field_options
                                 ) }}
 
                             </div>

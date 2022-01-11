@@ -108,8 +108,25 @@
                 {% endif %}
 
                 <div class="row">
-                    {% set col_md = get_current_interface() == 'central' ? 'col-md-9' : 'col-md-12' %}
+                    {% set col_md = get_current_interface() == 'central' ? 'col-md-12' : 'col-md-12' %}
                     <div class="col-12 {{ col_md }}">
+
+                        {% set fup_template_lbl %}
+                            <i class="ti ti-template fa-fw me-1"
+                               title="{{ _n('Rollback template', 'Rollback templates', get_plural_number(), 'releases') }}"></i>
+                        {% endset %}
+                        {{ fields.dropdownField(
+                            'PluginReleasesRollbacktemplate',
+                            'rollbacktemplates_id',
+                            subitem.fields['rollbacktemplates_id'],
+                            fup_template_lbl,
+                            {
+                                'full_width': true,
+                                'icon_label': true,
+                                'on_change': 'rollbacktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/rollback.php\")',
+                                'rand': rand,
+                            }
+                        ) }}
 
                         {{ fields.textField(
                             'name',
@@ -136,31 +153,6 @@
                             }
                         ) }}
                     </div>
-                    {% if get_current_interface() == 'central' %}
-                        <div class="col-12 col-md-3 order-first order-md-last">
-                            <div class="row">
-
-                                {% set fup_template_lbl %}
-                                    <i class="ti ti-template fa-fw me-1"
-                                       title="{{ _n('Rollback template', 'Rollback templates', get_plural_number(), 'releases') }}"></i>
-                                {% endset %}
-                                {{ fields.dropdownField(
-                                    'PluginReleasesRollbacktemplate',
-                                    'rollbacktemplates_id',
-                                    subitem.fields['rollbacktemplates_id'],
-                                    fup_template_lbl,
-                                    {
-                                        'full_width': true,
-                                        'icon_label': true,
-                                        'on_change': 'rollbacktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/rollback.php\")',
-                                        'rand': rand,
-                                    }
-                                ) }}
-
-
-                            </div>
-                        </div>
-                    {% endif %}
                 </div>
 
                 {{ call_plugin_hook('post_item_form', {"item": subitem, 'options': params}) }}

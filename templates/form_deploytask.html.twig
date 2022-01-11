@@ -1,33 +1,33 @@
 {#
- # ---------------------------------------------------------------------
- # GLPI - Gestionnaire Libre de Parc Informatique
- # Copyright (C) 2015-2021 Teclib' and contributors.
- #
- # http://glpi-project.org
- #
- # based on GLPI - Gestionnaire Libre de Parc Informatique
- # Copyright (C) 2003-2014 by the INDEPNET Development Team.
- #
- # ---------------------------------------------------------------------
- #
- # LICENSE
- #
- # This file is part of GLPI.
- #
- # GLPI is free software; you can redistribute it and/or modify
- # it under the terms of the GNU General Public License as published by
- # the Free Software Foundation; either version 2 of the License, or
- # (at your option) any later version.
- #
- # GLPI is distributed in the hope that it will be useful,
- # but WITHOUT ANY WARRANTY; without even the implied warranty of
- # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- # GNU General Public License for more details.
- #
- # You should have received a copy of the GNU General Public License
- # along with GLPI. If not, see <http://www.gnu.org/licenses/>.
- # ---------------------------------------------------------------------
- #}
+# ---------------------------------------------------------------------
+# GLPI - Gestionnaire Libre de Parc Informatique
+# Copyright (C) 2015-2021 Teclib' and contributors.
+#
+# http://glpi-project.org
+#
+# based on GLPI - Gestionnaire Libre de Parc Informatique
+# Copyright (C) 2003-2014 by the INDEPNET Development Team.
+#
+# ---------------------------------------------------------------------
+#
+# LICENSE
+#
+# This file is part of GLPI.
+#
+# GLPI is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# GLPI is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GLPI. If not, see <http://www.gnu.org/licenses/>.
+# ---------------------------------------------------------------------
+#}
 
 {% extends 'components/itilobject/timeline/form_timeline_item.html.twig' %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
@@ -39,61 +39,73 @@
 
 {% block timeline_card %}
    {% if form_mode == 'view' %}
-      <div class="read-only-content {{ entry_i['state'] is constant('PluginReleasesDeploytask::DONE') ? 'done' : '' }}">
-         {% if entry_i['state'] is constant('PluginReleasesDeploytask::TODO') %}
-         <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-         <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
-         {% elseif entry_i['state'] is constant('PluginReleasesTest::DONE') %}
-            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
-         {% elseif entry_i['state'] is constant('PluginReleasesTest::FAIL') %}
-            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
-         {% endif %}
+    <div class="read-only-content {{ entry_i['state'] is constant('PluginReleasesDeploytask::DONE') ? 'done' : '' }}">
+        {% if entry_i['state'] is constant('PluginReleasesDeploytask::TODO') %}
+            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               title="{{ __('Done') }}"></i>
+            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;'
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               title="{{ __('Failed', 'releases') }}"></i>
+        {% elseif entry_i['state'] is constant('PluginReleasesTest::DONE') %}
+            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;'
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               title="{{ __('Done') }}"></i>
+            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;'
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               title="{{ __('Failed', 'releases') }}"></i>
+        {% elseif entry_i['state'] is constant('PluginReleasesTest::FAIL') %}
+            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               title="{{ __('Done') }}"></i>
+            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;'
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               title="{{ __('Failed', 'releases') }}"></i>
+        {% endif %}
 
-         <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
-              title="{{ entry_i['content']|html_to_text }}" data-bs-toggle="tooltip">
+        <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
+             title="{{ entry_i['content']|html_to_text }}" data-bs-toggle="tooltip">
             {{ entry_i['name']|safe_html }}
             {{ entry_i['content']|enhanced_html({
-               'user_mentions': true,
-               'images_gallery': true
+                'user_mentions': true,
+                'images_gallery': true
             }) }}
-         </div>
+        </div>
 
-         <div class="timeline-badges">
+        <div class="timeline-badges">
             {% if entry_i['users_id_tech'] %}
-               <span class="badge bg-orange-lt">
+                <span class="badge bg-orange-lt">
                   {% set is_current_tech = (entry_i['users_id_tech'] == session('glpiID')) %}
-                  {% set anonym_tech = (get_current_interface() == 'helpdesk' and not is_current_tech and entity_config('anonymize_support_agents') != constant('Entity::ANONYMIZE_DISABLED')) %}
-                  {{ include('components/user/link_with_tooltip.html.twig', {
-                     'users_id': entry_i['users_id_tech'],
-                     'enable_anonymization': anonym_tech
-                  }, with_context = false) }}
+                    {% set anonym_tech = (get_current_interface() == 'helpdesk' and not is_current_tech and entity_config('anonymize_support_agents') != constant('Entity::ANONYMIZE_DISABLED')) %}
+                    {{ include('components/user/link_with_tooltip.html.twig', {
+                        'users_id': entry_i['users_id_tech'],
+                        'enable_anonymization': anonym_tech
+                    }, with_context = false) }}
                </span>
             {% endif %}
 
             {% if entry_i['groups_id_tech'] %}
-               <span class="badge bg-orange-lt">
+                <span class="badge bg-orange-lt">
                   <i class="fas fa-users me-1"></i>
                   {{ get_item_link('Group', entry_i['groups_id_tech'], {'enable_anonymization': true}) }}
                </span>
             {% endif %}
 
             {% if entry_i['plugin_releases_deploytasks_id'] %}
-               <span class="badge bg-orange-lt">
+                <span class="badge bg-orange-lt">
                   {{ get_item_name('PluginReleasesDeploytask', entry_i['plugin_releases_deploytasks_id']) }}
                </span>
             {% endif %}
 
             {% if entry_i['actiontime'] %}
-               <span class="actiontime badge bg-orange-lt">
+                <span class="actiontime badge bg-orange-lt">
                   <i class="fas fa-stopwatch me-1"></i>
                   {{ entry_i['actiontime']|formatted_duration }}
                </span>
             {% endif %}
 
             {% if entry_i['begin'] %}
-               <span class="planification badge bg-orange-lt">
+                <span class="planification badge bg-orange-lt">
                   <i class="fas fa-calendar me-1"></i>
                   {{ entry_i['begin']|formatted_datetime }}
                   &rArr;
@@ -102,155 +114,190 @@
             {% endif %}
 
 
-{#            {{ include('components/itilobject/timeline/pending_reasons_messages.html.twig') }}#}
-         </div>
-      </div>
+            {#            {{ include('components/itilobject/timeline/pending_reasons_messages.html.twig') }} #}
+        </div>
+    </div>
 
-      <script type="text/javascript">
-         function done_fail_deploytask(items_id, target, newStatus, rpath) {
-            $.post(rpath,
-               {'action':     'done_fail',
-                  'items_id':   items_id,
-                  'itemtype':   'PluginReleasesDeploytask',
-                  'parenttype': '{{ item.getType() }}',
-                  '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }},
-                  'newStatus': newStatus
-               })
-               .done(function(response) {
-                  $(target).parent().children().css('color','gray');//add gray to done and fail
+    <script type="text/javascript">
+       function done_fail_deploytask(items_id, target, newStatus, rpath) {
+          $.post(rpath,
+             {
+                'action': 'done_fail',
+                'items_id': items_id,
+                'itemtype': 'PluginReleasesDeploytask',
+                'parenttype': '{{ item.getType() }}',
+                '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }},
+                'newStatus': newStatus
+             })
+             .done(function (response) {
+                $(target).parent().children().css('color', 'gray');//add gray to done and fail
 
-                  if(response.state == 2){
-                     $(target).parent().children('i[data-type=\"done\"]').css('color','forestgreen');//green to done
-                  }else if (response.state == 3){
-                     $(target).parent().children('i[data-type=\"fail\"]').css('color','firebrick');//red to fail
-                  }
+                if (response.state == 2) {
+                   $(target).parent().children('i[data-type=\"done\"]').css('color', 'forestgreen');//green to done
+                } else if (response.state == 3) {
+                   $(target).parent().children('i[data-type=\"fail\"]').css('color', 'firebrick');//red to fail
+                }
 
-                  $(target).closest('.timeline-item').find('.read-only-content')
-                     .toggleClass('done');
+                $(target).closest('.timeline-item').find('.read-only-content')
+                   .toggleClass('done');
 
-                  var todo_tasks   = $('.todo-list-state .state.state_1').length;
-                  var done_tasks   = $('.todo-list-state .state.state_2').length;
-                  var total_tasks  = todo_tasks + done_tasks;
-                  var percent_done = Math.floor(100 * done_tasks / total_tasks);
+                var todo_tasks = $('.todo-list-state .state.state_1').length;
+                var done_tasks = $('.todo-list-state .state.state_2').length;
+                var total_tasks = todo_tasks + done_tasks;
+                var percent_done = Math.floor(100 * done_tasks / total_tasks);
 
-                  $('.timeline-progress')
-                     .css('width', percent_done + '%')
-                     .attr('aria-valuenow', percent_done);
-                  $('.task-progress-label').html(percent_done + '%');
-               });
-         }
-      </script>
-   {% else %}
-      <div class="PluginReleasesDeploytask">
-         <form name="asset_form" style="width: 100%;" class="d-flex flex-column" method="post"
-               action="{{ subitem.getFormURL() }}" enctype="multipart/form-data" data-track-changes="true" data-submit-once>
-            <input type="hidden" name="itemtype" value="{{ item.getType() }}" />
-            <input type="hidden" name="items_id" value="{{ item.fields['id'] }}"/>
-            {{ call_plugin_hook('pre_item_form', {"item": subitem, 'options': params}) }}
+                $('.timeline-progress')
+                   .css('width', percent_done + '%')
+                   .attr('aria-valuenow', percent_done);
+                $('.task-progress-label').html(percent_done + '%');
+             });
+       }
+    </script>
+{% else %}
+<div class="PluginReleasesDeploytask">
+    <form name="asset_form" style="width: 100%;" class="d-flex flex-column" method="post"
+          action="{{ subitem.getFormURL() }}" enctype="multipart/form-data" data-track-changes="true" data-submit-once>
+        <input type="hidden" name="itemtype" value="{{ item.getType() }}"/>
+        <input type="hidden" name="items_id" value="{{ item.fields['id'] }}"/>
+        {{ call_plugin_hook('pre_item_form', {"item": subitem, 'options': params}) }}
 
-            <div class="row">
-               <div class="col-12 col-md-9">
+        <div class="row">
+            <div class="col-12 col-md-9">
 
-                  {{ fields.textField(
-                     'name',
-                     subitem.fields['name'],
-                     __('Title'),
-                     {
+                {% set fup_source_lbl %}
+                    <i class="ti ti-check fa-fw me-1" title="{{ __("Previous task", "releases") }}"></i>
+                {% endset %}
+
+                {% set condition = {
+                    'plugin_releases_releases_id': item.fields['id']
+                } %}
+
+                {% if subitem.isNewItem() %}
+                {% else %}
+                    {% if tasks is defined and tasks|length > 0 %}
+                        {% set condition = condition|merge({'id': (tasks)}) %}
+                    {% else %}
+                        {% set condition = condition|merge({'id': 0}) %}
+                    {% endif %}
+                {% endif %}
+                {{ fields.dropdownField(
+                    'PluginReleasesDeploytask',
+                    'plugin_releases_deploytasks_id',
+                    subitem.fields['plugin_releases_deploytasks_id'],
+                    fup_source_lbl,
+                    {
+                        'full_width': true,
+                        'icon_label': true,
+                        'is_active': 1,
+                        'rand': rand,
+                        'condition': condition
+                    }
+                ) }}
+                {{ fields.textField(
+                    'name',
+                    subitem.fields['name'],
+                    __('Title'),
+                    {
                         'full_width': true,
                         'icon_label': true,
                         'rand': rand,
-                     }
-                  ) }}
+                    }
+                ) }}
 
-                  {{ fields.textareaField(
-                     'content',
-                     subitem.fields['content'],
-                     '',
-                     {
+                {{ fields.textareaField(
+                    'content',
+                    subitem.fields['content'],
+                    '',
+                    {
                         'full_width': true,
                         'no_label': true,
                         'enable_richtext': true,
                         'enable_fileupload': true,
                         'enable_mentions': true,
                         'rand': rand,
-                     }
-                  ) }}
-               </div>
-               <div class="col-12 col-md-3 order-first order-md-last">
-                  <div class="row">
+                    }
+                ) }}
+            </div>
+            <div class="col-12 col-md-3 order-first order-md-last">
+                <div class="row">
 
-                     {% set task_template_lbl %}
+                    {% set task_template_lbl %}
                         <i class="ti ti-template fa-fw me-1"
                            title="{{ _n('Task template', 'Task templates', get_plural_number(), 'releases') }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownField(
+                    {% endset %}
+                    {{ fields.dropdownField(
                         'PluginReleasesDeploytasktemplate',
                         'deploytasktemplates_id',
                         subitem.fields['deploytasktemplates_id'],
                         task_template_lbl,
                         {
-                           'full_width': true,
-                           'icon_label': true,
-                           'on_change': 'deploytasktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/deploytask.php\")',
-                           'entity': item.fields['entities_id'],
-                           'rand': rand,
+                            'full_width': true,
+                            'icon_label': true,
+                            'on_change': 'deploytasktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/deploytask.php\")',
+                            'entity': item.fields['entities_id'],
+                            'rand': rand,
                         }
-                     ) }}
+                    ) }}
 
-                     {# Category #}
-                     {% set task_category_lbl %}
+                    {# Category #}
+                    {% set task_category_lbl %}
                         <i class="fas fa-tag fa-fw me-1" title="{{ _n('Category', 'Categories', 1) }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownField(
+                    {% endset %}
+                    {{ fields.dropdownField(
                         'PluginReleasesTypeDeployTask',
                         'plugin_releases_typedeploytasks_id',
                         subitem.fields['plugin_releases_typedeploytasks_id'],
                         task_category_lbl,
                         {
-                           'full_width': true,
-                           'icon_label': true,
-                           'entity': item.fields['entities_id'],
-                           'is_active': 1,
-                           'rand': rand,
+                            'full_width': true,
+                            'icon_label': true,
+                            'entity': item.fields['entities_id'],
+                            'is_active': 1,
+                            'rand': rand,
                         }
-                     ) }}
+                    ) }}
 
-                     {% set fup_source_lbl %}
+                    {% set fup_source_lbl %}
                         <i class="ti ti-bug fa-fw me-1" title="{{ __("Associated risk", 'releases') }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownField(
+                    {% endset %}
+                    {% set condition = {
+                        'plugin_releases_releases_id': item.fields['id']
+                    } %}
+
+                    {{ fields.dropdownField(
                         'PluginReleasesRisk',
                         'plugin_releases_risks_id',
                         subitem.fields['plugin_releases_risks_id'],
                         fup_source_lbl,
                         {
-                           'full_width': true,
-                           'icon_label': true,
-                           'is_active': 1,
-                           'rand': rand,
+                            'full_width': true,
+                            'icon_label': true,
+                            'is_active': 1,
+                            'rand': rand,
+                            'condition': condition
                         }
-                     ) }}
+                    ) }}
 
-                     {# Status #}
-                     {% set task_state_lbl %}
+                    {# Status #}
+                    {% set task_state_lbl %}
                         <i class="fas fa-tasks fa-fw me-1" title="{{ __('Status') }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownArrayField('state', subitem.fields['state'], {
+                    {% endset %}
+                    {{ fields.dropdownArrayField('state', subitem.fields['state'], {
                         1: __('To do'),
                         2: __('Done'),
                         3: __('Failed', 'releases')
-                     }, task_state_lbl, {
+                    }, task_state_lbl, {
                         'full_width': true,
                         'icon_label': true,
                         'rand': rand,
-                     }) }}
+                    }) }}
 
 
-                     {# Duration #}
-                     {% set task_actiontime_lbl %}
+                    {# Duration #}
+                    {% set task_actiontime_lbl %}
                         <i class="fas fa-stopwatch fa-fw me-1" title="{{ __('Duration') }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownTimestampField('actiontime', subitem.fields['actiontime'], task_actiontime_lbl, {
+                    {% endset %}
+                    {{ fields.dropdownTimestampField('actiontime', subitem.fields['actiontime'], task_actiontime_lbl, {
                         'full_width': true,
                         'icon_label': true,
                         'rand': rand,
@@ -258,137 +305,138 @@
                         'max': 8 * constant('HOUR_TIMESTAMP'),
                         'addfirstminutes': true,
                         'inhours': true
-                     }) }}
+                    }) }}
 
-                     {# User #}
-                     {% set task_user_lbl %}
+                    {# User #}
+                    {% set task_user_lbl %}
                         <i class="fas fa-user fa-fw me-1" title="{{ 'User'|itemtype_name }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownField(
+                    {% endset %}
+                    {{ fields.dropdownField(
                         'User',
                         'users_id_tech',
                         subitem.fields['users_id_tech']|default(session('glpiID')),
                         task_user_lbl,
                         {
-                           'full_width': true,
-                           'icon_label': true,
-                           'entity': item.fields['entities_id'],
-                           'right': 'own_ticket',
-                           'rand': rand,
+                            'full_width': true,
+                            'icon_label': true,
+                            'entity': item.fields['entities_id'],
+                            'right': 'own_ticket',
+                            'rand': rand,
                         }
-                     ) }}
+                    ) }}
 
-                     {# Group #}
-                     {% set task_group_lbl %}
+                    {# Group #}
+                    {% set task_group_lbl %}
                         <i class="fas fa-users fa-fw me-1" title="{{ 'Group'|itemtype_name }}"></i>
-                     {% endset %}
-                     {{ fields.dropdownField(
+                    {% endset %}
+                    {{ fields.dropdownField(
                         'Group',
                         'groups_id_tech',
                         subitem.fields['groups_id_tech'],
                         task_group_lbl,
                         {
-                           'full_width': true,
-                           'icon_label': true,
-                           'entity': item.fields['entities_id'],
-                           'condition': {'is_task': 1},
-                           'rand': rand,
+                            'full_width': true,
+                            'icon_label': true,
+                            'entity': item.fields['entities_id'],
+                            'condition': {'is_task': 1},
+                            'rand': rand,
                         }
-                     ) }}
+                    ) }}
 
-                     <script type="text/javascript">
-                        function showPlanUpdate{{ rand }}(e) {
-                           $('#plan{{ rand }}').hide();
-                           $('#viewplan{{ rand }}').load('{{ path('/ajax/planning.php') }}', {
-                              action: "add_event_classic_form",
-                              form: "followups", // Was followups for tasks before. Can't find where this is used.
-                              entity: {{ item.fields['entities_id'] }},
-                              rand_user: {{ random() }},
-                              rand_group: {{ random() }},
-                              itemtype: "{{ subitem.type }}",
-                              items_id: {{ subitem.fields['id']|default(-1) }}
-                           });
-                        }
-                     </script>
-                     <button id="plan{{ rand }}" class="btn btn-outline-secondary d-block mb-2 text-truncate" onclick="showPlanUpdate{{ rand }}()" type="button">
+                    <script type="text/javascript">
+                       function showPlanUpdate{{ rand }}(e) {
+                          $('#plan{{ rand }}').hide();
+                          $('#viewplan{{ rand }}').load('{{ path('/ajax/planning.php') }}', {
+                             action: "add_event_classic_form",
+                             form: "followups", // Was followups for tasks before. Can't find where this is used.
+                             entity: {{ item.fields['entities_id'] }},
+                             rand_user: {{ random() }},
+                             rand_group: {{ random() }},
+                             itemtype: "{{ subitem.type }}",
+                             items_id: {{ subitem.fields['id']|default(-1) }}
+                          });
+                       }
+                    </script>
+                    <button id="plan{{ rand }}" class="btn btn-outline-secondary d-block mb-2 text-truncate"
+                            onclick="showPlanUpdate{{ rand }}()" type="button">
                         <i class="fas fa-calendar"></i>
                         <span>{{ __('Plan this task') }}</span>
-                     </button>
-                     <div id="viewplan{{ rand }}"></div>
-                  </div>
-               </div>
+                    </button>
+                    <div id="viewplan{{ rand }}"></div>
+                </div>
             </div>
+        </div>
 
-            {{ call_plugin_hook('post_item_form', {"item": subitem, 'options': params}) }}
-            <div class="d-flex card-footer mx-n3 mb-n3">
-               {% if subitem.fields['id'] <= 0 %}
-                  <div class="input-group">
-                     <button class="btn btn-primary" type="submit" name="add">
+        {{ call_plugin_hook('post_item_form', {"item": subitem, 'options': params}) }}
+        <div class="d-flex card-footer mx-n3 mb-n3">
+            {% if subitem.fields['id'] <= 0 %}
+                <div class="input-group">
+                    <button class="btn btn-primary" type="submit" name="add">
                         <i class="fas fa-plus"></i>
                         <span>{{ _x('button', 'Add') }}</span>
-                     </button>
-{#                     <span class="input-group-text bg-yellow-lt py-0 pe-0" id="pending-reasons-control-{{ rand }}">#}
-{#                        <span class="d-inline-flex align-items-center" title="{{ __("Set the status to pending") }}"#}
-{#                              data-bs-toggle="tooltip" data-bs-placement="top" role="button">#}
-{#                           <i class="fas fa-pause me-2"></i>#}
-{#                           <label class="form-check form-switch pt-2">#}
-{#                              <input type="hidden"   name="pending" value="0" />#}
-{#                              <input type="checkbox" name="pending" value="1" class="form-check-input"#}
-{#                                    id="enable-pending-reasons-{{ rand }}"#}
-{#                                    role="button"#}
-{#                                    data-bs-toggle="collapse" data-bs-target="#pending-reasons-setup-{{ rand }}" />#}
-{#                           </label>#}
-{#                        </span>#}
+                    </button>
+                    {#                     <span class="input-group-text bg-yellow-lt py-0 pe-0" id="pending-reasons-control-{{ rand }}"> #}
+                    {#                        <span class="d-inline-flex align-items-center" title="{{ __("Set the status to pending") }}" #}
+                    {#                              data-bs-toggle="tooltip" data-bs-placement="top" role="button"> #}
+                    {#                           <i class="fas fa-pause me-2"></i> #}
+                    {#                           <label class="form-check form-switch pt-2"> #}
+                    {#                              <input type="hidden"   name="pending" value="0" /> #}
+                    {#                              <input type="checkbox" name="pending" value="1" class="form-check-input" #}
+                    {#                                    id="enable-pending-reasons-{{ rand }}" #}
+                    {#                                    role="button" #}
+                    {#                                    data-bs-toggle="collapse" data-bs-target="#pending-reasons-setup-{{ rand }}" /> #}
+                    {#                           </label> #}
+                    {#                        </span> #}
 
-{#                        <div class="collapse ps-2 py-1 flex-fill" id="pending-reasons-setup-{{ rand }}">#}
-{#                           {{ include('components/itilobject/timeline/pending_reasons.html.twig') }}#}
-{#                        </div>#}
-{#                     </span>#}
-                  </div>
-               {% else %}
-                  <input type="hidden" name="id" value="{{ subitem.fields['id'] }}" />
-                  <button class="btn btn-primary me-2" type="submit" name="update">
-                     <i class="far fa-save"></i>
-                     <span>{{ _x('button', 'Save') }}</span>
-                  </button>
+                    {#                        <div class="collapse ps-2 py-1 flex-fill" id="pending-reasons-setup-{{ rand }}"> #}
+                    {#                           {{ include('components/itilobject/timeline/pending_reasons.html.twig') }} #}
+                    {#                        </div> #}
+                    {#                     </span> #}
+                </div>
+            {% else %}
+                <input type="hidden" name="id" value="{{ subitem.fields['id'] }}"/>
+                <button class="btn btn-primary me-2" type="submit" name="update">
+                    <i class="far fa-save"></i>
+                    <span>{{ _x('button', 'Save') }}</span>
+                </button>
 
-                  {% if subitem.can(id, constant('PURGE')) %}
-                     <button class="btn btn-outline-danger me-2" type="submit" name="purge"
-                             onclick="return confirm('{{ __('Confirm the final deletion?') }}');">
+                {% if subitem.can(id, constant('PURGE')) %}
+                    <button class="btn btn-outline-danger me-2" type="submit" name="purge"
+                            onclick="return confirm('{{ __('Confirm the final deletion?') }}');">
                         <i class="fas fa-trash-alt"></i>
                         <span>{{ _x('button', 'Delete permanently') }}</span>
-                     </button>
-                  {% endif %}
-               {% endif %}
-            </div>
+                    </button>
+                {% endif %}
+            {% endif %}
+        </div>
 
-            <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}" />
-         </form>
-      </div>
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
+    </form>
+</div>
 
-      <script type="text/javascript">
-         function deploytasktemplate_update{{ rand }}(value, rpath) {
-            $.ajax({
-               url: rpath,
-               type: 'POST',
-               data: {
-                  deploytasktemplates_id: value,
-                  items_id: '{{ item.fields['id'] }}',
-                  itemtype: '{{ item.getType() }}'
-               }
-            }).done(function (data) {
-               var plugin_releases_typedeploytasks_id = isNaN(parseInt(data.plugin_releases_typedeploytasks_id))
-                       ? 0
-                       : parseInt(data.plugin_releases_typedeploytasks_id);
-               // set textarea content
-               $("#name_{{ rand }}").val(data.name);
-               if (tasktinymce = tinymce.get("content_{{ rand }}")) {
-                  tasktinymce.setContent(data.content);
-               }
-               // set category
-               $("#dropdown_plugin_releases_typedeploytasks_id{{ rand }}").trigger("setValue", plugin_releases_typedeploytasks_id);
-            });
+<script type="text/javascript">
+   function deploytasktemplate_update{{ rand }}(value, rpath) {
+      $.ajax({
+         url: rpath,
+         type: 'POST',
+         data: {
+            deploytasktemplates_id: value,
+            items_id: '{{ item.fields['id'] }}',
+            itemtype: '{{ item.getType() }}'
          }
-      </script>
-   {% endif %}
+      }).done(function (data) {
+         var plugin_releases_typedeploytasks_id = isNaN(parseInt(data.plugin_releases_typedeploytasks_id))
+            ? 0
+            : parseInt(data.plugin_releases_typedeploytasks_id);
+         // set textarea content
+         $("#name_{{ rand }}").val(data.name);
+         if (tasktinymce = tinymce.get("content_{{ rand }}")) {
+            tasktinymce.setContent(data.content);
+         }
+         // set category
+         $("#dropdown_plugin_releases_typedeploytasks_id{{ rand }}").trigger("setValue", plugin_releases_typedeploytasks_id);
+      });
+   }
+</script>
+{% endif %}
 {% endblock %}

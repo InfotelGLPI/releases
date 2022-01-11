@@ -123,6 +123,23 @@
                     {% set col_md = get_current_interface() == 'central' ? 'col-md-9' : 'col-md-12' %}
                     <div class="col-12 {{ col_md }}">
 
+                        {% set fup_template_lbl %}
+                            <i class="ti ti-template fa-fw me-1"
+                               title="{{ _n('Test template', 'Test templates', get_plural_number(), 'releases') }}"></i>
+                        {% endset %}
+                        {{ fields.dropdownField(
+                            'PluginReleasesTesttemplate',
+                            'testtemplates_id',
+                            subitem.fields['testtemplates_id'],
+                            fup_template_lbl,
+                            {
+                                'full_width': true,
+                                'icon_label': true,
+                                'on_change': 'testtemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/test.php\")',
+                                'rand': rand,
+                            }
+                        ) }}
+
                         {{ fields.textField(
                             'name',
                             subitem.fields['name'],
@@ -130,6 +147,22 @@
                             {
                                 'full_width': true,
                                 'icon_label': true,
+                                'rand': rand,
+                            }
+                        ) }}
+
+                        {% set fup_source_lbl %}
+                            <i class="fas fa-inbox fa-fw me-1" title="{{ __("Test type", 'releases') }}"></i>
+                        {% endset %}
+                        {{ fields.dropdownField(
+                            'PluginReleasesTypeTest',
+                            'plugin_releases_typetests_id',
+                            subitem.fields['plugin_releases_typetests_id'],
+                            fup_source_lbl,
+                            {
+                                'full_width': true,
+                                'icon_label': true,
+                                'is_active': 1,
                                 'rand': rand,
                             }
                         ) }}
@@ -153,42 +186,13 @@
                         <div class="col-12 col-md-3 order-first order-md-last">
                             <div class="row">
 
-                                {% set fup_template_lbl %}
-                                    <i class="ti ti-template fa-fw me-1"
-                                       title="{{ _n('Test template', 'Test templates', get_plural_number(), 'releases') }}"></i>
-                                {% endset %}
-                                {{ fields.dropdownField(
-                                    'PluginReleasesTesttemplate',
-                                    'testtemplates_id',
-                                    subitem.fields['testtemplates_id'],
-                                    fup_template_lbl,
-                                    {
-                                        'full_width': true,
-                                        'icon_label': true,
-                                        'on_change': 'testtemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/test.php\")',
-                                        'rand': rand,
-                                    }
-                                ) }}
-
-                                {% set fup_source_lbl %}
-                                    <i class="fas fa-inbox fa-fw me-1" title="{{ __("Test type", 'releases') }}"></i>
-                                {% endset %}
-                                {{ fields.dropdownField(
-                                    'PluginReleasesTypeTest',
-                                    'plugin_releases_typetests_id',
-                                    subitem.fields['plugin_releases_typetests_id'],
-                                    fup_source_lbl,
-                                    {
-                                        'full_width': true,
-                                        'icon_label': true,
-                                        'is_active': 1,
-                                        'rand': rand,
-                                    }
-                                ) }}
-
                                 {% set fup_source_lbl %}
                                     <i class="ti ti-bug fa-fw me-1" title="{{ __("Associated risk", 'releases') }}"></i>
                                 {% endset %}
+                                {% set condition = {
+                                    'plugin_releases_releases_id': item.fields['id']
+                                } %}
+
                                 {{ fields.dropdownField(
                                     'PluginReleasesRisk',
                                     'plugin_releases_risks_id',
@@ -199,6 +203,7 @@
                                         'icon_label': true,
                                         'is_active': 1,
                                         'rand': rand,
+                                        'condition': condition
                                     }
                                 ) }}
 
