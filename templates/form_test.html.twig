@@ -33,7 +33,7 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {% set params = {'item': item}|merge(params|default({})) %}
-
+{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
 {% set candedit = item.maySolve() %}
 {% set rand = random() %}
 {% set field_options = {
@@ -46,14 +46,14 @@
     {% if form_mode == 'view' %}
         <div class="read-only-content {{ entry_i['state'] is constant('PluginReleasesTest::DONE') ? 'done' : '' }}">
             {% if entry_i['state'] is constant('PluginReleasesTest::TODO') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::DONE') }})" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::FAIL') }})" title="{{ __('Failed', 'releases') }}"></i>
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
             {% elseif entry_i['state'] is constant('PluginReleasesTest::DONE') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::DONE') }})" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::FAIL') }})" title="{{ __('Failed', 'releases') }}"></i>
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
             {% elseif entry_i['state'] is constant('PluginReleasesTest::FAIL') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::DONE') }})" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::FAIL') }})" title="{{ __('Failed', 'releases') }}"></i>
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('PluginReleasesTest::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
             {% endif %}
 
             <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
@@ -69,8 +69,8 @@
             </div>
         </div>
         <script type="text/javascript">
-           function done_fail_test(items_id, target, newStatus) {
-              $.post('{{ path('/plugins/releases/ajax/timeline.php') }}',
+           function done_fail_test(items_id, target, newStatus, rpath) {
+              $.post(rpath,
                  {'action':     'done_fail',
                     'items_id':   items_id,
                     'itemtype':   'PluginReleasesTest',
@@ -165,7 +165,7 @@
                                     {
                                         'full_width': true,
                                         'icon_label': true,
-                                        'on_change': 'testtemplate_update' ~ rand ~ '(this.value)',
+                                        'on_change': 'testtemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/test.php\")',
                                         'rand': rand,
                                     }
                                 ) }}
@@ -253,9 +253,9 @@
         </div>
 
         <script type="text/javascript">
-           function testtemplate_update{{ rand }}(value) {
+           function testtemplate_update{{ rand }}(value, rpath) {
               $.ajax({
-                 url: '{{ path('/plugins/releases/ajax/test.php') }}',
+                 url: rpath,
                  type: 'POST',
                  data: {
                     testtemplates_id: value,

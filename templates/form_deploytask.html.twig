@@ -31,7 +31,7 @@
 
 {% extends 'components/itilobject/timeline/form_timeline_item.html.twig' %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
-
+{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
 {% set params = {'parent': item}|merge(params|default({})) %}
 
 {% set candedit = item.maySolve() %}
@@ -41,14 +41,14 @@
    {% if form_mode == 'view' %}
       <div class="read-only-content {{ entry_i['state'] is constant('PluginReleasesDeploytask::DONE') ? 'done' : '' }}">
          {% if entry_i['state'] is constant('PluginReleasesDeploytask::TODO') %}
-         <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }})" title="{{ __('Done') }}"></i>
-         <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }})" title="{{ __('Failed', 'releases') }}"></i>
+         <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+         <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
          {% elseif entry_i['state'] is constant('PluginReleasesTest::DONE') %}
-            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }})" title="{{ __('Done') }}"></i>
-            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }})" title="{{ __('Failed', 'releases') }}"></i>
+            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
          {% elseif entry_i['state'] is constant('PluginReleasesTest::FAIL') %}
-            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }})" title="{{ __('Done') }}"></i>
-            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }})" title="{{ __('Failed', 'releases') }}"></i>
+            <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+            <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('PluginReleasesDeploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
          {% endif %}
 
          <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
@@ -107,8 +107,8 @@
       </div>
 
       <script type="text/javascript">
-         function done_fail_deploytask(items_id, target, newStatus) {
-            $.post('{{ path('/plugins/releases/ajax/timeline.php') }}',
+         function done_fail_deploytask(items_id, target, newStatus, rpath) {
+            $.post(rpath,
                {'action':     'done_fail',
                   'items_id':   items_id,
                   'itemtype':   'PluginReleasesDeploytask',
@@ -191,7 +191,7 @@
                         {
                            'full_width': true,
                            'icon_label': true,
-                           'on_change': 'deploytasktemplate_update' ~ rand ~ '(this.value)',
+                           'on_change': 'deploytasktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/deploytask.php\")',
                            'entity': item.fields['entities_id'],
                            'rand': rand,
                         }
@@ -367,9 +367,9 @@
       </div>
 
       <script type="text/javascript">
-         function deploytasktemplate_update{{ rand }}(value) {
+         function deploytasktemplate_update{{ rand }}(value, rpath) {
             $.ajax({
-               url: '{{ path('/plugins/releases/ajax/deploytask.php') }}',
+               url: rpath,
                type: 'POST',
                data: {
                   deploytasktemplates_id: value,

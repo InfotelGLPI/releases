@@ -33,7 +33,7 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {% set params = {'item': item}|merge(params|default({})) %}
-
+{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
 {% set candedit = item.maySolve() %}
 {% set rand = random() %}
 {% set field_options = {
@@ -46,9 +46,9 @@
     {% if form_mode == 'view' %}
         <div class="read-only-content {{ entry_i['state'] is constant('Planning::DONE') ? 'done' : '' }}">
             {% if entry_i['state'] is constant('Planning::TODO') %}
-                <span class="state state_1" onclick="change_rollback_state({{ entry_i['id'] }}, this)" title="{{ __('To do') }}"></span>
+                <span class="state state_1" onclick="change_rollback_state({{ entry_i['id'] }}, this, '{{ rpath }}/ajax/timeline.php')" title="{{ __('To do') }}"></span>
             {% elseif entry_i['state'] is constant('Planning::DONE') %}
-                <span class="state state_2" onclick="change_rollback_state({{ entry_i['id'] }}, this)" title="{{ __('Done') }}"></span>
+                <span class="state state_2" onclick="change_rollback_state({{ entry_i['id'] }}, this, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></span>
             {% endif %}
 
             <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
@@ -64,8 +64,8 @@
             </div>
         </div>
         <script type="text/javascript">
-           function change_rollback_state(items_id, target) {
-              $.post('{{ path('/plugins/releases/ajax/timeline.php') }}',
+           function change_rollback_state(items_id, target, rpath) {
+              $.post(rpath,
                  {'action':     'change_release_subitem_state',
                     'items_id':   items_id,
                     'itemtype':   'PluginReleasesRollback',
@@ -152,7 +152,7 @@
                                     {
                                         'full_width': true,
                                         'icon_label': true,
-                                        'on_change': 'rollbacktemplate_update' ~ rand ~ '(this.value)',
+                                        'on_change': 'rollbacktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/rollback.php\")',
                                         'rand': rand,
                                     }
                                 ) }}
@@ -194,9 +194,9 @@
         </div>
 
         <script type="text/javascript">
-           function rollbacktemplate_update{{ rand }}(value) {
+           function rollbacktemplate_update{{ rand }}(value, rpath) {
               $.ajax({
-                 url: '{{ path('/plugins/releases/ajax/rollback.php') }}',
+                 url: rpath,
                  type: 'POST',
                  data: {
                     rollbacktemplates_id: value,

@@ -2,23 +2,3 @@
 communication target
 Impact analysis empty
 ReleaseTemplate - review as glpi ?
-path twig to PLUGIN_RELEASES_WEBDIR
-
-Associated change on creation
-      //               echo __('Associated change', 'releases');
-      //               echo "</th>";
-      //               echo "<td>";
-      //               $change                  = new Change();
-      //               $condition["status"]     = Change::getNotSolvedStatusArray();
-      //               $condition["is_deleted"] = 0;
-      //               $condition[]             = getEntitiesRestrictCriteria($change->getTable(), '', $options["entities_id"], true);
-      //               $changes                 = $change->find($condition);
-      //               $list                    = [];
-      //               foreach ($changes as $ch) {
-      //                  $list[$ch["id"]] = $ch["name"];
-      //               }
-      //               Dropdown::showFromArray("changes", $list, ["multiple" => true, "values" => $select_changes]);
-      //               //      Change::dropdown([
-      //               ////            'used' => $used,
-      //               //         'entity' => $_SESSION['glpiactive_entity'],'condition'=>['status'=>Change::getNotSolvedStatusArray()]]);
-      //               echo "</td>";

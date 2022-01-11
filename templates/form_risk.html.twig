@@ -33,7 +33,7 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {% set params = {'item': item}|merge(params|default({})) %}
-
+{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
 {% set candedit = item.maySolve() %}
 {% set rand = random() %}
 {% set field_options = {
@@ -46,9 +46,9 @@
     {% if form_mode == 'view' %}
         <div class="read-only-content {{ entry_i['state'] is constant('Planning::DONE') ? 'done' : '' }}">
             {% if entry_i['state'] is constant('Planning::TODO') %}
-                <span class="state state_1" onclick="change_risk_state({{ entry_i['id'] }}, this)" title="{{ __('To do') }}"></span>
+                <span class="state state_1" onclick="change_risk_state({{ entry_i['id'] }}, this, '{{ rpath }}/ajax/timeline.php')" title="{{ __('To do') }}"></span>
             {% elseif entry_i['state'] is constant('Planning::DONE') %}
-                <span class="state state_2" onclick="change_risk_state({{ entry_i['id'] }}, this)" title="{{ __('Done') }}"></span>
+                <span class="state state_2" onclick="change_risk_state({{ entry_i['id'] }}, this, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></span>
             {% endif %}
 
             <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
@@ -64,8 +64,8 @@
             </div>
         </div>
         <script type="text/javascript">
-           function change_risk_state(items_id, target) {
-              $.post('{{ path('/plugins/releases/ajax/timeline.php') }}',
+           function change_risk_state(items_id, target, rpath) {
+              $.post(rpath,
                  {'action':     'change_release_subitem_state',
                     'items_id':   items_id,
                     'itemtype':   'PluginReleasesRisk',
@@ -159,7 +159,7 @@
                                     {
                                         'full_width': true,
                                         'icon_label': true,
-                                        'on_change': 'risktemplate_update' ~ rand ~ '(this.value)',
+                                        'on_change': 'risktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/risk.php\")',
                                         'rand': rand,
                                     }
                                 ) }}
@@ -216,9 +216,9 @@
         </div>
 
         <script type="text/javascript">
-           function risktemplate_update{{ rand }}(value) {
+           function risktemplate_update{{ rand }}(value, rpath) {
               $.ajax({
-                 url: '{{ path('/plugins/releases/ajax/risk.php') }}',
+                 url: rpath,
                  type: 'POST',
                  data: {
                     risktemplates_id: value,
