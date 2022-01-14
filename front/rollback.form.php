@@ -3,7 +3,7 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Releases plugin for GLPI
- Copyright (C) 2018 by the Releases Development Team.
+ Copyright (C) 2018-2022 by the Releases Development Team.
 
  https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------

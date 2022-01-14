@@ -190,7 +190,7 @@ div.workflow li {
 
 .Finalization-Rollback {
    background-color: #8fd57c;
-   color: #3a5d4e;
+   color: #535353;
 }
 
 .action-Deploytask {
@@ -4735,18 +4735,18 @@ section#timeline article div.inner span.bulle {
 }
 
 .riskBulle {
-   border: 2px solid #FFCF48 !important;
-   box-shadow: 0 0 0 7px #FFCF48 !important;
+   border: 2px solid #ff3c10 !important;
+   box-shadow: 0 0 0 7px #ff3c10 !important;
 }
 
 .rollbackBulle {
-   border: 2px solid #e0e0e0 !important;
-   box-shadow: 0 0 0 7px #e0e0e0 !important;
+   border: 2px solid #8fd57c !important;
+   box-shadow: 0 0 0 7px #8fd57c !important;
 }
 
 .taskBulle {
-   border: 2px solid #FEDA90 !important;
-   box-shadow: 0 0 0 7px #FEDA90 !important;
+   border: 2px solid #ff9d24 !important;
+   box-shadow: 0 0 0 7px #ff9d24 !important;
 }
 
 .testBulle {

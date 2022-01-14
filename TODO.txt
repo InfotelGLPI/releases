@@ -1,4 +1,3 @@
-﻿Previous task
-communication target
+﻿communication target
 Impact analysis empty
 ReleaseTemplate - review as glpi ?
