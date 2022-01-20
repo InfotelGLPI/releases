@@ -68,6 +68,18 @@ function plugin_releases_uninstall() {
       PluginReleasesRisk::getTable(),
       PluginReleasesRollback::getTable(),
       PluginReleasesDeploytasktemplate::getTable(),
+      PluginReleasesGroup_Release::getTable(),
+      PluginReleasesGroup_Releasetemplate::getTable(),
+      PluginReleasesRelease_Item::getTable(),
+      PluginReleasesReleasetemplate_Supplier::getTable(),
+      PluginReleasesRelease_Supplier::getTable(),
+      PluginReleasesRelease_User::getTable(),
+      PluginReleasesReleasetemplate_Item::getTable(),
+      PluginReleasesRisktemplate::getTable(),
+      PluginReleasesRollbacktemplate::getTable(),
+      PluginReleasesReleasetemplate_User::getTable(),
+      PluginReleasesTesttemplate::getTable(),
+      PluginReleasesReleasetemplate::getTable()
    ];
 
    foreach ($tables as $table) {
