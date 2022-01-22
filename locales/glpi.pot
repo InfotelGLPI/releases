@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-22 15:51+0000\n"
+"POT-Creation-Date: 2022-01-22 16:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANS : %d is the number of problems
-#: inc/release.class.php:2819
+#: inc/release.class.php:2823
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -73,27 +73,27 @@ msgctxt "button"
 msgid "Add"
 msgstr ""
 
-#: inc/release.class.php:1202
+#: inc/release.class.php:1195
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr ""
 
-#: inc/release.class.php:1157
+#: inc/release.class.php:1150
 msgctxt "button"
 msgid "Add a followup"
 msgstr ""
 
-#: inc/release.class.php:1172
+#: inc/release.class.php:1165
 msgctxt "button"
 msgid "Add a risk"
 msgstr ""
 
-#: inc/release.class.php:1187
+#: inc/release.class.php:1180
 msgctxt "button"
 msgid "Add a rollback"
 msgstr ""
 
-#: inc/release.class.php:1217
+#: inc/release.class.php:1210
 msgctxt "button"
 msgid "Add a test"
 msgstr ""
@@ -109,7 +109,7 @@ msgstr[1] ""
 msgid "Associated risk"
 msgstr ""
 
-#: inc/release.class.php:2285 inc/releasetemplate.class.php:1499
+#: inc/release.class.php:2289 inc/releasetemplate.class.php:1496
 msgid "Associated with"
 msgstr ""
 
@@ -160,7 +160,7 @@ msgstr ""
 msgid "Conforming realization"
 msgstr ""
 
-#: inc/release.class.php:2490 inc/releasetemplate.class.php:972
+#: inc/release.class.php:2494 inc/releasetemplate.class.php:969
 msgid "Create a release"
 msgstr ""
 
@@ -195,10 +195,10 @@ msgstr ""
 
 #: inc/deploytask.class.php:53 inc/finalization.class.php:191
 #: inc/notificationtargetrelease.class.php:859
-#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1873
-#: inc/release.class.php:1874 inc/releasetemplate.class.php:164
-#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1307
-#: inc/releasetemplate.class.php:1308 templates/timeline.html.twig:94
+#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1877
+#: inc/release.class.php:1878 inc/releasetemplate.class.php:164
+#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1304
+#: inc/releasetemplate.class.php:1305 templates/timeline.html.twig:94
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] ""
@@ -267,11 +267,11 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: inc/release.class.php:2473 templates/fields_panel.html.twig:95
+#: inc/release.class.php:2477 templates/fields_panel.html.twig:95
 msgid "For this change"
 msgstr ""
 
-#: inc/releasetemplate.class.php:2169
+#: inc/releasetemplate.class.php:2166
 msgid "Group in charge of the release"
 msgstr ""
 
@@ -294,11 +294,11 @@ msgstr ""
 msgid "New release"
 msgstr ""
 
-#: inc/release.class.php:2331 inc/releasetemplate.class.php:1544
+#: inc/release.class.php:2335 inc/releasetemplate.class.php:1541
 msgid "No data available"
 msgstr ""
 
-#: inc/release.class.php:2824 inc/release.class.php:2871
+#: inc/release.class.php:2828 inc/release.class.php:2875
 msgid "No release found."
 msgstr ""
 
@@ -384,7 +384,7 @@ msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:2685 inc/releasetemplate.class.php:1581
+#: inc/release.class.php:2689 inc/releasetemplate.class.php:1578
 msgid "Release actions details"
 msgstr ""
 
@@ -407,7 +407,7 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:2859
+#: inc/release.class.php:2863
 msgid "Releases on linked items"
 msgstr ""
 
