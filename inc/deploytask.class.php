@@ -235,7 +235,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
          Planning::checkAlreadyPlanned($input["users_id_tech"], $input["begin"], $input["end"],
                                        [$this->getType() => [$input["id"]]]);
 
-         $calendars_id = Entity::getUsedConfig('calendars_id', $this->fields['entities_id']);
+         $calendars_id = Entity::getUsedConfig('calendars_strategy', $this->fields['entities_id'], 'calendars_id', 0);
          $calendar     = new Calendar();
 
          // Using calendar
