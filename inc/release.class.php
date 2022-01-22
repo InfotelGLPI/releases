@@ -671,9 +671,9 @@ class PluginReleasesRelease extends CommonITILObject {
          $vals["changes_id"]                  = $this->input["changes_id"];
          $vals["plugin_releases_releases_id"] = $this->getID();
          $release_change->add($vals);
-//         foreach ($this->input["changes"] as $change) {
-//
-//         }
+         //         foreach ($this->input["changes"] as $change) {
+         //
+         //         }
       }
       //      $query = "INSERT INTO `glpi_plugin_release_globalstatues`
       //                             ( `plugin_release_releases_id`,`itemtype`, `status`)
@@ -1121,14 +1121,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
 
    function prepareField($template_id) {
-      $template = new PluginReleasesReleasetemplate();
-      $template->getFromDB($template_id);
 
-      foreach ($this->fields as $key => $field) {
-         if ($key != "id" && $key != "entities_id" && $template->getField($key) != NOT_AVAILABLE) {
-            $this->fields[$key] = $template->getField($key);
-         }
-      }
    }
 
    public function getTimelineItemtypes(): array {
@@ -1238,7 +1231,7 @@ class PluginReleasesRelease extends CommonITILObject {
       $this->restoreSavedValues($saved);
 
       // Set default options
-      if (!$ID) {
+      if ($ID == 0) {
          foreach ($default_values as $key => $val) {
             if (!isset($options[$key])) {
                if (isset($saved[$key])) {
@@ -1250,7 +1243,19 @@ class PluginReleasesRelease extends CommonITILObject {
          }
 
          if (isset($options["template_id"]) && $options["template_id"] > 0) {
-            $this->prepareField($options["template_id"]);
+
+            $template = new PluginReleasesReleasetemplate();
+            $template->getFromDB($options["template_id"]);
+
+            foreach ($this->fields as $key => $field) {
+               if ($key != "id"
+                   && $key != "entities_id"
+                   && $template->getField($key) != NOT_AVAILABLE) {
+                  $this->fields[$key] = $template->getField($key);
+                  $options[$key]      = $template->getField($key);
+               }
+            }
+
             $this->fields["status"] = self::NEWRELEASE;
             $release_user           = new PluginReleasesReleasetemplate_User();
             $release_supplier       = new PluginReleasesReleasetemplate_Supplier();
@@ -1289,7 +1294,6 @@ class PluginReleasesRelease extends CommonITILObject {
             }
          }
       }
-
 
       if ($ID > 0) {
          $this->check($ID, READ);
@@ -3368,17 +3372,17 @@ class PluginReleasesRelease extends CommonITILObject {
     * @see CommonDBTM::getSpecificMassiveActions()
     *
     */
-//   function getSpecificMassiveActions($checkitem = null) {
-//      $isadmin = static::canUpdate();
-//      $actions = parent::getSpecificMassiveActions($checkitem);
-//
-//      if (Session::getCurrentInterface() == 'central') {
-//         if ($isadmin) {
-//            $actions['PluginReleasesRelease' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
-//         }
-//      }
-//      return $actions;
-//   }
+   //   function getSpecificMassiveActions($checkitem = null) {
+   //      $isadmin = static::canUpdate();
+   //      $actions = parent::getSpecificMassiveActions($checkitem);
+   //
+   //      if (Session::getCurrentInterface() == 'central') {
+   //         if ($isadmin) {
+   //            $actions['PluginReleasesRelease' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
+   //         }
+   //      }
+   //      return $actions;
+   //   }
 
    /**
     * @param MassiveAction $ma
@@ -3389,17 +3393,17 @@ class PluginReleasesRelease extends CommonITILObject {
     * @see CommonDBTM::showMassiveActionsSubForm()
     *
     */
-//   static function showMassiveActionsSubForm(MassiveAction $ma) {
-//
-//      switch ($ma->getAction()) {
-//         case "transfer" :
-//            Dropdown::show('Entity');
-//            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
-//            return true;
-//            break;
-//      }
-//      return parent::showMassiveActionsSubForm($ma);
-//   }
+   //   static function showMassiveActionsSubForm(MassiveAction $ma) {
+   //
+   //      switch ($ma->getAction()) {
+   //         case "transfer" :
+   //            Dropdown::show('Entity');
+   //            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
+   //            return true;
+   //            break;
+   //      }
+   //      return parent::showMassiveActionsSubForm($ma);
+   //   }
 
    /**
     * @param MassiveAction $ma
@@ -3412,59 +3416,59 @@ class PluginReleasesRelease extends CommonITILObject {
     * @see CommonDBTM::processMassiveActionsForOneItemtype()
     *
     */
-//   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,
-//                                                       array         $ids) {
-//
-//
-//      switch ($ma->getAction()) {
-//
-//         case "transfer" :
-//            $input = $ma->getInput();
-//            if ($item->getType() == PluginReleasesRelease::getType()) {
-//               foreach ($ids as $key) {
-//                  $item->getFromDB($key);
-//
-//
-//                  unset($values);
-//                  $values["id"]          = $key;
-//                  $values["entities_id"] = $input['entities_id'];
-//
-//                  if ($item->update($values)) {
-//                     PluginReleasesDeploytask::transfer($key, $input["entities_id"]);
-//                     PluginReleasesTest::transfer($key, $input["entities_id"]);
-//                     PluginReleasesRisk::transfer($key, $input["entities_id"]);
-//                     PluginReleasesRollback::transfer($key, $input["entities_id"]);
-//                     PluginReleasesReview::transfer($key, $input["entities_id"]);
-//                     self::transferDocument($key, $input["entities_id"]);
-//                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
-//                  } else {
-//                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
-//                  }
-//               }
-//            }
-//            return;
-//      }
-//      parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
-//   }
+   //   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,
+   //                                                       array         $ids) {
+   //
+   //
+   //      switch ($ma->getAction()) {
+   //
+   //         case "transfer" :
+   //            $input = $ma->getInput();
+   //            if ($item->getType() == PluginReleasesRelease::getType()) {
+   //               foreach ($ids as $key) {
+   //                  $item->getFromDB($key);
+   //
+   //
+   //                  unset($values);
+   //                  $values["id"]          = $key;
+   //                  $values["entities_id"] = $input['entities_id'];
+   //
+   //                  if ($item->update($values)) {
+   //                     PluginReleasesDeploytask::transfer($key, $input["entities_id"]);
+   //                     PluginReleasesTest::transfer($key, $input["entities_id"]);
+   //                     PluginReleasesRisk::transfer($key, $input["entities_id"]);
+   //                     PluginReleasesRollback::transfer($key, $input["entities_id"]);
+   //                     PluginReleasesReview::transfer($key, $input["entities_id"]);
+   //                     self::transferDocument($key, $input["entities_id"]);
+   //                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
+   //                  } else {
+   //                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
+   //                  }
+   //               }
+   //            }
+   //            return;
+   //      }
+   //      parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
+   //   }
 
-//   static function transferDocument($ID, $entity) {
-//      global $DB;
-//
-//      if ($ID > 0) {
-//         $self      = new self();
-//         $documents = new Document_Item();
-//         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
-//         foreach ($items as $id => $vals) {
-//            $input                = [];
-//            $input["id"]          = $id;
-//            $input["entities_id"] = $entity;
-//            $documents->update($input);
-//         }
-//         return true;
-//
-//      }
-//      return 0;
-//   }
+   //   static function transferDocument($ID, $entity) {
+   //      global $DB;
+   //
+   //      if ($ID > 0) {
+   //         $self      = new self();
+   //         $documents = new Document_Item();
+   //         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
+   //         foreach ($items as $id => $vals) {
+   //            $input                = [];
+   //            $input["id"]          = $id;
+   //            $input["entities_id"] = $entity;
+   //            $documents->update($input);
+   //         }
+   //         return true;
+   //
+   //      }
+   //      return 0;
+   //   }
 
 
    /**

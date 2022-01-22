@@ -949,10 +949,7 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
       $template  = new PluginReleasesReleasetemplate();
       $templates = $template->find($condition);
       if (count($templates) != 0) {
-
-
          self::dropdown(["name" => "releasetemplates_id"] + $condition);
-
          echo "<br/><br/>";
       }
       $url = PluginReleasesRelease::getFormURL();
