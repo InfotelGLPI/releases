@@ -226,14 +226,14 @@ class PluginReleasesFinalization extends CommonDBTM {
           && $this->canUpdate()) {
          if ($deployTaskFail == 0 && $testFail == 0) {
 
-            $link = '<a href="#" id="finalize" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Finalize", 'releases') . '</a>';
+            $link = '<a href="#" id="finalize" class="submit btn btn-primary" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Finalize", 'releases') . '</a>';
 
             echo Ajax::createIframeModalWindow('alert-message',
                                                PLUGIN_RELEASES_WEBDIR . "/front/finalization.php?release_id=" . $release->fields['id'] . "&confirm=1",
                                                ['title'   => __("Finalize", 'releases'),
                                                 'display' => false]);
          } else {
-            $link = '<a href="#" id="finalize" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Mark as failed", 'releases') . '</a>';
+            $link = '<a href="#" id="finalize" class="submit btn btn-danger" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Ajax::createIframeModalWindow('alert-message',
                                                PLUGIN_RELEASES_WEBDIR . "/front/finalization.php?release_id=" . $release->fields['id'] . "&failed=1",

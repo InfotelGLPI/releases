@@ -2478,7 +2478,7 @@ class PluginReleasesRelease extends CommonITILObject {
                                                "name"       => "releasetemplates_id"] + $condition);
       $url = PluginReleasesRelease::getFormURL();
       echo "<br/><br/>";
-      echo "<a class='btn btn-primary' id='link' href='$url?changes_id=" . $item->getID() . "'>";
+      echo "<a class='submit btn btn-primary' id='link' href='$url?changes_id=" . $item->getID() . "'>";
       $url    = $url . "?changes_id=" . $item->getID() . "&template_id=";
       $script = "
       var link = function (id,linkurl) {
