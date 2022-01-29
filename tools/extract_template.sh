@@ -37,6 +37,3 @@ do
         --keyword=_nx:$F_ARGS_NX
     sed -i -r "s|standard input:([0-9]+)|`echo $file | sed "s|./||"`:\1|g" locales/glpi.pot
 done
-
-
-

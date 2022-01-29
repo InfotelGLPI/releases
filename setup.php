@@ -27,13 +27,14 @@
  --------------------------------------------------------------------------
  */
 
+define('PLUGIN_RELEASES_VERSION', '2.0.0-rc1');
+
 if (!defined("PLUGIN_RELEASES_DIR")) {
    define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
    define("PLUGIN_RELEASES_NOTFULL_DIR", Plugin::getPhpDir("releases",false));
    define("PLUGIN_RELEASES_WEBDIR", Plugin::getWebDir("releases"));
    define("PLUGIN_RELEASES_NOTFULL_WEBDIR", Plugin::getWebDir("releases",false));
 }
-
 
 // Init the hooks of the plugins -Needed
 function plugin_init_releases() {
@@ -92,7 +93,7 @@ function plugin_version_releases() {
 
    return [
       'name'           => _n('Release', 'Releases', 2, 'releases'),
-      'version'        => '2.0.0',
+      'version'      => PLUGIN_RELEASES_VERSION,
       'license'        => 'GPLv2+',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>, Alban Lesellier",
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
