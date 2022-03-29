@@ -283,6 +283,34 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          $changes[$data['id']] = $data;
 
       }
+
+       if ($canedit) {
+           echo "<div class='firstbloc'>";
+           echo "<form name='changeticket_form$rand' id='changeticket_form$rand' method='post'
+           action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
+
+           echo "<table class='tab_cadre_fixe'>";
+           echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a release', 'releases') . "</th></tr>";
+           echo "<tr class='tab_bg_2'><td>";
+           echo Html::hidden('changes_id', ['value' => $ID]);
+           PluginReleasesRelease::dropdown([
+               'used'   => [],
+               'entity' => $item->getEntityID(),
+               'condition' => [
+                   'NOT'    => [
+                       'status' => PluginReleasesRelease::getClosedStatusArray()
+                   ]
+               ]
+           ]);
+           echo "</td><td class='center'>";
+           echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
+           echo "</td><td>";
+
+           echo "</td></tr></table>";
+           Html::closeForm();
+           echo "</div>";
+       }
+
       $i       = 0;
       $row_num = 1;
       if ($canedit && $numrows) {
