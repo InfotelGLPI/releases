@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-29 09:24+0000\n"
+"POT-Creation-Date: 2022-03-30 07:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,9 +66,9 @@ msgstr ""
 msgid "Actors"
 msgstr ""
 
-#: templates/form_rollback.html.twig:164 templates/form_risk.html.twig:194
-#: templates/form_deploytask.html.twig:376 templates/footer.html.twig:84
-#: templates/footer.html.twig:86 templates/form_test.html.twig:236
+#: templates/form_risk.html.twig:194 templates/form_rollback.html.twig:164
+#: templates/footer.html.twig:84 templates/footer.html.twig:86
+#: templates/form_deploytask.html.twig:376 templates/form_test.html.twig:236
 msgctxt "button"
 msgid "Add"
 msgstr ""
@@ -81,6 +81,10 @@ msgstr ""
 #: inc/release.class.php:1150
 msgctxt "button"
 msgid "Add a followup"
+msgstr ""
+
+#: inc/change_release.class.php:293
+msgid "Add a release"
 msgstr ""
 
 #: inc/release.class.php:1165
@@ -150,8 +154,8 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr ""
 
-#: templates/form_rollback.html.twig:176 templates/form_risk.html.twig:206
-#: templates/form_deploytask.html.twig:405 templates/footer.html.twig:101
+#: templates/form_risk.html.twig:206 templates/form_rollback.html.twig:176
+#: templates/footer.html.twig:101 templates/form_deploytask.html.twig:405
 #: templates/form_test.html.twig:248
 msgid "Confirm the final deletion?"
 msgstr ""
@@ -172,9 +176,9 @@ msgstr ""
 msgid "Dates defined"
 msgstr ""
 
-#: templates/form_rollback.html.twig:178 templates/form_risk.html.twig:208
-#: templates/form_deploytask.html.twig:407 templates/footer.html.twig:100
-#: templates/footer.html.twig:103 templates/form_test.html.twig:250
+#: templates/form_risk.html.twig:208 templates/form_rollback.html.twig:178
+#: templates/footer.html.twig:100 templates/footer.html.twig:103
+#: templates/form_deploytask.html.twig:407 templates/form_test.html.twig:250
 msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
@@ -218,12 +222,11 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: templates/form_rollback.html.twig:51 templates/form_risk.html.twig:51
-#: templates/form_deploytask.html.twig:46
+#: templates/form_risk.html.twig:51 templates/form_rollback.html.twig:51
+#: templates/timeline.html.twig:103 templates/form_deploytask.html.twig:46
 #: templates/form_deploytask.html.twig:53
 #: templates/form_deploytask.html.twig:60
-#: templates/form_deploytask.html.twig:287 templates/timeline.html.twig:103
-#: templates/form_test.html.twig:49 templates/form_test.html.twig:52
+#: templates/form_deploytask.html.twig:287 templates/form_test.html.twig:49 templates/form_test.html.twig:52
 #: templates/form_test.html.twig:55 templates/form_test.html.twig:216
 msgid "Done"
 msgstr ""
@@ -248,9 +251,8 @@ msgstr[1] ""
 #: templates/form_deploytask.html.twig:49
 #: templates/form_deploytask.html.twig:56
 #: templates/form_deploytask.html.twig:63
-#: templates/form_deploytask.html.twig:288 templates/form_test.html.twig:50
-#: templates/form_test.html.twig:53 templates/form_test.html.twig:56
-#: templates/form_test.html.twig:217
+#: templates/form_deploytask.html.twig:288 templates/form_test.html.twig:50 templates/form_test.html.twig:53
+#: templates/form_test.html.twig:56 templates/form_test.html.twig:217
 msgid "Failed"
 msgstr ""
 
@@ -339,7 +341,7 @@ msgstr ""
 msgid "Plan this task"
 msgstr ""
 
-#: inc/change_release.class.php:308 inc/releasetemplate.class.php:631
+#: inc/change_release.class.php:336 inc/releasetemplate.class.php:631
 #: templates/fields_panel.html.twig:112
 msgid "Pre-production planned date"
 msgstr ""
@@ -356,7 +358,7 @@ msgstr ""
 msgid "Processing release"
 msgstr ""
 
-#: inc/change_release.class.php:309 inc/releasetemplate.class.php:636
+#: inc/change_release.class.php:337 inc/releasetemplate.class.php:636
 #: templates/fields_panel.html.twig:119
 msgid "Production planned date"
 msgstr ""
@@ -371,7 +373,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr ""
 
-#: inc/change_release.class.php:310 inc/notificationtargetrelease.class.php:715
+#: inc/change_release.class.php:338 inc/notificationtargetrelease.class.php:715
 #: inc/review.class.php:134
 msgid "Real production run date"
 msgstr ""
@@ -388,7 +390,7 @@ msgstr[1] ""
 msgid "Release actions details"
 msgstr ""
 
-#: inc/change_release.class.php:307 inc/releasetemplate.class.php:622
+#: inc/change_release.class.php:335 inc/releasetemplate.class.php:622
 #: inc/releasetemplate.class.php:848
 msgid "Release area"
 msgstr ""
@@ -474,14 +476,14 @@ msgstr[1] ""
 msgid "Rollbacks defined"
 msgstr ""
 
-#: templates/form_rollback.html.twig:171 templates/form_risk.html.twig:201
-#: templates/form_deploytask.html.twig:400 templates/footer.html.twig:124
-#: templates/footer.html.twig:126 templates/form_test.html.twig:243
+#: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
+#: templates/footer.html.twig:124 templates/footer.html.twig:126
+#: templates/form_deploytask.html.twig:400 templates/form_test.html.twig:243
 msgctxt "button"
 msgid "Save"
 msgstr ""
 
-#: inc/change_release.class.php:311 inc/release.class.php:295
+#: inc/change_release.class.php:339 inc/release.class.php:295
 #: inc/releasetemplate.class.php:144 inc/releasetemplate.class.php:648
 #: inc/releasetemplate.class.php:860 templates/fields_panel.html.twig:194
 #: templates/fields_panel.html.twig:206
@@ -534,8 +536,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/notificationtargetrelease.class.php:712 inc/testtemplate.class.php:58
-#: inc/testtemplate.class.php:162 inc/typetest.class.php:48
-#: templates/form_test.html.twig:155
+#: inc/testtemplate.class.php:162 inc/typetest.class.php:48 templates/form_test.html.twig:155
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] ""
@@ -553,13 +554,13 @@ msgstr ""
 msgid "Timeline filter"
 msgstr ""
 
-#: templates/form_rollback.html.twig:134 templates/form_risk.html.twig:134
+#: templates/form_risk.html.twig:134 templates/form_rollback.html.twig:134
 #: templates/form_deploytask.html.twig:199 templates/form_test.html.twig:146
 msgid "Title"
 msgstr ""
 
-#: templates/form_rollback.html.twig:49 templates/form_risk.html.twig:49
-#: templates/form_deploytask.html.twig:286 templates/timeline.html.twig:101
+#: templates/form_risk.html.twig:49 templates/form_rollback.html.twig:49
+#: templates/timeline.html.twig:101 templates/form_deploytask.html.twig:286
 #: templates/form_test.html.twig:215
 msgid "To do"
 msgstr ""
