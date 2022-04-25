@@ -499,7 +499,6 @@ class PluginReleasesRelease extends CommonITILObject {
     */
    function prepareInputForAdd($input) {
 
-
       $input = parent::prepareInputForAdd($input);
 
       if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
@@ -609,18 +608,18 @@ class PluginReleasesRelease extends CommonITILObject {
          $corresTasks      = [];
 
          foreach ($risks as $risk) {
-            $risk["plugin_releases_releases_id"] = $this->getID();
+            $risk["items_id"] = $this->getID();
             unset($risk["date_mod"]);
             unset($risk["date_creation"]);
             unset($risk["state"]);
             $old_id = $risk["id"];
             unset($risk["id"]);
-            $risk["content"]      = Toolbox::addslashes_deep($risk["content"]);
+            $risk["name"]      = Toolbox::addslashes_deep($risk["name"]);
             $risk["content"]      = Toolbox::addslashes_deep($risk["content"]);
             $corresRisks[$old_id] = $releaseRisk->add($risk);
          }
          foreach ($tests as $test) {
-            $test["plugin_releases_releases_id"] = $this->getID();
+            $test["items_id"] = $this->getID();
             unset($test["date_mod"]);
             unset($test["date_creation"]);
             unset($test["state"]);
@@ -633,7 +632,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
          }
          foreach ($tasks as $task) {
-            $task["plugin_releases_releases_id"] = $this->getID();
+            $task["items_id"] = $this->getID();
             unset($task["date_mod"]);
             unset($task["date_creation"]);
             unset($task["state"]);
@@ -647,7 +646,7 @@ class PluginReleasesRelease extends CommonITILObject {
 
          }
          foreach ($rollbacks as $rollback) {
-            $rollback["plugin_releases_releases_id"] = $this->getID();
+            $rollback["items_id"] = $this->getID();
             unset($rollback["date_mod"]);
             unset($rollback["date_creation"]);
             unset($rollback["state"]);
@@ -1272,7 +1271,7 @@ class PluginReleasesRelease extends CommonITILObject {
             foreach ($groups as $group) {
                $options["_groups_id_" . self::getActorFieldNameType($group["type"])] = $group["groups_id"];
             }
-            echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
+//            echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
          }
 
 
@@ -1415,6 +1414,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'canupdate'               => $canupdate,
          'canpriority'             => $canupdate,
          'canassign'               => $canupdate,
+         'root_release'              => PLUGIN_RELEASES_WEBDIR,
       ]);
       //       In percent
       //      $colsize1 = '13';
@@ -1776,8 +1776,7 @@ class PluginReleasesRelease extends CommonITILObject {
 //                console.log($(target).parent().children('i[data-type=\"fail\"]'));
                    $(target).parent().children('i[data-type=\"fail\"]').css('color','firebrick');//red to fail
                 }
-                  
-                });
+         });
       }
 
       function viewEditSubitem" . $this->fields['id'] . "$rand(e, itemtype, items_id, o, domid) {

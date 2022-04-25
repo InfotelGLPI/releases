@@ -47,6 +47,7 @@
             {{ include('@releases/timeline.html.twig') }}
          {% endif %}
       </div>
+      <input type="hidden" name="releasetemplates_id" value="{{ params['template_id'] }}" />
       <div class="itil-right-side col-12 col-md-4 mt-0 mt-md-n1 card-footer p-0 rounded-0">
          {% if not item.isNewItem() %}
             {{ include('components/itilobject/mainform_open.html.twig') }}

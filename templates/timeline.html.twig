@@ -29,6 +29,7 @@
 {# # ---------------------------------------------------------------------#}
 {# #}
 
+{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
 {% set timeline_order = "flex-column" %}
 {% if user_pref('timeline_order') == constant('CommonITILObject::TIMELINE_ORDER_REVERSE') %}
     {% set timeline_order = "flex-column-reverse" %}
@@ -95,15 +96,32 @@
           {% elseif itiltype is same as 'ITILFollowup' %}
               <h3> {{  __('Followup') }}</h3>
           {% endif %}
+          <script type="text/javascript">
+             function change_task_state(items_id, target, itemtype) {
+                $.post('{{ rpath }}/ajax/timeline.php',
+                   {'action':     'change_task_state',
+                      'items_id':   items_id,
+                      'itemtype':   itemtype,
+                      'parenttype': '{{ item.getType() }}',
+                      '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }}
+                   })
+                   .done(function(response) {
+                      $(target).removeClass('state_1 state_2')
+                         .addClass('state_'+response.state)
+                         .attr('title', response.label);
+                   });
+             }
+          </script>
          <div class="row">
+             {% if itiltype is same as 'PluginReleasesRisk' or itiltype is same as 'PluginReleasesRollback' %}
             <div class="col-auto todo-list-state d-none">
                {% if entry_i['state'] is constant('Planning::TODO') %}
-                  <span class="state state_1" onclick="change_task_state({{ entry_i['id'] }}, this)" title="{{ __('To do') }}"></span>
+                  <span class="state state_1" onclick="change_task_state({{ entry_i['id'] }}, this, '{{ itiltype}}')" title="{{ __('To do') }}"></span>
                {% elseif entry_i['state'] is constant('Planning::DONE') %}
-                  <span class="state state_2" onclick="change_task_state({{ entry_i['id'] }}, this)" title="{{ __('Done') }}"></span>
+                  <span class="state state_2" onclick="change_task_state({{ entry_i['id'] }}, this, '{{ itiltype}}')" title="{{ __('Done') }}"></span>
                {% endif %}
             </div>
-
+             {% endif %}
             <div class="col-auto d-flex flex-column user-part {{ 'right' in item_position ? 'ms-auto ms-0 order-sm-last' : '' }}">
                {% set avatar_rand = random() %}
 {#                log entries have no users_id#}

@@ -36,6 +36,11 @@ The plugin allows:
    </authors>
    <versions>
       <version>
+         <num>2.0.0</num>
+         <compatibility>~10.0</compatibility>
+         <download_url>https://github.com/InfotelGLPI/releases/releases/download/2.0.0/glpi-releases-2.0.0.tar.bz2</download_url>
+      </version>
+      <version>
          <num>2.0.0-rc1</num>
          <compatibility>~10.0</compatibility>
          <download_url>https://github.com/InfotelGLPI/releases/releases/download/2.0.0-rc1/glpi-releases-2.0.0-rc1.tar.bz2</download_url>

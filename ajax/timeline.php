@@ -140,6 +140,32 @@ if ( $_POST['action'] == 'done_fail') {
 
    switch ($_REQUEST['action']) {
 
+      case "change_task_state":
+         header("Content-Type: application/json; charset=UTF-8");
+         if (!isset($_REQUEST['items_id'])) {
+            exit();
+         }
+         $objClass = $_REQUEST['itemtype'];
+         $obj      = new $objClass;
+         $obj->getFromDB(intval($_REQUEST['items_id']));
+
+         if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
+            $new_state = ($obj->fields['state'] == Planning::DONE)
+               ? Planning::TODO
+               : Planning::DONE;
+            $new_label = Planning::getState($new_state);
+            echo json_encode([
+                                'state' => $new_state,
+                                'label' => $new_label
+                             ]);
+            $obj->update([
+                            'id'        => intval($_REQUEST['items_id']),
+                            $foreignKey => intval($_REQUEST[$foreignKey]),
+                            'state'     => $new_state
+                         ]);
+         }
+         break;
+
       case "viewsubitem":
          Html::header_nocache();
          if (!isset($_REQUEST['type'])) {
