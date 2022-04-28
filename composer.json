@@ -2,7 +2,7 @@
   "name": "infotel/releases",
   "type": "project",
   "license": "GPLv2+",
-  "require": {
+  "require-dev": {
     "atoum/atoum": "^3.3"
   }
 }
