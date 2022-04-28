@@ -1995,7 +1995,7 @@ class PluginReleasesRelease extends CommonITILObject {
       $foreignKey = static::getForeignKeyField();
 
       //display timeline
-      echo "<div class='timeline_history'>";
+      echo "<div class='timeline_releasehistory'>";
 
       static::showTimelineHeader();
 

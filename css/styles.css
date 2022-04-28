@@ -207,23 +207,23 @@ div.workflow li {
    color: #535353;
 }
 
-.timeline_history {
+.timeline_releasehistory {
    border-top: 1px dashed #3C5874;
    overflow: hidden;
    font-size: 12px;
    width: 100%;
 }
 
-.timeline_history .filter_timeline ul {
+.timeline_releasehistory .filter_timeline ul {
    display: inline-block;
    list-style-type: none;
 }
 
-.timeline_history .filter_timeline>* {
+.timeline_releasehistory .filter_timeline>* {
    vertical-align: middle;
 }
 
-.timeline_history .filter_timeline {
+.timeline_releasehistory .filter_timeline {
    opacity: 0.2;
    text-align: right;
    margin-top: 0.2em;
@@ -231,7 +231,7 @@ div.workflow li {
 }
 
 
-.timeline_history .filter_timeline a {
+.timeline_releasehistory .filter_timeline a {
    font-size: 1.5em;
    display: inline-block;
    padding: 0 0.2em;
@@ -241,7 +241,7 @@ div.workflow li {
    float: right;
 }
 
-.timeline_history .h_item {
+.timeline_releasehistory .h_item {
    clear: both;
    padding-top: 8px;
    border-top: 1px dashed #D2D2D2;
@@ -249,28 +249,28 @@ div.workflow li {
    flex-flow: row wrap;
 }
 
-.timeline_history .h_content .h_controls .control_item:hover {
+.timeline_releasehistory .h_content .h_controls .control_item:hover {
    opacity: 1;
    cursor: pointer;
 }
 
-.timeline_history .h_content .h_controls .control_item {
+.timeline_releasehistory .h_content .h_controls .control_item {
    margin-left: 5px;
    opacity: 0.5;
    font-size: 1.3em;
 }
 
-.timeline_history .left .h_date, .timeline_history .middle .h_date {
+.timeline_releasehistory .left .h_date, .timeline_releasehistory .middle .h_date {
    margin: 0 auto;
 }
 
-.timeline_history .left .h_user, .timeline_history .left .h_date {
+.timeline_releasehistory .left .h_user, .timeline_releasehistory .left .h_date {
    padding-left: 24px;
    padding-right: 0;
    padding-top: 2px;
 }
 
-.timeline_history .h_date {
+.timeline_releasehistory .h_date {
    background-repeat: no-repeat;
    padding-left: 24px;
    padding-top: 1px;
