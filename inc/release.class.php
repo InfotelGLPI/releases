@@ -1407,6 +1407,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'timeline_itemtypes'      => $this->getTimelineItemtypes(),
          'legacy_timeline_actions' => $this->getLegacyTimelineActionsHTML(),
          'params'                  => $options,
+         'entities_id'             => $ID ? $this->fields['entities_id'] : $options['entities_id'],
          'timeline'                => $this->getTimelineItems(),
          'itiltemplate_key'        => $tpl_key,
          'itiltemplate'            => $tt,

@@ -33,19 +33,28 @@
 {% set field_options = {
     'full_width': true,
     'fields_template': itiltemplate,
-    'disabled': (not canupdate)
+    'disabled': (not canupdate),
+    'add_field_class': (is_expanded ? 'col-sm-6' : ''),
 } %}
 
+{% set itil_layout    = user_pref('itil_layout', true) %}
+{% set headers_states = itil_layout['items'] %}
+
 <div class="accordion open accordion-flush" id="itil-data">
+    {% set main_show = headers_states['item-main'] is not defined or headers_states['item-main'] == "true" ? true : false %}
     <div class="accordion-item">
-        <h2 class="accordion-header" id="heading-main-ticket">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#ticket-main"
-                    aria-expanded="true" aria-controls="ticket-main">
-                <i class="ti ti-building-factory me-1"></i>
-                <span>{{ item.getTypeName(1) }}</span>
+        <h2 class="accordion-header" id="heading-main-item">
+            <button class="accordion-button {{ main_show ? "" : "collapsed" }}" type="button" data-bs-toggle="collapse" data-bs-target="#item-main" aria-expanded="true" aria-controls="ticket-main">
+                <i class="ti ti-alert-circle me-1 item-icon"></i>
+                <span class='status-recall'>
+                {{ item.getStatusIcon(item.fields['status'])|raw }}
+            </span>
+                <span class="item-title">
+                {{ item.getTypeName(1) }}
+            </span>
             </button>
         </h2>
-        <div id="ticket-main" class="accordion-collapse collapse show" aria-labelledby="heading-main-ticket">
+        <div id="item-main" class="accordion-collapse collapse {{ main_show ? "show" : "" }}" aria-labelledby="heading-main-ticket">
             <div class="accordion-body row m-0 mt-n2">
 
                 {% if is_multi_entities_mode() %}
@@ -137,19 +146,20 @@
             </div>
         </div>
     </div>
-
+    {% set actors_show = headers_states['actors'] is not defined or headers_states['actors'] == "true" ? true : false %}
     <div class="accordion-item">
-        <h2 class="accordion-header" id="heading-actor">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#actors"
-                    aria-expanded="true" aria-controls="actors">
+        <h2 class="accordion-header" id="heading-actor" title="{{ __('Actors') }}" data-bs-toggle="tooltip">
+            <button class="accordion-button {{ actors_show ? "" : "collapsed" }}" type="button" data-bs-toggle="collapse" data-bs-target="#actors" aria-expanded="true" aria-controls="actors">
                 <i class="ti ti-users me-1"></i>
-                <span>{{ __('Actors') }}</span>
+                <span class="item-title">
+                {{ __('Actors') }}
+            </span>
                 <span class="badge bg-secondary ms-2">
                {{ item.countActors() }}
             </span>
             </button>
         </h2>
-        <div id="actors" class="accordion-collapse collapse show" aria-labelledby="heading-actor">
+        <div id="actors" class="accordion-collapse collapse {{ actors_show ? "show" : "" }}" aria-labelledby="heading-actor">
             <div class="accordion-body accordion-actors row m-0 mt-n2">
                 {{ include('components/itilobject/actors/main.html.twig') }}
             </div>
@@ -185,19 +195,21 @@
                 {% set nb_shutdowns = nb_shutdowns + 1 %}
             {% endif %}
         {% endfor %}
-
+        {% set shutdowns_show = headers_states['shutdowns'] is defined and headers_states['shutdowns'] == "true" ? true : false %}
         <div class="accordion-item">
             <h2 class="accordion-header" id="shutdowns-heading">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#shutdowns"
+                <button class="accordion-button {{ shutdowns_show ? "" : "collapsed" }}" type="button" data-bs-toggle="collapse" data-bs-target="#shutdowns"
                         aria-expanded="true" aria-controls="shutdowns">
                     <i class="ti ti-power me-1"></i>
-                    <span>{{ __('Service shutdown', 'releases') }}</span>
+                    <span class="item-title">
+                        {{ __('Service shutdown', 'releases') }}
+                    </span>
                     {% if nb_shutdowns > 0 %}
                         <span class="badge bg-secondary ms-2">{{ nb_shutdowns }}</span>
                     {% endif %}
                 </button>
             </h2>
-            <div id="shutdowns" class="accordion-collapse collapse" aria-labelledby="shutdowns-heading">
+            <div id="shutdowns" class="accordion-collapse collapse {{ shutdowns_show ? "show" : "" }}" aria-labelledby="shutdowns-heading">
                 <div class="accordion-body row m-0 mt-n2">
 
                     {{ fields.dropdownYesNo(
@@ -239,19 +251,21 @@
                 {% set nb_communications = nb_communications + 1 %}
             {% endif %}
         {% endfor %}
-
+        {% set communications_show = headers_states['communications'] is defined and headers_states['communications'] == "true" ? true : false %}
         <div class="accordion-item">
             <h2 class="accordion-header" id="communications-heading">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                <button class="accordion-button {{ communications_show ? "" : "collapsed" }}" type="button" data-bs-toggle="collapse"
                         data-bs-target="#communications" aria-expanded="true" aria-controls="communications">
                     <i class="ti ti-speakerphone me-1"></i>
-                    <span>{{ __('Communication', 'releases') }}</span>
+                    <span class="item-title">
+                        {{ __('Communication', 'releases') }}
+                    </span>
                     {% if nb_communications > 0 %}
                         <span class="badge bg-secondary ms-2">{{ nb_communications }}</span>
                     {% endif %}
                 </button>
             </h2>
-            <div id="communications" class="accordion-collapse collapse" aria-labelledby="communications-heading">
+            <div id="communications" class="accordion-collapse collapse {{ communications_show ? "show" : "" }}" aria-labelledby="communications-heading">
                 <div class="accordion-body row m-0 mt-n2">
 
                     {{ fields.dropdownYesNo(
@@ -274,14 +288,19 @@
             </div>
         </div>
     {% endif %}
+    <span class="d-none d-md-block">
+        <button type="button" class="switch-panel-width btn btn-sm btn-square btn-icon btn-ghost-secondary position-absolute bottom-0 start-0 mb-2">
+            <i class="fas fa-caret-left"></i>
+        </button>
+    </span>
 </div>
 
 <script type="text/javascript">
-   $(function () {
+   $(function() {
       if ($(window).width() < 768) { // medium breakpoint (Todo check if it's possible to get bootstrap breakpoints withint javascript)
-         $('#itil-data .accordion-collapse').each(function () {
+         $('#itil-data .accordion-collapse').each(function() {
             $(this).removeClass('show');
-         });
+         })
       }
    });
 </script>
