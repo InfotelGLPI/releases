@@ -40,6 +40,12 @@ if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
 }
 
+// as _actors virtual field stores json, bypass automatic escaping
+if (isset($_UPOST['_actors'])) {
+    $_POST['_actors'] = json_decode($_UPOST['_actors'], true);
+    $_REQUEST['_actors'] = $_POST['_actors'];
+}
+
 $release = new PluginReleasesRelease();
 
 if (isset($_POST["add"])) {
@@ -145,9 +151,6 @@ if (isset($_POST["add"])) {
 
    $release->checkGlobal(READ);
 
-   Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
-
-   $release->display($_GET);
-
-   Html::footer();
+   $menus = ["helpdesk", PluginReleasesRelease::getType()];
+   PluginReleasesRelease::displayFullPageForItem($_REQUEST['id'] ?? 0, $menus, $_REQUEST);
 }
