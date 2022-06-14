@@ -340,13 +340,13 @@ class PluginReleasesChange_Release extends CommonDBRelation {
          echo "</tr>";
          foreach ($changes as $idc => $d) {
 
-            Session::addToNavigateListItems(self::getType(), $d["id"]);
+            Session::addToNavigateListItems(self::getType(), $d["linkid"]);
             $i++;
             $row_num++;
             echo "<tr class='tab_bg_1 center'>";
             echo "<td width='10'>";
             if ($canedit) {
-               Html::showMassiveActionCheckBox(__CLASS__, $d["id"]);
+               Html::showMassiveActionCheckBox(__CLASS__, $d["linkid"]);
             }
             echo "</td>";
 
