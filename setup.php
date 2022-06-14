@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_RELEASES_VERSION', '2.0.1');
+define('PLUGIN_RELEASES_VERSION', '2.0.2');
 
 if (!defined("PLUGIN_RELEASES_DIR")) {
    define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
