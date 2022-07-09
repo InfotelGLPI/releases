@@ -1025,7 +1025,7 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
 
       if ($task_obj->canview()) {
          //         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task);
-         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level DESC']);
+         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level ASC']);
          foreach ($tasks as $tasks_id => $task) {
             $task_obj->getFromDB($tasks_id);
             $task['can_edit']                                                      = $task_obj->canUpdateItem();

@@ -198,7 +198,6 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation {
             }
             $totalnb += $nb;
          }
-         $types_iterator->next();
       }
 
       if ($number) {
