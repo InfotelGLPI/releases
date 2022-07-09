@@ -49,8 +49,6 @@ class PluginReleasesChange_Release extends CommonDBRelation {
    static public $itemtype_2 = 'PluginReleasesRelease';
    static public $items_id_2 = 'plugin_releases_releases_id';
 
-   static $rightname = 'plugin_releases_releases';
-
    static function getTypeName($nb = 0) {
       return _n('Link Release/Change', 'Links Release/Change', $nb, 'releases');
    }
@@ -224,24 +222,6 @@ class PluginReleasesChange_Release extends CommonDBRelation {
     **/
    function post_purgeItem() {
       //TODO
-   }
-
-   static function canCreate() {
-      return Session::haveRight(static::$rightname, UPDATE);
-   }
-
-
-   /**
-    * Have I the global right to "view" the Object
-    *
-    * Default is true and check entity if the objet is entity assign
-    *
-    * May be overloaded if needed
-    *
-    * @return booleen
-    **/
-   static function canView() {
-      return Session::haveRight(static::$rightname, READ);
    }
 
    static function showReleaseFromChange($item) {
