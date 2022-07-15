@@ -5,8 +5,6 @@ Plugin Releases for GLPI
 
 ![Plugin Releases](https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases_finalize.png "Plugin Releases")
 
-Ce plugin est disponible en 9.5.x.
-
 Ce plugin est sur Transifex - Aidez-nous à le traduire :
 https://www.transifex.com/infotelglpi/GLPI_releases/
 
@@ -17,7 +15,6 @@ Ce plugin vous permet d'ajouter la gestion de mise en production à GLPI d'y ass
 > * description des tâches pour déployer
 > * ajout d'une revue sur la mise en production
 >   
-This plugin is available for 9.5.x.
 
 This plugin is on Transifex - Help us to translate :
 https://www.transifex.com/infotelglpi/GLPI_releases/
