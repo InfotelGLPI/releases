@@ -73,12 +73,10 @@ function plugin_init_releases() {
 
    $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeploytask', 'populatePlanning'];
    $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeploytask', 'displayPlanningItem'];
-   $plugin                                        = new Plugin();
-   if ($plugin->isInstalled("mydashboard")) {
-      if ($plugin->isActivated("mydashboard")) {
-         Plugin::registerClass('PluginMydashboardAlert',
-                               ['addtabon' => ['PluginReleasesRelease']]);
-      }
+
+   if (Plugin::isPluginActive("mydashboard")) {
+       Plugin::registerClass('PluginMydashboardAlert',
+                             ['addtabon' => ['PluginReleasesRelease']]);
    }
 
    // End init, when all types are registered

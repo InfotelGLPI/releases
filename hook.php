@@ -163,9 +163,7 @@ function plugin_releases_postinit() {
  */
 function plugin_releases_getDatabaseRelations() {
 
-   $plugin = new Plugin();
-
-   if ($plugin->isActivated("releases")) {
+   if (Plugin::isPluginActive("releases")) {
       return [
          "glpi_entities"                        => [
             "glpi_plugin_releases_deploytasks"         => "entities_id",
@@ -246,9 +244,7 @@ function plugin_releases_getDatabaseRelations() {
  */
 function plugin_releases_getDropdown() {
 
-   $plugin = new Plugin();
-
-   if ($plugin->isActivated("releases")) {
+   if (Plugin::isPluginActive("releases")) {
       return [PluginReleasesDeploytasktemplate::getType() => PluginReleasesDeploytasktemplate::getTypeName(2),
               PluginReleasesTesttemplate::getType()       => PluginReleasesTesttemplate::getTypeName(2),
               PluginReleasesRisktemplate::getType()       => PluginReleasesRisktemplate::getTypeName(2),
