@@ -1,0 +1,625 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Soporte Infraestructura Standby, 2023
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-07-26 14:02+0000\n"
+"PO-Revision-Date: 2020-07-28 11:31+0000\n"
+"Last-Translator: Soporte Infraestructura Standby, 2023\n"
+"Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/teams/12376/es_EC/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_EC\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. TRANS : %d is the number of problems
+#: inc/release.class.php:2823
+#, php-format
+msgid "%d last release"
+msgid_plural "%d last releases"
+msgstr[0] "%d últimas publicaciones"
+msgstr[1] "%d  últimas publicaciones"
+msgstr[2] "%d  últimas publicaciones"
+
+#: inc/finalization.class.php:205
+#, php-format
+msgid "%s  tests failed"
+msgstr "%s pruebas fallidas"
+
+#: inc/finalization.class.php:192
+#, php-format
+msgid "%s / %s deploy tasks"
+msgstr "%s %s desplegar tareas"
+
+#: inc/finalization.class.php:174
+#, php-format
+msgid "%s / %s risks"
+msgstr "%s %s riesgos"
+
+#: inc/finalization.class.php:183
+#, php-format
+msgid "%s / %s rollbacks"
+msgstr "%s %s retrocesos"
+
+#: inc/finalization.class.php:204
+#, php-format
+msgid "%s / %s tests"
+msgstr "%s %s pruebas"
+
+#: front/finalization.php:91 front/finalization.php:106
+#: inc/finalization.class.php:193
+#, php-format
+msgid "%s deploy tasks failed"
+msgstr "%s tareas de despliegue fallidas"
+
+#: front/finalization.php:94 front/finalization.php:109
+#, php-format
+msgid "%s tests failed"
+msgstr "%s pruebas fallidas"
+
+#: templates/fields_panel.html.twig:151 templates/fields_panel.html.twig:155
+msgid "Actors"
+msgstr "Actores"
+
+#: templates/form_risk.html.twig:194 templates/form_test.html.twig:236
+#: templates/form_rollback.html.twig:164
+#: templates/form_deploytask.html.twig:376 templates/footer.html.twig:100
+#: templates/footer.html.twig:102
+msgctxt "button"
+msgid "Add"
+msgstr "Agregar"
+
+#: inc/release.class.php:1194
+msgctxt "button"
+msgid "Add a deployment task"
+msgstr "Agregar una tarea de despliegue"
+
+#: inc/release.class.php:1149
+msgctxt "button"
+msgid "Add a followup"
+msgstr "Agregar un seguimiento"
+
+#: inc/change_release.class.php:273
+msgid "Add a release"
+msgstr "Agregar un comunicado"
+
+#: inc/release.class.php:1164
+msgctxt "button"
+msgid "Add a risk"
+msgstr "Agregar un riesgo"
+
+#: inc/release.class.php:1179
+msgctxt "button"
+msgid "Add a rollback"
+msgstr "Agregar una reversión"
+
+#: inc/release.class.php:1209
+msgctxt "button"
+msgid "Add a test"
+msgstr "Agregar una prueba"
+
+#: templates/fields_panel.html.twig:175
+msgid "Associated change"
+msgid_plural "Associated changes"
+msgstr[0] "Cambios asociados"
+msgstr[1] "Cambios asociados"
+msgstr[2] "Cambios asociados"
+
+#: inc/testtemplate.class.php:179 templates/form_test.html.twig:190
+#: templates/form_deploytask.html.twig:261
+msgid "Associated risk"
+msgstr "Riesgo asociado"
+
+#: inc/release.class.php:2289 inc/releasetemplate.class.php:1496
+msgid "Associated with"
+msgstr "Asociado a"
+
+#: inc/finalization.class.php:275
+msgid "Care all steps are not finish !"
+msgstr "Cuidado, no se han terminado todos los pasos."
+
+#: templates/form_deploytask.html.twig:244
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] "Categorías"
+msgstr[1] "Categorías"
+msgstr[2] "Categorías"
+
+#: inc/release.class.php:756
+msgid "Changes defined"
+msgstr "Cambios definidos"
+
+#: templates/fields_panel.html.twig:93
+msgid "Child entities"
+msgstr "Entidades secundarias"
+
+#: inc/notificationtargetrelease.class.php:54
+msgid "Closure of a releases"
+msgstr "Cierre de un comunicado"
+
+#: inc/release.class.php:312 inc/releasetemplate.class.php:886
+#: templates/fields_panel.html.twig:261 templates/fields_panel.html.twig:274
+msgid "Communication"
+msgstr "Comunicación"
+
+#: inc/release.class.php:325 inc/releasetemplate.class.php:891
+#: templates/fields_panel.html.twig:281
+msgid "Communication type"
+msgstr "Tipo de comunicación"
+
+#: inc/review.class.php:252
+msgctxt "button"
+msgid "Conclude the review"
+msgstr "Concluye la revisión"
+
+#: templates/form_risk.html.twig:206 templates/form_test.html.twig:248
+#: templates/form_rollback.html.twig:176
+#: templates/form_deploytask.html.twig:405 templates/footer.html.twig:117
+msgid "Confirm the final deletion?"
+msgstr "¿Confirmar la eliminación definitiva?"
+
+#: inc/notificationtargetrelease.class.php:716 inc/review.class.php:144
+msgid "Conforming realization"
+msgstr "Ejecución conforme"
+
+#: inc/release.class.php:2494 inc/releasetemplate.class.php:969
+msgid "Create a release"
+msgstr "Crear un comunicado"
+
+#: templates/form_risk.html.twig:179
+msgid "Create a test from this risk"
+msgstr "Crear una prueba a partir de este riesgo"
+
+#: inc/release.class.php:755
+msgid "Dates defined"
+msgstr "Definición de fechas"
+
+#: templates/form_risk.html.twig:208 templates/form_test.html.twig:250
+#: templates/form_rollback.html.twig:178
+#: templates/form_deploytask.html.twig:407 templates/footer.html.twig:116
+#: templates/footer.html.twig:119
+msgctxt "button"
+msgid "Delete permanently"
+msgstr "Eliminar permanentemente"
+
+#: inc/notificationtargetrelease.class.php:55
+msgid "Deleting a releases"
+msgstr "Eliminar una publicación"
+
+#: inc/deploytasktemplate.class.php:51
+msgid "Deploy Task template"
+msgid_plural "Deploy Task templates"
+msgstr[0] "Desplegar plantillas de tareas"
+msgstr[1] "Desplegar plantillas de tareas"
+msgstr[2] "Desplegar plantillas de tareas"
+
+#: inc/deploytasktemplate.class.php:63 inc/releasetemplate.class.php:185
+msgid "Deploy Task type"
+msgstr "Desplegar Tipo de tarea"
+
+#: inc/deploytask.class.php:53 inc/finalization.class.php:191
+#: inc/notificationtargetrelease.class.php:859
+#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1877
+#: inc/release.class.php:1878 inc/releasetemplate.class.php:164
+#: inc/releasetemplate.class.php:725 inc/releasetemplate.class.php:1304
+#: inc/releasetemplate.class.php:1305 templates/timeline.html.twig:95
+msgid "Deploy task"
+msgid_plural "Deploy tasks"
+msgstr[0] "Despliegue de tareas"
+msgstr[1] "Despliegue de tareas"
+msgstr[2] "Despliegue de tareas"
+
+#: inc/notificationtargetrelease.class.php:821 inc/typedeploytask.class.php:48
+msgid "Deploy task type"
+msgid_plural "Deploy task types"
+msgstr[0] "Tipos de tareas de despliegue"
+msgstr[1] "Tipos de tareas de despliegue"
+msgstr[2] "Tipos de tareas de despliegue"
+
+#: inc/release.class.php:759
+msgid "Deployment tasks in progress"
+msgstr "Tareas de implementación en curso"
+
+#: inc/releasetemplate.class.php:132
+msgid "Description"
+msgstr "Descripción"
+
+#: templates/form_risk.html.twig:51 templates/timeline.html.twig:121
+#: templates/form_test.html.twig:49 templates/form_test.html.twig:52
+#: templates/form_test.html.twig:55 templates/form_test.html.twig:216
+#: templates/form_rollback.html.twig:51 templates/form_deploytask.html.twig:46
+#: templates/form_deploytask.html.twig:53
+#: templates/form_deploytask.html.twig:60
+#: templates/form_deploytask.html.twig:287
+msgid "Done"
+msgstr "Realizado"
+
+#: templates/form_deploytask.html.twig:298
+msgid "Duration"
+msgstr "Duración"
+
+#: inc/release.class.php:763
+msgctxt "status"
+msgid "End"
+msgstr "fin"
+
+#: templates/fields_panel.html.twig:66 templates/fields_panel.html.twig:82
+msgid "Entity"
+msgid_plural "Entities"
+msgstr[0] "Entidades"
+msgstr[1] "Entidades"
+msgstr[2] "Entidades"
+
+#: inc/deploytask.class.php:292 inc/deploytask.class.php:1031
+#: inc/release.class.php:764 inc/test.class.php:316 inc/test.class.php:355
+#: templates/form_test.html.twig:50 templates/form_test.html.twig:53
+#: templates/form_test.html.twig:56 templates/form_test.html.twig:217
+#: templates/form_deploytask.html.twig:49
+#: templates/form_deploytask.html.twig:56
+#: templates/form_deploytask.html.twig:63
+#: templates/form_deploytask.html.twig:288
+msgid "Failed"
+msgstr "Falló"
+
+#: inc/finalization.class.php:54
+msgid "Finalization"
+msgstr "Finalización"
+
+#: inc/finalization.class.php:229 inc/finalization.class.php:233
+#: inc/finalization.class.php:295
+msgid "Finalize"
+msgstr "Finalizar"
+
+#: templates/timeline.html.twig:97
+msgid "Followup"
+msgstr "Seguimiento"
+
+#: inc/release.class.php:2477 templates/fields_panel.html.twig:104
+msgid "For this change"
+msgstr "Para este cambio"
+
+#: inc/releasetemplate.class.php:2166
+msgid "Group in charge of the release"
+msgstr "Grupo encargado de la liberación"
+
+#: inc/notificationtargetrelease.class.php:718 inc/review.class.php:156
+msgid "Incidents during process"
+msgstr "Incidencias durante el proceso"
+
+#: inc/change_release.class.php:53
+msgid "Link Release/Change"
+msgid_plural "Links Release/Change"
+msgstr[0] "Publicación/modificación de enlaces"
+msgstr[1] "Publicación/modificación de enlaces"
+msgstr[2] "Publicación/modificación de enlaces"
+
+#: inc/finalization.class.php:236 inc/finalization.class.php:240
+#: inc/finalization.class.php:288
+msgid "Mark as failed"
+msgstr "Marcar como fallido"
+
+#: inc/notificationtargetrelease.class.php:52
+msgid "New release"
+msgstr "Nueva versión"
+
+#: inc/release.class.php:2335 inc/releasetemplate.class.php:1541
+msgid "No data available"
+msgstr "No hay datos disponibles"
+
+#: inc/release.class.php:2828 inc/release.class.php:2875
+msgid "No release found."
+msgstr "No se ha encontrado ningún comunicado."
+
+#: inc/releasetemplate.class.php:152 inc/releasetemplate.class.php:662
+#: inc/releasetemplate.class.php:828 templates/fields_panel.html.twig:225
+msgid "Non-working hours"
+msgstr "Horas no laborables"
+
+#: inc/finalization.class.php:212
+msgid "Not yet completed"
+msgstr "Aún no se ha completado"
+
+#: inc/notificationtargetrelease.class.php:701 inc/release.class.php:225
+msgctxt "quantity"
+msgid "Number of risks"
+msgstr "Número de riesgos"
+
+#: inc/notificationtargetrelease.class.php:707 inc/release.class.php:238
+msgctxt "quantity"
+msgid "Number of rollbacks"
+msgstr "Número de rollbacks"
+
+#: inc/notificationtargetrelease.class.php:828 inc/release.class.php:265
+msgctxt "quantity"
+msgid "Number of tasks"
+msgstr "Número de tareas"
+
+#: inc/notificationtargetrelease.class.php:714 inc/release.class.php:251
+msgctxt "quantity"
+msgid "Number of tests"
+msgstr "Número de pruebas"
+
+#: templates/fields_panel.html.twig:114
+msgid "Opening date"
+msgstr "Fecha de apertura"
+
+#: templates/form_deploytask.html.twig:363
+msgid "Plan this task"
+msgstr "Planificar esta tarea"
+
+#: inc/change_release.class.php:316 inc/releasetemplate.class.php:631
+#: templates/fields_panel.html.twig:121
+msgid "Pre-production planned date"
+msgstr "Fecha de preproducción prevista"
+
+#: inc/release.class.php:217 inc/releasetemplate.class.php:136
+msgid "Pre-production run date"
+msgstr "Fecha de ejecución de preproducción"
+
+#: inc/deploytasktemplate.class.php:235
+#: templates/form_deploytask.html.twig:168
+msgid "Previous task"
+msgstr "Tarea anterior"
+
+#: inc/releasetemplate.class.php:74
+msgid "Processing release"
+msgstr "Liberación de procesamiento"
+
+#: inc/change_release.class.php:317 inc/releasetemplate.class.php:636
+#: templates/fields_panel.html.twig:128
+msgid "Production planned date"
+msgstr "Fecha prevista de producción"
+
+#: inc/finalization.class.php:281 inc/release.class.php:287
+#: inc/releasetemplate.class.php:140
+msgid "Production run date"
+msgstr "Fecha de producción"
+
+#: templates/footer.html.twig:123
+msgctxt "button"
+msgid "Put in trashbin"
+msgstr "Depositar en papelera"
+
+#: inc/change_release.class.php:318
+#: inc/notificationtargetrelease.class.php:715 inc/review.class.php:134
+msgid "Real production run date"
+msgstr "Fecha real de producción"
+
+#: setup.php:93 front/change_release.form.php:48
+#: inc/notificationtargetrelease.class.php:883 inc/profile.class.php:52
+#: inc/release.class.php:73 inc/releasetemplate.class.php:942
+msgid "Release"
+msgid_plural "Releases"
+msgstr[0] "Comunicados"
+msgstr[1] "Comunicados"
+msgstr[2] "Liberación"
+
+#: inc/release.class.php:2689 inc/releasetemplate.class.php:1578
+msgid "Release actions details"
+msgstr "Detalles de las acciones de liberación"
+
+#: inc/change_release.class.php:315 inc/releasetemplate.class.php:622
+#: inc/releasetemplate.class.php:848
+msgid "Release area"
+msgstr "Área de liberación"
+
+#: inc/release.class.php:754
+msgid "Release area defined"
+msgstr "Área de liberación definida"
+
+#: front/finalization.php:33
+msgid "Release finalization"
+msgstr "Finalización de la liberación"
+
+#: inc/releasetemplate.class.php:61
+msgid "Release template"
+msgid_plural "Release templates"
+msgstr[0] "Plantillas de publicación"
+msgstr[1] "Plantillas de publicación"
+msgstr[2] "Plantillas de publicación"
+
+#: inc/release.class.php:2863
+msgid "Releases on linked items"
+msgstr "Comunicados sobre elementos vinculados"
+
+#: templates/footer.html.twig:110 templates/footer.html.twig:112
+msgctxt "button"
+msgid "Restore"
+msgstr "Restaurar"
+
+#: inc/review.class.php:48
+msgid "Review"
+msgid_plural "Reviews"
+msgstr[0] "Comentarios"
+msgstr[1] "Comentarios"
+msgstr[2] "Comentarios"
+
+#: inc/release.class.php:762
+msgid "Reviewed"
+msgstr "Revisado"
+
+#: inc/deploytasktemplate.class.php:297 inc/finalization.class.php:173
+#: inc/notificationtargetrelease.class.php:734
+#: inc/notificationtargetrelease.class.php:861
+#: inc/notificationtargetrelease.class.php:881 inc/risk.class.php:50
+#: inc/testtemplate.class.php:62 templates/timeline.html.twig:91
+msgid "Risk"
+msgid_plural "Risk"
+msgstr[0] "Riesgo"
+msgstr[1] "Riesgo"
+msgstr[2] "Riesgo"
+
+#: inc/risktemplate.class.php:53 templates/form_risk.html.twig:116
+msgid "Risk template"
+msgid_plural "Risk templates"
+msgstr[0] "Plantillas de riesgo"
+msgstr[1] "Plantillas de riesgo"
+msgstr[2] "Plantillas de riesgo"
+
+#: inc/notificationtargetrelease.class.php:699 inc/risktemplate.class.php:148
+#: inc/typerisk.class.php:48 templates/form_risk.html.twig:143
+msgid "Risk type"
+msgid_plural "Risk types"
+msgstr[0] "Tipos de riesgo"
+msgstr[1] "Tipos de riesgo"
+msgstr[2] "Tipos de riesgo"
+
+#: inc/release.class.php:757
+msgid "Risks defined"
+msgstr "Riesgos definidos"
+
+#: inc/finalization.class.php:182 inc/notificationtargetrelease.class.php:735
+#: inc/notificationtargetrelease.class.php:736
+#: inc/notificationtargetrelease.class.php:862
+#: inc/notificationtargetrelease.class.php:882
+#: inc/releasetemplate.class.php:160 inc/releasetemplate.class.php:700
+#: inc/rollback.class.php:51 templates/timeline.html.twig:93
+msgid "Rollback"
+msgid_plural "Rollbacks"
+msgstr[0] "Retrocesos"
+msgstr[1] "Retrocesos"
+msgstr[2] "Retrocesos"
+
+#: inc/rollbacktemplate.class.php:51 templates/form_rollback.html.twig:116
+msgid "Rollback template"
+msgid_plural "Rollback templates"
+msgstr[0] "Plantillas de reversión"
+msgstr[1] "Plantillas de reversión"
+msgstr[2] "Plantillas de reversión"
+
+#: inc/release.class.php:758
+msgid "Rollbacks defined"
+msgstr "Retrocesos definidos"
+
+#: templates/form_risk.html.twig:201 templates/form_test.html.twig:243
+#: templates/form_rollback.html.twig:171
+#: templates/form_deploytask.html.twig:400 templates/footer.html.twig:140
+#: templates/footer.html.twig:142
+msgctxt "button"
+msgid "Save"
+msgstr "Guardar"
+
+#: inc/change_release.class.php:319 inc/release.class.php:295
+#: inc/releasetemplate.class.php:144 inc/releasetemplate.class.php:648
+#: inc/releasetemplate.class.php:860 templates/fields_panel.html.twig:205
+#: templates/fields_panel.html.twig:218
+msgid "Service shutdown"
+msgstr "Cierre del servicio"
+
+#: inc/release.class.php:303 inc/releasetemplate.class.php:148
+#: inc/releasetemplate.class.php:655 inc/releasetemplate.class.php:877
+#: templates/fields_panel.html.twig:232
+msgid "Service shutdown details"
+msgstr "Detalles del cierre del servicio"
+
+#: templates/form_deploytask.html.twig:379
+msgid "Set the status to pending"
+msgstr "Establecer el estado en pendiente"
+
+#: templates/form_test.html.twig:212 templates/form_deploytask.html.twig:283
+msgid "Status"
+msgstr "Estado"
+
+#: templates/timeline.html.twig:193
+msgid "Task"
+msgid_plural "Tasks"
+msgstr[0] "Tareas"
+msgstr[1] "Tareas"
+msgstr[2] "Tareas"
+
+#: templates/form_deploytask.html.twig:226
+msgid "Task template"
+msgid_plural "Task templates"
+msgstr[0] "Plantillas de tareas"
+msgstr[1] "Plantillas de tareas"
+msgstr[2] "Plantillas de tareas"
+
+#: inc/review.class.php:169
+msgid "Technical Support Document"
+msgstr "Documento de apoyo técnico"
+
+#: inc/finalization.class.php:203 inc/notificationtargetrelease.class.php:860
+#: inc/notificationtargetrelease.class.php:880
+#: inc/releasetemplate.class.php:156 inc/releasetemplate.class.php:676
+#: inc/test.class.php:52 templates/timeline.html.twig:89
+msgid "Test"
+msgid_plural "Tests"
+msgstr[0] "Pruebas"
+msgstr[1] "Pruebas"
+msgstr[2] "Pruebas"
+
+#: inc/testtemplate.class.php:50 templates/form_test.html.twig:128
+msgid "Test template"
+msgid_plural "Test templates"
+msgstr[0] "Plantillas de prueba"
+msgstr[1] "Plantillas de prueba"
+msgstr[2] "Plantillas de prueba"
+
+#: inc/notificationtargetrelease.class.php:712 inc/testtemplate.class.php:58
+#: inc/testtemplate.class.php:162 inc/typetest.class.php:48
+#: templates/form_test.html.twig:155
+msgid "Test type"
+msgid_plural "Test types"
+msgstr[0] "Tipos de pruebas"
+msgstr[1] "Tipos de pruebas"
+msgstr[2] "Tipos de pruebas"
+
+#: inc/release.class.php:760
+msgid "Tests in progress"
+msgstr "Pruebas en curso"
+
+#: front/finalization.php:70
+msgid "The release has been finalized"
+msgstr "Se ha finalizado la publicación"
+
+#: templates/filter_timeline.html.twig:89
+msgid "Timeline filter"
+msgstr "Filtro de línea de tiempo"
+
+#: templates/form_risk.html.twig:134 templates/form_test.html.twig:146
+#: templates/form_rollback.html.twig:134
+#: templates/form_deploytask.html.twig:199
+msgid "Title"
+msgstr "Título"
+
+#: templates/form_risk.html.twig:49 templates/timeline.html.twig:119
+#: templates/form_test.html.twig:215 templates/form_rollback.html.twig:49
+#: templates/form_deploytask.html.twig:286
+msgid "To do"
+msgstr "Para hacer "
+
+#: inc/release.class.php:761
+msgid "To finalized"
+msgstr "Para finalizar"
+
+#: templates/footer.html.twig:89
+msgid "Toggle panels width"
+msgstr "Ancho de los paneles"
+
+#: inc/notificationtargetrelease.class.php:53
+msgid "Update of a release"
+msgstr "Actualización de un comunicado"
+
+#: templates/timeline.html.twig:199
+msgid "Validation"
+msgid_plural "Validations"
+msgstr[0] "Validaciones"
+msgstr[1] "Validaciones"
+msgstr[2] "Validaciones"
+
+#: templates/filter_timeline.html.twig:122
+msgid "View TODO list"
+msgstr "Ver la lista TODO"
+
+#: templates/footer.html.twig:62
+msgid "View other actions"
+msgstr "Ver otras acciones"
