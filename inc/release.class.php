@@ -1303,6 +1303,8 @@ class PluginReleasesRelease extends CommonITILObject {
 
       $canupdate = !$ID || (Session::getCurrentInterface() == "central" && $this->canUpdateItem());
 
+      Toolbox::logInfo($this->isNewItem());
+
       if (!$this->isNewItem()) {
          $options['formtitle'] = sprintf(
             __('%1$s - ID %2$d'),
@@ -1317,12 +1319,18 @@ class PluginReleasesRelease extends CommonITILObject {
          $options['template_preview'] = 0;
       }
 
+      if((isset($this->fields['entities_id'])) && $this->fields['entities_id'] != 0 || (isset($options['entities_id']) && $options['entities_id'] != 0)){
+          $crit = ($ID ? $this->fields['entities_id'] : $options['entities_id']);
+      }else{
+          $crit = "";
+      }
+
       // Load template if available :
       $tt = $this->getITILTemplateToUse(
          $options['template_preview'],
          $this->getType(),
          0,
-         ($ID ? $this->fields['entities_id'] : $options['entities_id'])
+          $crit
       );
 
       // Predefined fields from template : reset them
@@ -1401,6 +1409,8 @@ class PluginReleasesRelease extends CommonITILObject {
             }
          }
       }
+
+
 
       TemplateRenderer::getInstance()->display('@releases/layout.html.twig', [
          'item'                    => $this,
