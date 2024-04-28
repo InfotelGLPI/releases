@@ -51,7 +51,7 @@
                     {# Don't use d-inline-flex class as it add an '!important' tag that mess with our javascript that will hide this div #}
                     <div class="main-actions" style="display:inline-flex">
                         {% endif %}
-                        <button class="submit btn btn-primary answer-action" data-bs-toggle="collapse"
+                        <button class="submit btn btn-primary mb-2 answer-action" data-bs-toggle="collapse"
                                 data-bs-target="#new-{{ default_action_data.class }}-block">
                             <i class="{{ default_action_data.icon }}"></i>
                             <span>{{ default_action_data.label }}</span>
@@ -65,7 +65,7 @@
                         <ul class="dropdown-menu">
                             {% for action, timeline_itemtype in timeline_itemtypes %}
                                 {% if loop.index0 > 0 %}
-                                    <li><a class="dropdown-item action-{{ action }} answer-action" href="#"
+                                    <li><a class="dropdown-item action-{{ action }} mb-2 answer-action" href="#"
                                            data-bs-toggle="collapse"
                                            data-bs-target="#new-{{ timeline_itemtype.class }}-block">
                                             <i class="{{ timeline_itemtype.icon }}"></i>

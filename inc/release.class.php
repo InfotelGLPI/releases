@@ -178,21 +178,7 @@ class PluginReleasesRelease extends CommonITILObject {
          'id'   => 'common',
          'name' => self::getTypeName(2)
       ];
-      $tab[] = [
-         'id'            => '81',
-         'table'         => self::getTable(),
-         'field'         => 'id',
-         'name'          => __('ID'),
-         'massiveaction' => false,
-         'datatype'      => 'number'
-      ];
-      $tab[] = [
-         'id'       => '80',
-         'table'    => 'glpi_entities',
-         'field'    => 'completename',
-         'name'     => __('Entity'),
-         'datatype' => 'dropdown'
-      ];
+
       $tab[] = [
          'id'            => '1',
          'table'         => $this->getTable(),
@@ -201,15 +187,26 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'itemlink',
          'itemlink_type' => $this->getType()
       ];
+
+       $tab[] = [
+           'id'            => '2',
+           'table'         => self::getTable(),
+           'field'         => 'id',
+           'name'          => __('ID'),
+           'massiveaction' => false,
+           'datatype'      => 'number'
+       ];
+
       $tab[] = [
-         'id'            => '2',
+         'id'            => '19',
          'table'         => $this->getTable(),
          'field'         => 'content',
          'name'          => __('Description'),
-         'massiveaction' => false,
+//         'massiveaction' => false,
          'datatype'      => 'text',
-         'htmltext'      => true
+//         'htmltext'      => true
       ];
+
       $tab[] = [
          'id'            => '18',
          'table'         => $this->getTable(),
@@ -360,6 +357,15 @@ class PluginReleasesRelease extends CommonITILObject {
          'datatype'      => 'datetime',
          'massiveaction' => false
       ];
+
+
+       $tab[] = [
+           'id'       => '80',
+           'table'    => 'glpi_entities',
+           'field'    => 'completename',
+           'name'     => __('Entity'),
+           'datatype' => 'dropdown'
+       ];
 
       $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
       return $tab;
@@ -518,6 +524,12 @@ class PluginReleasesRelease extends CommonITILObject {
          $input['status'] = self::RELEASEDEFINITION;
 
       }
+       if (empty($input["date_preproduction"])) {
+           $input["date_preproduction"] = NULL;
+       }
+       if (empty($input["date_production"])) {
+           $input["date_production"] = NULL;
+       }
       if (isset($input["id"]) && ($input["id"] > 0)) {
          $input["_oldID"] = $input["id"];
       }
@@ -1301,6 +1313,23 @@ class PluginReleasesRelease extends CommonITILObject {
          $this->check(-1, CREATE, $options);
       }
 
+       $userentities = [];
+       if (!$ID) {
+           $userentities = $this->getEntitiesForRequesters($options);
+
+           if (
+               count($userentities) > 0
+               && !in_array($this->fields["entities_id"], $userentities)
+           ) {
+               // If entity is not in the list of user's entities,
+               // then use as default value the first value of the user's entites list
+               $first_entity = current($userentities);
+               $this->fields["entities_id"] = $first_entity;
+               // Pass to values
+               $options['entities_id']      = $first_entity;
+           }
+       }
+
       $canupdate = !$ID || (Session::getCurrentInterface() == "central" && $this->canUpdateItem());
 
       Toolbox::logInfo($this->isNewItem());
@@ -1426,6 +1455,8 @@ class PluginReleasesRelease extends CommonITILObject {
          'canpriority'             => $canupdate,
          'canassign'               => $canupdate,
          'root_release'              => PLUGIN_RELEASES_WEBDIR,
+          'userentities'       => $userentities,
+          'has_pending_reason' => false,
       ]);
       //       In percent
       //      $colsize1 = '13';

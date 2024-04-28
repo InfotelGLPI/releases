@@ -71,9 +71,7 @@
                         ) }}
                     {% else %}
                         {% set entity_html %}
-                            {{ call('Entity::badgeCompletename', [
-                                get_item_name('Entity', item.fields['entities_id'])
-                            ])|raw }}
+                            {{ call('Entity::badgeCompletenameLinkById', [item.fields['entities_id']])|raw }}
                         {% endset %}
 
                         {{ fields.field(

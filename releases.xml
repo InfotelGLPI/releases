@@ -6,7 +6,7 @@
    <logo>https://raw.githubusercontent.com/InfotelGLPI/releases/master/releases.png</logo>
    <description>
       <short>
-         <fr><![CDATA[Plugin de gestion de mises en procduction de changements]]></fr>
+         <fr><![CDATA[Plugin de gestion de mises en production de changements]]></fr>
          <en><![CDATA[Change releases management plugin]]></en>
       </short>
       <long>
