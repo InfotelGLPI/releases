@@ -192,6 +192,11 @@ class PluginReleasesReleasetemplate extends ITILTemplate {
    }
 
 
+    public static function getItemsTable()
+    {
+        return 'glpi_plugin_releases_releases_items';
+    }
+
    /**
     * @see CommonDropdown::displaySpecificTypeField()
     **/
