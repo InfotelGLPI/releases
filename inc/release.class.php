@@ -3247,7 +3247,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $second_col = sprintf(
                     __('Closed on %s'),
                     ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
-                    Html::convDateTime($item->fields['closedate'])
+                    Html::convDateTime($item->fields['date_end'])
                 );
             } elseif ($item->fields['begin_waiting_date']) {
                 $second_col = sprintf(
