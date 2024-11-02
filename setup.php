@@ -55,6 +55,10 @@ function plugin_init_releases() {
 
    if (Session::getLoginUserID()) {
 
+       if (class_exists('PluginMetademandsMetademand')) {
+           PluginMetademandsMetademand::registerType('PluginReleasesRelease');
+       }
+
       Plugin::registerClass('PluginReleasesProfile',
                             ['addtabon' => 'Profile']);
       Plugin::registerClass('PluginReleasesRelease',
@@ -93,7 +97,7 @@ function plugin_version_releases() {
       'name'           => _n('Release', 'Releases', 2, 'releases'),
       'version'      => PLUGIN_RELEASES_VERSION,
       'license'        => 'GPLv2+',
-      'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>, Alban Lesellier",
+      'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Alban Lesellier",
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
       'minGlpiVersion' => '10.0',// For compatibility / no install
       'requirements'   => [

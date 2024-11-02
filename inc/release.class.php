@@ -1332,8 +1332,6 @@ class PluginReleasesRelease extends CommonITILObject {
 
       $canupdate = !$ID || (Session::getCurrentInterface() == "central" && $this->canUpdateItem());
 
-      Toolbox::logInfo($this->isNewItem());
-
       if (!$this->isNewItem()) {
          $options['formtitle'] = sprintf(
             __('%1$s - ID %2$d'),
