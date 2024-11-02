@@ -31,197 +31,221 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 /**
  * Template for task
  * @since 9.1
  **/
-class PluginReleasesRollbacktemplate extends CommonDropdown {
+class PluginReleasesRollbacktemplate extends CommonDropdown
+{
 
-   // From CommonDBTM
-   public $dohistory         = true;
-   public $can_be_translated = true;
+    // From CommonDBTM
+    public $dohistory = true;
+    public $can_be_translated = true;
 
-   static $rightname = 'plugin_releases_rollbacks';
-
-
-   static function getTypeName($nb = 0) {
-      return _n('Rollback template', 'Rollback templates', $nb, 'releases');
-   }
+    static $rightname = 'plugin_releases_rollbacks';
 
 
-   function getAdditionalFields() {
-
-      return [
-         //         ['name'  => 'plugin_release_typerollbacks_id',
-         //            'label' => __('Type test','Type tests', 'release'),
-         //            'type'  => 'dropdownRollbacks',
-         //         ],
-         //         ['name'  => 'plugin_release_risks_id',
-         //            'label' => __('Risk','Risks', 'release'),
-         //            'type'  => 'dropdownRisks',
-         //         ],
-         ['name'  => 'content',
-          'label' => __('Description'),
-          'type'  => 'textarea',
-          'rows'  => 10],
-
-      ];
-   }
+    static function getTypeName($nb = 0)
+    {
+        return _n('Rollback template', 'Rollback templates', $nb, 'releases');
+    }
 
 
-   function rawSearchOptions() {
-      $tab = parent::rawSearchOptions();
+    function getAdditionalFields()
+    {
+        return [
+            //         ['name'  => 'plugin_release_typerollbacks_id',
+            //            'label' => __('Type test','Type tests', 'release'),
+            //            'type'  => 'dropdownRollbacks',
+            //         ],
+            //         ['name'  => 'plugin_release_risks_id',
+            //            'label' => __('Risk','Risks', 'release'),
+            //            'type'  => 'dropdownRisks',
+            //         ],
+            [
+                'name' => 'content',
+                'label' => __('Description'),
+                'type' => 'textarea',
+                'rows' => 10
+            ],
 
-      $tab[] = [
-         'id'       => '4',
-         'name'     => __('Content'),
-         'field'    => 'content',
-         'table'    => $this->getTable(),
-         'datatype' => 'text',
-         'htmltext' => true
-      ];
-
-      $tab[] = [
-         'id'       => '3',
-         'name'     => __('Deploy Task type'),
-         'field'    => 'name',
-         'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
-         'datatype' => 'dropdown'
-      ];
-
-      return $tab;
-   }
+        ];
+    }
 
 
-   /**
-    * @see CommonDropdown::displaySpecificTypeField()
-    **/
-   function displaySpecificTypeField($ID, $field = [], array $options = []) {
+    function rawSearchOptions()
+    {
+        $tab = parent::rawSearchOptions();
 
-      switch ($field['type']) {
-         //         case 'dropdownRollbacks' :
-         //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
-         //            break;
-         case 'dropdownRisks' :
-            PluginReleasesRisktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
-            break;
+        $tab[] = [
+            'id' => '4',
+            'name' => __('Content'),
+            'field' => 'content',
+            'table' => $this->getTable(),
+            'datatype' => 'text',
+            'htmltext' => true
+        ];
 
-      }
-   }
+        $tab[] = [
+            'id' => '3',
+            'name' => __('Deploy Task type'),
+            'field' => 'name',
+            'table' => getTableForItemType('PluginReleasesTypeDeployTask'),
+            'datatype' => 'dropdown'
+        ];
 
-   static function canCreate() {
-      return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
-   }
-
-   /**
-    * Have I the global right to "view" the Object
-    *
-    * Default is true and check entity if the objet is entity assign
-    *
-    * May be overloaded if needed
-    *
-    * @return booleen
-    **/
-   static function canView() {
-      return Session::haveRight(static::$rightname, READ);
-   }
-
-   function showForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
-      $rand_template = mt_rand();
-      $rand_text     = mt_rand();
-      $rand_name     = mt_rand();
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-      echo "<tr class='tab_bg_1'>";
+        return $tab;
+    }
 
 
-      echo "<tr class='tab_bg_1' hidden>";
-      echo "<td colspan='4'>";
-      $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
-      echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
-      echo "</td>";
-      echo "</tr>";
+    /**
+     * @see CommonDropdown::displaySpecificTypeField()
+     **/
+    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    {
+        switch ($field['type']) {
+            //         case 'dropdownRollbacks' :
+            //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
+            //            break;
+            case 'dropdownRisks' :
+                PluginReleasesRisktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
+                break;
+        }
+    }
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]);
-      echo "</td>";
-      echo "<td colspan='2'>";
-      echo "</td>";
+    static function canCreate()
+    {
+        return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
+    }
 
-      echo "</tr>";
+    /**
+     * Have I the global right to "view" the Object
+     *
+     * Default is true and check entity if the objet is entity assign
+     *
+     * May be overloaded if needed
+     *
+     * @return booleen
+     **/
+    static function canView()
+    {
+        return Session::haveRight(static::$rightname, READ);
+    }
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Description') . "</td>";
-      echo "<td colspan='3'>";
-      //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
-      $content_id = "content$rand_text";
-      $cols       = 100;
-      $rows       = 10;
-      Html::textarea(['name'              => 'content',
-                      'value'             => $this->fields["content"],
-                      'rand'              => $rand_text,
-                      'editor_id'         => $content_id,
-                      'enable_fileupload' => false,
-                      'enable_richtext'   => true,
-                      'cols'              => $cols,
-                      'rows'              => $rows]);
-      echo "</td>";
-      echo "</tr>";
+    function showForm($ID, $options = [])
+    {
+        $rand_template = mt_rand();
+        $rand_text = mt_rand();
+        $rand_name = mt_rand();
+        $this->initForm($ID, $options);
+        $this->showFormHeader($options);
+        echo "<tr class='tab_bg_1'>";
 
-      $this->showFormButtons($options);
-   }
 
-   /**
-    * @param \CommonDBTM $item
-    *
-    * @return int
-    */
-   static function countForItem(CommonDBTM $item) {
-      $dbu   = new DbUtils();
-      $table = CommonDBTM::getTable(self::class);
-      return $dbu->countElementsInTable($table,
-                                        ["plugin_releases_releasetemplates_id" => $item->getID()]);
-   }
+        echo "<tr class='tab_bg_1' hidden>";
+        echo "<td colspan='4'>";
+        $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
+        echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
+        echo "</td>";
+        echo "</tr>";
 
-   /**
-    *
-    * @return css class
-    */
-   static function getCssClass() {
-      return "rollback";
-   }
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Name') . "</td>";
+        echo "<td>";
+        echo Html::input(
+            "name",
+            ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]
+        );
+        echo "</td>";
+        echo "<td colspan='2'>";
+        echo "</td>";
 
-   function post_addItem() {
-      $_SESSION['releases']["template"][Session::getLoginUserID()] = 'rollback';
-   }
+        echo "</tr>";
 
-   /**
-    * @param $ID
-    * @param $entity
-    *
-    * @return ID|int|the
-    */
-   static function transfer($ID, $entity) {
-      global $DB;
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Description') . "</td>";
+        echo "<td colspan='3'>";
+        //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
+        $content_id = "content$rand_text";
+        $cols = 100;
+        $rows = 10;
+        Html::textarea([
+            'name' => 'content',
+            'value' => $this->fields["content"],
+            'rand' => $rand_text,
+            'editor_id' => $content_id,
+            'enable_fileupload' => false,
+            'enable_richtext' => true,
+            'cols' => $cols,
+            'rows' => $rows
+        ]);
+        echo "</td>";
+        echo "</tr>";
 
-      if ($ID > 0) {
-         $self  = new self();
-         $items = $self->find(["plugin_releases_releasetemplates_id" => $ID]);
-         foreach ($items as $id => $vals) {
-            $input                = [];
-            $input["id"]          = $id;
-            $input["entities_id"] = $entity;
-            $self->update($input);
-         }
-         return true;
+        $this->showFormButtons($options);
+    }
 
-      }
-      return 0;
-   }
+    /**
+     * @param \CommonDBTM $item
+     *
+     * @return int
+     */
+    static function countForItem(CommonDBTM $item)
+    {
+        $dbu = new DbUtils();
+        $table = CommonDBTM::getTable(self::class);
+        return $dbu->countElementsInTable(
+            $table,
+            ["plugin_releases_releasetemplates_id" => $item->getID()]
+        );
+    }
+
+    /**
+     *
+     * @return css class
+     */
+    static function getCssClass()
+    {
+        return "rollback";
+    }
+
+    function prepareInputForAdd($input) {
+
+        if (empty($input["plugin_releases_releasetemplates_id"])) {
+            $input["plugin_releases_releasetemplates_id"] = 0;
+        }
+        return $input;
+    }
+
+    function post_addItem()
+    {
+        $_SESSION['releases']["template"][Session::getLoginUserID()] = 'rollback';
+    }
+
+    /**
+     * @param $ID
+     * @param $entity
+     *
+     * @return ID|int|the
+     */
+    static function transfer($ID, $entity)
+    {
+        global $DB;
+
+        if ($ID > 0) {
+            $self = new self();
+            $items = $self->find(["plugin_releases_releasetemplates_id" => $ID]);
+            foreach ($items as $id => $vals) {
+                $input = [];
+                $input["id"] = $id;
+                $input["entities_id"] = $entity;
+                $self->update($input);
+            }
+            return true;
+        }
+        return 0;
+    }
 }

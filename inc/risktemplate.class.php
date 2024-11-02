@@ -31,223 +31,251 @@
  */
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\ContentTemplates\TemplateManager;
+
 /**
  * Template for task
  * @since 9.1
  **/
-class PluginReleasesRisktemplate extends CommonDropdown {
+class PluginReleasesRisktemplate extends CommonDropdown
+{
 
-   // From CommonDBTM
-   public $dohistory         = true;
-   public $can_be_translated = true;
+    // From CommonDBTM
+    public $dohistory = true;
+    public $can_be_translated = true;
 
-   static $rightname = 'plugin_releases_risks';
-
-
-   static function getTypeName($nb = 0) {
-      return _n('Risk template', 'Risk templates', $nb, 'releases');
-   }
+    static $rightname = 'plugin_releases_risks';
 
 
-   function getAdditionalFields() {
-
-      return [
-         ['name'  => 'plugin_releases_typerisks_id',
-          'label' => __('Type risk', 'Type risks', 'releases'),
-          'type'  => 'dropdownTests',
-         ],
-
-         ['name'  => 'content',
-          'label' => __('Description'),
-          'type'  => 'textarea',
-          'rows'  => 10],
-
-      ];
-   }
+    static function getTypeName($nb = 0)
+    {
+        return _n('Risk template', 'Risk templates', $nb, 'releases');
+    }
 
 
-   function rawSearchOptions() {
-      $tab = parent::rawSearchOptions();
+    function getAdditionalFields()
+    {
+        return [
+            [
+                'name' => 'plugin_releases_typerisks_id',
+                'label' => __('Type risk', 'Type risks', 'releases'),
+                'type' => 'dropdownTests',
+            ],
 
-      $tab[] = [
-         'id'       => '4',
-         'name'     => __('Content'),
-         'field'    => 'content',
-         'table'    => $this->getTable(),
-         'datatype' => 'text',
-         'htmltext' => true
-      ];
+            [
+                'name' => 'content',
+                'label' => __('Description'),
+                'type' => 'textarea',
+                'rows' => 10
+            ],
 
-      $tab[] = [
-         'id'       => '3',
-         'name'     => __('Deploy Task type'),
-         'field'    => 'name',
-         'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
-         'datatype' => 'dropdown'
-      ];
-
-      return $tab;
-   }
+        ];
+    }
 
 
-   /**
-    * @see CommonDropdown::displaySpecificTypeField()
-    **/
-   function displaySpecificTypeField($ID, $field = [], array $options = []) {
+    function rawSearchOptions()
+    {
+        $tab = parent::rawSearchOptions();
 
-      switch ($field['type']) {
-         case 'dropdownTests' :
-            PluginReleasesTypeRisk::dropdown(["name" => "plugin_releases_typerisks_id"]);
-            break;
+        $tab[] = [
+            'id' => '4',
+            'name' => __('Content'),
+            'field' => 'content',
+            'table' => $this->getTable(),
+            'datatype' => 'text',
+            'htmltext' => true
+        ];
 
-      }
-   }
+        $tab[] = [
+            'id' => '3',
+            'name' => __('Deploy Task type'),
+            'field' => 'name',
+            'table' => getTableForItemType('PluginReleasesTypeDeployTask'),
+            'datatype' => 'dropdown'
+        ];
 
-   static function canCreate() {
-      return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
-   }
-
-   /**
-    * Have I the global right to "view" the Object
-    *
-    * Default is true and check entity if the objet is entity assign
-    *
-    * May be overloaded if needed
-    *
-    * @return booleen
-    **/
-   static function canView() {
-      return Session::haveRight(static::$rightname, READ);
-   }
-
-   public function showForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
-      $rand_text = mt_rand();
-      $rand_name = mt_rand();
-      $rand_type = mt_rand();
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-      echo "<tr class='tab_bg_1' hidden>";
-      echo "<td colspan='4'>";
-      $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
-      echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
-      echo "</td>";
-      echo "<td>";
-      echo __("Risk type", 'releases');
-      echo "</td>";
-
-      echo "<td>";
-      if (isset($_GET["typeriskid"])) {
-         $value = $_GET["typeriskid"];
-      } else {
-         $value = $this->fields["plugin_releases_typerisks_id"];
-      }
-      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name'  => "plugin_releases_typerisks_id",
-                                                         'value' => $value, 'rand' => $rand_type]);
-      echo "</td>";
+        return $tab;
+    }
 
 
-      echo "</tr>";
+    /**
+     * @see CommonDropdown::displaySpecificTypeField()
+     **/
+    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    {
+        switch ($field['type']) {
+            case 'dropdownTests' :
+                PluginReleasesTypeRisk::dropdown(["name" => "plugin_releases_typerisks_id"]);
+                break;
+        }
+    }
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Description') . "</td>";
-      echo "<td colspan='3'>";
-      //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
-      $content_id = "content$rand_text";
-      $cols       = 100;
-      $rows       = 10;
-      Html::textarea(['name'              => 'content',
-                      'value'             => $this->fields["content"],
-                      'rand'              => $rand_text,
-                      'editor_id'         => $content_id,
-                      'enable_fileupload' => false,
-                      'enable_richtext'   => true,
-                      'cols'              => $cols,
-                      'rows'              => $rows]);
-      echo "</td>";
-      echo "</tr>";
+    static function canCreate()
+    {
+        return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
+    }
 
-      $this->showFormButtons($options);
-   }
+    /**
+     * Have I the global right to "view" the Object
+     *
+     * Default is true and check entity if the objet is entity assign
+     *
+     * May be overloaded if needed
+     *
+     * @return booleen
+     **/
+    static function canView()
+    {
+        return Session::haveRight(static::$rightname, READ);
+    }
 
-   /**
-    * @param \CommonDBTM $item
-    *
-    * @return int
-    */
-   static function countForItem(CommonDBTM $item) {
-      $dbu   = new DbUtils();
-      $table = CommonDBTM::getTable(self::class);
-      return $dbu->countElementsInTable($table,
-                                        ["plugin_releases_releasetemplates_id" => $item->getID()]);
-   }
+    public function showForm($ID, $options = [])
+    {
+        global $CFG_GLPI, $DB;
+        $rand_text = mt_rand();
+        $rand_name = mt_rand();
+        $rand_type = mt_rand();
+        $this->initForm($ID, $options);
+        $this->showFormHeader($options);
 
-   /**
-    *
-    * @return css class
-    */
-   static function getCssClass() {
-      return "risk";
-   }
+        echo "<tr class='tab_bg_1' hidden>";
+        echo "<td colspan='4'>";
+        $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
+        echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
+        echo "</td>";
+        echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Name') . "</td>";
+        echo "<td>";
+        echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]
+        );
+        echo "</td>";
+        echo "<td>";
+        echo __("Risk type", 'releases');
+        echo "</td>";
 
-   function post_addItem() {
-      $_SESSION['releases']["template"][Session::getLoginUserID()] = 'risk';
-   }
+        echo "<td>";
+        if (isset($_GET["typeriskid"])) {
+            $value = $_GET["typeriskid"];
+        } else {
+            $value = $this->fields["plugin_releases_typerisks_id"];
+        }
+        Dropdown::show(PluginReleasesTypeRisk::getType(), [
+            'name' => "plugin_releases_typerisks_id",
+            'value' => $value,
+            'rand' => $rand_type
+        ]);
+        echo "</td>";
 
-   /**
-    * @param $ID
-    * @param $entity
-    *
-    * @return ID|int|the
-    */
-   static function transfer($ID, $entity) {
-      global $DB;
 
-      if ($ID > 0) {
-         $self  = new self();
-         $items = $self->find(["plugin_releases_releasetemplates_id" => $ID]);
-         foreach ($items as $id => $vals) {
-            $input                = [];
-            $input["id"]          = $id;
-            $input["entities_id"] = $entity;
-            $self->update($input);
-         }
-         return true;
+        echo "</tr>";
 
-      }
-      return 0;
-   }
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>" . __('Description') . "</td>";
+        echo "<td colspan='3'>";
+        //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
+        $content_id = "content$rand_text";
+        $cols = 100;
+        $rows = 10;
+        Html::textarea([
+            'name' => 'content',
+            'value' => $this->fields["content"],
+            'rand' => $rand_text,
+            'editor_id' => $content_id,
+            'enable_fileupload' => false,
+            'enable_richtext' => true,
+            'cols' => $cols,
+            'rows' => $rows
+        ]);
+        echo "</td>";
+        echo "</tr>";
 
-   /**
-    * Get content rendered by template engine, using given ITIL item to build parameters.
-    *
-    * @param CommonITILObject $itil_item
-    *
-    * @return string
-    */
-   public function getRenderedContent(CommonITILObject $itil_item): string
-   {
-      $html = TemplateManager::renderContentForCommonITIL(
-         $itil_item,
-         $this->fields['content']
-      );
+        $this->showFormButtons($options);
+    }
 
-      if (!$html) {
-         $html = $this->fields['content'];
-      }
+    /**
+     * @param \CommonDBTM $item
+     *
+     * @return int
+     */
+    static function countForItem(CommonDBTM $item)
+    {
+        $dbu = new DbUtils();
+        $table = CommonDBTM::getTable(self::class);
+        return $dbu->countElementsInTable(
+            $table,
+            ["plugin_releases_releasetemplates_id" => $item->getID()]
+        );
+    }
 
-      return $html;
-   }
+    /**
+     *
+     * @return css class
+     */
+    static function getCssClass()
+    {
+        return "risk";
+    }
+
+    function prepareInputForAdd($input)
+    {
+        if (empty($input["plugin_releases_releasetemplates_id"])) {
+            $input["plugin_releases_releasetemplates_id"] = 0;
+        }
+        return $input;
+    }
+
+    function post_addItem()
+    {
+        $_SESSION['releases']["template"][Session::getLoginUserID()] = 'risk';
+    }
+
+    /**
+     * @param $ID
+     * @param $entity
+     *
+     * @return ID|int|the
+     */
+    static function transfer($ID, $entity)
+    {
+        global $DB;
+
+        if ($ID > 0) {
+            $self = new self();
+            $items = $self->find(["plugin_releases_releasetemplates_id" => $ID]);
+            foreach ($items as $id => $vals) {
+                $input = [];
+                $input["id"] = $id;
+                $input["entities_id"] = $entity;
+                $self->update($input);
+            }
+            return true;
+        }
+        return 0;
+    }
+
+    /**
+     * Get content rendered by template engine, using given ITIL item to build parameters.
+     *
+     * @param CommonITILObject $itil_item
+     *
+     * @return string
+     */
+    public function getRenderedContent(CommonITILObject $itil_item): string
+    {
+        $html = TemplateManager::renderContentForCommonITIL(
+            $itil_item,
+            $this->fields['content']
+        );
+
+        if (!$html) {
+            $html = $this->fields['content'];
+        }
+
+        return $html;
+    }
 }

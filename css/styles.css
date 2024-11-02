@@ -25,7 +25,7 @@ h3.noinfo {
 
 /** release statuses */
 .releasestatus {
-   font-size: 1.4em;
+   font-size: 1em;
    margin-right: 0.2em;
    color: red;
    background-color: transparent;
@@ -155,9 +155,8 @@ div.workflow li {
    color: #ff3c10!important;
 }
 
-.timeline-item.PluginReleasesRisk .timeline-content,
-.PluginReleasesRisk {
-   background-color: #ff3c1096;
+.timeline-item.PluginReleasesRisk .timeline-content {
+   background-color: rgba(255, 60, 16, 0.29);
 }
 
 .Finalization-Risk {
@@ -169,8 +168,7 @@ div.workflow li {
    color: #2385bb!important;
 }
 
-.timeline-item.PluginReleasesTest .timeline-content,
-.PluginReleasesTest {
+.timeline-item.PluginReleasesTest .timeline-content {
    background-color: rgba(159, 221, 255, 0.72);
 }
 
@@ -183,8 +181,7 @@ div.workflow li {
    color: #8fd57c!important;
 }
 
-.timeline-item.PluginReleasesRollback .timeline-content,
-.PluginReleasesRollback {
+.timeline-item.PluginReleasesRollback .timeline-content {
    background-color: rgba(143, 213, 124, 0.74);
 }
 
@@ -197,8 +194,7 @@ div.workflow li {
    color: #ff9d24!important;
 }
 
-.timeline-item.PluginReleasesDeploytask .timeline-content,
-.PluginReleasesDeploytask{
+.timeline-item.PluginReleasesDeploytask .timeline-content {
    background-color: #fda02d8f;
 }
 

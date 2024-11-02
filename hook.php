@@ -249,7 +249,7 @@ function plugin_releases_getDropdown() {
               PluginReleasesTesttemplate::getType()       => PluginReleasesTesttemplate::getTypeName(2),
               PluginReleasesRisktemplate::getType()       => PluginReleasesRisktemplate::getTypeName(2),
               PluginReleasesRollbacktemplate::getType()   => PluginReleasesRollbacktemplate::getTypeName(2),
-              PluginReleasesReleasetemplate::getType()    => PluginReleasesReleasetemplate::getTypeName(2),
+//              PluginReleasesReleasetemplate::getType()    => PluginReleasesReleasetemplate::getTypeName(2),
               PluginReleasesTypeDeployTask::getType()     => PluginReleasesTypeDeployTask::getTypeName(2),
               PluginReleasesTypeTest::getType()           => PluginReleasesTypeTest::getTypeName(2),
               PluginReleasesTypeRisk::getType()           => PluginReleasesTypeRisk::getTypeName(2)
