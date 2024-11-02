@@ -31,10 +31,16 @@ The plugin allows:
    <issues>https://github.com/InfotelGLPI/releases/issues</issues>
    <readme>https://raw.githubusercontent.com/InfotelGLPI/releases/master/README.md</readme>
    <authors>
+      <author>Xavier Caillaud</author>
       <author>Alban Lesellier</author>
       <author>Infotel</author>
    </authors>
    <versions>
+      <version>
+         <num>2.0.4</num>
+         <compatibility>~10.0</compatibility>
+         <download_url>https://github.com/InfotelGLPI/releases/releases/download/2.0.4/glpi-releases-2.0.4.tar.bz2</download_url>
+      </version>
       <version>
          <num>2.0.3</num>
          <compatibility>~10.0</compatibility>
