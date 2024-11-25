@@ -908,10 +908,11 @@ class PluginReleasesRelease extends CommonITILObject
     function prepareInputForUpdate($input)
     {
         //      $input = parent::prepareInputForUpdate($input);
-        if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
+        if ((isset($input['target']) && empty($input['target']))
+            || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
             $input['target'] = [];
         }
-        if (isset($input["communication_type"])) {
+        if (isset($input["communication_type"]) && isset($input['target'])) {
             $input['target'] = json_encode($input['target']);
         }
 

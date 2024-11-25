@@ -83,7 +83,7 @@ function plugin_releases_uninstall() {
    ];
 
    foreach ($tables as $table) {
-      $DB->query("DROP TABLE IF EXISTS `$table`;");
+      $DB->dropTable($table);
    }
 
    $tables_glpi = ["glpi_displaypreferences",
@@ -97,7 +97,7 @@ function plugin_releases_uninstall() {
    ];
 
    foreach ($tables_glpi as $table_glpi) {
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` LIKE 'PluginReleases%';");
+       $DB->delete($table_glpi, ['itemtype' => ['LIKE' => 'PluginReleases%']]);
    }
 
    //TODO add drop profiles & menu in session ?
