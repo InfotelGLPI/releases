@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-25 17:05+0000\n"
+"POT-Creation-Date: 2025-03-28 14:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,9 +66,9 @@ msgstr ""
 msgid "Actors"
 msgstr ""
 
-#: templates/footer.html.twig:125 templates/footer.html.twig:127
-#: templates/form_test.html.twig:236 templates/form_deploytask.html.twig:376
+#: templates/form_test.html.twig:236 templates/form_deploytask.html.twig:377
 #: templates/form_rollback.html.twig:164 templates/form_risk.html.twig:194
+#: templates/footer.html.twig:125 templates/footer.html.twig:127
 msgctxt "button"
 msgid "Add"
 msgstr ""
@@ -109,7 +109,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/testtemplate.class.php:190 templates/form_test.html.twig:190
-#: templates/form_deploytask.html.twig:261
+#: templates/form_deploytask.html.twig:262
 msgid "Associated risk"
 msgstr ""
 
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Care all steps are not finish !"
 msgstr ""
 
-#: templates/form_deploytask.html.twig:244
+#: templates/form_deploytask.html.twig:245
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] ""
@@ -154,9 +154,9 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr ""
 
-#: templates/footer.html.twig:142 templates/form_test.html.twig:248
-#: templates/form_deploytask.html.twig:405
+#: templates/form_test.html.twig:248 templates/form_deploytask.html.twig:406
 #: templates/form_rollback.html.twig:176 templates/form_risk.html.twig:206
+#: templates/footer.html.twig:142
 msgid "Confirm the final deletion?"
 msgstr ""
 
@@ -176,9 +176,9 @@ msgstr ""
 msgid "Dates defined"
 msgstr ""
 
-#: templates/footer.html.twig:141 templates/footer.html.twig:144
-#: templates/form_test.html.twig:250 templates/form_deploytask.html.twig:407
+#: templates/form_test.html.twig:250 templates/form_deploytask.html.twig:408
 #: templates/form_rollback.html.twig:178 templates/form_risk.html.twig:208
+#: templates/footer.html.twig:141 templates/footer.html.twig:144
 msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
@@ -227,12 +227,12 @@ msgstr ""
 #: templates/form_deploytask.html.twig:46
 #: templates/form_deploytask.html.twig:53
 #: templates/form_deploytask.html.twig:60
-#: templates/form_deploytask.html.twig:287 templates/form_rollback.html.twig:51
+#: templates/form_deploytask.html.twig:288 templates/form_rollback.html.twig:51
 #: templates/form_risk.html.twig:51 templates/timeline.html.twig:121
 msgid "Done"
 msgstr ""
 
-#: templates/form_deploytask.html.twig:298
+#: templates/form_deploytask.html.twig:299
 msgid "Duration"
 msgstr ""
 
@@ -254,7 +254,7 @@ msgstr[1] ""
 #: templates/form_deploytask.html.twig:49
 #: templates/form_deploytask.html.twig:56
 #: templates/form_deploytask.html.twig:63
-#: templates/form_deploytask.html.twig:288
+#: templates/form_deploytask.html.twig:289
 msgid "Failed"
 msgstr ""
 
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Opening date"
 msgstr ""
 
-#: templates/form_deploytask.html.twig:363
+#: templates/form_deploytask.html.twig:364
 msgid "Plan this task"
 msgstr ""
 
@@ -352,7 +352,7 @@ msgstr ""
 msgid "Pre-production run date"
 msgstr ""
 
-#: inc/deploytasktemplate.class.php:256 templates/form_deploytask.html.twig:168
+#: inc/deploytasktemplate.class.php:256 templates/form_deploytask.html.twig:214
 msgid "Previous task"
 msgstr ""
 
@@ -478,9 +478,9 @@ msgstr[1] ""
 msgid "Rollbacks defined"
 msgstr ""
 
-#: templates/footer.html.twig:165 templates/footer.html.twig:167
-#: templates/form_test.html.twig:243 templates/form_deploytask.html.twig:400
+#: templates/form_test.html.twig:243 templates/form_deploytask.html.twig:401
 #: templates/form_rollback.html.twig:171 templates/form_risk.html.twig:201
+#: templates/footer.html.twig:165 templates/footer.html.twig:167
 msgctxt "button"
 msgid "Save"
 msgstr ""
@@ -498,11 +498,11 @@ msgstr ""
 msgid "Service shutdown details"
 msgstr ""
 
-#: templates/form_deploytask.html.twig:379
+#: templates/form_deploytask.html.twig:380
 msgid "Set the status to pending"
 msgstr ""
 
-#: templates/form_test.html.twig:212 templates/form_deploytask.html.twig:283
+#: templates/form_test.html.twig:212 templates/form_deploytask.html.twig:284
 msgid "Status"
 msgstr ""
 
@@ -512,7 +512,7 @@ msgid_plural "Tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/form_deploytask.html.twig:226
+#: templates/form_deploytask.html.twig:169
 msgid "Task template"
 msgid_plural "Task templates"
 msgstr[0] ""
@@ -557,12 +557,12 @@ msgstr ""
 msgid "Timeline filter"
 msgstr ""
 
-#: templates/form_test.html.twig:146 templates/form_deploytask.html.twig:199
+#: templates/form_test.html.twig:146 templates/form_deploytask.html.twig:188
 #: templates/form_rollback.html.twig:134 templates/form_risk.html.twig:134
 msgid "Title"
 msgstr ""
 
-#: templates/form_test.html.twig:215 templates/form_deploytask.html.twig:286
+#: templates/form_test.html.twig:215 templates/form_deploytask.html.twig:287
 #: templates/form_rollback.html.twig:49 templates/form_risk.html.twig:49
 #: templates/timeline.html.twig:119
 msgid "To do"
