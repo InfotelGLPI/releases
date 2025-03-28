@@ -164,35 +164,24 @@
         <div class="row">
             <div class="col-12 col-md-9">
 
-                {% set fup_source_lbl %}
-                    <i class="ti ti-check fa-fw me-1" title="{{ __("Previous task", "releases") }}"></i>
+                {% set fup_template_lbl %}
+                    <i class="ti ti-template fa-fw me-1"
+                       title="{{ _n('Task template', 'Task templates', get_plural_number(), 'releases') }}"></i>
                 {% endset %}
-
-                {% set condition = {
-                    'plugin_releases_releases_id': item.fields['id']
-                } %}
-
-                {% if subitem.isNewItem() %}
-                {% else %}
-                    {% if tasks is defined and tasks|length > 0 %}
-                        {% set condition = condition|merge({'id': (tasks)}) %}
-                    {% else %}
-                        {% set condition = condition|merge({'id': 0}) %}
-                    {% endif %}
-                {% endif %}
                 {{ fields.dropdownField(
-                    'PluginReleasesDeploytask',
-                    'plugin_releases_deploytasks_id',
-                    subitem.fields['plugin_releases_deploytasks_id'],
-                    fup_source_lbl,
+                    'PluginReleasesDeploytasktemplate',
+                    'deploytasktemplates_id',
+                    subitem.fields['deploytasktemplates_id'],
+                    fup_template_lbl,
                     {
                         'full_width': true,
                         'icon_label': true,
-                        'is_active': 1,
+                        'on_change': 'deploytasktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/deploytask.php\")',
+                        'entity': item.fields['entities_id'],
                         'rand': rand,
-                        'condition': condition
                     }
                 ) }}
+
                 {{ fields.textField(
                     'name',
                     subitem.fields['name'],
@@ -221,21 +210,33 @@
             <div class="col-12 col-md-3 order-first order-md-last">
                 <div class="row">
 
-                    {% set task_template_lbl %}
-                        <i class="ti ti-template fa-fw me-1"
-                           title="{{ _n('Task template', 'Task templates', get_plural_number(), 'releases') }}"></i>
+                    {% set fup_source_lbl %}
+                        <i class="ti ti-check fa-fw me-1" title="{{ __("Previous task", "releases") }}"></i>
                     {% endset %}
+
+                    {% set condition = {
+                        'plugin_releases_releases_id': item.fields['id']
+                    } %}
+
+                    {% if subitem.isNewItem() %}
+                    {% else %}
+                        {% if tasks is defined and tasks|length > 0 %}
+                            {% set condition = condition|merge({'id': (tasks)}) %}
+                        {% else %}
+                            {% set condition = condition|merge({'id': 0}) %}
+                        {% endif %}
+                    {% endif %}
                     {{ fields.dropdownField(
-                        'PluginReleasesDeploytasktemplate',
-                        'deploytasktemplates_id',
-                        subitem.fields['deploytasktemplates_id'],
-                        task_template_lbl,
+                        'PluginReleasesDeploytask',
+                        'plugin_releases_deploytasks_id',
+                        subitem.fields['plugin_releases_deploytasks_id'],
+                        fup_source_lbl,
                         {
                             'full_width': true,
                             'icon_label': true,
-                            'on_change': 'deploytasktemplate_update' ~ rand ~ '(this.value, \"'~ rpath ~'/ajax/deploytask.php\")',
-                            'entity': item.fields['entities_id'],
+                            'is_active': 1,
                             'rand': rand,
+                            'condition': condition
                         }
                     ) }}
 
