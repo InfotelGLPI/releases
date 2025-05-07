@@ -48,9 +48,9 @@ function plugin_init_releases() {
 
    if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
-      $PLUGIN_HOOKS["javascript"]['releases']     = [PLUGIN_RELEASES_NOTFULL_DIR."/js/releases.js"];
+      $PLUGIN_HOOKS["javascript"]['releases']     = [$CFG_GLPI['root_doc'] ."/js/releases.js"];
       $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'] = 'js/releases.js';
-      $PLUGIN_HOOKS['add_css']['releases'][]      = "css/styles.css";
+      $PLUGIN_HOOKS[Hooks::ADD_CSS]['releases'][]      = "css/styles.css";
    }
 
    Html::requireJs('tinymce');
