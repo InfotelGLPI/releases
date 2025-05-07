@@ -802,7 +802,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
                       '$begin' < `end` AND '$end' > `begin`
                 ORDER BY `begin`";
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
 
       if ($DB->numrows($result) > 0) {
          for ($i = 0; $data = $DB->fetchArray($result); $i++) {

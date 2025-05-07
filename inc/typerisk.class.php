@@ -68,7 +68,7 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
                    FROM `" . $table . "`
                    WHERE `id` = '$ID'";
 
-         if ($result = $DB->query($query)) {
+         if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result)) {
                $data                 = $DB->fetchAssoc($result);
                $data                 = Toolbox::addslashes_deep($data);
