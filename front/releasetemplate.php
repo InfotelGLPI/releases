@@ -34,7 +34,7 @@
  * @since 9.1
  */
 
-include('../../../inc/includes.php');
+
 Session::checkLoginUser();
 $dropdown = new PluginReleasesReleasetemplate();
 include(GLPI_ROOT . "/front/dropdown.common.php");

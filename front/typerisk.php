@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+
 Session::checkLoginUser();
 $dropdown = new PluginReleasesTypeRisk();
 include(GLPI_ROOT . "/front/dropdown.common.php");

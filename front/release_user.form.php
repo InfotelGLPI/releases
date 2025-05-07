@@ -36,9 +36,7 @@
 
 use Glpi\Event;
 
-if (!defined('GLPI_ROOT')) {
-   include('../../../inc/includes.php');
-}
+
 
 $link = new PluginReleasesRelease_User();
 $item = new PluginReleasesRelease();

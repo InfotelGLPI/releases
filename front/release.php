@@ -28,7 +28,7 @@
  */
 
 
-include('../../../inc/includes.php');
+
 Session::checkLoginUser();
 Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
 
