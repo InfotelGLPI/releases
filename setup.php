@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Plugin\Hooks;
+
 define('PLUGIN_RELEASES_VERSION', '2.0.4');
 
 if (!defined("PLUGIN_RELEASES_DIR")) {
@@ -47,7 +49,7 @@ function plugin_init_releases() {
    if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
       $PLUGIN_HOOKS["javascript"]['releases']     = [PLUGIN_RELEASES_NOTFULL_DIR."/js/releases.js"];
-      $PLUGIN_HOOKS['add_javascript']['releases'] = 'js/releases.js';
+      $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'] = 'js/releases.js';
       $PLUGIN_HOOKS['add_css']['releases'][]      = "css/styles.css";
    }
 
@@ -102,8 +104,8 @@ function plugin_version_releases() {
       'minGlpiVersion' => '10.0',// For compatibility / no install
       'requirements'   => [
          'glpi' => [
-            'min' => '10.0',
-            'max' => '11.0'
+            'min' => '11.0',
+            'max' => '12.0'
          ]
       ]
    ];
