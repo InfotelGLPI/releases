@@ -116,7 +116,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
         }
     }
 
-    static function canCreate()
+    static function canCreate(): bool
     {
         return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
     }
@@ -130,7 +130,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
      *
      * @return booleen
      **/
-    static function canView()
+    static function canView(): bool
     {
         return Session::haveRight(static::$rightname, READ);
     }

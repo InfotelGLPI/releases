@@ -159,7 +159,8 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       return $menu;
    }
 
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRight(static::$rightname, UPDATE);
    }
 
@@ -172,7 +173,8 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(static::$rightname, READ);
    }
 
