@@ -197,7 +197,7 @@ if ( $_POST['action'] == 'done_fail') {
             echo __('Access denied');
          }
 
-         Html::ajaxFooter();
+
          break;
 
    }

@@ -67,5 +67,5 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
    echo __('Access denied');
 }
 
-Html::ajaxFooter();
+
 
