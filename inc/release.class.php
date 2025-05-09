@@ -634,8 +634,6 @@ class PluginReleasesRelease extends CommonITILObject
                 unset($risk["state"]);
                 $old_id = $risk["id"];
                 unset($risk["id"]);
-                $risk["name"] = Toolbox::addslashes_deep($risk["name"]);
-                $risk["content"] = Toolbox::addslashes_deep($risk["content"]);
                 $corresRisks[$old_id] = $releaseRisk->add($risk);
             }
             foreach ($tests as $test) {
@@ -644,8 +642,6 @@ class PluginReleasesRelease extends CommonITILObject
                 unset($test["date_creation"]);
                 unset($test["state"]);
                 $old_id = $test["id"];
-                $test["name"] = Toolbox::addslashes_deep($test["name"]);
-                $test["content"] = Toolbox::addslashes_deep($test["content"]);
                 $test["plugin_releases_risks_id"] = $corresRisks[$test["plugin_releases_risks_id"]] ?? 0;
                 unset($test["id"]);
                 $corresTests[$old_id] = $releaseTest->add($test);
@@ -656,8 +652,6 @@ class PluginReleasesRelease extends CommonITILObject
                 unset($task["date_creation"]);
                 unset($task["state"]);
                 $old_id = $task["id"];
-                $task["name"] = Toolbox::addslashes_deep($task["name"]);
-                $task["content"] = Toolbox::addslashes_deep($task["content"]);
                 $task["plugin_releases_risks_id"] = $corresRisks[$task["plugin_releases_risks_id"]] ?? 0;
                 $task["plugin_releases_deploytasks_id"] = $corresTasks[$task["plugin_releases_deploytasktemplates_id"]] ?? 0;
                 unset($task["id"]);
@@ -670,8 +664,6 @@ class PluginReleasesRelease extends CommonITILObject
                 unset($rollback["state"]);
                 $old_id = $rollback["id"];
                 unset($rollback["id"]);
-                $rollback["name"] = Toolbox::addslashes_deep($rollback["name"]);
-                $rollback["content"] = Toolbox::addslashes_deep($rollback["content"]);
                 $corresRollbacks[$old_id] = $releaseRollback->add($rollback);
             }
             foreach ($items as $item) {
