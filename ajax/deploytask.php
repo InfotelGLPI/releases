@@ -36,7 +36,7 @@
 
 use Glpi\Http\Response;
 
-$AJAX_INCLUDE = 1;
+
 
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
