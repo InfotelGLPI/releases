@@ -1403,7 +1403,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 //               echo "</div>";
 
                echo "<span class='h_user_name'>";
-               $userdata = getUserName($item_i['users_id'], 2);
+               $userdata = getUserName($item_i['users_id']);
                echo $user->getLink() . "&nbsp;";
                echo Html::showToolTip(
                   $userdata["comment"],
@@ -1522,7 +1522,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
              && $item_i['users_id_editor'] > 0) {
             echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
             $user->getFromDB($item_i['users_id_editor']);
-            $userdata = getUserName($item_i['users_id_editor'], 2);
+            $userdata = getUserName($item_i['users_id_editor']);
             if (isset($item_i['date_mod']))
                echo sprintf(
                   __('Last edited on %1$s by %2$s'),
@@ -2095,7 +2095,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             echo "$mandatory$usericon&nbsp;";
 
             if ($k) {
-               $userdata = getUserName($k, 2);
+               $userdata = getUserName($k);
             } else {
                $email    = $d['alternative_email'];
                $userdata = "<a href='mailto:$email'>$email</a>";

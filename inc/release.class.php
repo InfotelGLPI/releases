@@ -2162,7 +2162,7 @@ class PluginReleasesRelease extends CommonITILObject
                     echo "</div>";
 
                     echo "<span class='h_user_name'>";
-                    $userdata = getUserName($item_i['users_id'], 2);
+                    $userdata = getUserName($item_i['users_id']);
                     echo $user->getLink() . "&nbsp;";
                     echo Html::showToolTip(
                         $userdata["comment"],
@@ -2420,7 +2420,7 @@ class PluginReleasesRelease extends CommonITILObject
                 && $item_i['users_id_editor'] > 0) {
                 echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
                 $user->getFromDB($item_i['users_id_editor']);
-                $userdata = getUserName($item_i['users_id_editor'], 2);
+                $userdata = getUserName($item_i['users_id_editor']);
                 if (isset($item_i['date_mod'])) {
                     echo sprintf(
                         __('Last edited on %1$s by %2$s'),
@@ -3284,7 +3284,7 @@ class PluginReleasesRelease extends CommonITILObject
             $fourth_col = "";
 
             foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
-                $userdata = getUserName($d["users_id"], 2);
+                $userdata = getUserName($d["users_id"]);
                 $fourth_col .= sprintf(
                     __('%1$s %2$s'),
                     "<span class='b'>" . $userdata['name'] . "</span>",
@@ -3317,7 +3317,7 @@ class PluginReleasesRelease extends CommonITILObject
                 if ($anonymize_helpdesk) {
                     $fifth_col .= __("Helpdesk");
                 } else {
-                    $userdata = getUserName($d["users_id"], 2);
+                    $userdata = getUserName($d["users_id"]);
                     $fifth_col .= sprintf(
                         __('%1$s %2$s'),
                         "<span class='b'>" . $userdata['name'] . "</span>",
