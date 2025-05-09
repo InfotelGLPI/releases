@@ -31,7 +31,7 @@
  */
 
 
-
+use Glpi\Exception\Http\BadRequestHttpException;
 
 Session::checkLoginUser();
 
@@ -58,4 +58,4 @@ if (isset($_POST["add"])) {
 
 }
 
-Html::displayErrorAndDie("lost");
+throw new BadRequestHttpException("lost");

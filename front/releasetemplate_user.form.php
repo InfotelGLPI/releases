@@ -35,7 +35,7 @@
  */
 
 use Glpi\Event;
-
+use Glpi\Exception\Http\BadRequestHttpException;
 
 
 $link = new PluginReleasesReleasetemplate_User();
@@ -71,7 +71,7 @@ if (isset($_POST["update"])) {
 } else if (isset($_GET["id"])) {
    $link->showUserNotificationForm($_GET["id"]);
 } else {
-   Html::displayErrorAndDie('Lost');
+    throw new BadRequestHttpException('Lost');
 }
 
 Html::popFooter();

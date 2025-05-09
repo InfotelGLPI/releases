@@ -35,7 +35,7 @@
  */
 
 use Glpi\Event;
-
+use Glpi\Exception\Http\BadRequestHttpException;
 
 
 $link = new PluginReleasesGroup_Release();
@@ -59,4 +59,4 @@ if (isset($_POST['delete'])) {
    Html::redirect(PLUGIN_RELEASES_WEBDIR . "/front/release.php");
 }
 
-Html::displayErrorAndDie('Lost');
+throw new BadRequestHttpException('Lost');
