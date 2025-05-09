@@ -64,9 +64,10 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
          // Not already transfer
          // Search init item
          $table = CommonDBTM::getTable(PluginReleasesTypeRisk::class);
-         $query = "SELECT *
-                   FROM `" . $table . "`
-                   WHERE `id` = '$ID'";
+         $query = [
+             'FROM' => $table,
+             'WHERE' => ['id' => $ID]
+         ];
 
          if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result)) {
