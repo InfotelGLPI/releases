@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
 
 
@@ -39,10 +41,10 @@ global $CFG_GLPI;
 $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 Html::header_nocache();
 if (!isset($_REQUEST['type'])) {
-   exit();
+    throw new NotFoundHttpException();
 }
 if (!isset($_REQUEST['parenttype'])) {
-   exit();
+    throw new NotFoundHttpException();
 }
 
 $item   = getItemForItemtype($_REQUEST['type']);
