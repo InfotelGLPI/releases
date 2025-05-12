@@ -83,7 +83,9 @@ function plugin_releases_uninstall() {
    ];
 
    foreach ($tables as $table) {
-      $DB->dropTable($table);
+       if ($DB->tableExists($table)) {
+           $DB->dropTable($table);
+       }
    }
 
    $tables_glpi = ["glpi_displaypreferences",
@@ -112,7 +114,10 @@ function plugin_releases_uninstall() {
                'FIELDS'   => 'id'];
 
    $notif = new Notification();
-    foreach ($DB->request('glpi_notifications', $options) as $data) {
+    foreach ($DB->request([
+        'FROM'  => 'glpi_notifications',
+        'WHERE' => $options
+    ]) as $data) {
         $notif->delete($data);
    }
 
@@ -121,17 +126,29 @@ function plugin_releases_uninstall() {
    $translation    = new NotificationTemplateTranslation();
    $notif_template = new Notification_NotificationTemplate();
    $options        = ['itemtype' => 'PluginReleasesRelease',
-                      'FIELDS'   => 'id'];
+//                      'FIELDS'   => 'id'
+   ];
 
-    foreach ($DB->request('glpi_notificationtemplates', $options) as $data) {
+    foreach ($DB->request([
+        'FROM'  => 'glpi_notificationtemplates',
+        'WHERE' => $options
+    ]) as $data) {
         $options_template = ['notificationtemplates_id' => $data['id'],
                            'FIELDS'                   => 'id'];
-        foreach ($DB->request('glpi_notificationtemplatetranslations', $options_template) as $data_template) {
+        foreach ($DB->request([
+            'FROM'  => 'glpi_notificationtemplatetranslations',
+            'WHERE' => $options_template
+        ]) as $data_template) {
+
             $translation->delete($data_template);
       }
       $template->delete($data);
 
-        foreach ($DB->request('glpi_notifications_notificationtemplates', $options_template) as $data_template) {
+        foreach ($DB->request([
+            'FROM'  => 'glpi_notifications_notificationtemplates',
+            'WHERE' => $options_template
+        ]) as $data_template) {
+
             $notif_template->delete($data_template);
       }
    }
