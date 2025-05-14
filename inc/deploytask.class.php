@@ -794,14 +794,23 @@ class PluginReleasesDeploytask extends CommonDBTM {
          $ASSIGN .= ") AND ";
       }
 
-      $query = "SELECT `glpi_plugin_releases_deploytasks`.*
-                FROM `glpi_plugin_releases_deploytasks`
-                LEFT JOIN `glpi_plugin_releases_typedeploytasks` 
-                ON (`glpi_plugin_releases_typedeploytasks`.`id` = `glpi_plugin_releases_deploytasks`.`plugin_releases_typedeploytasks_id`)
-                WHERE $ASSIGN
-                      '$begin' < `end` AND '$end' > `begin`
-                ORDER BY `begin`";
-
+       $query = [
+           'SELECT' => 'glpi_plugin_releases_deploytasks.*',
+           'FROM'   => 'glpi_plugin_releases_deploytasks',
+           'LEFT JOIN' => [
+               'glpi_plugin_releases_typedeploytasks' => [
+                   'ON' => 'glpi_plugin_releases_typedeploytasks.id = glpi_plugin_releases_deploytasks.plugin_releases_typedeploytasks_id'
+               ]
+           ],
+           'WHERE'  => [
+               'ASSIGN' => $ASSIGN,
+               'AND' => [
+                   "'$begin' < `end`",
+                   "'$end' > `begin`"
+               ]
+           ],
+           'ORDER BY' => 'begin'
+       ];
       $result = $DB->doQuery($query);
 
       if ($DB->numrows($result) > 0) {

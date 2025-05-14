@@ -64,9 +64,11 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
          // Not already transfer
          // Search init item
          $table = CommonDBTM::getTable(self::class);
-         $query = "SELECT *
-                   FROM `" . $table . "`
-                   WHERE `id` = '$ID'";
+          $query = [
+              'SELECT' => '*',
+              'FROM'   => $table,
+              'WHERE'  => ['id' => $ID]
+          ];
 
          if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result)) {
