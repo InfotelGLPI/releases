@@ -43,7 +43,7 @@ if (!defined("PLUGIN_RELEASES_DIR")) {
 // Init the hooks of the plugins -Needed
 function plugin_init_releases() {
    global $PLUGIN_HOOKS, $CFG_GLPI;
-
+    $CFG_GLPI['glpiitemtypetables']['glpi_plugin_releases_releases'] = 'PluginReleasesRelease';
    $PLUGIN_HOOKS['csrf_compliant']['releases']   = true;
    $PLUGIN_HOOKS['change_profile']['releases']   = ['PluginReleasesProfile', 'initProfile'];
    $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
