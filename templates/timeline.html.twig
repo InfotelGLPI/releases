@@ -29,7 +29,7 @@
 {# # ---------------------------------------------------------------------#}
 {# #}
 
-{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
+{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
 {% set timeline_order = "flex-column" %}
 {% if user_pref('timeline_order') == constant('CommonITILObject::TIMELINE_ORDER_REVERSE') %}
     {% set timeline_order = "flex-column-reverse" %}

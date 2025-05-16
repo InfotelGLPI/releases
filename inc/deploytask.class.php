@@ -860,7 +860,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $html = "";
 
       $rand = mt_rand();
-      $html .= "<a href='" . PLUGIN_RELEASES_WEBDIR . "/front/deploytask.form.php?id=" . $val["id"] . "'";
+      $html .= "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/releases/front/deploytask.form.php?id=" . $val["id"] . "'";
 
       $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
                onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";

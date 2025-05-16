@@ -36,8 +36,8 @@ define('PLUGIN_RELEASES_VERSION', '2.0.4');
 if (!defined("PLUGIN_RELEASES_DIR")) {
    define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
    define("PLUGIN_RELEASES_NOTFULL_DIR", Plugin::getPhpDir("releases",false));
-   define("PLUGIN_RELEASES_WEBDIR", $CFG_GLPI['root_doc'] . '/plugins/releases');
-   define("PLUGIN_RELEASES_NOTFULL_WEBDIR", '/plugins/releases');
+//   define("PLUGIN_RELEASES_WEBDIR", $CFG_GLPI['root_doc'] . '/plugins/releases');
+//   define("PLUGIN_RELEASES_NOTFULL_WEBDIR", '/plugins/releases');
 }
 
 // Init the hooks of the plugins -Needed
@@ -47,11 +47,10 @@ function plugin_init_releases() {
    $PLUGIN_HOOKS['csrf_compliant']['releases']   = true;
    $PLUGIN_HOOKS['change_profile']['releases']   = ['PluginReleasesProfile', 'initProfile'];
    $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
-
    if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
-      $PLUGIN_HOOKS["javascript"]['releases']     = [PLUGIN_RELEASES_NOTFULL_DIR ."/js/releases.js"];
-      $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'] = 'public/js/releases.js';
+//      $PLUGIN_HOOKS["javascript"]['releases'] = ["plugins/releases/js/releases.js"];
+      $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "/public/js/releases.js";
       $PLUGIN_HOOKS[Hooks::ADD_CSS]['releases'][]      = "css/styles.css";
    }
 

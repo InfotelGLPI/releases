@@ -36,7 +36,7 @@
 
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
-
+global $CFG_GLPI;
 
 $link = new PluginReleasesGroup_Release();
 $item = new PluginReleasesRelease();
@@ -55,8 +55,7 @@ if (isset($_POST['delete'])) {
    }
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);
-
-   Html::redirect(PLUGIN_RELEASES_WEBDIR . "/front/release.php");
+   Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/release.php");
 }
 
 throw new BadRequestHttpException('Lost');

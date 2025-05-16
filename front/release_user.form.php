@@ -36,7 +36,7 @@
 
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
-
+global $CFG_GLPI;
 
 $link = new PluginReleasesRelease_User();
 $item = new PluginReleasesRelease();
@@ -66,7 +66,7 @@ if (isset($_POST["update"])) {
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);
 
-   Html::redirect(PLUGIN_RELEASES_WEBDIR . "/front/release.php");
+   Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/release.php");
 
 } else if (isset($_GET["id"])) {
    $link->showUserNotificationForm($_GET["id"]);

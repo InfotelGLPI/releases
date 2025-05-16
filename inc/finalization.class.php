@@ -98,7 +98,8 @@ class PluginReleasesFinalization extends CommonDBTM {
    function showForm($ID, $options = []) {
 
 
-      $release = new PluginReleasesRelease();
+       global $CFG_GLPI;
+       $release = new PluginReleasesRelease();
       $release->getFromDB($ID);
 
       echo "<table class='tab_cadre_fixe' id='mainformtable'>";
@@ -229,14 +230,14 @@ class PluginReleasesFinalization extends CommonDBTM {
             $link = '<a href="#" id="finalize" class="submit btn btn-primary" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Finalize", 'releases') . '</a>';
 
             echo Ajax::createIframeModalWindow('alert-message',
-                                               PLUGIN_RELEASES_WEBDIR . "/front/finalization.php?release_id=" . $release->fields['id'] . "&confirm=1",
+                $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php?release_id=" . $release->fields['id'] . "&confirm=1",
                                                ['title'   => __("Finalize", 'releases'),
                                                 'display' => false]);
          } else {
             $link = '<a href="#" id="finalize" class="submit btn btn-danger" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Mark as failed", 'releases') . '</a>';
 
             echo Ajax::createIframeModalWindow('alert-message',
-                                               PLUGIN_RELEASES_WEBDIR . "/front/finalization.php?release_id=" . $release->fields['id'] . "&failed=1",
+                $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php?release_id=" . $release->fields['id'] . "&failed=1",
                                                ['title'   => __("Mark as failed", 'releases'),
                                                 'display' => false]);
          }
@@ -255,7 +256,8 @@ class PluginReleasesFinalization extends CommonDBTM {
 
    static function showFinalizeForm($params) {
 
-      $release = new PluginReleasesRelease();
+       global $CFG_GLPI;
+       $release = new PluginReleasesRelease();
       $ID      = $params["release_id"];
       $release->getFromDB($ID);
       $deployTaskDone  = PluginReleasesRelease::countForItem($ID, PluginReleasesDeploytask::class, PluginReleasesDeploytask::DONE);
@@ -274,7 +276,7 @@ class PluginReleasesFinalization extends CommonDBTM {
          echo '<div class="alert alert-important alert-warning d-flex">';
          echo __("Care all steps are not finish !", "releases") . '</div>';
       }
-      $target = PLUGIN_RELEASES_WEBDIR . "/front/finalization.php";
+      $target = $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php";
       echo "<form name='release_form' id='release_form' method='post'
                 action='" . $target . "'>";
 

@@ -879,7 +879,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
       Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
-                                    PLUGIN_RELEASES_WEBDIR . "/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
 
       echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
       echo "<td colspan='3'>";
@@ -918,13 +918,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "</td>";
       Ajax::updateItem("targets",
-                       PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
                        ['type'         => $this->fields["communication_type"],
                         'current_type' => $this->fields["communication_type"],
                         'values'       => $targets],
                        true);
       Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-                                    PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
                                     ['type'         => '__VALUE__',
                                      'current_type' => $this->fields["communication_type"],
                                      'values'       => $targets],
@@ -1130,7 +1130,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
+                                                 .load('" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
@@ -1156,7 +1156,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                  $foreignKey  => $this->fields['id'],
                  'id'         => -1];
       $out    = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-                                       PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php",
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php",
                                        $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
       echo "};

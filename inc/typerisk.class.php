@@ -144,7 +144,7 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
 
    static function getMenuOptions($menu) {
 
-      $plugin_page = PLUGIN_RELEASES_NOTFULL_WEBDIR.'/front/typerisk.php';
+      $plugin_page = $plugin_page = "/plugins/releases/front/typerisk.php";
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -153,7 +153,7 @@ class PluginReleasesTypeRisk extends CommonTreeDropdown {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR.'/front/typerisk.form.php\';';
+         $menu['options'][$itemtype]['links']['add'] = $plugin_page = "/plugins/releases/front/typerisk.form.php\';";
       }
 
       return $menu;

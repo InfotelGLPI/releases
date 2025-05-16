@@ -31,7 +31,7 @@
 
 {% extends 'components/itilobject/timeline/form_timeline_item.html.twig' %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
-{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
+{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
 {% set params = {'parent': item}|merge(params|default({})) %}
 
 {% set candedit = item.maySolve() %}

@@ -1243,6 +1243,7 @@ class PluginReleasesRelease extends CommonITILObject
 
     function showForm($ID, $options = [])
     {
+        global $CFG_GLPI;
         if (!static::canView()) {
             return false;
         }
@@ -1463,7 +1464,7 @@ class PluginReleasesRelease extends CommonITILObject
             'canupdate' => $canupdate,
             'canpriority' => $canupdate,
             'canassign' => $canupdate,
-            'root_release' => PLUGIN_RELEASES_WEBDIR,
+            'root_release' => $CFG_GLPI['root_doc'] . "/plugins/releases",
             'userentities' => $userentities,
             'has_pending_reason' => false,
         ]);
@@ -1807,7 +1808,7 @@ class PluginReleasesRelease extends CommonITILObject
 
         echo "<script type='text/javascript' >
       function change_task_state(items_id, target, itemtype) {
-         $.post('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
+         $.post('" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php',
                 {'action':     'change_task_state',
                   'items_id':   items_id,
                   'itemtype':   itemtype,
@@ -1821,7 +1822,7 @@ class PluginReleasesRelease extends CommonITILObject
                 });
       }
       function done_fail(items_id, target, itemtype,newStatus) {
-         $.post('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
+         $.post('" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php',
                 {'action':     'done_fail',
                   'items_id':   items_id,
                   'itemtype':   itemtype,
@@ -1862,7 +1863,7 @@ class PluginReleasesRelease extends CommonITILObject
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
+                                                 .load('" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
@@ -1891,7 +1892,7 @@ class PluginReleasesRelease extends CommonITILObject
         ];
         $out = Ajax::updateItemJsCode(
             "viewitem" . $this->fields['id'] . "$rand",
-            PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php",
+            $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php",
             $params,
             "",
             false
@@ -2683,6 +2684,7 @@ class PluginReleasesRelease extends CommonITILObject
      */
     static function getMenuContent()
     {
+        global $CFG_GLPI;
         $menu['title'] = self::getMenuName(2);
         $menu['page'] = self::getSearchURL(false);
         $menu['links']['search'] = self::getSearchURL(false);
@@ -2691,7 +2693,7 @@ class PluginReleasesRelease extends CommonITILObject
         //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
         $menu['icon'] = static::getIcon();
         if (self::canCreate()) {
-            $menu['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR . "/front/creationrelease.php";
+            $menu['links']['add'] = $plugin_page = "/plugins/releases/front/creationrelease.php";
         }
 
 
