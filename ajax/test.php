@@ -43,6 +43,7 @@ header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 // Mandatory parameter: risktemplates_id
 $testtemplates_id = $_POST['testtemplates_id'] ?? null;

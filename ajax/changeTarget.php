@@ -34,6 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
 }
 
 Session::checkCentralAccess();
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
    $values = [];

@@ -34,6 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], "changeitemstate.php")) {
 }
 
 Session::checkCentralAccess();
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 
 if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && isset($_POST["field"]) && isset($_POST["status"])) {

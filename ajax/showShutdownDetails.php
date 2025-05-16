@@ -35,6 +35,7 @@ if (strpos($_SERVER['PHP_SELF'], "showShutdownDetails.php")) {
 }
 
 Session::checkCentralAccess();
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 
 if (isset($_POST["value"])) {

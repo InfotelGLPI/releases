@@ -34,6 +34,7 @@
 use Glpi\Exception\Http\NotFoundHttpException;
 
 Session::checkLoginUser();
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 if ( $_POST['action'] == 'done_fail') {
    header("Content-Type: application/json; charset=UTF-8");
