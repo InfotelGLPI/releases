@@ -102,7 +102,7 @@ function plugin_version_releases() {
       'license'        => 'GPLv2+',
       'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Alban Lesellier",
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
-      'minGlpiVersion' => '10.0',// For compatibility / no install
+      'minGlpiVersion' => '11.0',// For compatibility / no install
       'requirements'   => [
          'glpi' => [
             'min' => '11.0',
