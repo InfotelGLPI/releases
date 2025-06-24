@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-28 14:07+0000\n"
+"POT-Creation-Date: 2025-06-24 13:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,40 +19,40 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANS : %d is the number of problems
-#: inc/release.class.php:2994
+#: inc/release.class.php:2988
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/finalization.class.php:205
+#: inc/finalization.class.php:206
 #, php-format
 msgid "%s  tests failed"
 msgstr ""
 
-#: inc/finalization.class.php:192
+#: inc/finalization.class.php:193
 #, php-format
 msgid "%s / %s deploy tasks"
 msgstr ""
 
-#: inc/finalization.class.php:174
+#: inc/finalization.class.php:175
 #, php-format
 msgid "%s / %s risks"
 msgstr ""
 
-#: inc/finalization.class.php:183
+#: inc/finalization.class.php:184
 #, php-format
 msgid "%s / %s rollbacks"
 msgstr ""
 
-#: inc/finalization.class.php:204
+#: inc/finalization.class.php:205
 #, php-format
 msgid "%s / %s tests"
 msgstr ""
 
 #: front/finalization.php:91 front/finalization.php:106
-#: inc/finalization.class.php:193
+#: inc/finalization.class.php:194
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr ""
@@ -66,19 +66,19 @@ msgstr ""
 msgid "Actors"
 msgstr ""
 
+#: templates/form_risk.html.twig:194 templates/footer.html.twig:125
+#: templates/footer.html.twig:127 templates/form_rollback.html.twig:164
 #: templates/form_test.html.twig:236 templates/form_deploytask.html.twig:377
-#: templates/form_rollback.html.twig:164 templates/form_risk.html.twig:194
-#: templates/footer.html.twig:125 templates/footer.html.twig:127
 msgctxt "button"
 msgid "Add"
 msgstr ""
 
-#: inc/release.class.php:1224
+#: inc/release.class.php:1216
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr ""
 
-#: inc/release.class.php:1167
+#: inc/release.class.php:1159
 msgctxt "button"
 msgid "Add a followup"
 msgstr ""
@@ -87,17 +87,17 @@ msgstr ""
 msgid "Add a release"
 msgstr ""
 
-#: inc/release.class.php:1186
+#: inc/release.class.php:1178
 msgctxt "button"
 msgid "Add a risk"
 msgstr ""
 
-#: inc/release.class.php:1205
+#: inc/release.class.php:1197
 msgctxt "button"
 msgid "Add a rollback"
 msgstr ""
 
-#: inc/release.class.php:1243
+#: inc/release.class.php:1235
 msgctxt "button"
 msgid "Add a test"
 msgstr ""
@@ -113,11 +113,11 @@ msgstr[1] ""
 msgid "Associated risk"
 msgstr ""
 
-#: inc/release.class.php:2406 inc/releasetemplate.class.php:1501
+#: inc/release.class.php:2399 inc/releasetemplate.class.php:1503
 msgid "Associated with"
 msgstr ""
 
-#: inc/finalization.class.php:275
+#: inc/finalization.class.php:277
 msgid "Care all steps are not finish !"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgid_plural "Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:772
+#: inc/release.class.php:764
 msgid "Changes defined"
 msgstr ""
 
@@ -139,12 +139,12 @@ msgstr ""
 msgid "Closure of a releases"
 msgstr ""
 
-#: inc/release.class.php:318 inc/releasetemplate.class.php:891
+#: inc/release.class.php:318 inc/releasetemplate.class.php:893
 #: templates/fields_panel.html.twig:259 templates/fields_panel.html.twig:272
 msgid "Communication"
 msgstr ""
 
-#: inc/release.class.php:333 inc/releasetemplate.class.php:896
+#: inc/release.class.php:333 inc/releasetemplate.class.php:898
 #: templates/fields_panel.html.twig:279
 msgid "Communication type"
 msgstr ""
@@ -154,9 +154,9 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr ""
 
-#: templates/form_test.html.twig:248 templates/form_deploytask.html.twig:406
-#: templates/form_rollback.html.twig:176 templates/form_risk.html.twig:206
-#: templates/footer.html.twig:142
+#: templates/form_risk.html.twig:206 templates/footer.html.twig:142
+#: templates/form_rollback.html.twig:176 templates/form_test.html.twig:248
+#: templates/form_deploytask.html.twig:406
 msgid "Confirm the final deletion?"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Conforming realization"
 msgstr ""
 
-#: inc/release.class.php:2634 inc/releasetemplate.class.php:974
+#: inc/release.class.php:2627 inc/releasetemplate.class.php:976
 msgid "Create a release"
 msgstr ""
 
@@ -172,13 +172,13 @@ msgstr ""
 msgid "Create a test from this risk"
 msgstr ""
 
-#: inc/release.class.php:771
+#: inc/release.class.php:763
 msgid "Dates defined"
 msgstr ""
 
+#: templates/form_risk.html.twig:208 templates/footer.html.twig:141
+#: templates/footer.html.twig:144 templates/form_rollback.html.twig:178
 #: templates/form_test.html.twig:250 templates/form_deploytask.html.twig:408
-#: templates/form_rollback.html.twig:178 templates/form_risk.html.twig:208
-#: templates/footer.html.twig:141 templates/footer.html.twig:144
 msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
@@ -197,12 +197,12 @@ msgstr[1] ""
 msgid "Deploy Task type"
 msgstr ""
 
-#: inc/deploytask.class.php:53 inc/finalization.class.php:191
+#: inc/deploytask.class.php:53 inc/finalization.class.php:192
 #: inc/notificationtargetrelease.class.php:859
-#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1957
-#: inc/release.class.php:1959 inc/releasetemplate.class.php:164
-#: inc/releasetemplate.class.php:730 inc/releasetemplate.class.php:1309
-#: inc/releasetemplate.class.php:1310 templates/timeline.html.twig:95
+#: inc/notificationtargetrelease.class.php:879 inc/release.class.php:1950
+#: inc/release.class.php:1952 inc/releasetemplate.class.php:164
+#: inc/releasetemplate.class.php:732 inc/releasetemplate.class.php:1311
+#: inc/releasetemplate.class.php:1312 templates/timeline.html.twig:95
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] ""
@@ -214,7 +214,7 @@ msgid_plural "Deploy task types"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:775
+#: inc/release.class.php:767
 msgid "Deployment tasks in progress"
 msgstr ""
 
@@ -222,13 +222,11 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: templates/form_test.html.twig:49 templates/form_test.html.twig:52
-#: templates/form_test.html.twig:55 templates/form_test.html.twig:216
-#: templates/form_deploytask.html.twig:46
-#: templates/form_deploytask.html.twig:53
-#: templates/form_deploytask.html.twig:60
-#: templates/form_deploytask.html.twig:288 templates/form_rollback.html.twig:51
-#: templates/form_risk.html.twig:51 templates/timeline.html.twig:121
+#: templates/form_risk.html.twig:51 templates/form_rollback.html.twig:51
+#: templates/timeline.html.twig:121 templates/form_test.html.twig:49
+#: templates/form_test.html.twig:52 templates/form_test.html.twig:55
+#: templates/form_test.html.twig:216 templates/form_deploytask.html.twig:46 templates/form_deploytask.html.twig:53
+#: templates/form_deploytask.html.twig:60 templates/form_deploytask.html.twig:288
 msgid "Done"
 msgstr ""
 
@@ -236,7 +234,7 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-#: inc/release.class.php:779
+#: inc/release.class.php:771
 msgctxt "status"
 msgid "End"
 msgstr ""
@@ -247,14 +245,11 @@ msgid_plural "Entities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/deploytask.class.php:292 inc/deploytask.class.php:1031
-#: inc/release.class.php:780 inc/test.class.php:316 inc/test.class.php:355
+#: inc/deploytask.class.php:292 inc/deploytask.class.php:1040
+#: inc/release.class.php:772 inc/test.class.php:316 inc/test.class.php:355
 #: templates/form_test.html.twig:50 templates/form_test.html.twig:53
 #: templates/form_test.html.twig:56 templates/form_test.html.twig:217
-#: templates/form_deploytask.html.twig:49
-#: templates/form_deploytask.html.twig:56
-#: templates/form_deploytask.html.twig:63
-#: templates/form_deploytask.html.twig:289
+#: templates/form_deploytask.html.twig:49 templates/form_deploytask.html.twig:56 templates/form_deploytask.html.twig:63 templates/form_deploytask.html.twig:289
 msgid "Failed"
 msgstr ""
 
@@ -262,8 +257,8 @@ msgstr ""
 msgid "Finalization"
 msgstr ""
 
-#: inc/finalization.class.php:229 inc/finalization.class.php:233
-#: inc/finalization.class.php:295
+#: inc/finalization.class.php:230 inc/finalization.class.php:234
+#: inc/finalization.class.php:297
 msgid "Finalize"
 msgstr ""
 
@@ -271,11 +266,11 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: inc/release.class.php:2615 templates/fields_panel.html.twig:102
+#: inc/release.class.php:2608 templates/fields_panel.html.twig:102
 msgid "For this change"
 msgstr ""
 
-#: inc/releasetemplate.class.php:2171
+#: inc/releasetemplate.class.php:2173
 msgid "Group in charge of the release"
 msgstr ""
 
@@ -289,8 +284,8 @@ msgid_plural "Links Release/Change"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/finalization.class.php:236 inc/finalization.class.php:240
-#: inc/finalization.class.php:288
+#: inc/finalization.class.php:237 inc/finalization.class.php:241
+#: inc/finalization.class.php:290
 msgid "Mark as failed"
 msgstr ""
 
@@ -298,20 +293,20 @@ msgstr ""
 msgid "New release"
 msgstr ""
 
-#: inc/release.class.php:2457 inc/releasetemplate.class.php:1546
+#: inc/release.class.php:2450 inc/releasetemplate.class.php:1548
 msgid "No data available"
 msgstr ""
 
-#: inc/release.class.php:2998 inc/release.class.php:3045
+#: inc/release.class.php:2992 inc/release.class.php:3039
 msgid "No release found."
 msgstr ""
 
-#: inc/releasetemplate.class.php:152 inc/releasetemplate.class.php:667
-#: inc/releasetemplate.class.php:833 templates/fields_panel.html.twig:223
+#: inc/releasetemplate.class.php:152 inc/releasetemplate.class.php:669
+#: inc/releasetemplate.class.php:835 templates/fields_panel.html.twig:223
 msgid "Non-working hours"
 msgstr ""
 
-#: inc/finalization.class.php:212
+#: inc/finalization.class.php:213
 msgid "Not yet completed"
 msgstr ""
 
@@ -343,7 +338,7 @@ msgstr ""
 msgid "Plan this task"
 msgstr ""
 
-#: inc/change_release.class.php:316 inc/releasetemplate.class.php:636
+#: inc/change_release.class.php:316 inc/releasetemplate.class.php:638
 #: templates/fields_panel.html.twig:119
 msgid "Pre-production planned date"
 msgstr ""
@@ -360,12 +355,12 @@ msgstr ""
 msgid "Processing release"
 msgstr ""
 
-#: inc/change_release.class.php:317 inc/releasetemplate.class.php:641
+#: inc/change_release.class.php:317 inc/releasetemplate.class.php:643
 #: templates/fields_panel.html.twig:126
 msgid "Production planned date"
 msgstr ""
 
-#: inc/finalization.class.php:281 inc/release.class.php:293
+#: inc/finalization.class.php:283 inc/release.class.php:293
 #: inc/releasetemplate.class.php:140
 msgid "Production run date"
 msgstr ""
@@ -380,24 +375,24 @@ msgstr ""
 msgid "Real production run date"
 msgstr ""
 
-#: setup.php:97 front/change_release.form.php:48
+#: setup.php:100 front/change_release.form.php:48
 #: inc/notificationtargetrelease.class.php:883 inc/profile.class.php:52
-#: inc/release.class.php:74 inc/releasetemplate.class.php:947
+#: inc/release.class.php:74 inc/releasetemplate.class.php:949
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:2848 inc/releasetemplate.class.php:1583
+#: inc/release.class.php:2842 inc/releasetemplate.class.php:1585
 msgid "Release actions details"
 msgstr ""
 
-#: inc/change_release.class.php:315 inc/releasetemplate.class.php:627
-#: inc/releasetemplate.class.php:853
+#: inc/change_release.class.php:315 inc/releasetemplate.class.php:629
+#: inc/releasetemplate.class.php:855
 msgid "Release area"
 msgstr ""
 
-#: inc/release.class.php:770
+#: inc/release.class.php:762
 msgid "Release area defined"
 msgstr ""
 
@@ -411,7 +406,7 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:3033
+#: inc/release.class.php:3027
 msgid "Releases on linked items"
 msgstr ""
 
@@ -426,11 +421,11 @@ msgid_plural "Reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:778
+#: inc/release.class.php:770
 msgid "Reviewed"
 msgstr ""
 
-#: inc/deploytasktemplate.class.php:331 inc/finalization.class.php:173
+#: inc/deploytasktemplate.class.php:331 inc/finalization.class.php:174
 #: inc/notificationtargetrelease.class.php:734
 #: inc/notificationtargetrelease.class.php:861
 #: inc/notificationtargetrelease.class.php:881 inc/risk.class.php:50
@@ -453,15 +448,15 @@ msgid_plural "Risk types"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:773
+#: inc/release.class.php:765
 msgid "Risks defined"
 msgstr ""
 
-#: inc/finalization.class.php:182 inc/notificationtargetrelease.class.php:735
+#: inc/finalization.class.php:183 inc/notificationtargetrelease.class.php:735
 #: inc/notificationtargetrelease.class.php:736
 #: inc/notificationtargetrelease.class.php:862
 #: inc/notificationtargetrelease.class.php:882
-#: inc/releasetemplate.class.php:160 inc/releasetemplate.class.php:705
+#: inc/releasetemplate.class.php:160 inc/releasetemplate.class.php:707
 #: inc/rollback.class.php:51 templates/timeline.html.twig:93
 msgid "Rollback"
 msgid_plural "Rollbacks"
@@ -474,26 +469,26 @@ msgid_plural "Rollback templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:774
+#: inc/release.class.php:766
 msgid "Rollbacks defined"
 msgstr ""
 
+#: templates/form_risk.html.twig:201 templates/footer.html.twig:165
+#: templates/footer.html.twig:167 templates/form_rollback.html.twig:171
 #: templates/form_test.html.twig:243 templates/form_deploytask.html.twig:401
-#: templates/form_rollback.html.twig:171 templates/form_risk.html.twig:201
-#: templates/footer.html.twig:165 templates/footer.html.twig:167
 msgctxt "button"
 msgid "Save"
 msgstr ""
 
 #: inc/change_release.class.php:319 inc/release.class.php:301
-#: inc/releasetemplate.class.php:144 inc/releasetemplate.class.php:653
-#: inc/releasetemplate.class.php:865 templates/fields_panel.html.twig:203
+#: inc/releasetemplate.class.php:144 inc/releasetemplate.class.php:655
+#: inc/releasetemplate.class.php:867 templates/fields_panel.html.twig:203
 #: templates/fields_panel.html.twig:216
 msgid "Service shutdown"
 msgstr ""
 
 #: inc/release.class.php:309 inc/releasetemplate.class.php:148
-#: inc/releasetemplate.class.php:660 inc/releasetemplate.class.php:882
+#: inc/releasetemplate.class.php:662 inc/releasetemplate.class.php:884
 #: templates/fields_panel.html.twig:230
 msgid "Service shutdown details"
 msgstr ""
@@ -522,9 +517,9 @@ msgstr[1] ""
 msgid "Technical Support Document"
 msgstr ""
 
-#: inc/finalization.class.php:203 inc/notificationtargetrelease.class.php:860
+#: inc/finalization.class.php:204 inc/notificationtargetrelease.class.php:860
 #: inc/notificationtargetrelease.class.php:880
-#: inc/releasetemplate.class.php:156 inc/releasetemplate.class.php:681
+#: inc/releasetemplate.class.php:156 inc/releasetemplate.class.php:683
 #: inc/test.class.php:52 templates/timeline.html.twig:89
 msgid "Test"
 msgid_plural "Tests"
@@ -545,7 +540,7 @@ msgid_plural "Test types"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/release.class.php:776
+#: inc/release.class.php:768
 msgid "Tests in progress"
 msgstr ""
 
@@ -557,18 +552,18 @@ msgstr ""
 msgid "Timeline filter"
 msgstr ""
 
+#: templates/form_risk.html.twig:134 templates/form_rollback.html.twig:134
 #: templates/form_test.html.twig:146 templates/form_deploytask.html.twig:188
-#: templates/form_rollback.html.twig:134 templates/form_risk.html.twig:134
 msgid "Title"
 msgstr ""
 
-#: templates/form_test.html.twig:215 templates/form_deploytask.html.twig:287
-#: templates/form_rollback.html.twig:49 templates/form_risk.html.twig:49
-#: templates/timeline.html.twig:119
+#: templates/form_risk.html.twig:49 templates/form_rollback.html.twig:49
+#: templates/timeline.html.twig:119 templates/form_test.html.twig:215
+#: templates/form_deploytask.html.twig:287
 msgid "To do"
 msgstr ""
 
-#: inc/release.class.php:777
+#: inc/release.class.php:769
 msgid "To finalized"
 msgstr ""
 
