@@ -28,7 +28,8 @@
  */
 
 
-include('../../../inc/includes.php');
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 Session::checkLoginUser();
 Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
 
@@ -40,7 +41,7 @@ if ($release->canView()) {
    Search::show(PluginReleasesRelease::getType());
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+
 
 Session::checkLoginUser();
 
@@ -102,7 +102,7 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST['addme_observer'])) {
    $release->check($_POST['plugin_releases_releases_id'], READ);
-   $input = array_merge(Toolbox::addslashes_deep($release->fields), [
+   $input = array_merge($release->fields, [
       'plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
       '_itil_observer'              => [
          '_type'            => "user",
@@ -142,7 +142,7 @@ if (isset($_POST["add"])) {
                                                       'documents_id' => $doc->getID()
                                                    ]);
       foreach ($found_document_items as $item) {
-         $document_item->delete(Toolbox::addslashes_deep($item), true);
+         $document_item->delete($item, true);
       }
    }
    Html::back();

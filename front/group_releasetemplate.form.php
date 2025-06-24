@@ -35,10 +35,8 @@
  */
 
 use Glpi\Event;
-
-if (!defined('GLPI_ROOT')) {
-   include('../../../inc/includes.php');
-}
+use Glpi\Exception\Http\BadRequestHttpException;
+global $CFG_GLPI;
 
 $link = new PluginReleasesGroup_Releasetemplate();
 $item = new PluginReleasesReleasetemplate();
@@ -58,7 +56,7 @@ if (isset($_POST['delete'])) {
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);
 
-   Html::redirect(PLUGIN_RELEASES_WEBDIR . "/front/releasetemplate.php");
+   Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/releasetemplate.php");
 }
 
-Html::displayErrorAndDie('Lost');
+throw new BadRequestHttpException('Lost');

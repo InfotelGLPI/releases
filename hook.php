@@ -83,7 +83,9 @@ function plugin_releases_uninstall() {
    ];
 
    foreach ($tables as $table) {
-      $DB->dropTable($table);
+       if ($DB->tableExists($table)) {
+           $DB->dropTable($table);
+       }
    }
 
    $tables_glpi = ["glpi_displaypreferences",
@@ -112,8 +114,11 @@ function plugin_releases_uninstall() {
                'FIELDS'   => 'id'];
 
    $notif = new Notification();
-   foreach ($DB->request('glpi_notifications', $options) as $data) {
-      $notif->delete($data);
+    foreach ($DB->request([
+        'FROM'  => 'glpi_notifications',
+        'WHERE' => $options
+    ]) as $data) {
+        $notif->delete($data);
    }
 
    //templates
@@ -121,18 +126,30 @@ function plugin_releases_uninstall() {
    $translation    = new NotificationTemplateTranslation();
    $notif_template = new Notification_NotificationTemplate();
    $options        = ['itemtype' => 'PluginReleasesRelease',
-                      'FIELDS'   => 'id'];
+//                      'FIELDS'   => 'id'
+   ];
 
-   foreach ($DB->request('glpi_notificationtemplates', $options) as $data) {
-      $options_template = ['notificationtemplates_id' => $data['id'],
+    foreach ($DB->request([
+        'FROM'  => 'glpi_notificationtemplates',
+        'WHERE' => $options
+    ]) as $data) {
+        $options_template = ['notificationtemplates_id' => $data['id'],
                            'FIELDS'                   => 'id'];
-      foreach ($DB->request('glpi_notificationtemplatetranslations', $options_template) as $data_template) {
-         $translation->delete($data_template);
+        foreach ($DB->request([
+            'FROM'  => 'glpi_notificationtemplatetranslations',
+            'WHERE' => $options_template
+        ]) as $data_template) {
+
+            $translation->delete($data_template);
       }
       $template->delete($data);
 
-      foreach ($DB->request('glpi_notifications_notificationtemplates', $options_template) as $data_template) {
-         $notif_template->delete($data_template);
+        foreach ($DB->request([
+            'FROM'  => 'glpi_notifications_notificationtemplates',
+            'WHERE' => $options_template
+        ]) as $data_template) {
+
+            $notif_template->delete($data_template);
       }
    }
 
@@ -288,13 +305,13 @@ function install_notifications() {
 
    // Notification
    // Request
-   $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','PluginReleasesRelease', NOW());";
-   $result = $DB->query($query_id) or die($DB->error());
-   $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginReleasesRelease' AND `name` = 'New release'";
-   $result = $DB->query($query_id) or die($DB->error());
+    $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','PluginReleasesRelease', NOW());";
+    $result = $DB->doQuery($query_id) or die($DB->error());
+    $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginReleasesRelease' AND `name` = 'New release'";
+    $result = $DB->doQuery($query_id) or die($DB->error());
    $templates_id = $DB->result($result, 0, 'id');
 
-   $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
+    $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
 VALUES('" . $templates_id . "',
 '##lang.pluginreleasesrelease.release## : ##pluginreleasesrelease.title##',
 '##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
@@ -346,23 +363,26 @@ VALUES('" . $templates_id . "',
 ##ENDFOREACHtests##
 
 
-','');";
-   $DB->query($query);
 
-   $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
+','');";
+    $DB->doQuery($query);
+
+    $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
               VALUES ('New release', 0, 'PluginReleasesRelease', 'newRelease', 1);";
-   $DB->query($query);
+    $DB->doQuery($query);
 
    //retrieve notification id
-   $query_id = "SELECT `id` FROM `glpi_notifications`
+    $query_id = "SELECT `id` FROM `glpi_notifications`
                WHERE `name` = 'New release' AND `itemtype` = 'PluginReleasesRelease' AND `event` = 'newRelease'";
-   $result = $DB->query($query_id) or die ($DB->error());
-   $notification = $DB->result($result, 0, 'id');
+    $result = $DB->doQuery($query_id) or die ($DB->error());
+    $notification = $DB->result($result, 0, 'id');
 
-   $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`) 
+    $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`) 
                VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
-   $DB->query($query);
-   //
+    $DB->doQuery($query);
+    //
+
+    //
    //      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
    //              VALUES ('Consumable request', 0, 'PluginConsumablesRequest', 'ConsumableRequest', 1);";
    //      $DB->query($query);

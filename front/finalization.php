@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+
 Session::checkLoginUser();
 
 Html::popHeader(__("Release finalization", 'releases'), $_SERVER['PHP_SELF']);

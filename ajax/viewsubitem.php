@@ -27,22 +27,25 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
-   $AJAX_INCLUDE = 1;
-   include('../../../inc/includes.php');
+
+
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 Session::checkCentralAccess();
 global $CFG_GLPI;
 $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 Html::header_nocache();
 if (!isset($_REQUEST['type'])) {
-   exit();
+    throw new NotFoundHttpException();
 }
 if (!isset($_REQUEST['parenttype'])) {
-   exit();
+    throw new NotFoundHttpException();
 }
 
 $item   = getItemForItemtype($_REQUEST['type']);
@@ -67,5 +70,5 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
    echo __('Access denied');
 }
 
-Html::ajaxFooter();
+
 

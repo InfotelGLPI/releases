@@ -794,15 +794,24 @@ class PluginReleasesDeploytask extends CommonDBTM {
          $ASSIGN .= ") AND ";
       }
 
-      $query = "SELECT `glpi_plugin_releases_deploytasks`.*
-                FROM `glpi_plugin_releases_deploytasks`
-                LEFT JOIN `glpi_plugin_releases_typedeploytasks` 
-                ON (`glpi_plugin_releases_typedeploytasks`.`id` = `glpi_plugin_releases_deploytasks`.`plugin_releases_typedeploytasks_id`)
-                WHERE $ASSIGN
-                      '$begin' < `end` AND '$end' > `begin`
-                ORDER BY `begin`";
-
-      $result = $DB->query($query);
+       $query = [
+           'SELECT' => 'glpi_plugin_releases_deploytasks.*',
+           'FROM'   => 'glpi_plugin_releases_deploytasks',
+           'LEFT JOIN' => [
+               'glpi_plugin_releases_typedeploytasks' => [
+                   'ON' => 'glpi_plugin_releases_typedeploytasks.id = glpi_plugin_releases_deploytasks.plugin_releases_typedeploytasks_id'
+               ]
+           ],
+           'WHERE'  => [
+               'ASSIGN' => $ASSIGN,
+               'AND' => [
+                   "'$begin' < `end`",
+                   "'$end' > `begin`"
+               ]
+           ],
+           'ORDER BY' => 'begin'
+       ];
+      $result = $DB->doQuery($query);
 
       if ($DB->numrows($result) > 0) {
          for ($i = 0; $data = $DB->fetchArray($result); $i++) {
@@ -851,7 +860,7 @@ class PluginReleasesDeploytask extends CommonDBTM {
       $html = "";
 
       $rand = mt_rand();
-      $html .= "<a href='" . PLUGIN_RELEASES_WEBDIR . "/front/deploytask.form.php?id=" . $val["id"] . "'";
+      $html .= "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/releases/front/deploytask.form.php?id=" . $val["id"] . "'";
 
       $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
                onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";

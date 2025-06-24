@@ -331,7 +331,7 @@ class PluginReleasesChange_Release extends CommonDBRelation {
             echo "</td>";
 
             echo "<td class='center'>";
-            echo "<a href='" . PLUGIN_RELEASES_WEBDIR . "/front/release.form.php?id=" . $idc . "'>";
+            echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/releases/front/release.form.php?id=" . $idc . "'>";
             echo $d["name"];
             if ($_SESSION["glpiis_ids_visible"] || empty($d["name"])) {
                echo " (" . $idc . ")";

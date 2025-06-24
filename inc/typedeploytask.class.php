@@ -64,14 +64,15 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
          // Not already transfer
          // Search init item
          $table = CommonDBTM::getTable(self::class);
-         $query = "SELECT *
-                   FROM `" . $table . "`
-                   WHERE `id` = '$ID'";
+          $query = [
+              'SELECT' => '*',
+              'FROM'   => $table,
+              'WHERE'  => ['id' => $ID]
+          ];
 
-         if ($result = $DB->query($query)) {
+         if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result)) {
                $data                 = $DB->fetchAssoc($result);
-               $data                 = Toolbox::addslashes_deep($data);
                $input['name']        = $data['name'];
                $input['entities_id'] = $entity;
 
@@ -143,7 +144,8 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
    }
 
 
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRight(static::$rightname, UPDATE);
    }
 
@@ -156,7 +158,8 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(static::$rightname, READ);
    }
 

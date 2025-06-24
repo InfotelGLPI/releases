@@ -31,7 +31,7 @@
  */
 
 
-include('../../../inc/includes.php');
+
 
 Session::checkLoginUser();
 

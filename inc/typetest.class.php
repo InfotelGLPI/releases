@@ -64,14 +64,15 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
          // Not already transfer
          // Search init item
          $table = CommonDBTM::getTable(PluginReleasesTypeTest::class);
-         $query = "SELECT *
-                   FROM `" . $table . "`
-                   WHERE `id` = '$ID'";
+          $query = [
+              'SELECT' => '*',
+              'FROM'   => $table,
+              'WHERE'  => ['id' => $ID]
+          ];
 
-         if ($result = $DB->query($query)) {
+         if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result)) {
                $data                 = $DB->fetchAssoc($result);
-               $data                 = Toolbox::addslashes_deep($data);
                $input['name']        = $data['name'];
                $input['entities_id'] = $entity;
 
@@ -144,7 +145,8 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
 
    static function getMenuOptions($menu) {
 
-      $plugin_page = PLUGIN_RELEASES_NOTFULL_WEBDIR.'/front/typetest.php';
+       global $CFG_GLPI;
+       $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.php";
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -153,13 +155,14 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = PLUGIN_RELEASES_NOTFULL_WEBDIR.'/front/typetest.form.php\';';
+         $menu['options'][$itemtype]['links']['add'] = $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.form.php\';";
       }
 
       return $menu;
    }
 
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRight(static::$rightname, UPDATE);
    }
 
@@ -172,7 +175,8 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(static::$rightname, READ);
    }
 

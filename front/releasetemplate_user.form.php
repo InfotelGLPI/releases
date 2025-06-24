@@ -35,10 +35,8 @@
  */
 
 use Glpi\Event;
-
-if (!defined('GLPI_ROOT')) {
-   include('../../../inc/includes.php');
-}
+use Glpi\Exception\Http\BadRequestHttpException;
+global $CFG_GLPI;
 
 $link = new PluginReleasesReleasetemplate_User();
 $item = new PluginReleasesReleasetemplate();
@@ -68,12 +66,12 @@ if (isset($_POST["update"])) {
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);
 
-   Html::redirect(PLUGIN_RELEASES_WEBDIR . "//front/releasetemplate.php");
+   Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/releasetemplate.php");
 
 } else if (isset($_GET["id"])) {
    $link->showUserNotificationForm($_GET["id"]);
 } else {
-   Html::displayErrorAndDie('Lost');
+    throw new BadRequestHttpException('Lost');
 }
 
 Html::popFooter();

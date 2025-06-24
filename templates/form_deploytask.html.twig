@@ -31,7 +31,7 @@
 
 {% extends 'components/itilobject/timeline/form_timeline_item.html.twig' %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
-{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
+{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
 {% set params = {'parent': item}|merge(params|default({})) %}
 
 {% set candedit = item.maySolve() %}
@@ -76,7 +76,7 @@
             {% if entry_i['users_id_tech'] %}
                 <span class="badge bg-orange-lt">
                   {% set is_current_tech = (entry_i['users_id_tech'] == session('glpiID')) %}
-                    {% set anonym_tech = (get_current_interface() == 'helpdesk' and not is_current_tech and entity_config('anonymize_support_agents') != constant('Entity::ANONYMIZE_DISABLED')) %}
+                    {% set anonym_tech = (get_current_interface() == 'helpdesk' and not is_current_tech and entity_config('anonymize_support_agents', entity_id) != constant('Entity::ANONYMIZE_DISABLED')) %}
                     {{ include('components/user/link_with_tooltip.html.twig', {
                         'users_id': entry_i['users_id_tech'],
                         'enable_anonymization': anonym_tech

@@ -33,7 +33,7 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {% set params = {'item': item}|merge(params|default({})) %}
-{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
+{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
 {% set candedit = item.maySolve() %}
 {% set rand = random() %}
 {% set field_options = {

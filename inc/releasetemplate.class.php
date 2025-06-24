@@ -275,7 +275,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
    }
 
-   static function canCreate() {
+   static function canCreate(): bool
+   {
       return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
    }
 
@@ -288,7 +289,8 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     *
     * @return booleen
     **/
-   static function canView() {
+   static function canView(): bool
+   {
       return Session::haveRight(static::$rightname, READ);
    }
 
@@ -877,7 +879,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
       Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
-                                    PLUGIN_RELEASES_WEBDIR . "/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
 
       echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
       echo "<td colspan='3'>";
@@ -916,13 +918,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       echo "</td>";
       Ajax::updateItem("targets",
-                       PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
                        ['type'         => $this->fields["communication_type"],
                         'current_type' => $this->fields["communication_type"],
                         'values'       => $targets],
                        true);
       Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-                                    PLUGIN_RELEASES_WEBDIR . "/ajax/changeTarget.php",
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
                                     ['type'         => '__VALUE__',
                                      'current_type' => $this->fields["communication_type"],
                                      'values'       => $targets],
@@ -1128,7 +1130,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                                                             $(_eltsel + ' .displayed_content').show();
                                                         });
                $(_eltsel + ' .edit_item_content').show()
-                                                 .load('" . PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php',
+                                                 .load('" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php',
                                                        {'action'    : 'viewsubitem',
                                                         'type'      : itemtype,
                                                         'parenttype': '$objType',
@@ -1154,7 +1156,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                  $foreignKey  => $this->fields['id'],
                  'id'         => -1];
       $out    = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-                                       PLUGIN_RELEASES_WEBDIR . "/ajax/timeline.php",
+          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php",
                                        $params, "", false);
       echo str_replace("\"itemtype\"", "itemtype", $out);
       echo "};
@@ -1401,7 +1403,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 //               echo "</div>";
 
                echo "<span class='h_user_name'>";
-               $userdata = getUserName($item_i['users_id'], 2);
+               $userdata = getUserName($item_i['users_id']);
                echo $user->getLink() . "&nbsp;";
                echo Html::showToolTip(
                   $userdata["comment"],
@@ -1520,7 +1522,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
              && $item_i['users_id_editor'] > 0) {
             echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
             $user->getFromDB($item_i['users_id_editor']);
-            $userdata = getUserName($item_i['users_id_editor'], 2);
+            $userdata = getUserName($item_i['users_id_editor']);
             if (isset($item_i['date_mod']))
                echo sprintf(
                   __('Last edited on %1$s by %2$s'),
@@ -2093,7 +2095,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             echo "$mandatory$usericon&nbsp;";
 
             if ($k) {
-               $userdata = getUserName($k, 2);
+               $userdata = getUserName($k);
             } else {
                $email    = $d['alternative_email'];
                $userdata = "<a href='mailto:$email'>$email</a>";

@@ -30,9 +30,11 @@
  * ---------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+
+use Glpi\Exception\Http\NotFoundHttpException;
 
 Session::checkLoginUser();
+Session::checkRight('plugin_releases_releases', UPDATE);
 
 if ( $_POST['action'] == 'done_fail') {
    header("Content-Type: application/json; charset=UTF-8");
@@ -41,7 +43,7 @@ if ( $_POST['action'] == 'done_fail') {
       !isset($_POST['items_id'])
       || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
    ) {
-      exit();
+       throw new NotFoundHttpException();
    }
 
    $taskClass = $_POST['itemtype'];
@@ -88,7 +90,7 @@ if ( $_POST['action'] == 'done_fail') {
       !isset($_POST['items_id'])
       || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
    ) {
-      exit();
+       throw new NotFoundHttpException();
    }
 
    $taskClass = $_POST['itemtype'];
@@ -143,7 +145,7 @@ if ( $_POST['action'] == 'done_fail') {
       case "change_task_state":
          header("Content-Type: application/json; charset=UTF-8");
          if (!isset($_REQUEST['items_id'])) {
-            exit();
+             throw new NotFoundHttpException();
          }
          $objClass = $_REQUEST['itemtype'];
          $obj      = new $objClass;
@@ -169,10 +171,10 @@ if ( $_POST['action'] == 'done_fail') {
       case "viewsubitem":
          Html::header_nocache();
          if (!isset($_REQUEST['type'])) {
-            exit();
+             throw new NotFoundHttpException();
          }
          if (!isset($_REQUEST['parenttype'])) {
-            exit();
+             throw new NotFoundHttpException();
          }
 
          $item   = getItemForItemtype($_REQUEST['type']);
@@ -198,7 +200,7 @@ if ( $_POST['action'] == 'done_fail') {
             echo __('Access denied');
          }
 
-         Html::ajaxFooter();
+
          break;
 
    }

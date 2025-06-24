@@ -29,7 +29,7 @@
 {# # ---------------------------------------------------------------------#}
 {# #}
 
-{% set rpath = constant('PLUGIN_RELEASES_WEBDIR') %}
+{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
 {% set timeline_order = "flex-column" %}
 {% if user_pref('timeline_order') == constant('CommonITILObject::TIMELINE_ORDER_REVERSE') %}
     {% set timeline_order = "flex-column-reverse" %}
@@ -47,7 +47,7 @@
       {% set date_mod = entry_i['date_mod'] %}
       {% set entry_rand = random() %}
       {% set is_current_user = users_id == session('glpiID') %}
-      {% set anonym_user = (get_current_interface() == 'helpdesk' and not is_current_user and entity_config('anonymize_support_agents') != constant('Entity::ANONYMIZE_DISABLED')) %}
+       {% set anonym_user = (get_current_interface() == 'helpdesk' and not is_current_user and entity_config('anonymize_support_agents', entity_id) != constant('Entity::ANONYMIZE_DISABLED')) %}
 
 {#       Fix solution type#}
       {% if entry['type'] is same as 'Solution' %}
