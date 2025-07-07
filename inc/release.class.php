@@ -3767,7 +3767,7 @@ class PluginReleasesRelease extends CommonITILObject
 
     public static function getTaskClass()
     {
-        // TODO: Implement getTaskClass() method.
+        return PluginReleasesDeploytask::class;
     }
 
     public static function getContentTemplatesParametersClass(): string
