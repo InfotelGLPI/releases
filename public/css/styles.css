@@ -4824,3 +4824,48 @@ h2.dateColor {
    background-color: #8db8e2;
    color: white !important;
 }
+
+#item-main > div > div > label{
+   width: auto;
+}
+
+#item-main > div > div > div {
+   width: auto;
+}
+
+#actors > div > div > div.d-flex.align-items-center > label{
+   width: auto;
+}
+#shutdowns > div > div > label{
+   width: auto;
+}
+#shutdowns > div > div > div{
+   width: auto;
+}
+#communications > div > div > label{
+   width: auto;
+}
+#communications > div > div > div{
+   width: auto;
+}
+
+.accordion-button::after {
+   flex-shrink: 0;
+   width: 1rem;
+   height: 1rem;
+   margin-left: auto;
+   content: "";
+   display: inline-block;
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3C!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--%3E%3Cpath d='M207 381.5L12.7 187.1c-9.4-9.4-9.4-24.6 0-33.9l22.7-22.7c9.4-9.4 24.5-9.4 33.9 0L224 284.5l154.7-154c9.4-9.3 24.5-9.3 33.9 0l22.7 22.7c9.4 9.4 9.4 24.6 0 33.9L241 381.5c-9.4 9.4-24.6 9.4-33.9 0z'/%3E%3C/svg%3E");
+   background-repeat: no-repeat;
+   background-size: 1rem;
+   transition: transform 0.2s ease-in-out;
+}
+.accordion-button:not(.collapsed)::after {
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3C!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--%3E%3Cpath d='M207 381.5L12.7 187.1c-9.4-9.4-9.4-24.6 0-33.9l22.7-22.7c9.4-9.4 24.5-9.4 33.9 0L224 284.5l154.7-154c9.4-9.3 24.5-9.3 33.9 0l22.7 22.7c9.4 9.4 9.4 24.6 0 33.9L241 381.5c-9.4 9.4-24.6 9.4-33.9 0z'/%3E%3C/svg%3E");
+   transform: rotate(-180deg);
+}
+
+.item-title{
+   font-size: 15px;
+}
