@@ -110,8 +110,7 @@ function plugin_releases_uninstall() {
    //   }
 
    $options = ['itemtype' => 'PluginReleasesRelease',
-               'event'    => 'newRelease',
-               'FIELDS'   => 'id'];
+               'event'    => 'newRelease'];
 
    $notif = new Notification();
     foreach ($DB->request([
@@ -125,16 +124,13 @@ function plugin_releases_uninstall() {
    $template       = new NotificationTemplate();
    $translation    = new NotificationTemplateTranslation();
    $notif_template = new Notification_NotificationTemplate();
-   $options        = ['itemtype' => 'PluginReleasesRelease',
-//                      'FIELDS'   => 'id'
-   ];
+   $options        = ['itemtype' => 'PluginReleasesRelease'];
 
     foreach ($DB->request([
         'FROM'  => 'glpi_notificationtemplates',
         'WHERE' => $options
     ]) as $data) {
-        $options_template = ['notificationtemplates_id' => $data['id'],
-                           'FIELDS'                   => 'id'];
+        $options_template = ['notificationtemplates_id' => $data['id']];
         foreach ($DB->request([
             'FROM'  => 'glpi_notificationtemplatetranslations',
             'WHERE' => $options_template
