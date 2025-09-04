@@ -38,6 +38,10 @@ class PluginReleasesReview extends CommonDBTM {
 
    static $rightname = 'plugin_releases_releases';
 
+    static function getIcon()
+    {
+        return "ti ti-eye ";
+    }
    /**
     * @param int $nb
     *
@@ -51,7 +55,7 @@ class PluginReleasesReview extends CommonDBTM {
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if ($item->getType() == PluginReleasesRelease::getType()) {
-         return self::getTypeName(1);
+         return self::createTabEntry(self::getTypeName(1));
       }
 
       return '';

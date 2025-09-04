@@ -51,6 +51,12 @@ class PluginReleasesRelease_Item extends CommonDBRelation {
    static public $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
 
+
+    public static function getIcon()
+    {
+        return "ti ti-package";
+    }
+
    /**
     * @since 0.84
     **/

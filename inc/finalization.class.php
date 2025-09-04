@@ -44,6 +44,10 @@ class PluginReleasesFinalization extends CommonDBTM {
    const FAIL = 3; // Failed
 
 
+    static function getIcon()
+    {
+        return "ti ti-check";
+    }
    /**
     * @param int $nb
     *
@@ -70,7 +74,7 @@ class PluginReleasesFinalization extends CommonDBTM {
       if (static::canView()) {
          switch ($item->getType()) {
             case PluginReleasesRelease::getType() :
-               return self::getTypeName(2);
+               return self::createTabEntry(self::getTypeName(2));
          }
       }
       return '';

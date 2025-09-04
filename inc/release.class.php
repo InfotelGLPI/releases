@@ -1828,11 +1828,11 @@ class PluginReleasesRelease extends CommonITILObject
                   'itemtype':   itemtype,
                   'parenttype': '$objType',
                   '$foreignKey': " . $this->fields['id'] . ",
-                  'newStatus': newStatus 
+                  'newStatus': newStatus
                 })
                 .done(function(response) {
                 $(target).parent().children().css('color','gray');//add gray to done and fail
-                          
+
                 if(response.state == 2){
 //                console.log($(target).parent().children('i[data-type=\"done\"]'));
                    $(target).parent().children('i[data-type=\"done\"]').css('color','forestgreen');//green to done
@@ -2459,7 +2459,7 @@ class PluginReleasesRelease extends CommonITILObject
 
             unset($_SESSION["releases"][Session::getLoginUserID()]);
             echo Html::scriptBlock(
-                "$(document).ready(function (){        
+                "$(document).ready(function (){
                                         $('.filter_timeline_release li a').removeClass('h_active');
                                         $('.h_item').removeClass('h_hidden');
                                        $('.h_item').addClass('h_hidden');
@@ -3767,6 +3767,12 @@ class PluginReleasesRelease extends CommonITILObject
     public static function getContentTemplatesParametersClass(): string
     {
         // TODO: Implement getContentTemplatesParametersClass() method.
+    }
+
+    public static function getContentTemplatesParametersClassInstance(
+    ): \Glpi\ContentTemplates\Parameters\CommonITILObjectParameters
+    {
+        // TODO: Implement getContentTemplatesParametersClassInstance() method.
     }
 }
 
