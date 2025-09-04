@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-04 07:23+0000\n"
+"POT-Creation-Date: 2025-09-04 09:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "%s tests failed"
 msgstr ""
 
-#: templates/fields_panel.html.twig:149 templates/fields_panel.html.twig:153
+#: templates/fields_panel.html.twig:150
 msgid "Actors"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgctxt "button"
 msgid "Add a test"
 msgstr ""
 
-#: templates/fields_panel.html.twig:173
+#: templates/fields_panel.html.twig:168
 msgid "Associated change"
 msgid_plural "Associated changes"
 msgstr[0] ""
@@ -132,7 +132,7 @@ msgstr[1] ""
 msgid "Changes defined"
 msgstr ""
 
-#: templates/fields_panel.html.twig:91
+#: templates/fields_panel.html.twig:89
 msgid "Child entities"
 msgstr ""
 
@@ -141,12 +141,12 @@ msgid "Closure of a releases"
 msgstr ""
 
 #: inc/release.class.php:318 inc/releasetemplate.class.php:893
-#: templates/fields_panel.html.twig:259 templates/fields_panel.html.twig:272
+#: templates/fields_panel.html.twig:250 templates/fields_panel.html.twig:262
 msgid "Communication"
 msgstr ""
 
 #: inc/release.class.php:333 inc/releasetemplate.class.php:898
-#: templates/fields_panel.html.twig:279
+#: templates/fields_panel.html.twig:269
 msgid "Communication type"
 msgstr ""
 
@@ -242,7 +242,7 @@ msgctxt "status"
 msgid "End"
 msgstr ""
 
-#: templates/fields_panel.html.twig:66 templates/fields_panel.html.twig:80
+#: templates/fields_panel.html.twig:64 templates/fields_panel.html.twig:78
 msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] ""
@@ -271,7 +271,7 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: inc/release.class.php:2608 templates/fields_panel.html.twig:102
+#: inc/release.class.php:2608 templates/fields_panel.html.twig:100
 msgid "For this change"
 msgstr ""
 
@@ -307,7 +307,7 @@ msgid "No release found."
 msgstr ""
 
 #: inc/releasetemplate.class.php:152 inc/releasetemplate.class.php:669
-#: inc/releasetemplate.class.php:835 templates/fields_panel.html.twig:223
+#: inc/releasetemplate.class.php:835 templates/fields_panel.html.twig:215
 msgid "Non-working hours"
 msgstr ""
 
@@ -335,7 +335,7 @@ msgctxt "quantity"
 msgid "Number of tests"
 msgstr ""
 
-#: templates/fields_panel.html.twig:112
+#: templates/fields_panel.html.twig:110
 msgid "Opening date"
 msgstr ""
 
@@ -344,7 +344,7 @@ msgid "Plan this task"
 msgstr ""
 
 #: inc/change_release.class.php:335 inc/releasetemplate.class.php:638
-#: templates/fields_panel.html.twig:119
+#: templates/fields_panel.html.twig:117
 msgid "Pre-production planned date"
 msgstr ""
 
@@ -361,7 +361,7 @@ msgid "Processing release"
 msgstr ""
 
 #: inc/change_release.class.php:336 inc/releasetemplate.class.php:643
-#: templates/fields_panel.html.twig:126
+#: templates/fields_panel.html.twig:124
 msgid "Production planned date"
 msgstr ""
 
@@ -488,14 +488,14 @@ msgstr ""
 
 #: inc/change_release.class.php:338 inc/release.class.php:301
 #: inc/releasetemplate.class.php:144 inc/releasetemplate.class.php:655
-#: inc/releasetemplate.class.php:867 templates/fields_panel.html.twig:203
-#: templates/fields_panel.html.twig:216
+#: inc/releasetemplate.class.php:867 templates/fields_panel.html.twig:196
+#: templates/fields_panel.html.twig:208
 msgid "Service shutdown"
 msgstr ""
 
 #: inc/release.class.php:309 inc/releasetemplate.class.php:148
 #: inc/releasetemplate.class.php:662 inc/releasetemplate.class.php:884
-#: templates/fields_panel.html.twig:230
+#: templates/fields_panel.html.twig:222
 msgid "Service shutdown details"
 msgstr ""
 
