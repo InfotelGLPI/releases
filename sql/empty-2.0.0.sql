@@ -394,14 +394,14 @@ CREATE TABLE `glpi_plugin_releases_releasetemplates_suppliers` (
   KEY `group` (`suppliers_id`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`)
-VALUES (NULL, 'PluginReleasesRelease', 1, 1, 0),
-(NULL, 'PluginReleasesRelease', 8, 2, 0),
-(NULL, 'PluginReleasesRelease', 2, 3, 0),
-(NULL, 'PluginReleasesRelease', 4, 4, 0),
-(NULL, 'PluginReleasesRelease', 5, 5, 0),
-(NULL, 'PluginReleasesRelease', 6, 6, 0),
-(NULL, 'PluginReleasesRelease', 7, 7, 0),
-(NULL, 'PluginReleasesRelease', 18, 8, 0),
-(NULL, 'PluginReleasesRelease', 9, 9, 0),
-(NULL, 'PluginReleasesReleasetemplate',4,3,0);
+INSERT INTO `glpi_displaypreferences` (`id`, `itemtype`, `num`, `rank`, `users_id`, `interface`)
+VALUES (NULL, 'PluginReleasesRelease', 1, 1, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 8, 2, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 2, 3, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 4, 4, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 5, 5, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 6, 6, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 7, 7, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 18, 8, 0, 'central'),
+(NULL, 'PluginReleasesRelease', 9, 9, 0, 'central'),
+(NULL, 'PluginReleasesReleasetemplate',4,3,0, 'central');
