@@ -84,7 +84,7 @@ function plugin_releases_uninstall() {
 
    foreach ($tables as $table) {
        if ($DB->tableExists($table)) {
-           $DB->dropTable($table);
+           $DB->dropTable($table, true);
        }
    }
 
@@ -377,7 +377,7 @@ VALUES('" . $templates_id . "',
     $result = $DB->doQuery($query_id) or die ($DB->error());
     $notification = $DB->result($result, 0, 'id');
 
-    $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`) 
+    $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
                VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
     $DB->doQuery($query);
     //
