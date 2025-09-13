@@ -30,6 +30,7 @@
 global $CFG_GLPI;
 
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Metademands\Metademand;
 
 define('PLUGIN_RELEASES_VERSION', '2.0.4');
 
@@ -58,8 +59,8 @@ function plugin_init_releases() {
 
    if (Session::getLoginUserID()) {
 
-       if (class_exists('PluginMetademandsMetademand')) {
-           PluginMetademandsMetademand::registerType('PluginReleasesRelease');
+       if (class_exists(Metademand::class)) {
+           Metademand::registerType('PluginReleasesRelease');
        }
 
       Plugin::registerClass('PluginReleasesProfile',
