@@ -30,16 +30,16 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 0.85
- */
-
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Releasetemplate;
+use GlpiPlugin\Releases\Releasetemplate_User;
+
 global $CFG_GLPI;
 
-$link = new PluginReleasesReleasetemplate_User();
-$item = new PluginReleasesReleasetemplate();
+$link = new Releasetemplate_User();
+$item = new Releasetemplate();
 
 Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
@@ -61,7 +61,7 @@ if (isset($_POST["update"])) {
 
 
    if ($item->can($link->fields["plugin_releases_releasetemplates_id"], READ)) {
-      Html::redirect(PluginReleasesRelease::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
+      Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
    }
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);

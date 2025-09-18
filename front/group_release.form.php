@@ -30,16 +30,15 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 0.85
- */
-
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Releases\Group_Release;
+use GlpiPlugin\Releases\Release;
+
 global $CFG_GLPI;
 
-$link = new PluginReleasesGroup_Release();
-$item = new PluginReleasesRelease();
+$link = new Group_Release();
+$item = new Release();
 
 Session::checkLoginUser();
 
@@ -51,7 +50,7 @@ if (isset($_POST['delete'])) {
               sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]));
 
    if ($item->can($link->fields["plugin_releases_releases_id"], READ)) {
-      Html::redirect(PluginReleasesRelease::getFormURLWithID($link->fields['plugin_releases_releases_id']));
+      Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releases_id']));
    }
    Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
                                     true, ERROR);

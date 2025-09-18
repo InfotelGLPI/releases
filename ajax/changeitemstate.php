@@ -27,8 +27,9 @@
  --------------------------------------------------------------------------
  */
 
-if (strpos($_SERVER['PHP_SELF'], "changeitemstate.php")) {
+use GlpiPlugin\Releases\Release;
 
+if (strpos($_SERVER['PHP_SELF'], "changeitemstate.php")) {
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
@@ -39,7 +40,7 @@ Session::checkRight('plugin_releases_releases', UPDATE);
 
 if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && isset($_POST["field"]) && isset($_POST["status"])) {
    global $DB;
-   $item = new PluginReleasesRelease();
+   $item = new Release();
    $item->getFromDB($_POST["plugin_releases_releases_id"]);
    if ($_POST["status"] > $item->getField('status')) {
       $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID(), 'status' => $_POST["status"]];

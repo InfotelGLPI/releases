@@ -27,14 +27,22 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonGLPI;
+use DbUtils;
+use Html;
+use ProfileRight;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginPresalesProfile
+ * Class Profile
  */
-class PluginReleasesProfile extends Profile {
+class Profile extends \Profile {
 
    static $rightname = "profile";
 
@@ -141,11 +149,11 @@ class PluginReleasesProfile extends Profile {
       if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
           && $openform
       ) {
-         $profile = new Profile();
+         $profile = new \Profile();
          echo "<form method='post' action='" . $profile->getFormURL() . "'>";
       }
 
-      $profile = new Profile();
+      $profile = new \Profile();
       $profile->getFromDB($profiles_id);
       if ($profile->getField('interface') == 'central') {
          $rights = $this->getAllRights();
@@ -173,31 +181,26 @@ class PluginReleasesProfile extends Profile {
     */
    static function getAllRights($all = false) {
       $rights = array(
-         array('itemtype' => PluginReleasesRelease::getType(),
-               'label'    => PluginReleasesRelease::getTypeName(2),
+         array('itemtype' => Release::getType(),
+               'label'    => Release::getTypeName(2),
                'field'    => 'plugin_releases_releases'
          ),
-         array('itemtype' => PluginReleasesTest::getType(),
-               'label'    => PluginReleasesTest::getTypeName(2),
+         array('itemtype' => Test::getType(),
+               'label'    => Test::getTypeName(2),
                'field'    => 'plugin_releases_tests'
          ),
-         array('itemtype' => PluginReleasesRisk::getType(),
-               'label'    => PluginReleasesRisk::getTypeName(2),
+         array('itemtype' => Risk::getType(),
+               'label'    => Risk::getTypeName(2),
                'field'    => 'plugin_releases_risks'
          ),
-         array('itemtype' => PluginReleasesRollback::getType(),
-               'label'    => PluginReleasesRollback::getTypeName(2),
+         array('itemtype' => Rollback::getType(),
+               'label'    => Rollback::getTypeName(2),
                'field'    => 'plugin_releases_rollbacks'
          ),
-         array('itemtype' => PluginReleasesDeploytask::getType(),
-               'label'    => PluginReleasesDeploytask::getTypeName(2),
+         array('itemtype' => Deploytask::getType(),
+               'label'    => Deploytask::getTypeName(2),
                'field'    => 'plugin_releases_tasks'
          ),
-         //         array('itemtype' => PluginReleasesRelease::getType(),
-         //            'label' => PluginReleasesRelease::getTypeName(2),
-         //            'field' => 'plugin_releases_releases'
-         //         )
-         //TODO continuer les droits
       );
 
 

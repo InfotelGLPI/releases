@@ -30,6 +30,19 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use Ajax;
+use CommonDBTM;
+use CommonDropdown;
+use DbUtils;
+use Dropdown;
+use Group;
+use Html;
+use Session;
+use Toolbox;
+use User;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
@@ -38,7 +51,7 @@ if (!defined('GLPI_ROOT')) {
  * Template for task
  * @since 9.1
  **/
-class PluginReleasesDeploytasktemplate extends CommonDropdown
+class Deploytasktemplate extends CommonDropdown
 {
 
     // From CommonDBTM
@@ -114,17 +127,17 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
 
         $tab[] = [
             'id' => '3',
-            'name' => PluginReleasesTypeDeployTask::getTypeName(),
+            'name' => TypeDeployTask::getTypeName(),
             'field' => 'name',
-            'table' => getTableForItemType('PluginReleasesTypeDeployTask'),
+            'table' => getTableForItemType(TypeDeployTask::class),
             'datatype' => 'dropdown'
         ];
 
         $tab[] = [
             'id' => '5',
-            'name' => PluginReleasesReleasetemplate::getTypeName(),
+            'name' => Releasetemplate::getTypeName(),
             'field' => 'name',
-            'table' => getTableForItemType('PluginReleasesReleasetemplate'),
+            'table' => getTableForItemType(Releasetemplate::class),
             'datatype' => 'dropdown'
         ];
 
@@ -139,7 +152,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
     {
         switch ($field['type']) {
             case 'state' :
-                PluginReleasesDeploytask::dropdownStateTask("state", $this->fields["state"]);
+                Deploytask::dropdownStateTask("state", $this->fields["state"]);
                 break;
             case 'users_id_tech' :
                 User::dropdown([
@@ -239,7 +252,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
         }
         echo "<tr class='tab_bg_1' hidden>";
         echo "<td colspan='4'>";
-        $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
+        $foreignKey = Releasetemplate::getForeignKeyField();
         echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
         echo "</td>";
         echo "</tr>";
@@ -259,7 +272,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
 
         if ($ID != -1 && $ID != 0) {
             $forbidden_id = self::getAllDescendant($this->getID());
-            Dropdown::show(PluginReleasesDeploytasktemplate::getType(), [
+            Dropdown::show(Deploytasktemplate::getType(), [
                 "condition" => [
                     "plugin_releases_releasetemplates_id" => $id_release,
                     "NOT" => ["id" => $forbidden_id]
@@ -268,7 +281,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
                 "comments" => false
             ]);
         } else {
-            Dropdown::show(PluginReleasesDeploytasktemplate::getType(), [
+            Dropdown::show(Deploytasktemplate::getType(), [
                 "condition" => [
                     "plugin_releases_releasetemplates_id" => $id_release,
                     "NOT" => ["id" => $this->getID()]
@@ -320,7 +333,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
         echo "<div class='fa-label'>
          <i class='fas fa-tag fa-fw'
             title='" . __('Category') . "'></i>";
-        PluginReleasesTypeDeployTask::dropdown([
+        TypeDeployTask::dropdown([
             'value' => $this->fields["plugin_releases_typedeploytasks_id"],
             'rand' => $rand_type,
             //         'entity'    => $item->fields["entities_id"],
@@ -329,7 +342,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
         echo "</div>";
         echo "<div class='fa-label'>
          <span>" . __('Risk', 'releases') . "</span>&nbsp;";
-        Dropdown::show(PluginReleasesRisktemplate::getType(), [
+        Dropdown::show(Risktemplate::getType(), [
             'name' => "plugin_releases_risks_id",
             'value' => $this->fields["plugin_releases_risks_id"],
             "condition" => ["plugin_releases_releasetemplates_id" => $this->fields[$foreignKey]]
@@ -340,7 +353,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
             echo "<div class='fa-label'>
             <i class='fas fa-tasks fa-fw'
                title='" . __('Status') . "'></i>";
-            PluginReleasesDeploytask::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
+            Deploytask::dropdownStateTask("state", $this->fields["state"], true, ['rand' => $rand_state]);
             echo "</div>";
         }
 
@@ -593,7 +606,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
 
     static function leveling_task($id, $previous_task)
     {
-        $task = new PluginReleasesDeploytask();
+        $task = new Deploytask();
         $input = [];
         $input['id'] = $id;
         $input['_disablenotif'] = true;
@@ -616,7 +629,7 @@ class PluginReleasesDeploytasktemplate extends CommonDropdown
     static function getAllDescendant($id)
     {
         $childrens = [];
-        $task = new PluginReleasesDeploytasktemplate();
+        $task = new Deploytasktemplate();
         $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
         $childrens[] = $id;
         foreach ($tasks as $t) {

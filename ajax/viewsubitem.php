@@ -30,8 +30,6 @@
 use Glpi\Exception\Http\NotFoundHttpException;
 
 if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
-
-
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }

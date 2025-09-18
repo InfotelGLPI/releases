@@ -30,13 +30,13 @@
  * ---------------------------------------------------------------------
  */
 
-
-
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Releasetemplate;
 
 Session::checkLoginUser();
 
-$item = new PluginReleasesReleasetemplate();
+$item = new Releasetemplate();
 
-Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
+Html::header(Release::getTypeName(2), '', "helpdesk", Release::class);
 $item->displayMenu("");
 Html::footer();

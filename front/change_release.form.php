@@ -32,30 +32,33 @@
 
 
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Releases\Change_Release;
 
 Session::checkLoginUser();
 
-$item = new PluginReleasesChange_Release();
+$item = new Change_Release();
 if (isset($_POST["add"])) {
-   if (!empty($_POST['plugin_releases_releases_id']) && empty($_POST['changes_id'])) {
-      $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-                         __('Change'));
-      Session::addMessageAfterRedirect($message, false, ERROR);
-      Html::back();
-   }
-   if (empty($_POST['plugin_releases_releases_id']) && !empty($_POST['changes_id'])) {
-      $message = sprintf(__('Mandatory fields are not filled. Please correct: %s'),
-                         __('Release', 'releases'));
-      Session::addMessageAfterRedirect($message, false, ERROR);
-      Html::back();
-   }
-   $item->check(-1, CREATE, $_POST);
+    if (!empty($_POST['plugin_releases_releases_id']) && empty($_POST['changes_id'])) {
+        $message = sprintf(
+            __('Mandatory fields are not filled. Please correct: %s'),
+            __('Change')
+        );
+        Session::addMessageAfterRedirect($message, false, ERROR);
+        Html::back();
+    }
+    if (empty($_POST['plugin_releases_releases_id']) && !empty($_POST['changes_id'])) {
+        $message = sprintf(
+            __('Mandatory fields are not filled. Please correct: %s'),
+            __('Release', 'releases')
+        );
+        Session::addMessageAfterRedirect($message, false, ERROR);
+        Html::back();
+    }
+    $item->check(-1, CREATE, $_POST);
 
-   if ($item->add($_POST)) {
-
-   }
-   Html::back();
-
+    if ($item->add($_POST)) {
+    }
+    Html::back();
 }
 
 throw new BadRequestHttpException("lost");

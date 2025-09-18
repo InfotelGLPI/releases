@@ -35,6 +35,8 @@
  */
 
 
+use GlpiPlugin\Releases\Deploytasktemplate;
+
 Session::checkLoginUser();
-$dropdown = new PluginReleasesDeploytasktemplate();
+$dropdown = new Deploytasktemplate();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");

@@ -29,16 +29,17 @@
 
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Releases\Release;
 
 Session::checkLoginUser();
-Html::header(PluginReleasesRelease::getTypeName(2), '', "helpdesk", PluginReleasesRelease::getType());
+Html::header(Release::getTypeName(2), '', "helpdesk", Release::class);
 
-$release = new PluginReleasesRelease();
+$release = new Release();
 
 if ($release->canView()) {
    //   Html::compileScss(["file"=>"../css/style.scss"]);
    //     echo Html::Scss("../css/style.scss");
-   Search::show(PluginReleasesRelease::getType());
+   Search::show(Release::class);
 
 } else {
     throw new AccessDeniedHttpException();

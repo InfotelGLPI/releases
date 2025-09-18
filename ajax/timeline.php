@@ -32,70 +32,72 @@
 
 
 use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Releases\Deploytask;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Rollback;
+use GlpiPlugin\Releases\Test;
 
 Session::checkLoginUser();
 Session::checkRight('plugin_releases_releases', UPDATE);
 
-if ( $_POST['action'] == 'done_fail') {
-   header("Content-Type: application/json; charset=UTF-8");
+if ($_POST['action'] == 'done_fail') {
+    header("Content-Type: application/json; charset=UTF-8");
 
-   if (
-      !isset($_POST['items_id'])
+    if (!isset($_POST['items_id'])
       || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
-   ) {
-       throw new NotFoundHttpException();
-   }
+    ) {
+        throw new NotFoundHttpException();
+    }
 
-   $taskClass = $_POST['itemtype'];
-   $task      = new $taskClass();
-   $task->getFromDB(intval($_POST['items_id']));
+    $taskClass = $_POST['itemtype'];
+    $task      = new $taskClass();
+    $task->getFromDB(intval($_POST['items_id']));
 
-   if ($_POST["newStatus"] == $task->fields['state']) {
-      $new_state = PluginReleasesTest::TODO;
-   } else {
-      $new_state = $_POST["newStatus"];
-   }
+    if ($_POST["newStatus"] == $task->fields['state']) {
+        $new_state = Test::TODO;
+    } else {
+        $new_state = $_POST["newStatus"];
+    }
 
-   $new_label = Planning::getState($new_state);
-   echo json_encode([
+    $new_label = Planning::getState($new_state);
+    echo json_encode([
                        'state' => $new_state,
                        'label' => $new_label
                     ]);
 
-   $foreignKey = $parent->getForeignKeyField();
-   $task->update([
+    $foreignKey = $parent->getForeignKeyField();
+    $task->update([
                     'id'        => intval($_POST['items_id']),
                     $foreignKey => intval($_POST[$foreignKey]),
                     'state'     => $new_state
                  ]);
-   $release = new PluginReleasesRelease();
-   $release->getFromDB($task->fields["plugin_releases_releases_id"]);
-   if (PluginReleasesTest::countDoneForItem($release) != 0) {
-      $release->update(['id' => $release->getID(),
-                        'status' => PluginReleasesRelease::TESTDEFINITION]);
-   } else if (PluginReleasesDeploytask::countDoneForItem($release) != 0) {
-      $release->update(['id' => $release->getID(),
-                        'status' => PluginReleasesRelease::TASKDEFINITION]);
-   } else if (PluginReleasesRollback::countDoneForItem($release) != 0) {
-      $release->update(['id' => $release->getID(),
-                        'status' => PluginReleasesRelease::ROLLBACKDEFINITION]);
-   } else {
-      $release->update(['id' => $release->getID(),
-                        'status' => PluginReleasesRelease::RISKDEFINITION]);
-   }
-} else if (($_POST['action'] ?? null) === 'change_release_subitem_state') {
-   header("Content-Type: application/json; charset=UTF-8");
+    $release = new Release();
+    $release->getFromDB($task->fields["plugin_releases_releases_id"]);
+    if (Test::countDoneForItem($release) != 0) {
+        $release->update(['id' => $release->getID(),
+                        'status' => Release::TESTDEFINITION]);
+    } elseif (Deploytask::countDoneForItem($release) != 0) {
+        $release->update(['id' => $release->getID(),
+                        'status' => Release::TASKDEFINITION]);
+    } elseif (Rollback::countDoneForItem($release) != 0) {
+        $release->update(['id' => $release->getID(),
+                        'status' => Release::ROLLBACKDEFINITION]);
+    } else {
+        $release->update(['id' => $release->getID(),
+                        'status' => Release::RISKDEFINITION]);
+    }
+} elseif (($_POST['action'] ?? null) === 'change_release_subitem_state') {
+    header("Content-Type: application/json; charset=UTF-8");
 
-   if (
-      !isset($_POST['items_id'])
+    if (!isset($_POST['items_id'])
       || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
-   ) {
-       throw new NotFoundHttpException();
-   }
+    ) {
+        throw new NotFoundHttpException();
+    }
 
-   $taskClass = $_POST['itemtype'];
-   $task      = new $taskClass();
-   $task->getFromDB(intval($_POST['items_id']));
+    $taskClass = $_POST['itemtype'];
+    $task      = new $taskClass();
+    $task->getFromDB(intval($_POST['items_id']));
 
       $new_state = ($task->fields['state'] == Planning::DONE)
          ? Planning::TODO
@@ -113,95 +115,91 @@ if ( $_POST['action'] == 'done_fail') {
                        'state'     => $new_state
                     ]);
 
-      $release = new PluginReleasesRelease();
+      $release = new Release();
       $release->getFromDB($task->fields["plugin_releases_releases_id"]);
-      if (PluginReleasesTest::countDoneForItem($release) != 0) {
-         $release->update(['id' => $release->getID(),
-                           'status' => PluginReleasesRelease::TESTDEFINITION]);
-      } else if (PluginReleasesDeploytask::countDoneForItem($release) != 0) {
-         $release->update(['id' => $release->getID(),
-                           'status' => PluginReleasesRelease::TASKDEFINITION]);
-      } else if (PluginReleasesRollback::countDoneForItem($release) != 0) {
-         $release->update(['id' => $release->getID(),
-                           'status' => PluginReleasesRelease::ROLLBACKDEFINITION]);
-      } else {
-         $release->update(['id' => $release->getID(),
-                           'status' => PluginReleasesRelease::RISKDEFINITION]);
-      }
+    if (Test::countDoneForItem($release) != 0) {
+        $release->update(['id' => $release->getID(),
+                         'status' => Release::TESTDEFINITION]);
+    } elseif (Deploytask::countDoneForItem($release) != 0) {
+        $release->update(['id' => $release->getID(),
+                         'status' => Release::TASKDEFINITION]);
+    } elseif (Rollback::countDoneForItem($release) != 0) {
+        $release->update(['id' => $release->getID(),
+                         'status' => Release::ROLLBACKDEFINITION]);
+    } else {
+        $release->update(['id' => $release->getID(),
+                         'status' => Release::RISKDEFINITION]);
+    }
 } else {
+    if (!isset($_REQUEST['action'])) {
+        exit;
+    }
 
-   if (!isset($_REQUEST['action'])) {
-      exit;
-   }
+    header("Content-Type: text/html; charset=UTF-8");
 
-   header("Content-Type: text/html; charset=UTF-8");
-
-   $objType    = $_REQUEST['parenttype']::getType();
-   $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
+    $objType    = $_REQUEST['parenttype']::getType();
+    $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 
 
-   switch ($_REQUEST['action']) {
+    switch ($_REQUEST['action']) {
+        case "change_task_state":
+            header("Content-Type: application/json; charset=UTF-8");
+            if (!isset($_REQUEST['items_id'])) {
+                throw new NotFoundHttpException();
+            }
+            $objClass = $_REQUEST['itemtype'];
+            $obj      = new $objClass;
+            $obj->getFromDB(intval($_REQUEST['items_id']));
 
-      case "change_task_state":
-         header("Content-Type: application/json; charset=UTF-8");
-         if (!isset($_REQUEST['items_id'])) {
-             throw new NotFoundHttpException();
-         }
-         $objClass = $_REQUEST['itemtype'];
-         $obj      = new $objClass;
-         $obj->getFromDB(intval($_REQUEST['items_id']));
-
-         if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
-            $new_state = ($obj->fields['state'] == Planning::DONE)
-               ? Planning::TODO
-               : Planning::DONE;
-            $new_label = Planning::getState($new_state);
-            echo json_encode([
+            if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
+                $new_state = ($obj->fields['state'] == Planning::DONE)
+                ? Planning::TODO
+                : Planning::DONE;
+                $new_label = Planning::getState($new_state);
+                echo json_encode([
                                 'state' => $new_state,
                                 'label' => $new_label
                              ]);
-            $obj->update([
+                $obj->update([
                             'id'        => intval($_REQUEST['items_id']),
                             $foreignKey => intval($_REQUEST[$foreignKey]),
                             'state'     => $new_state
                          ]);
-         }
-         break;
+            }
+            break;
 
-      case "viewsubitem":
-         Html::header_nocache();
-         if (!isset($_REQUEST['type'])) {
-             throw new NotFoundHttpException();
-         }
-         if (!isset($_REQUEST['parenttype'])) {
-             throw new NotFoundHttpException();
-         }
+        case "viewsubitem":
+            Html::header_nocache();
+            if (!isset($_REQUEST['type'])) {
+                throw new NotFoundHttpException();
+            }
+            if (!isset($_REQUEST['parenttype'])) {
+                throw new NotFoundHttpException();
+            }
 
-         $item   = getItemForItemtype($_REQUEST['type']);
-         $parent = getItemForItemtype($_REQUEST['parenttype']);
+            $item   = getItemForItemtype($_REQUEST['type']);
+            $parent = getItemForItemtype($_REQUEST['parenttype']);
 
-         if (isset($_REQUEST[$parent->getForeignKeyField()])
+            if (isset($_REQUEST[$parent->getForeignKeyField()])
              && isset($_REQUEST["id"])
              && $parent->getFromDB($_REQUEST[$parent->getForeignKeyField()])) {
-
-            $ol = ObjectLock::isLocked($_REQUEST['parenttype'], $parent->getID());
-            if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
-               ObjectLock::setReadOnlyProfile();
-            }
-            if ($item->getType() == "ITILFollowup") {
-               $item->fields["itemtype"] = $parent->getType();
-               $item->fields["items_id"] = $_REQUEST["id"];
-            }
-            $parent::showSubForm($item, $_REQUEST["id"], ['parent'    => $parent,
+                $ol = ObjectLock::isLocked($_REQUEST['parenttype'], $parent->getID());
+                if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
+                    ObjectLock::setReadOnlyProfile();
+                }
+                if ($item->getType() == "ITILFollowup") {
+                    $item->fields["itemtype"] = $parent->getType();
+                    $item->fields["items_id"] = $_REQUEST["id"];
+                }
+                $parent::showSubForm($item, $_REQUEST["id"], ['parent'    => $parent,
                                                           "itemtype"  => $parent->getType(),
                                                           "items_id"  => $parent->getID(),
                                                           $foreignKey => $_REQUEST[$foreignKey]]);
-         } else {
-            echo __('Access denied');
-         }
+            } else {
+                echo __('Access denied');
+            }
 
 
-         break;
-
-   }
+            break;
+    }
 }

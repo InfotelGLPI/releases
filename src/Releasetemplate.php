@@ -30,22 +30,44 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use Ajax;
+use CommonDBTM;
+use CommonDropdown;
+use CommonGLPI;
+use CommonITILActor;
+use CommonITILObject;
+use DbUtils;
+use Document_Item;
+use Dropdown;
+use Entity;
+use Glpi\RichText\RichText;
+use Group;
+use Html;
+use Location;
+use MassiveAction;
+use Session;
+use Supplier;
+use Toolbox;
+use User;
+
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 /**
- * Template for task
+ * Template for Release
  * @since 9.1
  **/
-class PluginReleasesReleasetemplate extends CommonDropdown {
+class Releasetemplate extends CommonDropdown {
 
    // From CommonDBTM
    public $dohistory         = true;
    public $can_be_translated = true;
-   public $userlinkclass     = 'PluginReleasesReleasetemplate_User'; //todo chnage after table create for template
-   public $grouplinkclass    = 'PluginReleasesGroup_Releasetemplate';//todo chnage after table create for template
-   public $supplierlinkclass = 'PluginReleasesReleasetemplate_Supplier';//todo chnage after table create for template
+   public $userlinkclass     = Releasetemplate_User::class; //todo chnage after table create for template
+   public $grouplinkclass    = Group_Releasetemplate::class;//todo chnage after table create for template
+   public $supplierlinkclass = Releasetemplate_Supplier::class;//todo chnage after table create for template
 
    static $rightname = 'plugin_releases_releases';
 
@@ -115,7 +137,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $this->addStandardTab(self::getType(), $ong, $options);
       $this->addDefaultFormTab($ong);
       //      $this->defineDefaultObjectTabs($ong, $options);
-      $this->addStandardTab('PluginReleasesReleasetemplate_Item', $ong, $options);
+      $this->addStandardTab(Releasetemplate_Item::class, $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
 
@@ -184,7 +206,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          'id'       => '3',
          'name'     => __('Deploy Task type','releases'),
          'field'    => 'name',
-         'table'    => getTableForItemType('PluginReleasesTypeDeployTask'),
+         'table'    => getTableForItemType(TypeDeployTask::class),
          'datatype' => 'dropdown'
       ];
 
@@ -205,9 +227,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       switch ($field['type']) {
          case 'dropdownRollbacks' :
-            $item      = new PluginReleasesRollbacktemplate();
+            $item      = new Rollbacktemplate();
             $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $rolltemp  = new PluginReleasesRollbacktemplate();
+            $rolltemp  = new Rollbacktemplate();
             $alltemps  = $rolltemp->find($condition);
             $rolls     = [];
             foreach ($alltemps as $roll) {
@@ -223,9 +245,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
             break;
          case 'dropdownTests' :
-            $item      = new PluginReleasesTesttemplate();
+            $item      = new Testtemplate();
             $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $testtemp  = new PluginReleasesTesttemplate();
+            $testtemp  = new Testtemplate();
             $alltemps  = $testtemp->find($condition);
             $tests     = [];
             foreach ($alltemps as $test) {
@@ -240,9 +262,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
             Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
             break;
          case 'dropdownTasks' :
-            $item      = new PluginReleasesDeploytasktemplate();
+            $item      = new Deploytasktemplate();
             $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-            $tasktemp  = new PluginReleasesDeploytasktemplate();
+            $tasktemp  = new Deploytasktemplate();
             $alltemps  = $tasktemp->find($condition);
             $tasks     = [];
             foreach ($alltemps as $task) {
@@ -335,9 +357,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       }
 
-      $release_user     = new PluginReleasesReleasetemplate_User();
-      $release_supplier = new PluginReleasesReleasetemplate_Supplier();
-      $group_release    = new PluginReleasesGroup_Releasetemplate();
+      $release_user     = new Releasetemplate_User();
+      $release_supplier = new Releasetemplate_Supplier();
+      $group_release    = new Group_Releasetemplate();
 
       $release_user->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
       $release_supplier->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
@@ -686,9 +708,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</td>";
 
       echo "<td>";
-      $item      = new PluginReleasesRollbacktemplate();
+      $item      = new Rollbacktemplate();
       $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $rolltemp  = new PluginReleasesRollbacktemplate();
+      $rolltemp  = new Rollbacktemplate();
       $alltemps  = $rolltemp->find($condition);
       $rolls     = [];
       foreach ($alltemps as $roll) {
@@ -710,9 +732,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "</td>";
       echo "<td>";
 
-      $item      = new PluginReleasesTesttemplate();
+      $item      = new Testtemplate();
       $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $testtemp  = new PluginReleasesTesttemplate();
+      $testtemp  = new Testtemplate();
       $alltemps  = $testtemp->find($condition);
       $tests     = [];
       foreach ($alltemps as $test) {
@@ -732,9 +754,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
       echo "</td>";
       echo "<td>";
-      $item      = new PluginReleasesDeploytasktemplate();
+      $item      = new Deploytasktemplate();
       $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $tasktemp  = new PluginReleasesDeploytasktemplate();
+      $tasktemp  = new Deploytasktemplate();
       $alltemps  = $tasktemp->find($condition);
       $tasks     = [];
       foreach ($alltemps as $task) {
@@ -953,13 +975,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<td class='center b' >";
       $dbu       = new DbUtils();
       $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', true);
-      $template  = new PluginReleasesReleasetemplate();
+      $template  = new Releasetemplate();
       $templates = $template->find($condition);
       if (count($templates) != 0) {
          self::dropdown(["name" => "releasetemplates_id"] + $condition);
          echo "<br/><br/>";
       }
-      $url = PluginReleasesRelease::getFormURL();
+      $url = Release::getFormURL();
       echo "<a  id='link' href='$url'>";
       $url    = $url . "?template_id=";
       $script = "
@@ -989,13 +1011,13 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       $timeline = [];
 
-      $riskClass     = 'PluginReleasesRisktemplate';
+      $riskClass     = Risktemplate::class;
       $risk_obj      = new $riskClass;
-      $rollbackClass = 'PluginReleasesRollbacktemplate';
+      $rollbackClass = Rollbacktemplate::class;
       $rollback_obj  = new $rollbackClass;
-      $taskClass     = 'PluginReleasesDeploytasktemplate';
+      $taskClass     = Deploytasktemplate::class;
       $task_obj      = new $taskClass;
-      $testClass     = 'PluginReleasesTesttemplate';
+      $testClass     = Testtemplate::class;
       $test_obj      = new $testClass;
 
       //checks rights
@@ -1068,26 +1090,26 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       //check sub-items rights
       $tmp       = [$foreignKey => $this->getID()];
-      $riskClass = "PluginReleasesRisktemplate";
+      $riskClass = Risktemplate::class;
       $risk      = new $riskClass;
       $risk->getEmpty();
       $risk->fields['itemtype'] = $objType;
       $risk->fields['items_id'] = $this->getID();
 
 
-      $rollbackClass = "PluginReleasesRollbacktemplate";
+      $rollbackClass = Rollbacktemplate::class;
       $rollback      = new $rollbackClass;
       $rollback->getEmpty();
       $rollback->fields['itemtype'] = $objType;
       $rollback->fields['items_id'] = $this->getID();
 
-      $taskClass = "PluginReleasesDeploytasktemplate";
+      $taskClass = Deploytasktemplate::class;
       $task      = new $taskClass;
       $task->getEmpty();
       $task->fields['itemtype'] = $objType;
       $task->fields['items_id'] = $this->getID();
 
-      $testClass = "PluginReleasesTesttemplate";
+      $testClass = Testtemplate::class;
       $test      = new $testClass;
       $test->getEmpty();
       $test->fields['itemtype'] = $objType;
@@ -1115,8 +1137,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                          ? 'viewitem" . $this->fields['id'] . $rand . "'
                          : domid;
                var target = e.target || window.event.srcElement;
-               if (target.nodeName == 'a') return;
-               if (target.className == 'read_more_button') return;
+               if (target.nodeName == 'a') {
+                    exit;
+               }
+               if (target.className == 'read_more_button') exit;
 
                var _eltsel = '[data-uid='+domid+']';
                var _elt = $(_eltsel);
@@ -1171,7 +1195,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       $release = new $objType();
       $release->getFromDB($this->getID());
 
-      echo "<li class='PluginReleasesRisk'>";
+      echo "<li class='Risk'>";
       echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
            "'><i class='ti ti-bug'></i>&nbsp;" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
       if ($canadd_risk) {
@@ -1179,7 +1203,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
 
-      echo "<li class='PluginReleasesRollback'>";
+      echo "<li class='Rollback'>";
       echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><i class='ti ti-arrow-back-up'></i>&nbsp;" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
       if ($canadd_rollback) {
@@ -1187,7 +1211,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
 
-      echo "<li class='PluginReleasesDeploytask'>";
+      echo "<li class='Deploytask'>";
       echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
            "'><i class='ti ti-checkbox'></i>&nbsp;" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
       if ($canadd_task) {
@@ -1195,7 +1219,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       }
 
 
-      echo "<li class='PluginReleasesTest'>";
+      echo "<li class='Test'>";
       echo "<a href='#' data-type='Test' title='" . $testClass::getTypeName(2) .
            "'><i class='ti ti-check'></i>&nbsp;" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
       if ($canadd_test) {
@@ -1214,7 +1238,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    }
 
    static function isAllowedStatus($old, $new) {
-      if ($old != PluginReleasesRelease::CLOSED && $old != PluginReleasesRelease::REVIEW) {
+      if ($old != Release::CLOSED && $old != Release::REVIEW) {
          return true;
       }
       return false;
@@ -1242,7 +1266,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
    static function getClosedStatusArray() {
 
 
-      $tab = [PluginReleasesRelease::CLOSED, PluginReleasesRelease::REVIEW];
+      $tab = [Release::CLOSED, Release::REVIEW];
       return $tab;
    }
 
@@ -1254,7 +1278,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
     *
     */
    static function getReopenableStatusArray() {
-      return [PluginReleasesRelease::CLOSED];
+      return [Release::CLOSED];
    }
 
    static function countForItem($ID, $class, $state = 0) {
@@ -1301,16 +1325,16 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
       echo "<h3>" . __("Timeline filter") . " : </h3>";
       echo "<ul>";
 
-      $riskClass = "PluginReleasesRisk";
+      $riskClass = "Risk";
       echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
            "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
-      $rollbackClass = "PluginReleasesRollback";
+      $rollbackClass = "Rollback";
       echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
-      $taskClass = "PluginReleasesDeploytask";
+      $taskClass = "Deploytask";
       echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
            "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
-      $testClass = "PluginReleasesTest";
+      $testClass = "Test";
       echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
       echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __('Followup') .
@@ -1384,7 +1408,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          if (isset($item['itiltype']) && $item['itiltype'] == "Followup") {
             $class .= " ITIL{$item['itiltype']}";
          } else {
-            $class .= " PluginReleases{$item['itiltype']}";
+            $class .= " Releases{$item['itiltype']}";
          }
 
          echo "<div class='h_item $user_position $class'>";
@@ -1427,7 +1451,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 //         if (isset($item['itiltype']) && $item['itiltype'] == "Followup") {
 //            $class .= " ITIL{$item['itiltype']}";
 //         } else {
-//            $class .= " PluginReleases{$item['itiltype']}";
+//            $class .= " Releases{$item['itiltype']}";
 //         }
 
 
@@ -1458,9 +1482,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          echo "</div>";
          if (isset($item_i['content'])) {
             if (isset($item_i["name"])) {
-               $content = "<h2>" . $item_i['name'] . "  </h2>" . Glpi\RichText\RichText::getEnhancedHtml($item_i['content']);
+               $content = "<h2>" . $item_i['name'] . "  </h2>" . RichText::getEnhancedHtml($item_i['content']);
             } else {
-               $content = Glpi\RichText\RichText::getEnhancedHtml($item_i['content']);
+               $content = RichText::getEnhancedHtml($item_i['content']);
             }
 
 
@@ -1556,7 +1580,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          }
 
          unset($_SESSION["releases"]["template"][Session::getLoginUserID()]);
-         echo Html::scriptBlock("$(document).ready(function (){        
+         echo Html::scriptBlock("$(document).ready(function (){
                                         $('.filter_timeline_release li a').removeClass('h_active');
                                         $('.h_item').removeClass('h_hidden');
                                        $('.h_item').addClass('h_hidden');
@@ -1621,7 +1645,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
               'date_preproduction'         => null,
               'date_production'            => null,
               'entities_id'                => $entity,
-              'status'                     => PluginReleasesRelease::NEWRELEASE,
+              'status'                     => Release::NEWRELEASE,
               'service_shutdown'           => false,
               'service_shutdown_details'   => '',
               'hour_type'                  => 0,
@@ -1649,9 +1673,9 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
          $options['_default_use_notification'] = Entity::getUsedConfig('is_notif_enable_default', $options['entities_id'], '', 1);
       }
       if ($ID) {
-         $release_user     = new PluginReleasesReleasetemplate_User();
-         $release_supplier = new PluginReleasesReleasetemplate_Supplier();
-         $group_release    = new PluginReleasesGroup_Releasetemplate();
+         $release_user     = new Releasetemplate_User();
+         $release_supplier = new Releasetemplate_Supplier();
+         $group_release    = new Group_Releasetemplate();
          $users            = $release_user->find(['plugin_releases_releasetemplates_id' => $ID]);
          $suppliers        = $release_supplier->find(['plugin_releases_releasetemplates_id' => $ID]);
          $groups           = $group_release->find(['plugin_releases_releasetemplates_id' => $ID]);
@@ -3030,7 +3054,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
       if (Session::getCurrentInterface() == 'central') {
          if ($isadmin) {
-            $actions['PluginReleasesReleasetemplate' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
+            $actions['GlpiPlugin\Releases\Releasetemplate' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
          }
       }
       return $actions;
@@ -3076,7 +3100,7 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
 
          case "transfer" :
             $input = $ma->getInput();
-            if ($item->getType() == PluginReleasesReleasetemplate::getType()) {
+            if ($item->getType() == Releasetemplate::getType()) {
                foreach ($ids as $key) {
                   $item->getFromDB($key);
 
@@ -3086,10 +3110,10 @@ class PluginReleasesReleasetemplate extends CommonDropdown {
                   $values["entities_id"] = $input['entities_id'];
 
                   if ($item->update($values)) {
-                     PluginReleasesDeploytasktemplate::transfer($key, $input["entities_id"]);
-                     PluginReleasesTesttemplate::transfer($key, $input["entities_id"]);
-                     PluginReleasesRisktemplate::transfer($key, $input["entities_id"]);
-                     PluginReleasesRollbacktemplate::transfer($key, $input["entities_id"]);
+                     Deploytasktemplate::transfer($key, $input["entities_id"]);
+                     Testtemplate::transfer($key, $input["entities_id"]);
+                     Risktemplate::transfer($key, $input["entities_id"]);
+                     Rollbacktemplate::transfer($key, $input["entities_id"]);
                      self::transferDocument($key, $input["entities_id"]);
                      $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                   } else {

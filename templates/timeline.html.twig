@@ -85,13 +85,13 @@
 
       <div class="timeline-item mb-3 {{ itiltype }} {{ state_class }} {{ entry['class'] }} {{ 'right' in item_position ? 'ms-auto' : '' }}"
             data-itemtype="{{ entry['type'] }}" data-items-id="{{ entry_i['id'] }}">
-          {% if itiltype is same as 'PluginReleasesTest' %}
+          {% if itiltype is same as 'GlpiPlugin\Releases\Test' %}
               <h3> {{  _n('Test', 'Tests', 1, 'releases') }}</h3>
-          {% elseif itiltype is same as 'PluginReleasesRisk' %}
+          {% elseif itiltype is same as 'GlpiPlugin\Releases\Risk' %}
               <h3> {{  _n('Risk', 'Risks', 1, 'releases') }}</h3>
-          {% elseif itiltype is same as 'PluginReleasesRollback' %}
+          {% elseif itiltype is same as 'GlpiPlugin\Releases\Rollback' %}
               <h3> {{  _n('Rollback', 'Rollbacks', 1, 'releases') }}</h3>
-          {% elseif itiltype is same as 'PluginReleasesDeploytask' %}
+          {% elseif itiltype is same as 'GlpiPlugin\Releases\Deploytask' %}
               <h3> {{  _n('Deploy task', 'Deploy tasks', 1, 'releases') }}</h3>
           {% elseif itiltype is same as 'ITILFollowup' %}
               <h3> {{  __('Followup') }}</h3>
@@ -113,7 +113,7 @@
              }
           </script>
          <div class="row">
-             {% if itiltype is same as 'PluginReleasesRisk' or itiltype is same as 'PluginReleasesRollback' %}
+             {% if itiltype is same as 'GlpiPlugin\Releases\Risk' or itiltype is same as 'GlpiPlugin\Releases\Rollback' %}
             <div class="col-auto todo-list-state d-none">
                {% if entry_i['state'] is constant('Planning::TODO') %}
                   <span class="state state_1" onclick="change_task_state({{ entry_i['id'] }}, this, '{{ itiltype}}')" title="{{ __('To do') }}"></span>
@@ -154,17 +154,17 @@
                   <div class="card-body">
                      {{ include('components/itilobject/timeline/timeline_item_header.html.twig') }}
 
-                     {% if itiltype is same as 'PluginReleasesTest' %}
+                     {% if itiltype is same as 'GlpiPlugin\Releases\Test' %}
                         {{ include('@releases/form_test.html.twig', {'form_mode': 'view'}) }}
-                     {% elseif itiltype is same as 'PluginReleasesDeploytask' %}
+                     {% elseif itiltype is same as 'GlpiPlugin\Releases\Deploytask' %}
                         {{ include('@releases/form_deploytask.html.twig', {'form_mode': 'view'}) }}
                      {% elseif itiltype is same as 'ITILFollowup' %}
                         {{ include('components/itilobject/timeline/form_followup.html.twig', {'form_mode': 'view'}) }}
-                     {% elseif itiltype is same as 'PluginReleasesRollback' %}
+                     {% elseif itiltype is same as 'GlpiPlugin\Releases\Rollback' %}
                         {{ include('@releases/form_rollback.html.twig', {'form_mode': 'view'}) }}
                      {% elseif itiltype is same as 'Document_Item' %}
                         {{ include('components/itilobject/timeline/form_document_item.html.twig', {'form_mode': 'view'}) }}
-                     {% elseif itiltype is same as 'PluginReleasesRisk' %}
+                     {% elseif itiltype is same as 'GlpiPlugin\Releases\Risk' %}
                            {{ include('@releases/form_risk.html.twig', {'form_mode': 'view'}) }}
                      {% else %}
                         <div class="read-only-content">

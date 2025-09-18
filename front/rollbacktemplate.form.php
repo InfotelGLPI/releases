@@ -30,11 +30,9 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 9.1
- */
-
+use GlpiPlugin\Releases\Rollbacktemplate;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesRollbacktemplate();
+
+$dropdown = new Rollbacktemplate();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");

@@ -27,7 +27,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Releases\TypeDeployTask;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesTypeDeployTask();
+
+$dropdown = new TypeDeployTask();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");

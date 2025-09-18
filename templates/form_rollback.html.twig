@@ -68,7 +68,7 @@
               $.post(rpath,
                  {'action':     'change_release_subitem_state',
                     'items_id':   items_id,
-                    'itemtype':   'PluginReleasesRollback',
+                    'itemtype':   'GlpiPlugin\Releases\Rollback',
                     'parenttype': '{{ item.getType() }}',
                     '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }}
                  })
@@ -116,7 +116,7 @@
                                title="{{ _n('Rollback template', 'Rollback templates', get_plural_number(), 'releases') }}"></i>
                         {% endset %}
                         {{ fields.dropdownField(
-                            'PluginReleasesRollbacktemplate',
+                            'GlpiPlugin\Releases\Rollbacktemplate',
                             'rollbacktemplates_id',
                             subitem.fields['rollbacktemplates_id'],
                             fup_template_lbl,

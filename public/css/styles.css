@@ -155,7 +155,7 @@ div.workflow li {
    color: #ff3c10!important;
 }
 
-.timeline-item.PluginReleasesRisk .timeline-content {
+.timeline-item.Risk .timeline-content {
    background-color: rgba(255, 60, 16, 0.29);
 }
 
@@ -168,7 +168,7 @@ div.workflow li {
    color: #2385bb!important;
 }
 
-.timeline-item.PluginReleasesTest .timeline-content {
+.timeline-item.Test .timeline-content {
    background-color: rgba(159, 221, 255, 0.72);
 }
 
@@ -181,7 +181,7 @@ div.workflow li {
    color: #8fd57c!important;
 }
 
-.timeline-item.PluginReleasesRollback .timeline-content {
+.timeline-item.Rollback .timeline-content {
    background-color: rgba(143, 213, 124, 0.74);
 }
 
@@ -194,7 +194,7 @@ div.workflow li {
    color: #ff9d24!important;
 }
 
-.timeline-item.PluginReleasesDeploytask .timeline-content {
+.timeline-item.Deploytask .timeline-content {
    background-color: #fda02d8f;
 }
 

@@ -3,14 +3,14 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Releases plugin for GLPI
- Copyright (C) 2018-2022 by the releases Development Team.
+ Copyright (C) 2018-2022 by the Releases Development Team.
 
  https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of releases.
+ This file is part of Releases.
 
  releases is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,12 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use CommonTreeDropdown;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -34,21 +40,21 @@ if (!defined('GLPI_ROOT')) {
 // Class for a Dropdown
 
 /**
- * Class PluginReleasesTypeDeployTask
+ * Class TypeTest
  */
-class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
+class TypeTest extends CommonTreeDropdown {
 
    /**
     * @param int $nb
     *
-    * @return translated
+    * @return string
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Deploy task type', 'Deploy task types', $nb, 'releases');
+      return _n('Test type', 'Test types', $nb, 'releases');
    }
 
-   static $rightname         = 'plugin_releases_tasks';
+   static $rightname         = 'plugin_releases_tests';
    var    $can_be_translated = true;
 
    /**
@@ -63,7 +69,7 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
       if ($ID > 0) {
          // Not already transfer
          // Search init item
-         $table = CommonDBTM::getTable(self::class);
+         $table = CommonDBTM::getTable(TypeTest::class);
           $query = [
               'SELECT' => '*',
               'FROM'   => $table,
@@ -143,6 +149,23 @@ class PluginReleasesTypeDeployTask extends CommonTreeDropdown {
       return $tab;
    }
 
+   static function getMenuOptions($menu) {
+
+       global $CFG_GLPI;
+       $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.php";
+      $itemtype    = strtolower(self::getType());
+
+      //Menu entry in admin
+      $menu['options'][$itemtype]['title']           = self::getTypeName();
+      $menu['options'][$itemtype]['page']            = $plugin_page;
+      $menu['options'][$itemtype]['links']['search'] = $plugin_page;
+
+      if (Session::haveright(self::$rightname, UPDATE)) {
+         $menu['options'][$itemtype]['links']['add'] = $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.form.php\';";
+      }
+
+      return $menu;
+   }
 
    static function canCreate(): bool
    {

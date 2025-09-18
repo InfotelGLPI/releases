@@ -27,7 +27,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Releases\TypeRisk;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesTypeRisk();
+
+$dropdown = new TypeRisk();
 include(GLPI_ROOT . "/front/dropdown.common.php");

@@ -1,37 +1,42 @@
 <?php
+/*
+ * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
+ -------------------------------------------------------------------------
+ Releases plugin for GLPI
+ Copyright (C) 2018-2022 by the Releases Development Team.
 
-use Glpi\RichText\RichText;
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
 
-/**
- * ---------------------------------------------------------------------
- * GLPI - Gestionnaire Libre de Parc Informatique
- * Copyright (C) 2015-2018 Teclib' and contributors.
- *
- * http://glpi-project.org
- *
- * based on GLPI - Gestionnaire Libre de Parc Informatique
- * Copyright (C) 2003-2014 by the INDEPNET Development Team.
- *
- * ---------------------------------------------------------------------
- *
- * LICENSE
- *
- * This file is part of GLPI.
- *
- * GLPI is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * GLPI is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GLPI. If not, see <http://www.gnu.org/licenses/>.
- * ---------------------------------------------------------------------
+ LICENSE
+
+ This file is part of Releases.
+
+ Releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ Releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
  */
+
+namespace GlpiPlugin\Releases;
+
+use Change;
+use CommonDBRelation;
+use CommonGLPI;
+use Glpi\RichText\RichText;
+use Html;
+use Search;
+use Session;
+use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
@@ -42,13 +47,13 @@ if (!defined('GLPI_ROOT')) {
  *
  * Relation between Changes and Releases
  **/
-class PluginReleasesChange_Release extends CommonDBRelation
+class Change_Release extends CommonDBRelation
 {
     // From CommonDBRelation
     public static $itemtype_1 = 'Change';
     public static $items_id_1 = 'changes_id';
 
-    public static $itemtype_2 = 'PluginReleasesRelease';
+    public static $itemtype_2 = Release::class;
     public static $items_id_2 = 'plugin_releases_releases_id';
 
     public static function getTypeName($nb = 0)
@@ -73,7 +78,7 @@ class PluginReleasesChange_Release extends CommonDBRelation
         if (static::canView()) {
             $nb = 0;
             switch ($item->getType()) {
-                case 'PluginReleasesRelease':
+                case Release::class:
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = countElementsInTable(
                             'glpi_plugin_releases_changes_releases',
@@ -93,7 +98,7 @@ class PluginReleasesChange_Release extends CommonDBRelation
     {
 
         switch ($item->getType()) {
-            case 'PluginReleasesRelease':
+            case Release::class:
                 self::showForRelease($item);
                 break;
         }
@@ -103,9 +108,9 @@ class PluginReleasesChange_Release extends CommonDBRelation
     /**
      * Show changes for a release
      *
-     * @param $ticket Ticket object
+     * @param $release Release object
      **/
-    public static function showForRelease(PluginReleasesRelease $release)
+    public static function showForRelease(Release $release)
     {
         global $DB;
 
@@ -195,7 +200,7 @@ class PluginReleasesChange_Release extends CommonDBRelation
                 //        %2$s is the name of the item (used for headings of a list)
                 sprintf(
                     __('%1$s = %2$s'),
-                    Ticket::getTypeName(1),
+                    Change::getTypeName(1),
                     $release->fields["name"]
                 )
             );
@@ -224,11 +229,11 @@ class PluginReleasesChange_Release extends CommonDBRelation
 
     public function post_addItem()
     {
-        $release = new PluginReleasesRelease();
+        $release = new Release();
         if ($release->getFromDB($this->getField("plugin_releases_releases_id"))) {
-            if ($release->getField("status") < PluginReleasesRelease::CHANGEDEFINITION) {
+            if ($release->getField("status") < Release::CHANGEDEFINITION) {
                 $update["id"]     = $release->getID();
-                $update["status"] = PluginReleasesRelease::CHANGEDEFINITION;
+                $update["status"] = Release::CHANGEDEFINITION;
                 $release->update($update);
             }
         }
@@ -248,10 +253,10 @@ class PluginReleasesChange_Release extends CommonDBRelation
     {
         global $CFG_GLPI, $DB;
 
-        PluginReleasesRelease::showCreateRelease($item);
+        Release::showCreateRelease($item);
         echo "<br/><br/>";
         $ID      = $item->getID();
-        $canedit = PluginReleasesRelease::canUpdate();
+        $canedit = Release::canUpdate();
         $rand    = mt_rand();
 
         $iterator = $DB->request([
@@ -293,12 +298,12 @@ class PluginReleasesChange_Release extends CommonDBRelation
             echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a release', 'releases') . "</th></tr>";
             echo "<tr class='tab_bg_2'><td>";
             echo Html::hidden('changes_id', ['value' => $ID]);
-            PluginReleasesRelease::dropdown([
+            Release::dropdown([
                 'used'   => [],
                 'entity' => $item->getEntityID(),
                 'condition' => [
                     'NOT'    => [
-                        'status' => PluginReleasesRelease::getClosedStatusArray(),
+                        'status' => Release::getClosedStatusArray(),
                     ],
                 ],
             ]);
@@ -321,7 +326,7 @@ class PluginReleasesChange_Release extends CommonDBRelation
         }
         if ($numrows) {
             echo "<table class='tab_cadre_fixehov'>";
-            echo "<tr class='noHover'><th colspan='8'>" . PluginReleasesRelease::getTypeName($numrows) . "</th>";
+            echo "<tr class='noHover'><th colspan='8'>" . Release::getTypeName($numrows) . "</th>";
             echo "</tr>";
 
             echo "<tr  class='tab_bg_1'>";
@@ -357,8 +362,8 @@ class PluginReleasesChange_Release extends CommonDBRelation
                 echo "</a></td>";
                 echo "<td >";
                 $var = "<span class='status'>";
-                $var .= PluginReleasesRelease::getStatusIcon($d["status"]);
-                $var .= PluginReleasesRelease::getStatus($d["status"]);
+                $var .= Release::getStatusIcon($d["status"]);
+                $var .= Release::getStatus($d["status"]);
                 $var .= "</span>";
                 echo $var;
                 echo "</td >";
@@ -372,7 +377,7 @@ class PluginReleasesChange_Release extends CommonDBRelation
                 echo Html::convDateTime($d["date_production"]);
                 echo "</td >";
                 echo "<td >";
-                $review = new PluginReleasesReview();
+                $review = new Review();
                 if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $d['id']])) {
                     echo Html::convDateTime($review->fields["real_date_release"]);
                 }

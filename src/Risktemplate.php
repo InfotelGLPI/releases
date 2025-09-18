@@ -30,18 +30,28 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use CommonDropdown;
+use CommonITILObject;
+use DbUtils;
+use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\ContentTemplates\TemplateManager;
+use Html;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
-use Glpi\Application\View\TemplateRenderer;
-use Glpi\ContentTemplates\TemplateManager;
 
 /**
- * Template for task
+ * Template for risk
  * @since 9.1
  **/
-class PluginReleasesRisktemplate extends CommonDropdown
+class Risktemplate extends CommonDropdown
 {
 
     // From CommonDBTM
@@ -94,7 +104,7 @@ class PluginReleasesRisktemplate extends CommonDropdown
             'id' => '3',
             'name' => __('Deploy Task type'),
             'field' => 'name',
-            'table' => getTableForItemType('PluginReleasesTypeDeployTask'),
+            'table' => getTableForItemType(TypeDeployTask::class),
             'datatype' => 'dropdown'
         ];
 
@@ -109,7 +119,7 @@ class PluginReleasesRisktemplate extends CommonDropdown
     {
         switch ($field['type']) {
             case 'dropdownTests' :
-                PluginReleasesTypeRisk::dropdown(["name" => "plugin_releases_typerisks_id"]);
+                TypeRisk::dropdown(["name" => "plugin_releases_typerisks_id"]);
                 break;
         }
     }
@@ -144,7 +154,7 @@ class PluginReleasesRisktemplate extends CommonDropdown
 
         echo "<tr class='tab_bg_1' hidden>";
         echo "<td colspan='4'>";
-        $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
+        $foreignKey = Releasetemplate::getForeignKeyField();
         echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
         echo "</td>";
         echo "</tr>";
@@ -164,7 +174,7 @@ class PluginReleasesRisktemplate extends CommonDropdown
         } else {
             $value = $this->fields["plugin_releases_typerisks_id"];
         }
-        Dropdown::show(PluginReleasesTypeRisk::getType(), [
+        Dropdown::show(TypeRisk::getType(), [
             'name' => "plugin_releases_typerisks_id",
             'value' => $value,
             'rand' => $rand_type

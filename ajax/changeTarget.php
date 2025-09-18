@@ -28,7 +28,6 @@
  */
 
 if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
-
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }

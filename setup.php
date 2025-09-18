@@ -31,73 +31,84 @@ global $CFG_GLPI;
 
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Metademands\Metademand;
+use GlpiPlugin\Mydashboard\Alert;
+use GlpiPlugin\Releases\Deploytask;
+use GlpiPlugin\Releases\Profile;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Release_Item;
 
-define('PLUGIN_RELEASES_VERSION', '2.0.4');
+define('PLUGIN_RELEASES_VERSION', '2.1.0');
 
 if (!defined("PLUGIN_RELEASES_DIR")) {
-   define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
-//   define("PLUGIN_RELEASES_NOTFULL_DIR", Plugin::getPhpDir("releases",false));
-//   define("PLUGIN_RELEASES_WEBDIR", $CFG_GLPI['root_doc'] . '/plugins/releases');
-//   define("PLUGIN_RELEASES_NOTFULL_WEBDIR", '/plugins/releases');
+    define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
 }
 
 // Init the hooks of the plugins -Needed
-function plugin_init_releases() {
-   global $PLUGIN_HOOKS, $CFG_GLPI;
-    $CFG_GLPI['glpiitemtypetables']['glpi_plugin_releases_releases'] = 'PluginReleasesRelease';
-   $PLUGIN_HOOKS['csrf_compliant']['releases']   = true;
-   $PLUGIN_HOOKS['change_profile']['releases']   = ['PluginReleasesProfile', 'initProfile'];
-   $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
-   if (isset($_SESSION['glpiactiveprofile']['interface'])
+function plugin_init_releases()
+{
+    global $PLUGIN_HOOKS, $CFG_GLPI;
+    $CFG_GLPI['glpiitemtypetables']['glpi_plugin_releases_releases'] = Release::class;
+    $PLUGIN_HOOKS['csrf_compliant']['releases']   = true;
+    $PLUGIN_HOOKS['change_profile']['releases']   = [Profile::class, 'initProfile'];
+    $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
+    if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
 //      $PLUGIN_HOOKS["javascript"]['releases'] = ["plugins/releases/js/releases.js"];
-      $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "js/releases.js";
-      $PLUGIN_HOOKS[Hooks::ADD_CSS]['releases'][]      = "css/styles.css";
-   }
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "js/releases.js";
+        $PLUGIN_HOOKS[Hooks::ADD_CSS]['releases'][]      = "css/styles.css";
+    }
 
-   Html::requireJs('tinymce');
+    Html::requireJs('tinymce');
 
-   if (Session::getLoginUserID()) {
+    if (Session::getLoginUserID()) {
+        if (class_exists(Metademand::class)) {
+            Metademand::registerType(Release::class);
+        }
 
-       if (class_exists(Metademand::class)) {
-           Metademand::registerType('PluginReleasesRelease');
-       }
-
-      Plugin::registerClass('PluginReleasesProfile',
-                            ['addtabon' => 'Profile']);
-      Plugin::registerClass('PluginReleasesRelease',
-                            ['addtabon'                    => ['Change'],
-                             'notificationtemplates_types' => true]);
-      Plugin::registerClass('PluginReleasesRelease_Item',
-                            ['addtabon' => ['User', 'Group', 'Supplier']]);
-      Plugin::registerClass(PluginReleasesDeploytask::class, [
+        Plugin::registerClass(
+            Profile::class,
+            ['addtabon' => 'Profile']
+        );
+        Plugin::registerClass(
+            Release::class,
+            ['addtabon'                    => ['Change'],
+            'notificationtemplates_types' => true]
+        );
+        Plugin::registerClass(
+            Release_Item::class,
+            ['addtabon' => ['User', 'Group', 'Supplier']]
+        );
+        Plugin::registerClass(Deploytask::class, [
          'planning_types' => true
-      ]);
+        ]);
 
-      if (Session::haveRight("plugin_releases_releases", READ)) {
-         $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => 'PluginReleasesRelease'];
-      }
-   }
+        if (Session::haveRight("plugin_releases_releases", READ)) {
+            $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => Release::class];
+        }
+    }
 
-   $PLUGIN_HOOKS['planning_populate']['releases'] = ['PluginReleasesDeploytask', 'populatePlanning'];
-   $PLUGIN_HOOKS['display_planning']['releases']  = ['PluginReleasesDeploytask', 'displayPlanningItem'];
+    $PLUGIN_HOOKS['planning_populate']['releases'] = [Deploytask::class, 'populatePlanning'];
+    $PLUGIN_HOOKS['display_planning']['releases']  = [Deploytask::class, 'displayPlanningItem'];
 
-   if (Plugin::isPluginActive("mydashboard")) {
-       Plugin::registerClass('PluginMydashboardAlert',
-                             ['addtabon' => ['PluginReleasesRelease']]);
-   }
+    if (Plugin::isPluginActive("mydashboard")) {
+        Plugin::registerClass(
+            Alert::class,
+            ['addtabon' => [Release::class]]
+        );
+    }
 
    // End init, when all types are registered
-   $PLUGIN_HOOKS['post_init']['releases'] = 'plugin_releases_postinit';
+    $PLUGIN_HOOKS['post_init']['releases'] = 'plugin_releases_postinit';
 }
 
 // Get the name and the version of the plugin - Needed
 /**
  * @return array
  */
-function plugin_version_releases() {
+function plugin_version_releases()
+{
 
-   return [
+    return [
       'name'           => _n('Release', 'Releases', 2, 'releases'),
       'version'      => PLUGIN_RELEASES_VERSION,
       'license'        => 'GPLv2+',
@@ -110,6 +121,5 @@ function plugin_version_releases() {
             'max' => '12.0'
          ]
       ]
-   ];
-
+    ];
 }

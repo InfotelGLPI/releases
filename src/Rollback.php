@@ -27,15 +27,22 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
+use Session;
+
+
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
-use Glpi\Application\View\TemplateRenderer;
 /**
- * Class PluginReleasesRollback
+ * Class Rollback
  */
-class PluginReleasesRollback extends CommonDBTM {
+class Rollback extends CommonDBTM {
 
    static $rightname = 'plugin_releases_rollbacks';
    const TODO = 1; // todo
@@ -44,7 +51,7 @@ class PluginReleasesRollback extends CommonDBTM {
    /**
     * @param int $nb
     *
-    * @return translated
+    * @return string
     */
    static function getTypeName($nb = 0) {
 
@@ -98,7 +105,7 @@ class PluginReleasesRollback extends CommonDBTM {
 
       $input["users_id"] = Session::getLoginUserID();
       $input["plugin_releases_releases_id"] = $input["items_id"];
-      $release           = new PluginReleasesRelease();
+      $release           = new Release();
       $release->getFromDB($input["items_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 
@@ -173,7 +180,7 @@ class PluginReleasesRollback extends CommonDBTM {
 //         //      echo "<div class='fa-label'>
 //         //            <i class='fas fa-reply fa-fw'
 //         //               title='".."'></i>";
-//         PluginReleasesRollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
+//         Rollbacktemplate::dropdown(['value'     => $this->fields['plugin_releases_rollbacktemplates_id'],
 //                                                   'entity'    => $this->getEntityID(),
 //                                                   'rand'      => $rand_template,
 //                                                   'on_change' => 'tasktemplate_update(this.value)']);

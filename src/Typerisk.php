@@ -3,14 +3,14 @@
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  Releases plugin for GLPI
- Copyright (C) 2018-2022 by the Releases Development Team.
+ Copyright (C) 2018-2022 by the releases Development Team.
 
  https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of Releases.
+ This file is part of releases.
 
  releases is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -27,6 +27,12 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use CommonTreeDropdown;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
@@ -34,21 +40,21 @@ if (!defined('GLPI_ROOT')) {
 // Class for a Dropdown
 
 /**
- * Class PluginReleasesTypeTest
+ * Class TypeRisk
  */
-class PluginReleasesTypeTest extends CommonTreeDropdown {
+class TypeRisk extends CommonTreeDropdown {
 
    /**
     * @param int $nb
     *
-    * @return translated
+    * @return string
     */
    static function getTypeName($nb = 0) {
 
-      return _n('Test type', 'Test types', $nb, 'releases');
+      return _n('Risk type', 'Risk types', $nb, 'releases');
    }
 
-   static $rightname         = 'plugin_releases_tests';
+   static $rightname         = 'plugin_releases_risks';
    var    $can_be_translated = true;
 
    /**
@@ -63,12 +69,11 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       if ($ID > 0) {
          // Not already transfer
          // Search init item
-         $table = CommonDBTM::getTable(PluginReleasesTypeTest::class);
-          $query = [
-              'SELECT' => '*',
-              'FROM'   => $table,
-              'WHERE'  => ['id' => $ID]
-          ];
+         $table = CommonDBTM::getTable(TypeRisk::class);
+         $query = [
+             'FROM' => $table,
+             'WHERE' => ['id' => $ID]
+         ];
 
          if ($result = $DB->doQuery($query)) {
             if ($DB->numrows($result)) {
@@ -145,8 +150,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
 
    static function getMenuOptions($menu) {
 
-       global $CFG_GLPI;
-       $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.php";
+      $plugin_page = $plugin_page = "/plugins/releases/front/typerisk.php";
       $itemtype    = strtolower(self::getType());
 
       //Menu entry in admin
@@ -155,7 +159,7 @@ class PluginReleasesTypeTest extends CommonTreeDropdown {
       $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
       if (Session::haveright(self::$rightname, UPDATE)) {
-         $menu['options'][$itemtype]['links']['add'] = $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.form.php\';";
+         $menu['options'][$itemtype]['links']['add'] = $plugin_page = "/plugins/releases/front/typerisk.form.php\';";
       }
 
       return $menu;

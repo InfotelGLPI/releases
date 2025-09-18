@@ -27,27 +27,37 @@
  --------------------------------------------------------------------------
  */
 
+
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use DbUtils;
+use Dropdown;
+use Glpi\Application\View\TemplateRenderer;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-use Glpi\Application\View\TemplateRenderer;
 /**
- * Class PluginReleasesRisk
+ * Class Test
  */
-class PluginReleasesRisk extends CommonDBTM {
+class Test extends CommonDBTM {
 
-   static $rightname = 'plugin_releases_risks';
+   static $rightname = 'plugin_releases_tests';
    const TODO = 1; // todo
    const DONE = 2; // done
+   const FAIL = 3; // Failed
 
    /**
     * @param int $nb
     *
-    * @return translated
+    * @return string
     */
    static function getTypeName($nb = 0) {
-      return _n('Risk', 'Risks', $nb, 'releases');
+
+      return _n('Test', 'Tests', $nb, 'releases');
    }
 
    /**
@@ -55,7 +65,7 @@ class PluginReleasesRisk extends CommonDBTM {
     * @return css class
     */
    static function getCssClass() {
-      return "risk";
+      return "test";
    }
 
    /**
@@ -70,6 +80,7 @@ class PluginReleasesRisk extends CommonDBTM {
                                         ["plugin_releases_releases_id" => $item->getID()]);
    }
 
+
    /**
     * @param \CommonDBTM $item
     *
@@ -83,38 +94,58 @@ class PluginReleasesRisk extends CommonDBTM {
                                          "state"                       => self::DONE]);
    }
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
+   static function countFailForItem(CommonDBTM $item) {
+      $dbu   = new DbUtils();
+      $table = CommonDBTM::getTable(self::class);
+      return $dbu->countElementsInTable($table,
+                                        ["plugin_releases_releases_id" => $item->getID(),
+                                         "state"                       => self::FAIL]);
+   }
+
+
+   /**
+    * Prepare input datas for adding the item
+    *
+    * @param array $input datas used to add the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForAdd($input) {
 
       $input = parent::prepareInputForAdd($input);
 
       $input["users_id"] = Session::getLoginUserID();
       $input["plugin_releases_releases_id"] = $input["items_id"];
-      $release           = new PluginReleasesRelease();
+
+      $release           = new Release();
       $release->getFromDB($input["items_id"]);
       $input["entities_id"] = $release->getField("entities_id");
-
 
       return $input;
    }
 
+   /**
+    *
+    */
    function post_addItem() {
       parent::post_addItem();
-
-      if (isset($this->input["create_test"]) && $this->input["create_test"] == 1) {
-         $test                                     = new PluginReleasesTest();
-         $inputTest                                = [];
-         $inputTest["entities_id"]                 = $this->fields["entities_id"];
-         $inputTest["plugin_releases_releases_id"] = $this->fields["plugin_releases_releases_id"];
-         $inputTest["plugin_releases_risks_id"]    = $this->fields["id"];
-         $inputTest["name"]                        = $this->fields["name"];
-         $inputTest["users_id"]                    = $this->fields["users_id"];
-         $inputTest["content"]                     = $this->fields["content"];
-         $test->add($inputTest);
-      }
 
 
    }
 
+
+   /**
+    * Prepare input datas for updating the item
+    *
+    * @param array $input data used to update the item
+    *
+    * @return array the modified $input array
+    **/
    function prepareInputForUpdate($input) {
       // update last editor if content change
       if (isset($input['update'])
@@ -128,12 +159,17 @@ class PluginReleasesRisk extends CommonDBTM {
       return $input;
    }
 
-   function post_updateItem($history = 1) {
 
+   function post_updateItem($history = 1) {
       parent::post_updateItem($history);
    }
 
-
+   /**
+    * @param       $ID
+    * @param array $options
+    *
+    * @return bool
+    */
    function showForm($ID, $options = []) {
 
 
@@ -141,7 +177,7 @@ class PluginReleasesRisk extends CommonDBTM {
          $this->getEmpty();
       }
 
-      TemplateRenderer::getInstance()->display('@releases/form_risk.html.twig', [
+      TemplateRenderer::getInstance()->display('@releases/form_test.html.twig', [
          'item'      => $options['parent'],
          'subitem'   => $this
       ]);
@@ -151,90 +187,109 @@ class PluginReleasesRisk extends CommonDBTM {
 //      $rand_text     = mt_rand();
 //      $rand_name     = mt_rand();
 //      $rand_type     = mt_rand();
+//      $rand_risk     = mt_rand();
+//      $rand_state    = mt_rand();
 //
 //      $this->initForm($ID, $options);
 //      $this->showFormHeader($options);
+//
+//      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
 //      if ($ID < 0) {
 //         echo "<tr class='tab_bg_1'>";
 //         echo "<td>";
-//         echo _n('Risk template', 'Risk templates', 1, 'releases');
+//         echo _n('Test template', 'Test templates', 1, 'releases');
 //         echo "</td>";
 //         echo "<td style='vertical-align: middle' >";
-//         //      echo
-//         //         "<div class='fa-label'>
+//         //      echo "<div class='fa-label'>
 //         //            <i class='fas fa-reply fa-fw'
 //         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-//         PluginReleasesRisktemplate::dropdown(['value'     => '',
+//         Testtemplate::dropdown(['value'     => '',
 //                                               'entity'    => $this->getEntityID(),
 //                                               'rand'      => $rand_template,
 //                                               'on_change' => 'tasktemplate_update(this.value)']);
-//         //      echo "</div>";
+//         echo "</div>";
 //         echo Html::scriptBlock('
-//            function tasktemplate_update(value) {
-//               $.ajax({
-//                  url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/risk.php",
-//                  type: "POST",
-//                  data: {
-//                     templates_id: value
-//                  }
-//               }).done(function(data) {
-//                  var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
-//                     ? 0
-//                     : parseInt(data.plugin_releases_typerisks_id);
+//         function tasktemplate_update(value) {
+//            $.ajax({
+//               url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/test.php",
+//               type: "POST",
+//               data: {
+//                  templates_id: value
+//               }
+//            }).done(function(data) {
+//               var plugin_releases_typetests_id = isNaN(parseInt(data.plugin_releases_typetests_id))
+//                  ? 0
+//                  : parseInt(data.plugin_releases_typetests_id);
 //
-//                  // set textarea content
-//                  $("#content' . $rand_text . '").html(data.content);
-//                  // set name
-//                  $("#name' . $rand_name . '").val(data.name);
-//                  $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
-//                  // set also tinmyce (if enabled)
-//                  if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
-//                     tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
-//                  }
 //
-//               });
-//            }
-//         ');
+//
+//               // set textarea content
+//               $("#content' . $rand_text . '").html(data.content);
+//               // set name
+//               $("#name' . $rand_name . '").val(data.name);
+//               $("#dropdown_plugin_releases_typetests_id' . $rand_type . '").trigger("setValue", plugin_releases_typetests_id);
+//
+//               // set also tinmyce (if enabled)
+//               if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
+//                  tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
+//               }
+//
+//            });
+//         }
+//      ');
 //         echo "</td>";
-//         echo "<td>";
-//         echo __("Create a test from this risk", "releases");
+//         echo "<td colspan='2'>";
 //         echo "</td>";
-//         echo "<td>";
-//         Html::showCheckbox(["name" => "create_test"]);
-//         echo "</td>";
-//
-//
 //         echo "</tr>";
 //      }
 //      echo "<tr class='tab_bg_1'>";
-//
 //      echo "<td>" . __('Name') . "</td>";
 //      echo "<td>";
-//      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
-//      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
+//      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
 //      echo "</td>";
 //
 //      echo "<td>";
-//      echo __("Risk type", 'releases');
+//      echo __("Test type", 'releases');
 //      echo "</td>";
 //
 //      echo "<td>";
-//      if (isset($_GET["typeriskid"])) {
-//         $value = $_GET["typeriskid"];
+//      if (isset($_GET["typetestid"])) {
+//         $value = $_GET["typetestid"];
 //      } else {
-//         $value = $this->fields["plugin_releases_typerisks_id"];
+//         $value = $this->fields["plugin_releases_typetests_id"];
 //      }
-//      Dropdown::show(PluginReleasesTypeRisk::getType(), ['name'  => "plugin_releases_typerisks_id",
-//                                                         'value' => $value, 'rand' => $rand_type]);
+//      Dropdown::show(TypeTest::getType(), ['rand'  => $rand_type, 'name' => "plugin_releases_typetests_id",
+//                                                         'value' => $value]);
 //      echo "</td>";
 //
 //
 //      echo "</tr>";
+//      echo "<tr class='tab_bg_1'>";
+//      echo "<td>";
+//      echo __("Associated risk", 'releases');
+//      echo "</td>";
+//      echo "<td>";
+//      Dropdown::show(Risk::getType(), ['rand'  => $rand_risk, 'name' => "plugin_releases_risks_id", "condition" => ["plugin_releases_releases_id" => $options['plugin_releases_releases_id']],
+//                                                     'value' => $this->fields["plugin_releases_risks_id"]]);
+//      echo "</td>";
+//      echo "<td>";
+//      echo __('Status');
+//      echo "</td>";
 //
+//      echo "<td>";
+//      if (isset($this->fields["state"])) {
+//         echo "<div class='fa-label'>
+//            <i class='fas fa-tasks fa-fw'
+//               title='" . __('Status') . "'></i>";
+//         self::dropdownStateTest("state", $this->fields["state"], true, ['rand' => $rand_state]);
+//         echo "</div>";
+//      }
+//      echo "</td>";
+//      echo "</tr>";
 //      echo "<tr class='tab_bg_1'>";
 //      echo "<td>" . __('Description') . "</td>";
 //      echo "<td colspan='3'>";
-//      //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
+//      //       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
 //      $content_id = "content$rand_text";
 //      $cols       = 100;
 //      $rows       = 10;
@@ -252,6 +307,24 @@ class PluginReleasesRisk extends CommonDBTM {
 //      $this->showFormButtons($options);
 //
 //      return true;
+   }
+
+   /**
+    * Dropdown of test & tests state
+    *
+    * @param $name   select name
+    * @param $value  default value (default '')
+    * @param $display  display of send string ? (true by default)
+    * @param $options  options
+    **/
+   static function dropdownStateTest($name, $value = '', $display = true, $options = []) {
+
+      $values = [static::TODO => __('To do'),
+                 static::DONE => __('Done'),
+                 static::FAIL => __('Failed', 'releases')];
+
+      return Dropdown::showFromArray($name, $values, array_merge(['value'   => $value,
+                                                                  'display' => $display], $options));
    }
 
    /**
@@ -277,5 +350,24 @@ class PluginReleasesRisk extends CommonDBTM {
 //      }
 //      return 0;
 //   }
+
+   /**
+    * Get test state name
+    *
+    * @param $value status ID
+    **/
+   static function getState($value) {
+
+      switch ($value) {
+         case static::FAIL :
+            return __('Failed', 'releases');
+
+         case static::TODO :
+            return __('To do');
+
+         case static::DONE :
+            return __('Done');
+      }
+   }
 }
 

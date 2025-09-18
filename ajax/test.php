@@ -30,14 +30,9 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 9.1
- */
-
-use Glpi\Http\Response;
-
-
-
+use Glpi\Exception\Http\BadRequestHttpException;
+use Glpi\RichText\RichText;
+use GlpiPlugin\Releases\Testtemplate;
 
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
@@ -48,7 +43,7 @@ Session::checkRight('plugin_releases_releases', UPDATE);
 // Mandatory parameter: risktemplates_id
 $testtemplates_id = $_POST['testtemplates_id'] ?? null;
 if ($testtemplates_id === null) {
-   Response::sendError(400, "Missing or invalid parameter: 'testtemplates_id'");
+    throw new BadRequestHttpException("Missing or invalid parameter: 'testtemplates_id'");
 } else if ($testtemplates_id == 0) {
    // Reset form
    echo json_encode([
@@ -60,29 +55,29 @@ if ($testtemplates_id === null) {
 // Mandatory parameter: items_id
 $parents_id = $_POST['items_id'] ?? 0;
 if (!$parents_id) {
-   Response::sendError(400, "Missing or invalid parameter: 'items_id'");
+    throw new BadRequestHttpException("Missing or invalid parameter: 'items_id'");
 }
 
 // Mandatory parameter: itemtype
 $parents_itemtype = $_POST['itemtype'] ?? '';
 if (empty($parents_itemtype) || !is_subclass_of($parents_itemtype, CommonITILObject::class)) {
-   Response::sendError(400, "Missing or invalid parameter: 'itemtype'");
+    throw new BadRequestHttpException("Missing or invalid parameter: 'itemtype'");
 }
 
-// Load PluginReleasesTesttemplate template
-$template = new PluginReleasesTesttemplate();
+// Load Testtemplate template
+$template = new Testtemplate();
 if (!$template->getFromDB($testtemplates_id)) {
-   Response::sendError(400, "Unable to load template: $testtemplates_id");
+    throw new BadRequestHttpException("Unable to load template: $testtemplates_id");
 }
 
 // Load parent item
 $parent = new $parents_itemtype();
 if (!$parent->getFromDB($parents_id)) {
-   Response::sendError(400, "Unable to load parent item: $parents_itemtype $parents_id");
+    throw new BadRequestHttpException("Unable to load parent item: $parents_itemtype $parents_id");
 }
 
 // Render template content using
-$template->fields['content'] = Glpi\RichText\RichText::getSafeHtml($template->fields['content']);
+$template->fields['content'] = RichText::getSafeHtml($template->fields['content']);
 
 // Return json response with the template fields
 echo json_encode($template->fields);

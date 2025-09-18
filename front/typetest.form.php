@@ -27,7 +27,9 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Releases\TypeTest;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesTypeTest();
+
+$dropdown = new TypeTest();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");

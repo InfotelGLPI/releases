@@ -30,11 +30,9 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 9.1
- */
-
+use GlpiPlugin\Releases\Testtemplate;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesTesttemplate();
+
+$dropdown = new Testtemplate();
 include(GLPI_ROOT . "/front/dropdown.common.php");

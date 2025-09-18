@@ -30,41 +30,39 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 0.85
- */
-
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Release_Supplier;
 
-
-$link = new PluginReleasesRelease_Supplier();
+$link = new Release_Supplier();
 
 Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
 
 if (isset($_POST["update"])) {
-   $link->check($_POST["id"], UPDATE);
+    $link->check($_POST["id"], UPDATE);
 
-   $link->update($_POST);
-   echo "<script type='text/javascript' >\n";
-   echo "window.parent.location.reload();";
-   echo "</script>";
+    $link->update($_POST);
+    echo "<script type='text/javascript' >\n";
+    echo "window.parent.location.reload();";
+    echo "</script>";
+} elseif (isset($_POST['delete'])) {
+    $link->check($_POST['id'], DELETE);
+    $link->delete($_POST);
 
-} else if (isset($_POST['delete'])) {
-   $link->check($_POST['id'], DELETE);
-   $link->delete($_POST);
-
-   Event::log($link->fields['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
-              sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]));
-   Html::redirect(PluginReleasesRelease::getFormURLWithID($link->fields['plugin_releases_releases_id']));
-
-} else if (isset($_GET["id"])) {
-   $link->showSupplierNotificationForm($_GET["id"]);
+    Event::log(
+        $link->fields['plugin_releases_releases_id'],
+        "plugin_releases",
+        4,
+        "maintain",
+        sprintf(__('%s deletes an actor'), $_SESSION["glpiname"])
+    );
+    Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releases_id']));
+} elseif (isset($_GET["id"])) {
+    $link->showSupplierNotificationForm($_GET["id"]);
 } else {
     throw new BadRequestHttpException('Lost');
 }
 
 Html::popFooter();
-
-

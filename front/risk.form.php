@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Risk;
 
 Session::checkLoginUser();
 if (!isset($_GET["id"])) {
@@ -36,7 +38,7 @@ if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
 }
 
-$release = New PluginReleasesRisk();
+$release = New Risk();
 
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);
@@ -66,7 +68,7 @@ if (isset($_POST["add"])) {
 
    $release->checkGlobal(READ);
 
-   Html::header(PluginReleasesRelease::getTypeName(2), '', "help", PluginReleasesRelease::getType());
+   Html::header(Release::getTypeName(2), '', "help", Release::class);
 
    $release->display($_GET);
 

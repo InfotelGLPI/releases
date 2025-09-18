@@ -27,11 +27,12 @@
  --------------------------------------------------------------------------
  */
 
-
-
 Session::checkLoginUser();
 
 use Glpi\Event;
+use GlpiPlugin\Releases\Change_Release;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Release_User;
 
 if (!isset($_GET["id"])) {
    $_GET["id"] = 0;
@@ -46,7 +47,7 @@ if (isset($_UPOST['_actors'])) {
     $_REQUEST['_actors'] = $_POST['_actors'];
 }
 
-$release = new PluginReleasesRelease();
+$release = new Release();
 
 if (isset($_POST["add"])) {
 
@@ -90,7 +91,7 @@ if (isset($_POST["add"])) {
    $input["entities_id"] = $change->getField("entities_id");
 
    $newID                                = $release->add($input);
-   $change_release                       = new PluginReleasesChange_Release();
+   $change_release                       = new Change_Release();
    $input                                = [];
    $input["changes_id"]                  = $change->getID();
    $input["plugin_releases_releases_id"] = $newID;
@@ -114,10 +115,10 @@ if (isset($_POST["add"])) {
    Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
       //TRANS: %s is the user login
               sprintf(__('%s adds an actor'), $_SESSION["glpiname"]));
-   Html::redirect(PluginReleasesRelease::getFormURLWithID($_POST['plugin_releases_releases_id']));
+   Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
 } else if (isset($_POST['addme_assign'])) {
-   $release_user = new PluginReleasesRelease_User();
+   $release_user = new Release_User();
 
    $release->check($_POST['plugin_releases_releases_id'], READ);
    $input = ['plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
@@ -125,10 +126,10 @@ if (isset($_POST["add"])) {
              'use_notification'            => 1,
              'type'                        => CommonITILActor::ASSIGN];
    $release_user->add($input);
-   \Glpi\Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
+   Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
       //TRANS: %s is the user login
                     sprintf(__('%s adds an actor'), $_SESSION["glpiname"]));
-   Html::redirect(PluginReleasesRelease::getFormURLWithID($_POST['plugin_releases_releases_id']));
+   Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
 } else if (isset($_REQUEST['delete_document'])) {
 
@@ -137,8 +138,8 @@ if (isset($_POST["add"])) {
    if ($doc->can($doc->getID(), UPDATE)) {
       $document_item        = new Document_Item;
       $found_document_items = $document_item->find([
-                                                      'itemtype'     => 'PluginReleasesRelease',
-                                                      'items_id'     => (int)$_REQUEST['PluginReleasesRelease'],
+                                                      'itemtype'     => Release::class,
+                                                      'items_id'     => (int)$_REQUEST[Release::class],
                                                       'documents_id' => $doc->getID()
                                                    ]);
       foreach ($found_document_items as $item) {
@@ -151,6 +152,6 @@ if (isset($_POST["add"])) {
 
    $release->checkGlobal(READ);
 
-   $menus = ["helpdesk", PluginReleasesRelease::getType()];
-   PluginReleasesRelease::displayFullPageForItem($_REQUEST['id'] ?? 0, $menus, $_REQUEST);
+   $menus = ["helpdesk", Release::class];
+   Release::displayFullPageForItem($_REQUEST['id'] ?? 0, $menus, $_REQUEST);
 }

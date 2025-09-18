@@ -30,41 +30,51 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use CommonDropdown;
+use DbUtils;
+use Dropdown;
+use Html;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
 /**
- * Template for task
+ * Template for test
  * @since 9.1
  **/
-class PluginReleasesRollbacktemplate extends CommonDropdown
+class Testtemplate extends CommonDropdown
 {
 
     // From CommonDBTM
     public $dohistory = true;
     public $can_be_translated = true;
 
-    static $rightname = 'plugin_releases_rollbacks';
-
+    static $rightname = 'plugin_releases_tests';
 
     static function getTypeName($nb = 0)
     {
-        return _n('Rollback template', 'Rollback templates', $nb, 'releases');
+        return _n('Test template', 'Test templates', $nb, 'releases');
     }
 
 
     function getAdditionalFields()
     {
         return [
-            //         ['name'  => 'plugin_release_typerollbacks_id',
-            //            'label' => __('Type test','Type tests', 'release'),
-            //            'type'  => 'dropdownRollbacks',
-            //         ],
-            //         ['name'  => 'plugin_release_risks_id',
-            //            'label' => __('Risk','Risks', 'release'),
-            //            'type'  => 'dropdownRisks',
-            //         ],
+            [
+                'name' => 'plugin_releases_typetests_id',
+                'label' => _n('Test type', 'Test types', 1, 'releases'),
+                'type' => 'dropdownTests',
+            ],
+            [
+                'name' => 'plugin_releases_risks_id',
+                'label' => _n('Risk', 'Risks', 1, 'releases'),
+                'type' => 'dropdownRisks',
+            ],
             [
                 'name' => 'content',
                 'label' => __('Description'),
@@ -93,7 +103,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
             'id' => '3',
             'name' => __('Deploy Task type'),
             'field' => 'name',
-            'table' => getTableForItemType('PluginReleasesTypeDeployTask'),
+            'table' => getTableForItemType(TypeDeployTask::class),
             'datatype' => 'dropdown'
         ];
 
@@ -107,14 +117,15 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
     function displaySpecificTypeField($ID, $field = [], array $options = [])
     {
         switch ($field['type']) {
-            //         case 'dropdownRollbacks' :
-            //            PluginReleaseTypeR::dropdown(["name"=>"plugin_release_typetests_id"]);
-            //            break;
+            case 'dropdownTests' :
+                TypeTest::dropdown(["name" => "plugin_releases_typetests_id"]);
+                break;
             case 'dropdownRisks' :
-                PluginReleasesRisktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
+                Risktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
                 break;
         }
     }
+
 
     static function canCreate(): bool
     {
@@ -135,40 +146,74 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
         return Session::haveRight(static::$rightname, READ);
     }
 
+    /**
+     * @param       $ID
+     * @param array $options
+     *
+     * @return bool|void
+     */
     function showForm($ID, $options = [])
     {
-        $rand_template = mt_rand();
-        $rand_text = mt_rand();
-        $rand_name = mt_rand();
         $this->initForm($ID, $options);
         $this->showFormHeader($options);
-        echo "<tr class='tab_bg_1'>";
 
+        $rand_text = mt_rand();
+        $rand_name = mt_rand();
+        $rand_type = mt_rand();
+        $rand_risk = mt_rand();
 
         echo "<tr class='tab_bg_1' hidden>";
         echo "<td colspan='4'>";
-        $foreignKey = PluginReleasesReleasetemplate::getForeignKeyField();
+        $foreignKey = Releasetemplate::getForeignKeyField();
         echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
         echo "</td>";
         echo "</tr>";
-
         echo "<tr class='tab_bg_1'>";
+
         echo "<td>" . __('Name') . "</td>";
         echo "<td>";
-        echo Html::input(
-            "name",
-            ["id" => "name" . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name,]
-        );
+        echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
         echo "</td>";
-        echo "<td colspan='2'>";
+
+        echo "<td>";
+        echo __("Test type", 'releases');
         echo "</td>";
+
+        echo "<td>";
+        if (isset($_GET["typetestid"])) {
+            $value = $_GET["typetestid"];
+        } else {
+            $value = $this->fields["plugin_releases_typetests_id"];
+        }
+        Dropdown::show(TypeTest::getType(), [
+            'rand' => $rand_type,
+            'name' => "plugin_releases_typetests_id",
+            'value' => $value
+        ]);
+        echo "</td>";
+
 
         echo "</tr>";
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>";
+        echo __("Associated risk", 'releases');
+        echo "</td>";
 
+        echo "<td>";
+
+        Dropdown::show(Risktemplate::getType(), [
+            'rand' => $rand_risk,
+            'name' => "plugin_releases_risks_id",
+            'value' => $this->fields["plugin_releases_risks_id"],
+            "condition" => ["plugin_releases_releasetemplates_id" => $this->fields[$foreignKey]]
+        ]);
+        echo "</td>";
+        echo "<td colspan='2'></td>";
+        echo "</tr>";
         echo "<tr class='tab_bg_1'>";
         echo "<td>" . __('Description') . "</td>";
         echo "<td colspan='3'>";
-        //       Html::textarea(["id"=>"content".$rand_content, "name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),  'rand'      => $rand_content,]);
+        //       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
         $content_id = "content$rand_text";
         $cols = 100;
         $rows = 10;
@@ -184,7 +229,6 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
         ]);
         echo "</td>";
         echo "</tr>";
-
         $this->showFormButtons($options);
     }
 
@@ -209,7 +253,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
      */
     static function getCssClass()
     {
-        return "rollback";
+        return "test";
     }
 
     function prepareInputForAdd($input) {
@@ -222,7 +266,7 @@ class PluginReleasesRollbacktemplate extends CommonDropdown
 
     function post_addItem()
     {
-        $_SESSION['releases']["template"][Session::getLoginUserID()] = 'rollback';
+        $_SESSION['releases']["template"][Session::getLoginUserID()] = 'test';
     }
 
     /**

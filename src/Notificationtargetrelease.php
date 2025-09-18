@@ -30,17 +30,36 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use Change;
+use CommonITILActor;
+use CommonITILObject;
+use Dropdown;
+use Entity;
+use Glpi\RichText\RichText;
+use Html;
+use ITILFollowup;
+use Log;
+use NotificationTarget;
+use NotificationTargetCommonITILObject;
+use CommonDBTM;
+use Session;
+use Supplier;
+use Ticket;
+use User;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
 
 /**
- * NotificationTargetChange Class
+ * NotificationTargetRelease Class
  *
  * @since 0.85
  **/
-class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonITILObject {
+class NotificationTargetRelease extends NotificationTargetCommonITILObject {
 
    public $private_profiles = [];
 
@@ -79,13 +98,13 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       $data["##review.incident##"]            = "";
       $data["##review.incidentdescription##"] = "";
 
-      $review = new PluginReleasesReview();
+      $review = new Review();
       if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
          $data["##review.realproductiondate##"]  = Html::convDateTime($review->getField("real_date_release"));
          $data["##review.conformrealization##"]  = Dropdown::getYesNo($review->getField('conforming_realization'));
          $data["##review.name##"]                = $review->getField('name');
          $data["##review.incident##"]            = Dropdown::getYesNo($review->getField('incident'));
-         $data["##review.incidentdescription##"] = Glpi\RichText\RichText::getTextFromHtml($review->getField('incident_description'));
+         $data["##review.incidentdescription##"] = RichText::getTextFromHtml($review->getField('incident_description'));
       }
       $data["##$objettype.url##"]
          = $this->formatURL($options['additionnaloption']['usertype'],
@@ -405,7 +424,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
 
 
          //Task infos
-         $tasktype = PluginReleasesDeploytask::getType();
+         $tasktype = Deploytask::getType();
          $taskobj  = new $tasktype();
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
@@ -431,7 +450,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
             $tmp['##task.date##']        = Html::convDateTime($task['date']);
             $tmp['##task.description##'] = $task['content'];
             $tmp['##task.time##']        = Ticket::getActionTime($task['actiontime']);
-            $tmp['##task.status##']      = PluginReleasesDeploytask::getState($task['state']);
+            $tmp['##task.status##']      = Deploytask::getState($task['state']);
 
             $tmp['##task.user##']  = getUserName($task['users_id_tech']);
             $tmp['##task.group##']
@@ -449,7 +468,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $data["##$objettype.numberoftasks##"] = count($data['tasks']);
 
          //Risk infos
-         $risktype = PluginReleasesRisk::getType();
+         $risktype = Risk::getType();
          $riskobj  = new $risktype();
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
@@ -482,7 +501,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $data["##$objettype.numberofrisks##"] = count($data['risks']);
 
          //Rollback infos
-         $rollbacktype = PluginReleasesRollback::getType();
+         $rollbacktype = Rollback::getType();
          $rollbackobj  = new $rollbacktype();
          $restrict     = [$item->getForeignKeyField() => $item->getField('id')];
 
@@ -512,7 +531,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
          $data["##$objettype.numberofrollbacks##"] = count($data['rollbacks']);
 
          //Test infos
-         $testtype = PluginReleasesTest::getType();
+         $testtype = Test::getType();
          $testobj  = new $testtype();
          $restrict = [$item->getForeignKeyField() => $item->getField('id')];
 
@@ -947,7 +966,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       //TODO change for release -> OK
 
       if (isset($options['task_id'])) {
-         $tasktable = getTableForItemType(PluginReleasesDeploytask::getType());
+         $tasktable = getTableForItemType(Deploytask::getType());
 
          $criteria                           = array_merge_recursive(
             ['INNER JOIN' => [
@@ -983,7 +1002,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       //TODO change for release -> OK
 
       if (isset($options['task_id'])) {
-         $tasktable = getTableForItemType(PluginReleasesDeploytask::getType());
+         $tasktable = getTableForItemType(Deploytask::getType());
 
          $criteria                           = array_merge_recursive(
             ['INNER JOIN' => [
@@ -1022,7 +1041,7 @@ class PluginReleasesNotificationTargetRelease extends NotificationTargetCommonIT
       //TODO change for release -> OK
 
       if (isset($options['task_id'])) {
-         $tasktable = getTableForItemType(PluginReleasesDeploytask::getType());
+         $tasktable = getTableForItemType(Deploytask::getType());
          $iterator  = $DB->request([
                                       'FROM'       => $tasktable,
                                       'INNER JOIN' => [

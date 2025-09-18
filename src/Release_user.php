@@ -30,37 +30,34 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonITILActor;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-/**
- * PluginReleasesGroup_Release Class
- *
- * @since 0.85
- *
- * Relation between Groups and Releases
- **/
-class PluginReleasesGroup_Release extends CommonITILActor {
+/// Class Release_User
+class Release_User extends CommonITILActor {
 
    // From CommonDBRelation
-   static public $itemtype_1 = 'PluginReleasesRelease';
+   static public $itemtype_1 = Release::class;
    static public $items_id_1 = 'plugin_releases_releases_id';
-   static public $itemtype_2 = 'Group';
-   static public $items_id_2 = 'groups_id';
-
+   static public $itemtype_2 = 'User';
+   static public $items_id_2 = 'users_id';
 
    function post_addItem() {
 
-      switch ($this->input['type']) {  // Values from CommonITILObject::getSearchOptionsActors()
+      switch ($this->input['type']) { // Values from CommonITILObject::getSearchOptionsActors()
          case CommonITILActor::REQUESTER:
-            $this->_force_log_option = 71;
+            $this->_force_log_option = 4;
             break;
          case CommonITILActor::OBSERVER:
-            $this->_force_log_option = 65;
+            $this->_force_log_option = 66;
             break;
          case CommonITILActor::ASSIGN:
-            $this->_force_log_option = 8;
+            $this->_force_log_option = 5;
             break;
       }
       parent::post_addItem();

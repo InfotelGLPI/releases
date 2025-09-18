@@ -68,7 +68,7 @@
               $.post(rpath,
                  {'action':     'change_release_subitem_state',
                     'items_id':   items_id,
-                    'itemtype':   'PluginReleasesRisk',
+                    'itemtype':   'GlpiPlugin\Releases\Risk',
                     'parenttype': '{{ item.getType() }}',
                     '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }}
                  })
@@ -116,7 +116,7 @@
                                title="{{ _n('Risk template', 'Risk templates', get_plural_number(), 'releases') }}"></i>
                         {% endset %}
                         {{ fields.dropdownField(
-                            'PluginReleasesRisktemplate',
+                            'GlpiPlugin\Releases\Risktemplate',
                             'risktemplates_id',
                             subitem.fields['risktemplates_id'],
                             fup_template_lbl,
@@ -143,7 +143,7 @@
                             <i class="fas fa-inbox fa-fw me-1" title="{{ __("Risk type", 'releases') }}"></i>
                         {% endset %}
                         {{ fields.dropdownField(
-                            'PluginReleasesTypeRisk',
+                            'GlpiPlugin\Releases\TypeRisk',
                             'plugin_releases_typerisks_id',
                             subitem.fields['plugin_releases_typerisks_id'],
                             fup_source_lbl,

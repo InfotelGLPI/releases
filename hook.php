@@ -27,6 +27,31 @@
  --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Releases\Change_Release;
+use GlpiPlugin\Releases\Deploytask;
+use GlpiPlugin\Releases\Deploytasktemplate;
+use GlpiPlugin\Releases\Group_Release;
+use GlpiPlugin\Releases\Group_Releasetemplate;
+use GlpiPlugin\Releases\Profile;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Release_Item;
+use GlpiPlugin\Releases\Release_Supplier;
+use GlpiPlugin\Releases\Release_User;
+use GlpiPlugin\Releases\Releasetemplate;
+use GlpiPlugin\Releases\Releasetemplate_Item;
+use GlpiPlugin\Releases\Releasetemplate_Supplier;
+use GlpiPlugin\Releases\Releasetemplate_User;
+use GlpiPlugin\Releases\Review;
+use GlpiPlugin\Releases\Risk;
+use GlpiPlugin\Releases\Risktemplate;
+use GlpiPlugin\Releases\Rollback;
+use GlpiPlugin\Releases\Rollbacktemplate;
+use GlpiPlugin\Releases\Test;
+use GlpiPlugin\Releases\Testtemplate;
+use GlpiPlugin\Releases\TypeDeployTask;
+use GlpiPlugin\Releases\TypeRisk;
+use GlpiPlugin\Releases\TypeTest;
+
 /**
  * @return bool
  */
@@ -35,16 +60,18 @@ function plugin_releases_install() {
 
    if (!$DB->tableExists("glpi_plugin_releases_releases")) {
 
-      $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/empty-2.0.0.sql");
+      $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/empty-2.1.0.sql");
       install_notifications();
+   } else {
+       $DB->runFile(PLUGIN_RELEASES_DIR . "/sqlupdate-2.1.0.sql");
    }
    $rep_files_release = GLPI_PLUGIN_DOC_DIR . "/releases";
    if (!is_dir($rep_files_release)) {
       mkdir($rep_files_release);
    }
 
-   PluginReleasesProfile::initProfile();
-   PluginReleasesProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
+   Profile::initProfile();
+    Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 
    return true;
 }
@@ -57,29 +84,29 @@ function plugin_releases_uninstall() {
 
 
    $tables = [
-      PluginReleasesRelease::getTable(),
-      PluginReleasesReview::getTable(),
-      PluginReleasesChange_Release::getTable(),
-      PluginReleasesTypeDeployTask::getTable(),
-      PluginReleasesTypeRisk::getTable(),
-      PluginReleasesTypeTest::getTable(),
-      PluginReleasesDeploytask::getTable(),
-      PluginReleasesTest::getTable(),
-      PluginReleasesRisk::getTable(),
-      PluginReleasesRollback::getTable(),
-      PluginReleasesDeploytasktemplate::getTable(),
-      PluginReleasesGroup_Release::getTable(),
-      PluginReleasesGroup_Releasetemplate::getTable(),
-      PluginReleasesRelease_Item::getTable(),
-      PluginReleasesReleasetemplate_Supplier::getTable(),
-      PluginReleasesRelease_Supplier::getTable(),
-      PluginReleasesRelease_User::getTable(),
-      PluginReleasesReleasetemplate_Item::getTable(),
-      PluginReleasesRisktemplate::getTable(),
-      PluginReleasesRollbacktemplate::getTable(),
-      PluginReleasesReleasetemplate_User::getTable(),
-      PluginReleasesTesttemplate::getTable(),
-      PluginReleasesReleasetemplate::getTable()
+      Release::getTable(),
+      Review::getTable(),
+      Change_Release::getTable(),
+      TypeDeployTask::getTable(),
+      TypeRisk::getTable(),
+      TypeTest::getTable(),
+      Deploytask::getTable(),
+      Test::getTable(),
+      Risk::getTable(),
+      Rollback::getTable(),
+      Deploytasktemplate::getTable(),
+      Group_Release::getTable(),
+      Group_Releasetemplate::getTable(),
+      Release_Item::getTable(),
+      Releasetemplate_Supplier::getTable(),
+      Release_Supplier::getTable(),
+      Release_User::getTable(),
+      Releasetemplate_Item::getTable(),
+      Risktemplate::getTable(),
+      Rollbacktemplate::getTable(),
+      Releasetemplate_User::getTable(),
+      Testtemplate::getTable(),
+      Releasetemplate::getTable()
    ];
 
    foreach ($tables as $table) {
@@ -99,17 +126,17 @@ function plugin_releases_uninstall() {
    ];
 
    foreach ($tables_glpi as $table_glpi) {
-       $DB->delete($table_glpi, ['itemtype' => ['LIKE' => 'PluginReleases%']]);
+       $DB->delete($table_glpi, ['itemtype' => ['LIKE' => 'GlpiPlugin\Releases%']]);
    }
 
    //TODO add drop profiles & menu in session ?
    //Delete rights associated with the plugin
    //   $profileRight = new ProfileRight();
-   //   foreach (PluginReleaseProfile::getAllRights(true) as $right) {
+   //   foreach (Profile::getAllRights(true) as $right) {
    //      $profileRight->deleteByCriteria(['name' => $right['field']]);
    //   }
 
-   $options = ['itemtype' => 'PluginReleasesRelease',
+   $options = ['itemtype' => Release::class,
                'event'    => 'newRelease',
                'FIELDS'   => 'id'];
 
@@ -125,7 +152,7 @@ function plugin_releases_uninstall() {
    $template       = new NotificationTemplate();
    $translation    = new NotificationTemplateTranslation();
    $notif_template = new Notification_NotificationTemplate();
-   $options        = ['itemtype' => 'PluginReleasesRelease',
+   $options        = ['itemtype' => Release::class,
 //                      'FIELDS'   => 'id'
    ];
 
@@ -161,15 +188,15 @@ function plugin_releases_postinit() {
    global $PLUGIN_HOOKS;
 
    $PLUGIN_HOOKS['item_purge']['releases'] = [];
-   $release                                = new PluginReleasesRelease();
+   $release                                = new Release();
    $types                                  = $release->getAllTypesForHelpdesk();
    if (isset($types) && is_array($types)) {
       foreach ($types as $type => $name) {
 
          $PLUGIN_HOOKS['item_purge']['releases'][$type]
-            = ['PluginReleasesRelease_Item', 'cleanForItem'];
+            = [Release_Item::class, 'cleanForItem'];
 
-         CommonGLPI::registerStandardTab($type, 'PluginReleasesRelease_Item');
+         CommonGLPI::registerStandardTab($type, Release_Item::class);
       }
    }
 }
@@ -262,14 +289,14 @@ function plugin_releases_postinit() {
 function plugin_releases_getDropdown() {
 
    if (Plugin::isPluginActive("releases")) {
-      return [PluginReleasesDeploytasktemplate::getType() => PluginReleasesDeploytasktemplate::getTypeName(2),
-              PluginReleasesTesttemplate::getType()       => PluginReleasesTesttemplate::getTypeName(2),
-              PluginReleasesRisktemplate::getType()       => PluginReleasesRisktemplate::getTypeName(2),
-              PluginReleasesRollbacktemplate::getType()   => PluginReleasesRollbacktemplate::getTypeName(2),
-//              PluginReleasesReleasetemplate::getType()    => PluginReleasesReleasetemplate::getTypeName(2),
-              PluginReleasesTypeDeployTask::getType()     => PluginReleasesTypeDeployTask::getTypeName(2),
-              PluginReleasesTypeTest::getType()           => PluginReleasesTypeTest::getTypeName(2),
-              PluginReleasesTypeRisk::getType()           => PluginReleasesTypeRisk::getTypeName(2)
+      return [Deploytasktemplate::getType() => Deploytasktemplate::getTypeName(2),
+              Testtemplate::getType()       => Testtemplate::getTypeName(2),
+              Risktemplate::getType()       => Risktemplate::getTypeName(2),
+              Rollbacktemplate::getType()   => Rollbacktemplate::getTypeName(2),
+//              Releasetemplate::getType()    => Releasetemplate::getTypeName(2),
+              TypeDeployTask::getType()     => TypeDeployTask::getTypeName(2),
+              TypeTest::getType()           => TypeTest::getTypeName(2),
+              TypeRisk::getType()           => TypeRisk::getTypeName(2)
 
       ];
    } else {
@@ -285,7 +312,7 @@ function plugin_releases_getDropdown() {
 function plugin_releases_AssignToTicket($types) {
    if (Session::haveRight("plugin_releases_releases", "1")
        && isset($_REQUEST["_itemtype"]) && $_REQUEST["_itemtype"] == "Ticket") {
-      $types['PluginReleasesRelease'] = PluginReleasesRelease::getTypeName(2);
+      $types[Release::class] = Release::getTypeName(2);
    }
 
    return $types;
@@ -305,9 +332,9 @@ function install_notifications() {
 
    // Notification
    // Request
-    $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','PluginReleasesRelease', NOW());";
+    $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','GlpiPlugin\\Releases\\Release', NOW());";
     $result = $DB->doQuery($query_id) or die($DB->error());
-    $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginReleasesRelease' AND `name` = 'New release'";
+    $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='GlpiPlugin\\Releases\\Release' AND `name` = 'New release'";
     $result = $DB->doQuery($query_id) or die($DB->error());
    $templates_id = $DB->result($result, 0, 'id');
 
@@ -368,12 +395,12 @@ VALUES('" . $templates_id . "',
     $DB->doQuery($query);
 
     $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
-              VALUES ('New release', 0, 'PluginReleasesRelease', 'newRelease', 1);";
+              VALUES ('New release', 0, 'GlpiPlugin\\Releases\\Release', 'newRelease', 1);";
     $DB->doQuery($query);
 
    //retrieve notification id
     $query_id = "SELECT `id` FROM `glpi_notifications`
-               WHERE `name` = 'New release' AND `itemtype` = 'PluginReleasesRelease' AND `event` = 'newRelease'";
+               WHERE `name` = 'New release' AND `itemtype` = 'GlpiPlugin\\Releases\\Release' AND `event` = 'newRelease'";
     $result = $DB->doQuery($query_id) or die ($DB->error());
     $notification = $DB->result($result, 0, 'id');
 

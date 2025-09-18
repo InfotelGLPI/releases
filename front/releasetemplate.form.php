@@ -30,11 +30,9 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 9.1
- */
 
+use GlpiPlugin\Releases\Releasetemplate;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesReleasetemplate();
+$dropdown = new Releasetemplate();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");

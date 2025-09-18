@@ -30,21 +30,25 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonITILActor;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
 /**
- * PluginReleasesGroup_Release Class
+ * Group_Releasetemplate Class
  *
  * @since 0.85
  *
  * Relation between Groups and Releases
  **/
-class PluginReleasesGroup_Releasetemplate extends CommonITILActor {
+class Group_Releasetemplate extends CommonITILActor {
 
    // From CommonDBRelation
-   static public $itemtype_1 = 'PluginReleasesReleasetemplate';
+   static public $itemtype_1 = Releasetemplate::class;
    static public $items_id_1 = 'plugin_releases_releasetemplates_id';
    static public $itemtype_2 = 'Group';
    static public $items_id_2 = 'groups_id';

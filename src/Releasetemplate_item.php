@@ -31,19 +31,30 @@
  * ---------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBRelation;
+use CommonDBTM;
+use CommonGLPI;
+use DbUtils;
+use Dropdown;
+use Html;
+use Session;
+use Toolbox;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
 /**
- * Item_Problem Class
+ * Releasetemplate_Item Class
  *
- *  Relation between Problems and Items
+ *  Relation between Releasetemplates and Items
  **/
-class PluginReleasesReleasetemplate_Item extends CommonDBRelation
+class Releasetemplate_Item extends CommonDBRelation
 {
     // From CommonDBRelation
-    public static $itemtype_1 = 'PluginReleasesReleasetemplate';
+    public static $itemtype_1 = Releasetemplate::class;
     public static $items_id_1 = 'plugin_releases_releasetemplates_id';
 
     public static $itemtype_2         = 'itemtype';
@@ -86,7 +97,7 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
      *
      * @return void
      **/
-    public static function showForRelease(PluginReleasesReleasetemplate $release)
+    public static function showForRelease(Releasetemplate $release)
     {
         $instID = $release->fields['id'];
 
@@ -109,8 +120,8 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
 
             echo "<tr class='tab_bg_1'><td>";
             $types    = [];
-            $releaseR = new PluginReleasesRelease();
-            //         foreach (PluginReleasesRelease::$typeslinkable as $key => $val) {
+            $releaseR = new Release();
+            //         foreach (Release::$typeslinkable as $key => $val) {
             foreach ($releaseR->getAllTypesForHelpdesk() as $key => $val) {
                 $types[] = $key;
             }
@@ -221,7 +232,7 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
     public static function countForItem(CommonDBTM $item)
     {
         $dbu   = new DbUtils();
-        $table = CommonDBTM::getTable(PluginReleasesReleasetemplate_Item::class);
+        $table = CommonDBTM::getTable(Releasetemplate_Item::class);
         return $dbu->countElementsInTable(
             $table,
             ["plugin_releases_releasetemplates_id" => $item->getID()]
@@ -231,7 +242,7 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
     public static function countReleaseForItem(CommonDBTM $item)
     {
         $dbu   = new DbUtils();
-        $table = CommonDBTM::getTable(PluginReleasesRelease_Item::class);
+        $table = CommonDBTM::getTable(Release_Item::class);
         return $dbu->countElementsInTable(
             $table,
             ["plugin_releases_releasetemplates_id" => $item->getID()]
@@ -245,7 +256,7 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
         if (!$withtemplate) {
             $nb = 0;
             switch ($item->getType()) {
-                case 'PluginReleasesReleasetemplate':
+                case Releasetemplate::class:
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = self::countForItem($item);
                     }
@@ -257,7 +268,7 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = self::countReleaseForItem($item);
                     }
-                    return self::createTabEntry(Problem::getTypeName(Session::getPluralNumber()), $nb);
+                    return self::createTabEntry(Releasetemplate::getTypeName(Session::getPluralNumber()), $nb);
 
                 default:
                     if (Session::haveRight("release", READ)) {
@@ -289,7 +300,7 @@ class PluginReleasesReleasetemplate_Item extends CommonDBRelation
     {
 
         switch ($item->getType()) {
-            case 'PluginReleasesReleasetemplate':
+            case Releasetemplate::class:
                 self::showForRelease($item);
                 break;
 

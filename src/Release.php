@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -27,55 +28,88 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use Ajax;
+use Change;
+use ChangeTemplate;
+use CommonDBConnexity;
+use CommonDBTM;
+use CommonGLPI;
+use CommonITILActor;
+use CommonITILObject;
+use DbUtils;
+use Document;
+use Document_Item;
+use Dropdown;
+use Entity;
+use Glpi\Application\View\TemplateRenderer;
+use Glpi\ContentTemplates\Parameters\CommonITILObjectParameters;
+use Glpi\DBAL\QuerySubQuery;
+use Glpi\RichText\RichText;
+use Group;
+use Html;
+use Impact;
+use Item_Ticket;
+use ITILFollowup;
+use KnowbaseItem_Item;
+use Location;
+use MassiveAction;
+use Notepad;
+use NotificationEvent;
+use NotificationMailing;
+use Planning;
+use Search;
+use Session;
+use Toolbox;
+use User;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
 
-use Glpi\Application\View\TemplateRenderer;
-
 /**
- * Class PluginReleasesRelease
+ * Class Release
  */
-class PluginReleasesRelease extends CommonITILObject
+class Release extends CommonITILObject
 {
-
     public $dohistory = true;
-    static $rightname = 'plugin_releases_releases';
+    public static $rightname = 'plugin_releases_releases';
     protected $usenotepad = true;
-    static $types = [];
-    public $userlinkclass = 'PluginReleasesRelease_User';
-    public $grouplinkclass = 'PluginReleasesGroup_Release';
-    public $supplierlinkclass = 'PluginReleasesRelease_Supplier';
+    public static $types = [];
+    public $userlinkclass = Release_User::class;
+    public $grouplinkclass = Group_Release::class;
+    public $supplierlinkclass = Release_Supplier::class;
 
     // STATUS
 
 
-    const NEWRELEASE = 1;
-    const RELEASEDEFINITION = 2; // default
-    const DATEDEFINITION = 3; // date definition
-    const CHANGEDEFINITION = 4; // changes defenition
-    const RISKDEFINITION = 5; // risks definition
-    const ROLLBACKDEFINITION = 6; // rollbacks definition
-    const TASKDEFINITION = 7; // tasks definition
-    const TESTDEFINITION = 8; // tests definition
-    const FINALIZE = 9; // finalized
-    const REVIEW = 10; // reviewed
-    const CLOSED = 11; // closed
-    const FAIL = 12;
+    public const NEWRELEASE = 1;
+    public const RELEASEDEFINITION = 2; // default
+    public const DATEDEFINITION = 3; // date definition
+    public const CHANGEDEFINITION = 4; // changes defenition
+    public const RISKDEFINITION = 5; // risks definition
+    public const ROLLBACKDEFINITION = 6; // rollbacks definition
+    public const TASKDEFINITION = 7; // tasks definition
+    public const TESTDEFINITION = 8; // tests definition
+    public const FINALIZE = 9; // finalized
+    public const REVIEW = 10; // reviewed
+    public const CLOSED = 11; // closed
+    public const FAIL = 12;
 
 
     /**
      * @param int $nb
      *
-     * @return translated
+     * @return string
      */
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Release', 'Releases', $nb, 'releases');
     }
 
 
-    static function countForItem($ID, $class, $state = 0)
+    public static function countForItem($ID, $class, $state = 0)
     {
         $dbu = new DbUtils();
         $table = CommonDBTM::getTable($class);
@@ -92,7 +126,7 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
 
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
         if (static::canView()) {
             switch ($item->getType()) {
@@ -110,7 +144,7 @@ class PluginReleasesRelease extends CommonITILObject
                 //                  $label .= " <span class='badge'>$nb_elements</span>";
                 //               }
                 //               return $ong;
-                case "Change" :
+                case "Change":
                     return self::createTabEntry(self::getTypeName(2), self::countItemForAChange($item));
             }
         }
@@ -118,7 +152,7 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
 
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         switch ($item->getType()) {
             //         case __CLASS__ :
@@ -140,37 +174,37 @@ class PluginReleasesRelease extends CommonITILObject
             //                  break;
             //            }
             //            break;
-            case "Change" :
-                PluginReleasesChange_Release::showReleaseFromChange($item);
+            case "Change":
+                Change_Release::showReleaseFromChange($item);
                 break;
         }
         return true;
     }
 
-    static function countItemForAChange($item)
+    public static function countItemForAChange($item)
     {
         $dbu = new DbUtils();
-        $table = CommonDBTM::getTable(PluginReleasesChange_Release::class);
+        $table = CommonDBTM::getTable(Change_Release::class);
         return $dbu->countElementsInTable(
             $table,
             ["changes_id" => $item->getID()]
         );
     }
 
-    function defineTabs($options = [])
+    public function defineTabs($options = [])
     {
         $ong = [];
         //      $this->addStandardTab(self::getType(), $ong, $options);
         $this->addDefaultFormTab($ong);
-        $this->addStandardTab('PluginReleasesChange_Release', $ong, $options);
+        $this->addStandardTab(Change_Release::class, $ong, $options);
         $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
         $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
-        $this->addStandardTab('PluginReleasesRelease_Item', $ong, $options);
+        $this->addStandardTab(Release_Item::class, $ong, $options);
         if ($this->hasImpactTab()) {
             $this->addStandardTab('Impact', $ong, $options); // todo hide in template
         }
-        $this->addStandardTab('PluginReleasesFinalization', $ong, $options);
-        $this->addStandardTab('PluginReleasesReview', $ong, $options);
+        $this->addStandardTab(Finalization::class, $ong, $options);
+        $this->addStandardTab(Review::class, $ong, $options);
         $this->addStandardTab('Notepad', $ong, $options);
         $this->addStandardTab('Log', $ong, $options);
         return $ong;
@@ -179,13 +213,13 @@ class PluginReleasesRelease extends CommonITILObject
     /**
      * @return array
      */
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = [];
 
         $tab[] = [
             'id' => 'common',
-            'name' => self::getTypeName(2)
+            'name' => self::getTypeName(2),
         ];
 
         $tab[] = [
@@ -194,7 +228,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'name',
             'name' => __('name'),
             'datatype' => 'itemlink',
-            'itemlink_type' => $this->getType()
+            'itemlink_type' => $this->getType(),
         ];
 
         $tab[] = [
@@ -203,7 +237,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'id',
             'name' => __('ID'),
             'massiveaction' => false,
-            'datatype' => 'number'
+            'datatype' => 'number',
         ];
 
         $tab[] = [
@@ -211,9 +245,9 @@ class PluginReleasesRelease extends CommonITILObject
             'table' => $this->getTable(),
             'field' => 'content',
             'name' => __('Description'),
-//         'massiveaction' => false,
+            //         'massiveaction' => false,
             'datatype' => 'text',
-//         'htmltext'      => true
+            //         'htmltext'      => true
         ];
 
         $tab[] = [
@@ -222,7 +256,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'date_preproduction',
             'name' => __('Pre-production run date', 'releases'),
             'massiveaction' => false,
-            'datatype' => 'datetime'
+            'datatype' => 'datetime',
         ];
         $tab[] = [
             'id' => '4',
@@ -235,7 +269,7 @@ class PluginReleasesRelease extends CommonITILObject
             'massiveaction' => false,
             'joinparams' => [
                 'jointype' => 'child',
-            ]
+            ],
         ];
         $tab[] = [
             'id' => '5',
@@ -248,7 +282,7 @@ class PluginReleasesRelease extends CommonITILObject
             'massiveaction' => false,
             'joinparams' => [
                 'jointype' => 'child',
-            ]
+            ],
         ];
         $tab[] = [
             'id' => '6',
@@ -262,7 +296,7 @@ class PluginReleasesRelease extends CommonITILObject
             'massiveaction' => false,
             'joinparams' => [
                 'jointype' => 'child',
-            ]
+            ],
         ];
         $tab[] = [
             'id' => '7',
@@ -276,7 +310,7 @@ class PluginReleasesRelease extends CommonITILObject
             'massiveaction' => false,
             'joinparams' => [
                 'jointype' => 'child',
-            ]
+            ],
         ];
         $tab[] = [
             'id' => '8',
@@ -284,7 +318,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'status',
             'name' => __('Status'),
             'massiveaction' => false,
-            'datatype' => 'specific'
+            'datatype' => 'specific',
         ];
         $tab[] = [
             'id' => '9',
@@ -292,7 +326,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'date_production',
             'name' => __('Production run date', 'releases'),
             'massiveaction' => false,
-            'datatype' => 'datetime'
+            'datatype' => 'datetime',
         ];
         $tab[] = [
             'id' => '10',
@@ -300,7 +334,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'service_shutdown',
             'name' => __('Service shutdown', 'releases'),
             'massiveaction' => false,
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
         $tab[] = [
             'id' => '11',
@@ -309,7 +343,7 @@ class PluginReleasesRelease extends CommonITILObject
             'name' => __('Service shutdown details', 'releases'),
             'massiveaction' => false,
             'datatype' => 'text',
-            'htmltext' => true
+            'htmltext' => true,
         ];
         $tab[] = [
             'id' => '12',
@@ -317,14 +351,14 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'communication',
             'name' => __('Communication', 'releases'),
             'massiveaction' => false,
-            'datatype' => 'bool'
+            'datatype' => 'bool',
         ];
         $types = [
             'Entity' => 'Entity',
             'Group' => 'Group',
             'Profile' => 'Profile',
             'User' => 'User',
-            'Location' => 'Location'
+            'Location' => 'Location',
         ];
         $tab[] = [
             'id' => '13',
@@ -341,7 +375,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'target',
             'name' => _n('Target', 'Targets', 2),
             'massiveaction' => false,
-            'datatype' => 'specific'
+            'datatype' => 'specific',
         ];
         $tab[] = [
             'id' => '15',
@@ -349,7 +383,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'date_mod',
             'name' => __('Last update'),
             'datatype' => 'datetime',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
         $tab[] = [
@@ -358,7 +392,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'date_creation',
             'name' => __('Creation date'),
             'datatype' => 'datetime',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
         $tab[] = [
             'id' => '17',
@@ -366,7 +400,7 @@ class PluginReleasesRelease extends CommonITILObject
             'field' => 'date_end',
             'name' => __('Closing date'),
             'datatype' => 'datetime',
-            'massiveaction' => false
+            'massiveaction' => false,
         ];
 
 
@@ -375,7 +409,7 @@ class PluginReleasesRelease extends CommonITILObject
             'table' => 'glpi_entities',
             'field' => 'completename',
             'name' => __('Entity'),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab = array_merge($tab, Location::rawSearchOptionsToAdd());
@@ -387,13 +421,13 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @param $field     String         name of the field
      * @param $values    String / Array with the value to display
-     * @param $options   Array          of option
+     * @param $options   Array option
      *
-     * @return a string
+     * @return  string
      **@since version 0.83
      *
      */
-    static function getSpecificValueToDisplay($field, $values, array $options = [])
+    public static function getSpecificValueToDisplay($field, $values, array $options = [])
     {
         if (!is_array($values)) {
             $values = [$field => $values];
@@ -401,31 +435,31 @@ class PluginReleasesRelease extends CommonITILObject
 
         switch ($field) {
             case 'status':
-//            $var = "<span class='status'>";
+                //            $var = "<span class='status'>";
                 $var = self::getStatusIcon($values["status"]);
                 $var .= self::getStatus($values["status"]);
-//            $var .= "</span>";
+                //            $var .= "</span>";
                 return $var;
                 break;
-            //         case 'nb_tasks':
-            //            return self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class,PluginReleasesDeploytask::DONE)
-            //                   . ' / ' . self::countForItem($options["raw_data"]["id"], PluginReleasesDeploytask::class);
-            //            break;
-            //         case 'nb_risks':
-            //            $self = new self();
-            //            $self->getFromDB($options["raw_data"]["id"]);
-            //            return PluginReleasesRisk::countDoneForItem($self) . " / ".PluginReleasesRisk::countForItem($self);
-            //            break;
-            //         case 'nb_rollbacks':
-            //            $self = new self();
-            //            $self->getFromDB($options["raw_data"]["id"]);
-            //            return PluginReleasesRollback::countDoneForItem($self) . " / ".PluginReleasesRollback::countForItem($self);
-            //            break;
-            //         case 'nb_tests':
-            //            $self = new self();
-            //            $self->getFromDB($options["raw_data"]["id"]);
-            //            return PluginReleasesTest::countDoneForItem($self) . " / ".PluginReleasesTest::countForItem($self);
-            //            break;
+                //         case 'nb_tasks':
+                //            return self::countForItem($options["raw_data"]["id"], Deploytask::class,Deploytask::DONE)
+                //                   . ' / ' . self::countForItem($options["raw_data"]["id"], Deploytask::class);
+                //            break;
+                //         case 'nb_risks':
+                //            $self = new self();
+                //            $self->getFromDB($options["raw_data"]["id"]);
+                //            return Risk::countDoneForItem($self) . " / ".Risk::countForItem($self);
+                //            break;
+                //         case 'nb_rollbacks':
+                //            $self = new self();
+                //            $self->getFromDB($options["raw_data"]["id"]);
+                //            return Rollback::countDoneForItem($self) . " / ".Rollback::countForItem($self);
+                //            break;
+                //         case 'nb_tests':
+                //            $self = new self();
+                //            $self->getFromDB($options["raw_data"]["id"]);
+                //            return Test::countDoneForItem($self) . " / ".Test::countForItem($self);
+                //            break;
             case 'communication_type':
                 if ($values["communication_type"] == "0" || $values["communication_type"] == "ALL") {
                     return " ";
@@ -457,7 +491,7 @@ class PluginReleasesRelease extends CommonITILObject
                 }
                 if ($self->fields["communication_type"] == "Profile") {
                     $text = "";
-                    $profile = new Profile();
+                    $profile = new \Profile();
                     $items = json_decode($values["target"]);
                     if (is_array($items)) {
                         foreach ($items as $item) {
@@ -513,7 +547,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return datas
      */
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         $input = parent::prepareInputForAdd($input);
 
@@ -548,20 +582,20 @@ class PluginReleasesRelease extends CommonITILObject
     /**
      * @see CommonDBTM::post_clone
      **/
-    function post_clone($source, $history)
+    public function post_clone($source, $history)
     {
         //TODO imagine how to modify computer clone because elements are not DBConnexity
         parent::post_clone($source, $history);
         $relations_classes = [
-            PluginReleasesRisk::class,
-            PluginReleasesTest::class,
-            PluginReleasesDeploytask::class,
-            PluginReleasesRollback::class,
-            PluginReleasesReview::class,
-            PluginReleasesFinalization::class,
+            Risk::class,
+            Test::class,
+            Deploytask::class,
+            Rollback::class,
+            Review::class,
+            Finalization::class,
             Notepad::class,
             KnowbaseItem_Item::class,
-            Document_Item::class
+            Document_Item::class,
 
         ];
 
@@ -598,29 +632,31 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return void
      **/
-    function post_addItem()
+    public function post_addItem()
     {
         global $DB, $CFG_GLPI;
 
         if (isset($this->input["releasetemplates_id"])) {
-            $template = new PluginReleasesReleasetemplate();
+            $template = new Releasetemplate();
             $template->getFromDB($this->input["releasetemplates_id"]);
             $risks = [];
-            $releaseTest = new PluginReleasesTest();
-            $testTemplate = new PluginReleasesTesttemplate();
-            $releaseTask = new PluginReleasesDeploytask();
-            $taskTemplate = new PluginReleasesDeploytasktemplate();
-            $releaseRollback = new PluginReleasesRollback();
-            $rollbackTemplate = new PluginReleasesRollbacktemplate();
-            $releaseRisk = new PluginReleasesRisk();
-            $riskTemplate = new PluginReleasesRisktemplate();
-            $itemLinkTemplate = new PluginReleasesReleasetemplate_Item();
-            $itemLink = new PluginReleasesRelease_Item();
+            $releaseTest = new Test();
+            $testTemplate = new Testtemplate();
+            $releaseTask = new Deploytask();
+            $taskTemplate = new Deploytasktemplate();
+            $releaseRollback = new Rollback();
+            $rollbackTemplate = new Rollbacktemplate();
+            $releaseRisk = new Risk();
+            $riskTemplate = new Risktemplate();
+            $itemLinkTemplate = new Releasetemplate_Item();
+            $itemLink = new Release_Item();
             $risks = $riskTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
             $tests = $testTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
             $rollbacks = $rollbackTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
-            $tasks = $taskTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()],
-                ["ASC" => "level"]);
+            $tasks = $taskTemplate->find(
+                ["plugin_releases_releasetemplates_id" => $template->getID()],
+                ["ASC" => "level"]
+            );
             $items = $itemLinkTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
             $corresRisks = [];
             $corresTests = [];
@@ -673,7 +709,7 @@ class PluginReleasesRelease extends CommonITILObject
             }
         }
         if (isset($this->input["changes_id"])) {
-            $release_change = new PluginReleasesChange_Release();
+            $release_change = new Change_Release();
             $vals["changes_id"] = $this->input["changes_id"];
             $vals["plugin_releases_releases_id"] = $this->getID();
             $release_change->add($vals);
@@ -683,12 +719,11 @@ class PluginReleasesRelease extends CommonITILObject
         }
         //      $query = "INSERT INTO `glpi_plugin_release_globalstatues`
         //                             ( `plugin_release_releases_id`,`itemtype`, `status`)
-        //                      VALUES (".$this->fields['id'].",'". PluginReleasesRisk::getType()."', 0),
-        //                      (".$this->fields['id'].",'". PluginReleasesTest::getType()."', 0),
-        //                      (".$this->fields['id'].",'". PluginReleasesRelease::getType()."', 0),
-        //                      (".$this->fields['id'].",'". PluginReleasesDeploytask::getType()."', 0),
-        //                      (".$this->fields['id'].",'PluginReleaseDate', 0),
-        //                      (".$this->fields['id'].",'". PluginReleasesRollback::getType()."', 0)
+        //                      VALUES (".$this->fields['id'].",'". Risk::getType()."', 0),
+        //                      (".$this->fields['id'].",'". Test::getType()."', 0),
+        //                      (".$this->fields['id'].",'". Release::getType()."', 0),
+        //                      (".$this->fields['id'].",'". Deploytask::getType()."', 0),
+        //                      (".$this->fields['id'].",'". Rollback::getType()."', 0)
         //                      ;";
         //      $DB->queryOrDie($query, "statues creation");
         parent::post_addItem();
@@ -696,7 +731,7 @@ class PluginReleasesRelease extends CommonITILObject
 
             Notepad::class,
             KnowbaseItem_Item::class,
-            Document_Item::class
+            Document_Item::class,
 
         ];
 
@@ -725,7 +760,7 @@ class PluginReleasesRelease extends CommonITILObject
         }
     }
 
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         global $CFG_GLPI;
         parent::post_updateItem($history); // TODO: Change the autogenerated stub
@@ -739,7 +774,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return void
      **/
-    function post_deleteItem()
+    public function post_deleteItem()
     {
         global $CFG_GLPI;
         parent::post_deleteItem(); // TODO: Change the autogenerated stub
@@ -755,7 +790,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return array
      **/
-    static function getAllStatusArray($releasestatus = false)
+    public static function getAllStatusArray($releasestatus = false)
     {
         $tab = [
             self::NEWRELEASE => _x('status', 'New'),
@@ -769,7 +804,7 @@ class PluginReleasesRelease extends CommonITILObject
             self::FINALIZE => __('To finalized', 'releases'),
             self::REVIEW => __('Reviewed', 'releases'),
             self::CLOSED => _x('status', 'End', 'releases'),
-            self::FAIL => __('Failed', 'releases')
+            self::FAIL => __('Failed', 'releases'),
         ];
 
         return $tab;
@@ -796,11 +831,11 @@ class PluginReleasesRelease extends CommonITILObject
      **@since 0.84
      *
      */
-    static function getStatus($value)
+    public static function getStatus($value)
     {
         $tab = static::getAllStatusArray(true);
         // Return $value if not defined
-        return (isset($tab[$value]) ? $tab[$value] : $value);
+        return ($tab[$value] ?? $value);
     }
 
     /**
@@ -836,8 +871,8 @@ class PluginReleasesRelease extends CommonITILObject
 
         return $class == null
             ? ''
-            : 'releasestatus ' . ($solid ? 'fas fa-' : 'far fa-') . $class .
-            " " . self::getStatusKey($status);
+            : 'releasestatus ' . ($solid ? 'fas fa-' : 'far fa-') . $class
+            . " " . self::getStatusKey($status);
     }
 
     /**
@@ -851,40 +886,40 @@ class PluginReleasesRelease extends CommonITILObject
     {
         $key = '';
         switch ($status) {
-            case self::NEWRELEASE :
+            case self::NEWRELEASE:
                 $key = 'newrelease';
                 break;
-            case self::RELEASEDEFINITION :
+            case self::RELEASEDEFINITION:
                 $key = 'releasedef';
                 break;
-            case self::DATEDEFINITION :
+            case self::DATEDEFINITION:
                 $key = 'datedef';
                 break;
-            case self::CHANGEDEFINITION :
+            case self::CHANGEDEFINITION:
                 $key = 'changedef';
                 break;
-            case self::RISKDEFINITION :
+            case self::RISKDEFINITION:
                 $key = 'riskdef';
                 break;
-            case self::TESTDEFINITION :
+            case self::TESTDEFINITION:
                 $key = 'testdef';
                 break;
-            case self::TASKDEFINITION :
+            case self::TASKDEFINITION:
                 $key = 'taskdef';
                 break;
-            case self::ROLLBACKDEFINITION :
+            case self::ROLLBACKDEFINITION:
                 $key = 'rollbackdef';
                 break;
-            case self::FINALIZE :
+            case self::FINALIZE:
                 $key = 'finalize';
                 break;
-            case self::REVIEW :
+            case self::REVIEW:
                 $key = 'review';
                 break;
-            case self::CLOSED :
+            case self::CLOSED:
                 $key = 'closerelease';
                 break;
-            case self::FAIL :
+            case self::FAIL:
                 $key = 'closerelease';
                 break;
         }
@@ -897,7 +932,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return datas
      */
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         //      $input = parent::prepareInputForUpdate($input);
         if ((isset($input['target']) && empty($input['target']))
@@ -920,14 +955,14 @@ class PluginReleasesRelease extends CommonITILObject
         if (isset($input['_itil_requester'])) {
             if (isset($input['_itil_requester']['_type'])) {
                 $input['_itil_requester'] = [
-                        'type' => CommonITILActor::REQUESTER,
-                        $this->getForeignKeyField() => $input['id'],
-                        '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                        '_from_object' => true,
-                    ] + $input['_itil_requester'];
+                    'type' => CommonITILActor::REQUESTER,
+                    $this->getForeignKeyField() => $input['id'],
+                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+                    '_from_object' => true,
+                ] + $input['_itil_requester'];
 
                 switch ($input['_itil_requester']['_type']) {
-                    case "user" :
+                    case "user":
                         if (isset($input['_itil_requester']['use_notification'])
                             && is_array($input['_itil_requester']['use_notification'])) {
                             $input['_itil_requester']['use_notification'] = $input['_itil_requester']['use_notification'][0];
@@ -960,7 +995,7 @@ class PluginReleasesRelease extends CommonITILObject
                         }
                         break;
 
-                    case "group" :
+                    case "group":
                         if (!empty($this->grouplinkclass)
                             && ($input['_itil_requester']['groups_id'] > 0)) {
                             $groupactors = new $this->grouplinkclass();
@@ -978,14 +1013,14 @@ class PluginReleasesRelease extends CommonITILObject
         if (isset($input['_itil_observer'])) {
             if (isset($input['_itil_observer']['_type'])) {
                 $input['_itil_observer'] = [
-                        'type' => CommonITILActor::OBSERVER,
-                        $this->getForeignKeyField() => $input['id'],
-                        '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                        '_from_object' => true,
-                    ] + $input['_itil_observer'];
+                    'type' => CommonITILActor::OBSERVER,
+                    $this->getForeignKeyField() => $input['id'],
+                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+                    '_from_object' => true,
+                ] + $input['_itil_observer'];
 
                 switch ($input['_itil_observer']['_type']) {
-                    case "user" :
+                    case "user":
                         if (isset($input['_itil_observer']['use_notification'])
                             && is_array($input['_itil_observer']['use_notification'])) {
                             $input['_itil_observer']['use_notification'] = $input['_itil_observer']['use_notification'][0];
@@ -1017,7 +1052,7 @@ class PluginReleasesRelease extends CommonITILObject
                         }
                         break;
 
-                    case "group" :
+                    case "group":
                         if (!empty($this->grouplinkclass)
                             && ($input['_itil_observer']['groups_id'] > 0)) {
                             $groupactors = new $this->grouplinkclass();
@@ -1035,11 +1070,11 @@ class PluginReleasesRelease extends CommonITILObject
         if (isset($input['_itil_assign'])) {
             if (isset($input['_itil_assign']['_type'])) {
                 $input['_itil_assign'] = [
-                        'type' => CommonITILActor::ASSIGN,
-                        $this->getForeignKeyField() => $input['id'],
-                        '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                        '_from_object' => true,
-                    ] + $input['_itil_assign'];
+                    'type' => CommonITILActor::ASSIGN,
+                    $this->getForeignKeyField() => $input['id'],
+                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+                    '_from_object' => true,
+                ] + $input['_itil_assign'];
 
                 if (isset($input['_itil_assign']['use_notification'])
                     && is_array($input['_itil_assign']['use_notification'])) {
@@ -1051,7 +1086,7 @@ class PluginReleasesRelease extends CommonITILObject
                 }
 
                 switch ($input['_itil_assign']['_type']) {
-                    case "user" :
+                    case "user":
                         if (!empty($this->userlinkclass)
                             && ((isset($input['_itil_assign']['alternative_email'])
                                     && $input['_itil_assign']['alternative_email'])
@@ -1074,7 +1109,7 @@ class PluginReleasesRelease extends CommonITILObject
                         }
                         break;
 
-                    case "group" :
+                    case "group":
                         if (!empty($this->grouplinkclass)
                             && ($input['_itil_assign']['groups_id'] > 0)) {
                             $groupactors = new $this->grouplinkclass();
@@ -1096,7 +1131,7 @@ class PluginReleasesRelease extends CommonITILObject
                         }
                         break;
 
-                    case "supplier" :
+                    case "supplier":
                         if (!empty($this->supplierlinkclass)
                             && ((isset($input['_itil_assign']['alternative_email'])
                                     && $input['_itil_assign']['alternative_email'])
@@ -1128,9 +1163,7 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
 
-    function prepareField($template_id)
-    {
-    }
+    public function prepareField($template_id) {}
 
     public function getTimelineItemtypes(): array
     {
@@ -1158,90 +1191,90 @@ class PluginReleasesRelease extends CommonITILObject
                 'icon' => 'ti ti-message-circle',
                 'label' => _x('button', 'Add a followup', 'releases'),
                 'template' => 'components/itilobject/timeline/form_followup.html.twig',
-                'item' => $fup
+                'item' => $fup,
             ];
         }
 
-        $risk = new PluginReleasesRisk();
+        $risk = new Risk();
 
         $canadd_risk = $risk->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                $solved_closed_statuses,
-                true
-            );
+            $this->fields["status"],
+            $solved_closed_statuses,
+            true
+        );
 
         if ($canadd_risk) {
             $itemtypes['Risk'] = [
-                'type' => 'PluginReleasesRisk',
-                'class' => 'PluginReleasesRisk',
+                'type' => 'Risk',
+                'class' => 'Risk',
                 'icon' => 'ti ti-bug',
                 'label' => _x('button', 'Add a risk', 'releases'),
                 'template' => '@releases/form_risk.html.twig',
-                'item' => $risk
+                'item' => $risk,
             ];
         }
 
-        $rollback = new PluginReleasesRollback();
+        $rollback = new Rollback();
 
         $canadd_roll = $rollback->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                $solved_closed_statuses,
-                true
-            );
+            $this->fields["status"],
+            $solved_closed_statuses,
+            true
+        );
 
         if ($canadd_roll) {
             $itemtypes['Rollback'] = [
-                'type' => 'PluginReleasesRollback',
-                'class' => 'PluginReleasesRollback',
+                'type' => 'Rollback',
+                'class' => 'Rollback',
                 'icon' => 'ti ti-arrow-back-up',
                 'label' => _x('button', 'Add a rollback', 'releases'),
                 'template' => '@releases/form_rollback.html.twig',
-                'item' => $rollback
+                'item' => $rollback,
             ];
         }
 
-        $task = new PluginReleasesDeploytask();
+        $task = new Deploytask();
 
         $canadd_task = $task->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                $solved_closed_statuses,
-                true
-            );
+            $this->fields["status"],
+            $solved_closed_statuses,
+            true
+        );
 
         if ($canadd_task) {
             $itemtypes['Deploytask'] = [
-                'type' => 'PluginReleasesDeploytask',
-                'class' => 'PluginReleasesDeploytask',
+                'type' =>  'Deploytask',
+                'class' => 'Deploytask',
                 'icon' => 'ti ti-checkbox',
                 'label' => _x('button', 'Add a deployment task', 'releases'),
                 'template' => '@releases/form_deploytask.html.twig',
-                'item' => $task
+                'item' => $task,
             ];
         }
 
-        $test = new PluginReleasesTest();
+        $test = new Test();
 
         $canadd_test = $test->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                $solved_closed_statuses,
-                true
-            );
+            $this->fields["status"],
+            $solved_closed_statuses,
+            true
+        );
 
         if ($canadd_test) {
             $itemtypes['Test'] = [
-                'type' => 'PluginReleasesTest',
-                'class' => 'PluginReleasesTest',
+                'type' => 'Test',
+                'class' => 'Test',
                 'icon' => 'ti ti-check',
                 'label' => _x('button', 'Add a test', 'releases'),
                 'template' => '@releases/form_test.html.twig',
-                'item' => $test
+                'item' => $test,
             ];
         }
 
         return $itemtypes;
     }
 
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         global $CFG_GLPI;
         if (!static::canView()) {
@@ -1269,7 +1302,7 @@ class PluginReleasesRelease extends CommonITILObject
             }
 
             if (isset($options["template_id"]) && $options["template_id"] > 0) {
-                $template = new PluginReleasesReleasetemplate();
+                $template = new Releasetemplate();
                 $template->getFromDB($options["template_id"]);
 
                 foreach ($this->fields as $key => $field) {
@@ -1282,11 +1315,12 @@ class PluginReleasesRelease extends CommonITILObject
                 }
 
                 $this->fields["status"] = self::NEWRELEASE;
-                $release_user = new PluginReleasesReleasetemplate_User();
-                $release_supplier = new PluginReleasesReleasetemplate_Supplier();
-                $group_release = new PluginReleasesGroup_Releasetemplate();
+                $release_user = new Releasetemplate_User();
+                $release_supplier = new Releasetemplate_Supplier();
+                $group_release = new Group_Releasetemplate();
                 $users = $release_user->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
-                $suppliers = $release_supplier->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]
+                $suppliers = $release_supplier->find(
+                    ['plugin_releases_releasetemplates_id' => $options["template_id"]]
                 );
                 $groups = $group_release->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
                 foreach ($users as $user) {
@@ -1300,7 +1334,7 @@ class PluginReleasesRelease extends CommonITILObject
                 foreach ($groups as $group) {
                     $options["_groups_id_" . self::getActorFieldNameType($group["type"])] = $group["groups_id"];
                 }
-//            echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
+                //            echo Html::hidden("releasetemplates_id", ["value" => $options["template_id"]]);
             }
 
 
@@ -1312,8 +1346,8 @@ class PluginReleasesRelease extends CommonITILObject
                     if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
                         $this->fields["name"] = $c->getField("name");
                         $options["name"] = $c->getField("name");
-                        $this->fields["content"] = Toolbox::stripslashes_deep($c->getField("content"));
-                        $options["content"] = Toolbox::stripslashes_deep($c->getField("content"));
+                        $this->fields["content"] = $c->getField("content");
+                        $options["content"] = $c->getField("content");
                     }
                     $options['entities_id'] = $c->getField("entities_id");
                     $this->fields["entities_id"] = $c->getField("entities_id");
@@ -1357,95 +1391,95 @@ class PluginReleasesRelease extends CommonITILObject
             $options['noid'] = true;
         }
 
-//      if (!isset($options['template_preview'])) {
-//         $options['template_preview'] = 0;
-//      }
-//
-//      if((isset($this->fields['entities_id'])) && $this->fields['entities_id'] != 0 || (isset($options['entities_id']) && $options['entities_id'] != 0)){
-//          $crit = ($ID ? $this->fields['entities_id'] : $options['entities_id']);
-//      }else{
-//          $crit = "";
-//      }
-//
-//      // Load template if available :
-//      $tt = new PluginReleasesReleasetemplate();
-//
-//      // Predefined fields from template : reset them
-//      if (isset($options['_predefined_fields'])) {
-//         $options['_predefined_fields']
-//            = Toolbox::decodeArrayFromInput($options['_predefined_fields']);
-//      } else {
-//         $options['_predefined_fields'] = [];
-//      }
-//
-//      // Store predefined fields to be able not to take into account on change template
-//      // Only manage predefined values on ticket creation
-//      $predefined_fields = [];
-//      $tpl_key           = $this->getTemplateFormFieldName();
-//      if (!$ID) {
-//         if (isset($tt->predefined) && count($tt->predefined)) {
-//            foreach ($tt->predefined as $predeffield => $predefvalue) {
-//               if (isset($default_values[$predeffield])) {
-//                  // Is always default value : not set
-//                  // Set if already predefined field
-//                  // Set if ticket template change
-//                  if (
-//                     ((count($options['_predefined_fields']) == 0)
-//                      && ($options[$predeffield] == $default_values[$predeffield]))
-//                     || (isset($options['_predefined_fields'][$predeffield])
-//                         && ($options[$predeffield] == $options['_predefined_fields'][$predeffield]))
-//                     || (isset($options[$tpl_key])
-//                         && ($options[$tpl_key] != $tt->getID()))
-//                     // user pref for requestype can't overwrite requestype from template
-//                     // when change category
-//                     || (($predeffield == 'requesttypes_id')
-//                         && empty($saved))
-//                     || (isset($ticket) && $options[$predeffield] == $ticket->getField($predeffield))
-//                     || (isset($problem) && $options[$predeffield] == $problem->getField($predeffield))
-//                  ) {
-//                     // Load template data
-//                     $options[$predeffield]           = $predefvalue;
-//                     $this->fields[$predeffield]      = $predefvalue;
-//                     $predefined_fields[$predeffield] = $predefvalue;
-//                  }
-//               }
-//            }
-//            // All predefined override : add option to say predifined exists
-//            if (count($predefined_fields) == 0) {
-//               $predefined_fields['_all_predefined_override'] = 1;
-//            }
-//         } else { // No template load : reset predefined values
-//            if (count($options['_predefined_fields'])) {
-//               foreach ($options['_predefined_fields'] as $predeffield => $predefvalue) {
-//                  if ($options[$predeffield] == $predefvalue) {
-//                     $options[$predeffield] = $default_values[$predeffield];
-//                  }
-//               }
-//            }
-//         }
-//      }
-//
-//      foreach ($default_values as $name => $value) {
-//         if (!isset($options[$name])) {
-//            if (isset($saved[$name])) {
-//               $options[$name] = $saved[$name];
-//            } else {
-//               $options[$name] = $value;
-//            }
-//         }
-//      }
-//
-//      // Put ticket template on $options for actors
-//      $options[str_replace('s_id', '', $tpl_key)] = $tt;
-//
-//      if ($options['template_preview']) {
-//         // Add all values to fields of tickets for template preview
-//         foreach ($options as $key => $val) {
-//            if (!isset($this->fields[$key])) {
-//               $this->fields[$key] = $val;
-//            }
-//         }
-//      }
+        //      if (!isset($options['template_preview'])) {
+        //         $options['template_preview'] = 0;
+        //      }
+        //
+        //      if((isset($this->fields['entities_id'])) && $this->fields['entities_id'] != 0 || (isset($options['entities_id']) && $options['entities_id'] != 0)){
+        //          $crit = ($ID ? $this->fields['entities_id'] : $options['entities_id']);
+        //      }else{
+        //          $crit = "";
+        //      }
+        //
+        //      // Load template if available :
+        //      $tt = new Releasetemplate();
+        //
+        //      // Predefined fields from template : reset them
+        //      if (isset($options['_predefined_fields'])) {
+        //         $options['_predefined_fields']
+        //            = Toolbox::decodeArrayFromInput($options['_predefined_fields']);
+        //      } else {
+        //         $options['_predefined_fields'] = [];
+        //      }
+        //
+        //      // Store predefined fields to be able not to take into account on change template
+        //      // Only manage predefined values on ticket creation
+        //      $predefined_fields = [];
+        //      $tpl_key           = $this->getTemplateFormFieldName();
+        //      if (!$ID) {
+        //         if (isset($tt->predefined) && count($tt->predefined)) {
+        //            foreach ($tt->predefined as $predeffield => $predefvalue) {
+        //               if (isset($default_values[$predeffield])) {
+        //                  // Is always default value : not set
+        //                  // Set if already predefined field
+        //                  // Set if ticket template change
+        //                  if (
+        //                     ((count($options['_predefined_fields']) == 0)
+        //                      && ($options[$predeffield] == $default_values[$predeffield]))
+        //                     || (isset($options['_predefined_fields'][$predeffield])
+        //                         && ($options[$predeffield] == $options['_predefined_fields'][$predeffield]))
+        //                     || (isset($options[$tpl_key])
+        //                         && ($options[$tpl_key] != $tt->getID()))
+        //                     // user pref for requestype can't overwrite requestype from template
+        //                     // when change category
+        //                     || (($predeffield == 'requesttypes_id')
+        //                         && empty($saved))
+        //                     || (isset($ticket) && $options[$predeffield] == $ticket->getField($predeffield))
+        //                     || (isset($problem) && $options[$predeffield] == $problem->getField($predeffield))
+        //                  ) {
+        //                     // Load template data
+        //                     $options[$predeffield]           = $predefvalue;
+        //                     $this->fields[$predeffield]      = $predefvalue;
+        //                     $predefined_fields[$predeffield] = $predefvalue;
+        //                  }
+        //               }
+        //            }
+        //            // All predefined override : add option to say predifined exists
+        //            if (count($predefined_fields) == 0) {
+        //               $predefined_fields['_all_predefined_override'] = 1;
+        //            }
+        //         } else { // No template load : reset predefined values
+        //            if (count($options['_predefined_fields'])) {
+        //               foreach ($options['_predefined_fields'] as $predeffield => $predefvalue) {
+        //                  if ($options[$predeffield] == $predefvalue) {
+        //                     $options[$predeffield] = $default_values[$predeffield];
+        //                  }
+        //               }
+        //            }
+        //         }
+        //      }
+        //
+        //      foreach ($default_values as $name => $value) {
+        //         if (!isset($options[$name])) {
+        //            if (isset($saved[$name])) {
+        //               $options[$name] = $saved[$name];
+        //            } else {
+        //               $options[$name] = $value;
+        //            }
+        //         }
+        //      }
+        //
+        //      // Put ticket template on $options for actors
+        //      $options[str_replace('s_id', '', $tpl_key)] = $tt;
+        //
+        //      if ($options['template_preview']) {
+        //         // Add all values to fields of tickets for template preview
+        //         foreach ($options as $key => $val) {
+        //            if (!isset($this->fields[$key])) {
+        //               $this->fields[$key] = $val;
+        //            }
+        //         }
+        //      }
         $tt = new ChangeTemplate();
 
         $predefined_fields = $this->setPredefinedFields($tt, $options, self::getDefaultValues());
@@ -1713,7 +1747,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return mixed value of the field / false if not exists
      **/
-    function getField($field)
+    public function getField($field)
     {
         if (array_key_exists($field, $this->fields)) {
             return $this->fields[$field];
@@ -1724,7 +1758,7 @@ class PluginReleasesRelease extends CommonITILObject
     /**
      * @return mixed
      */
-    function getNameAlert()
+    public function getNameAlert()
     {
         return $this->fields["name"];
     }
@@ -1732,7 +1766,7 @@ class PluginReleasesRelease extends CommonITILObject
     /**
      * @return mixed
      */
-    function getContentAlert()
+    public function getContentAlert()
     {
         return $this->fields["service_shutdown_details"];
     }
@@ -1748,7 +1782,7 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 9.4.0
      *
      */
-    function showTimelineForm($rand)
+    public function showTimelineForm($rand)
     {
         global $CFG_GLPI;
 
@@ -1757,50 +1791,50 @@ class PluginReleasesRelease extends CommonITILObject
 
         //check sub-items rights
         $tmp = [$foreignKey => $this->getID()];
-        $riskClass = "PluginReleasesRisk";
-        $risk = new $riskClass;
+        $riskClass = Risk::class;
+        $risk = new $riskClass();
         $risk->getEmpty();
         $risk->fields['itemtype'] = $objType;
         $risk->fields['items_id'] = $this->getID();
 
 
-        $rollbackClass = "PluginReleasesRollback";
-        $rollback = new $rollbackClass;
+        $rollbackClass = Rollback::class;
+        $rollback = new $rollbackClass();
         $rollback->getEmpty();
         $rollback->fields['itemtype'] = $objType;
         $rollback->fields['items_id'] = $this->getID();
 
-        $taskClass = "PluginReleasesDeploytask";
-        $task = new $taskClass;
+        $taskClass = Deploytask::class;
+        $task = new $taskClass();
         $task->getEmpty();
         $task->fields['itemtype'] = $objType;
         $task->fields['items_id'] = $this->getID();
 
-        $testClass = "PluginReleasesTest";
-        $test = new $testClass;
+        $testClass = Test::class;
+        $test = new $testClass();
         $test->getEmpty();
         $test->fields['itemtype'] = $objType;
         $test->fields['items_id'] = $this->getID();
 
         $canadd_risk = $risk->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray())
-            );
+            $this->fields["status"],
+            array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray())
+        );
 
         $canadd_rollback = $rollback->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray())
-            );
+            $this->fields["status"],
+            array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray())
+        );
 
         $canadd_task = $task->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray())
-            );
+            $this->fields["status"],
+            array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray())
+        );
 
         $canadd_test = $test->can(-1, CREATE, $tmp) && !in_array(
-                $this->fields["status"],
-                $this->getSolvedStatusArray()
-            );
+            $this->fields["status"],
+            $this->getSolvedStatusArray()
+        );
 
         // javascript function for add and edit items
         $objType = self::getType();
@@ -1848,8 +1882,8 @@ class PluginReleasesRelease extends CommonITILObject
                          ? 'viewitem" . $this->fields['id'] . $rand . "'
                          : domid;
                var target = e.target || window.event.srcElement;
-               if (target.nodeName == 'a') return;
-               if (target.className == 'read_more_button') return;
+               if (target.nodeName == 'a') exit;
+               if (target.className == 'read_more_button') exit;
 
                var _eltsel = '[data-uid='+domid+']';
                var _elt = $(_eltsel);
@@ -1888,7 +1922,7 @@ class PluginReleasesRelease extends CommonITILObject
             'type' => 'itemtype',
             'parenttype' => $objType,
             $foreignKey => $this->fields['id'],
-            'id' => -1
+            'id' => -1,
         ];
         $out = Ajax::updateItemJsCode(
             "viewitem" . $this->fields['id'] . "$rand",
@@ -1911,12 +1945,12 @@ class PluginReleasesRelease extends CommonITILObject
         $release->getFromDB($this->getID());
 
         echo "<li class='risk'>";
-        echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
-            "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem(
+        echo "<a href='#' data-type='Risk' title='" . $riskClass::getTypeName(2)
+            . "'><i class='fas fa-bug'></i>" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem(
                 $release
             ) . ")</a></li>";
         if ($canadd_risk) {
-            echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+            echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"Risk\");' style='margin-right: 10px;margin-left: -5px;'></i>";
         }
 
         $style = "color:orange;";
@@ -1929,12 +1963,12 @@ class PluginReleasesRelease extends CommonITILObject
         echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
         echo "<li class='rollback'>";
-        echo "<a href='#'  data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
-            "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem(
+        echo "<a href='#'  data-type='Rollback' title='" . $rollbackClass::getTypeName(2)
+            . "'><i class='fas fa-undo-alt'></i>" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem(
                 $release
             ) . ")</a></li>";
         if ($canadd_rollback) {
-            echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+            echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"Rollback\");' style='margin-right: 10px;margin-left: -5px;'></i>";
         }
 
 
@@ -1947,15 +1981,15 @@ class PluginReleasesRelease extends CommonITILObject
         echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
         echo "<li class='task'>";
-        echo "<a href='#'   data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
-            "'><i class='fas fa-check-square'></i>" . _n(
+        echo "<a href='#'   data-type='Deploytask' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases')
+            . "'><i class='fas fa-check-square'></i>" . _n(
                 'Deploy task',
                 'Deploy tasks',
                 2,
                 'releases'
             ) . " (" . $taskClass::countForItem($release) . ")</a></li>";
         if ($canadd_task) {
-            echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+            echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"Deploytask\");' style='margin-right: 10px;margin-left: -5px;'></i>";
         }
 
         $style = "color:orange;";
@@ -1971,12 +2005,12 @@ class PluginReleasesRelease extends CommonITILObject
         echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
         echo "<li class='test'>";
-        echo "<a href='#'  data-type='test' title='" . $testClass::getTypeName(2) .
-            "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem(
+        echo "<a href='#'  data-type='Test' title='" . $testClass::getTypeName(2)
+            . "'><i class='fas fa-check'></i>" . $testClass::getTypeName(2) . " (" . $testClass::countForItem(
                 $release
             ) . ")</a></li>";
         if ($canadd_test) {
-            echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+            echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"Test\");' style='margin-right: 10px;margin-left: -5px;'></i>";
         }
         $style = "color:orange;";
         $fa = "fa-pencil-alt";
@@ -1990,8 +2024,8 @@ class PluginReleasesRelease extends CommonITILObject
         }
         echo "<i class='fas $fa' style='margin-right: 10px;$style'></i>";
 
-        echo "<li class='followup'>" .
-            "<a href='#'  data-type='ITILFollowup' title='" . __("Followup") . "'>"
+        echo "<li class='followup'>"
+            . "<a href='#'  data-type='ITILFollowup' title='" . __("Followup") . "'>"
             . "<i class='far fa-comment'></i>" . __("Followup") . " (" . self::countFollowupForItem(
                 $release
             ) . ")</a></li>";
@@ -2009,18 +2043,18 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
     /**
-     * @param \CommonDBTM $item
+     * @param CommonDBTM $item
      *
      * @return int
      */
-    static function countFollowupForItem(CommonDBTM $item)
+    public static function countFollowupForItem(CommonDBTM $item)
     {
         $dbu = new DbUtils();
         return $dbu->countElementsInTable(
             "glpi_itilfollowups",
             [
                 "items_id" => $item->getID(),
-                "itemtype" => $item->getType()
+                "itemtype" => $item->getType(),
             ]
         );
     }
@@ -2032,40 +2066,40 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 9.4.0
      *
      */
-    function filterTimeline()
+    public function filterTimeline()
     {
         echo "<div class='filter_timeline'>";
         echo "<h3>" . __("Timeline filter") . " : </h3>";
         echo "<ul>";
 
-        $riskClass = "PluginReleasesRisk";
-        echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(
-                2
-            ) .
-            "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
-        $rollbackClass = "PluginReleasesRollback";
-        echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(
-                2
-            ) .
-            "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
-        $taskClass = "PluginReleasesDeploytask";
-        echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . $taskClass::getTypeName(
-                2
-            ) .
-            "'><span class='sr-only'>" . $taskClass::getTypeName(2) . "</span></a></li>";
-        $testClass = "PluginReleasesTest";
-        echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(
-                2
-            ) .
-            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
+        $riskClass = Risk::class;
+        echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='Risk' title='" . $riskClass::getTypeName(
+            2
+        )
+            . "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
+        $rollbackClass = Rollback::class;
+        echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='Rollback' title='" . $rollbackClass::getTypeName(
+            2
+        )
+            . "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
+        $taskClass = Deploytask::class;
+        echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='Deploytask' title='" . $taskClass::getTypeName(
+            2
+        )
+            . "'><span class='sr-only'>" . $taskClass::getTypeName(2) . "</span></a></li>";
+        $testClass = Test::class;
+        echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='Test' title='" . $testClass::getTypeName(
+            2
+        )
+            . "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
         echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __(
-                'Followup'
-            ) .
-            "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
+            'Followup'
+        )
+            . "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
         echo "<li><a href='#' class=' filterEle fa fa-ban pointer' data-type='reset' title=\"" . __s(
-                "Reset display options"
-            ) .
-            "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
+            "Reset display options"
+        )
+            . "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
         echo "</ul>";
         echo "</div>";
 
@@ -2082,7 +2116,7 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 9.4.0
      *
      */
-    function showTimeLine($rand)
+    public function showTimeLine($rand)
     {
         global $CFG_GLPI, $autolink_options;
 
@@ -2158,8 +2192,8 @@ class PluginReleasesRelease extends CommonITILObject
                     $user->getFromDB($item_i['users_id']);
 
                     echo "<div class='tooltip_picture_border'>";
-                    echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='" .
-                        User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
+                    echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='"
+                        . User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
                     echo "</div>";
 
                     echo "<span class='h_user_name'>";
@@ -2228,8 +2262,8 @@ class PluginReleasesRelease extends CommonITILObject
                     $content = $item_i['content'];
                 }
 
-                $content = Glpi\RichText\RichText::getEnhancedHtml($content);
-                $content = autolink($content, false);
+                $content = RichText::getEnhancedHtml($content);
+                //                $content = autolink($content, false);
 
                 $long_text = "";
                 if ((substr_count($content, "<br") > 30) || (strlen($content) > 2000)) {
@@ -2239,17 +2273,17 @@ class PluginReleasesRelease extends CommonITILObject
                 echo "<div class='item_content $long_text'>";
                 echo "<p>";
                 if (isset($item_i['state'])) {
-                    if ($item['type'] == PluginReleasesTest::getType()
-                        || $item['type'] == pluginReleasesDeploytask::getType()) {
-                        $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\"," . PluginReleasesTest::DONE . ")'";
-                        $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\"," . PluginReleasesTest::FAIL . ")'";
+                    if ($item['type'] == Test::getType()
+                        || $item['type'] == Deploytask::getType()) {
+                        $onClickDone = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\"," . Test::DONE . ")'";
+                        $onClickFail = "onclick='done_fail(" . $item_i['id'] . ", this,\"" . $item['type'] . "\"," . Test::FAIL . ")'";
                         $cursor = "";
                         if (!$item_i['can_edit']) {
                             $cursor = "cursor: not-allowed;";
                             $onClickDone = "";
                             $onClickFail = "";
                         }
-                        if ($item_i['state'] == PluginReleasesDeploytask::TODO || $item_i['state'] == PluginReleasesTest::TODO) {
+                        if ($item_i['state'] == Deploytask::TODO || $item_i['state'] == Test::TODO) {
                             echo "<span>";
                             $style = "color:gray;";
                             $fa = "fa-times-circle fa-2x";
@@ -2259,7 +2293,7 @@ class PluginReleasesRelease extends CommonITILObject
 
                             echo "<i data-type='done' class='fas $fa pointer' style='margin-right: 10px;$style $cursor' $onClickDone></i>";
                             echo "</span>";
-                        } elseif ($item_i['state'] == PluginReleasesDeploytask::DONE || $item_i['state'] == PluginReleasesTest::DONE) {
+                        } elseif ($item_i['state'] == Deploytask::DONE || $item_i['state'] == Test::DONE) {
                             echo "<span>";
                             $style = "color:gray;";
                             $fa = "fa-times-circle fa-2x";
@@ -2294,7 +2328,7 @@ class PluginReleasesRelease extends CommonITILObject
                 echo "</p>";
 
                 echo "<div class='rich_text_container'>";
-                $richtext = Glpi\RichText\RichText::getEnhancedHtml($content);
+                $richtext = RichText::getEnhancedHtml($content);
                 //            $richtext = Html::replaceImagesByGallery($richtext);
                 echo $richtext;
                 echo "</div>";
@@ -2349,19 +2383,19 @@ class PluginReleasesRelease extends CommonITILObject
                         }
                         echo "<span class='buttons'>";
                         echo "<a href='" . Document::getFormURLWithID(
-                                $item_i_['id']
-                            ) . "' class='edit_document fa fa-eye pointer' title='" .
-                            _sx("button", "Show") . "'>";
+                            $item_i_['id']
+                        ) . "' class='edit_document fa fa-eye pointer' title='"
+                            . _sx("button", "Show") . "'>";
                         echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
 
                         $doc = new Document();
                         $doc->getFromDB($item_i_['id']);
                         if ($doc->can($item_i_['id'], UPDATE)) {
-                            echo "<a href='" . static::getFormURL() .
-                                "?delete_document&documents_id=" . $item_i_['id'] .
-                                "&$foreignKey=" . $this->getID(
-                                ) . "' class='delete_document fas fa-trash-alt pointer' title='" .
-                                _sx("button", "Delete permanently") . "'>";
+                            echo "<a href='" . static::getFormURL()
+                                . "?delete_document&documents_id=" . $item_i_['id']
+                                . "&$foreignKey=" . $this->getID(
+                                ) . "' class='delete_document fas fa-trash-alt pointer' title='"
+                                . _sx("button", "Delete permanently") . "'>";
                             echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
                         }
                         echo "</span>";
@@ -2376,31 +2410,31 @@ class PluginReleasesRelease extends CommonITILObject
             if (isset($item_i['plugin_releases_typedeploytasks_id'])
                 && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
                 echo Dropdown::getDropdownName(
-                        "glpi_plugin_releases_typedeploytasks",
-                        $item_i['plugin_releases_typedeploytasks_id']
-                    ) . "<br>";
+                    "glpi_plugin_releases_typedeploytasks",
+                    $item_i['plugin_releases_typedeploytasks_id']
+                ) . "<br>";
             }
             if (isset($item_i['plugin_releases_typerisks_id'])
                 && !empty($item_i['plugin_releases_typerisks_id'])) {
                 echo Dropdown::getDropdownName(
-                        "glpi_plugin_releases_typerisks",
-                        $item_i['plugin_releases_typerisks_id']
-                    ) . "<br>";
+                    "glpi_plugin_releases_typerisks",
+                    $item_i['plugin_releases_typerisks_id']
+                ) . "<br>";
             }
             if (isset($item_i['plugin_releases_typetests_id'])
                 && !empty($item_i['plugin_releases_typetests_id'])) {
                 echo Dropdown::getDropdownName(
-                        "glpi_plugin_releases_typetests",
-                        $item_i['plugin_releases_typetests_id']
-                    ) . "<br>";
+                    "glpi_plugin_releases_typetests",
+                    $item_i['plugin_releases_typetests_id']
+                ) . "<br>";
             }
             if (isset($item_i['plugin_releases_risks_id'])
                 && !empty($item_i['plugin_releases_risks_id'])) {
                 echo __("Associated with", 'releases') . " ";
                 echo Dropdown::getDropdownName(
-                        "glpi_plugin_releases_risks",
-                        $item_i['plugin_releases_risks_id']
-                    ) . "<br>";
+                    "glpi_plugin_releases_risks",
+                    $item_i['plugin_releases_risks_id']
+                ) . "<br>";
             }
 
             if (isset($item_i['actiontime'])
@@ -2479,21 +2513,21 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
 
-    function getTimelineItems(array $options = [])
+    public function getTimelineItems(array $options = [])
     {
         $objType = self::getType();
         $foreignKey = self::getForeignKeyField();
 
         $timeline = [];
 
-        $riskClass = 'PluginReleasesRisk';
-        $risk_obj = new $riskClass;
-        $rollbackClass = 'PluginReleasesRollback';
-        $rollback_obj = new $rollbackClass;
-        $taskClass = 'PluginReleasesDeploytask';
-        $task_obj = new $taskClass;
-        $testClass = 'PluginReleasesTest';
-        $test_obj = new $testClass;
+        $riskClass = Risk::class;
+        $risk_obj = new $riskClass();
+        $rollbackClass = Rollback::class;
+        $rollback_obj = new $rollbackClass();
+        $taskClass = Deploytask::class;
+        $task_obj = new $taskClass();
+        $testClass = Test::class;
+        $test_obj = new $testClass();
 
         //checks rights
         $restrict_risk = $restrict_rollback = $restrict_task = $restrict_test = [];
@@ -2502,7 +2536,7 @@ class PluginReleasesRelease extends CommonITILObject
         $user = new User();
 
         $fupClass = 'ITILFollowup';
-        $followup_obj = new $fupClass;
+        $followup_obj = new $fupClass();
 
 
         //checks rights
@@ -2511,8 +2545,8 @@ class PluginReleasesRelease extends CommonITILObject
             $restrict_fup = [
                 'OR' => [
                     'is_private' => 0,
-                    'users_id' => Session::getLoginUserID()
-                ]
+                    'users_id' => Session::getLoginUserID(),
+                ],
             ];
         }
 
@@ -2523,11 +2557,12 @@ class PluginReleasesRelease extends CommonITILObject
             $followups = $followup_obj->find(['items_id' => $this->getID()] + $restrict_fup, ['date DESC', 'id DESC']);
             foreach ($followups as $followups_id => $followup) {
                 $followup_obj->getFromDB($followups_id);
-                $followup['can_edit'] = $followup_obj->canUpdateItem();;
+                $followup['can_edit'] = $followup_obj->canUpdateItem();
+                ;
                 $timeline[$followup['date'] . "_followup_" . $followups_id] = [
                     'type' => $fupClass,
                     'item' => $followup,
-                    'itiltype' => 'ITILFollowup'
+                    'itiltype' => 'ITILFollowup',
                 ];
             }
         }
@@ -2540,7 +2575,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $timeline[$risk['date_mod'] . "_risk_" . $risks_id] = [
                     'type' => $riskClass,
                     'item' => $risk,
-                    'itiltype' => 'PluginReleasesRisk'
+                    'itiltype' => 'Risk',
                 ];
             }
         }
@@ -2556,7 +2591,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = [
                     'type' => $rollbackClass,
                     'item' => $rollback,
-                    'itiltype' => 'PluginReleasesRollback'
+                    'itiltype' => 'Rollback',
                 ];
             }
         }
@@ -2571,7 +2606,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = [
                     'type' => $taskClass,
                     'item' => $task,
-                    'itiltype' => 'PluginReleasesDeploytask'
+                    'itiltype' => 'Deploytask',
                 ];
             }
         }
@@ -2584,7 +2619,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $timeline[$test['date_mod'] . "_test_" . $tests_id] = [
                     'type' => $testClass,
                     'item' => $test,
-                    'itiltype' => 'PluginReleasesTest'
+                    'itiltype' => 'Test',
                 ];
             }
         }
@@ -2596,20 +2631,20 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
 
-    static function showCreateRelease($item)
+    public static function showCreateRelease($item)
     {
-        $item_t = new PluginReleasesReleasetemplate();
+        $item_t = new Releasetemplate();
         $dbu = new DbUtils();
         $condition = $dbu->getEntitiesRestrictCriteria($item_t->getTable());
-        PluginReleasesReleasetemplate::dropdown(
+        Releasetemplate::dropdown(
             [
                 "comments" => false,
                 "addicon" => false,
                 "emptylabel" => __("For this change", "releases"),
-                "name" => "releasetemplates_id"
+                "name" => "releasetemplates_id",
             ] + $condition
         );
-        $url = PluginReleasesRelease::getFormURL();
+        $url = Release::getFormURL();
         echo "<br/><br/>";
         echo "<a class='submit btn btn-primary' id='link' href='$url?changes_id=" . $item->getID() . "'>";
         $url = $url . "?changes_id=" . $item->getID() . "&template_id=";
@@ -2633,14 +2668,14 @@ class PluginReleasesRelease extends CommonITILObject
         //      Html::closeForm();
     }
 
-    function getLinkedItems(bool $addNames = true): array
+    public function getLinkedItems(bool $addNames = true): array
     {
         global $DB;
 
         $assets = $DB->request([
             'SELECT' => ['itemtype', 'items_id'],
             'FROM' => 'glpi_plugin_releases_releases_items',
-            'WHERE' => ['plugin_releases_releases_id' => $this->getID()]
+            'WHERE' => ['plugin_releases_releases_id' => $this->getID()],
         ]);
 
         $assets = iterator_to_array($assets);
@@ -2652,7 +2687,7 @@ class PluginReleasesRelease extends CommonITILObject
                     continue;
                 }
                 /** @var CommonDBTM $item */
-                $item = new $asset['itemtype'];
+                $item = new $asset['itemtype']();
                 $item->getFromDB($asset['items_id']);
 
                 // Add name
@@ -2682,15 +2717,15 @@ class PluginReleasesRelease extends CommonITILObject
     /**
      * @return array
      */
-    static function getMenuContent()
+    public static function getMenuContent()
     {
         global $CFG_GLPI;
         $menu['title'] = self::getMenuName(2);
         $menu['page'] = self::getSearchURL(false);
         $menu['links']['search'] = self::getSearchURL(false);
 
-//        $menu['links']['template'] = PLUGIN_RELEASES_NOTFULL_WEBDIR . "/front/releasetemplate.php";
-        //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=PluginReleasesRelease&add=0";
+        //        $menu['links']['template'] = PLUGIN_RELEASES_NOTFULL_WEBDIR . "/front/releasetemplate.php";
+        //      $menu['links']['template'] = "/front/setup.templates.php?itemtype=Release&add=0";
         $menu['icon'] = static::getIcon();
         if (self::canCreate()) {
             $menu['links']['add'] = $plugin_page = "/plugins/releases/front/creationrelease.php";
@@ -2701,12 +2736,12 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-building-factory";
     }
 
-    static function getDefaultValues($entity = 0)
+    public static function getDefaultValues($entity = 0)
     {
         global $CFG_GLPI;
 
@@ -2733,29 +2768,29 @@ class PluginReleasesRelease extends CommonITILObject
             '_users_id_requester' => $users_id_requester,
             '_users_id_requester_notif' => [
                 'use_notification' => [$default_use_notif],
-                'alternative_email' => ''
+                'alternative_email' => '',
             ],
             '_groups_id_requester' => 0,
             '_users_id_assign' => $users_id_assign,
             '_users_id_assign_notif' => [
                 'use_notification' => [$default_use_notif],
-                'alternative_email' => ''
+                'alternative_email' => '',
             ],
             '_groups_id_assign' => 0,
             '_users_id_observer' => 0,
             '_users_id_observer_notif' => [
                 'use_notification' => [$default_use_notif],
-                'alternative_email' => ''
+                'alternative_email' => '',
             ],
             '_groups_id_observer' => 0,
             '_link' => [
                 'tickets_id_2' => '',
-                'link' => ''
+                'link' => '',
             ],
             '_suppliers_id_assign' => 0,
             '_suppliers_id_assign_notif' => [
                 'use_notification' => [$default_use_notif],
-                'alternative_email' => ''
+                'alternative_email' => '',
             ],
             'name' => '',
             'content' => '',
@@ -2776,7 +2811,7 @@ class PluginReleasesRelease extends CommonITILObject
         ];
     }
 
-    static function isAllowedStatus($old, $new)
+    public static function isAllowedStatus($old, $new)
     {
         if ($old != self::CLOSED && $old != self::REVIEW) {
             return true;
@@ -2791,7 +2826,7 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 9.4.0
      *
      */
-    function canReopen()
+    public function canReopen()
     {
         return Session::haveRight('plugin_releases_releases', CREATE)
             && in_array($this->fields["status"], $this->getClosedStatusArray());
@@ -2804,7 +2839,7 @@ class PluginReleasesRelease extends CommonITILObject
      **@since 0.83
      *
      */
-    static function getClosedStatusArray()
+    public static function getClosedStatusArray()
     {
         $tab = [self::CLOSED, self::FAIL];
         return $tab;
@@ -2817,13 +2852,13 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 9.4.0
      *
      */
-    static function getReopenableStatusArray()
+    public static function getReopenableStatusArray()
     {
         return [self::CLOSED];
     }
 
 
-    static function failOrNot($itemtype, $items_id)
+    public static function failOrNot($itemtype, $items_id)
     {
         $self = new self();
         $self->getFromDB($items_id);
@@ -2837,7 +2872,7 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 9.4.0
      *
      */
-    function showTimelineHeader()
+    public function showTimelineHeader()
     {
         echo "<h2>" . __("Release actions details", 'releases') . "</h2>";
         $this->filterTimeline();
@@ -2853,7 +2888,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return boolean|void
      **/
-    static function showListForItem(CommonDBTM $item, $withtemplate = 0)
+    public static function showListForItem(CommonDBTM $item, $withtemplate = 0)
     {
         global $DB;
 
@@ -2872,7 +2907,7 @@ class PluginReleasesRelease extends CommonITILObject
         ];
 
         switch ($item->getType()) {
-            case 'User' :
+            case 'User':
                 $restrict['glpi_plugin_releases_releases_users.users_id'] = $item->getID();
 
                 $options['criteria'][0]['field'] = 4; // status
@@ -2892,7 +2927,7 @@ class PluginReleasesRelease extends CommonITILObject
 
                 break;
 
-            case 'Supplier' :
+            case 'Supplier':
                 $restrict['glpi_plugin_releases_releases_suppliers.suppliers_id'] = $item->getID();
 
                 $options['criteria'][0]['field'] = 6;
@@ -2901,7 +2936,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $options['criteria'][0]['link'] = 'AND';
                 break;
 
-            case 'Group' :
+            case 'Group':
                 // Mini search engine
                 if ($item->haveChildren()) {
                     $tree = Session::getSavedOption(__CLASS__, 'tree', 0);
@@ -2931,7 +2966,7 @@ class PluginReleasesRelease extends CommonITILObject
                 $options['criteria'][0]['link'] = 'AND';
                 break;
 
-            default :
+            default:
                 $restrict['items_id'] = $item->getID();
                 $restrict['itemtype'] = $item->getType();
                 break;
@@ -2939,13 +2974,13 @@ class PluginReleasesRelease extends CommonITILObject
 
         // Link to open a new release
         //      if ($item->getID()
-        //          && PluginReleasesRelease::isPossibleToAssignType($item->getType())
+        //          && Release::isPossibleToAssignType($item->getType())
         //          && self::canCreate()
         //          && !(!empty($withtemplate) && $withtemplate == 2)
         //          && (!isset($item->fields['is_template']) || $item->fields['is_template'] == 0)) {
         //         echo "<div class='firstbloc'>";
         //         Html::showSimpleForm(
-        //            PluginReleasesRelease::getFormURL(),
+        //            Release::getFormURL(),
         //            '_add_fromitem',
         //            __('New release for this item...'),
         //            [
@@ -2959,7 +2994,7 @@ class PluginReleasesRelease extends CommonITILObject
 
         $criteria = self::getCommonCriteria();
         $criteria['WHERE'] = $restrict + getEntitiesRestrictCriteria(self::getTable());
-        $criteria['LIMIT'] = (int)$_SESSION['glpilist_limit'];
+        $criteria['LIMIT'] = (int) $_SESSION['glpilist_limit'];
         $iterator = $DB->request($criteria);
         $number = count($iterator);
 
@@ -2972,7 +3007,7 @@ class PluginReleasesRelease extends CommonITILObject
         }
         if ($number > 0) {
             Session::initNavigateListItems(
-                'PluginReleasesRelease',
+                Release::class,
                 //TRANS : %1$s is the itemtype name,
                 //        %2$s is the name of the item (used for headings of a list)
                 sprintf(
@@ -2996,7 +3031,7 @@ class PluginReleasesRelease extends CommonITILObject
             self::commonListHeader(Search::HTML_OUTPUT);
 
             foreach ($iterator as $data) {
-                Session::addToNavigateListItems('PluginReleasesRelease', $data["id"]);
+                Session::addToNavigateListItems(Release::class, $data["id"]);
                 self::showShort($data["id"]);
             }
             self::commonListHeader(Search::HTML_OUTPUT);
@@ -3061,7 +3096,7 @@ class PluginReleasesRelease extends CommonITILObject
         $table = static::getTable();
         $criteria = [
             'SELECT' => [
-                "$table.*"
+                "$table.*",
             ],
             'DISTINCT' => true,
             'FROM' => $table,
@@ -3069,41 +3104,42 @@ class PluginReleasesRelease extends CommonITILObject
                 $gtable => [
                     'ON' => [
                         $table => 'id',
-                        $gtable => $fk
-                    ]
+                        $gtable => $fk,
+                    ],
                 ],
                 $utable => [
                     'ON' => [
                         $table => 'id',
-                        $utable => $fk
-                    ]
+                        $utable => $fk,
+                    ],
                 ],
                 $stable => [
                     'ON' => [
                         $table => 'id',
-                        $stable => $fk
-                    ]
+                        $stable => $fk,
+                    ],
                 ],
                 $itable => [
                     'ON' => [
                         $table => 'id',
-                        $itable => $fk
-                    ]
-                ]
+                        $itable => $fk,
+                    ],
+                ],
             ],
-            'ORDERBY' => "$table.date_mod DESC"
+            'ORDERBY' => "$table.date_mod DESC",
         ];
         if (count($_SESSION["glpiactiveentities"]) > 1) {
             $criteria['LEFT JOIN']['glpi_entities'] = [
                 'ON' => [
                     'glpi_entities' => 'id',
-                    $table => 'entities_id'
-                ]
+                    $table => 'entities_id',
+                ],
             ];
             $criteria['SELECT'] = array_merge(
-                $criteria['SELECT'], [
+                $criteria['SELECT'],
+                [
                     'glpi_entities.completename AS entityname',
-                    "$table.entities_id AS entityID"
+                    "$table.entities_id AS entityID",
                 ]
             );
         }
@@ -3114,7 +3150,7 @@ class PluginReleasesRelease extends CommonITILObject
      * @param integer $output_type Output type
      * @param string $mass_id id of the form to check all
      */
-    static function commonListHeader(
+    public static function commonListHeader(
         $output_type = Search::HTML_OUTPUT,
         $mass_id = '',
         array $params = []
@@ -3167,7 +3203,7 @@ class PluginReleasesRelease extends CommonITILObject
      * @since 0.85 (befor in each object with differents parameters)
      *
      */
-    static function showShort($id, $options = [])
+    public static function showShort($id, $options = [])
     {
         global $DB;
 
@@ -3241,20 +3277,20 @@ class PluginReleasesRelease extends CommonITILObject
             if ($item->fields['status'] == static::CLOSED) {
                 $second_col = sprintf(
                     __('Closed on %s'),
-                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
-                    Html::convDateTime($item->fields['date_end'])
+                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '')
+                    . Html::convDateTime($item->fields['date_end'])
                 );
             } elseif ($item->fields['begin_waiting_date']) {
                 $second_col = sprintf(
                     __('Put on hold on %s'),
-                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
-                    Html::convDateTime($item->fields['begin_waiting_date'])
+                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '')
+                    . Html::convDateTime($item->fields['begin_waiting_date'])
                 );
             } else {
                 $second_col = sprintf(
                     __('Opened on %s'),
-                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '') .
-                    Html::convDateTime($item->fields['date'])
+                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '')
+                    . Html::convDateTime($item->fields['date'])
                 );
             }
 
@@ -3294,7 +3330,7 @@ class PluginReleasesRelease extends CommonITILObject
                         $userdata["comment"],
                         [
                             'link' => $userdata["link"],
-                            'display' => false
+                            'display' => false,
                         ]
                     )
                 );
@@ -3327,7 +3363,7 @@ class PluginReleasesRelease extends CommonITILObject
                             $userdata["comment"],
                             [
                                 'link' => $userdata["link"],
-                                'display' => false
+                                'display' => false,
                             ]
                         )
                     );
@@ -3406,7 +3442,7 @@ class PluginReleasesRelease extends CommonITILObject
             // Add link
             if ($item->canViewItem()) {
                 $eigth_column = "<a id='" . $item->getType(
-                    ) . $item->fields["id"] . "$rand' href=\"" . $item->getLinkURL()
+                ) . $item->fields["id"] . "$rand' href=\"" . $item->getLinkURL()
                     . "\">$eigth_column</a>";
 
                 if ($p['followups']
@@ -3430,11 +3466,11 @@ class PluginReleasesRelease extends CommonITILObject
                     __('%1$s %2$s'),
                     $eigth_column,
                     Html::showToolTip(
-                        Glpi\RichText\RichText::getSafeHtml($item->fields["content"]),
+                        RichText::getSafeHtml($item->fields["content"]),
                         [
                             'display' => false,
-                            'applyto' => $item->getType() . $item->fields["id"] .
-                                $rand
+                            'applyto' => $item->getType() . $item->fields["id"]
+                                . $rand,
                         ]
                     )
                 );
@@ -3452,7 +3488,7 @@ class PluginReleasesRelease extends CommonITILObject
             $tenth_column = '';
             $planned_infos = '';
 
-            $tasktype = "PluginReleasesDeploytask";
+            $tasktype = Deploytask::class;
             $plan = new $tasktype();
             $items = [];
 
@@ -3468,19 +3504,19 @@ class PluginReleasesRelease extends CommonITILObject
                 if (isset($plan['begin']) && $plan['begin']) {
                     $items[$plan['id']] = $plan['id'];
                     $planned_infos .= sprintf(
-                        __('From %s') .
-                        ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                        __('From %s')
+                        . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
                         Html::convDateTime($plan['begin'])
                     );
                     $planned_infos .= sprintf(
-                        __('To %s') .
-                        ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                        __('To %s')
+                        . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
                         Html::convDateTime($plan['end'])
                     );
                     if ($plan['users_id_tech']) {
                         $planned_infos .= sprintf(
-                            __('By %s') .
-                            ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
+                            __('By %s')
+                            . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
                             getUserName($plan['users_id_tech'])
                         );
                     }
@@ -3491,8 +3527,8 @@ class PluginReleasesRelease extends CommonITILObject
             $tenth_column = count($items);
             if ($tenth_column) {
                 $tenth_column = "<span class='pointer'
-                              id='" . $item->getType() . $item->fields["id"] . "planning$rand'>" .
-                    $tenth_column . '</span>';
+                              id='" . $item->getType() . $item->fields["id"] . "planning$rand'>"
+                    . $tenth_column . '</span>';
                 $tenth_column = sprintf(
                     __('%1$s %2$s'),
                     $tenth_column,
@@ -3500,9 +3536,9 @@ class PluginReleasesRelease extends CommonITILObject
                         $planned_infos,
                         [
                             'display' => false,
-                            'applyto' => $item->getType() .
-                                $item->fields["id"] .
-                                "planning" . $rand
+                            'applyto' => $item->getType()
+                                . $item->fields["id"]
+                                . "planning" . $rand,
                         ]
                     )
                 );
@@ -3530,7 +3566,7 @@ class PluginReleasesRelease extends CommonITILObject
      *
      * @return integer
      **/
-    function numberOfTasks($with_private = true)
+    public function numberOfTasks($with_private = true)
     {
         global $DB;
 
@@ -3543,20 +3579,20 @@ class PluginReleasesRelease extends CommonITILObject
             'COUNT' => 'cpt',
             'FROM' => $table,
             'WHERE' => [
-                    $this->getForeignKeyField() => $this->fields['id']
-                ] + $RESTRICT
+                $this->getForeignKeyField() => $this->fields['id'],
+            ] + $RESTRICT,
         ])->next();
 
         return (isset($row['cpt']) && $row['cpt'] > 0) ? $row['cpt'] : 0;
     }
 
-    function post_getEmpty()
+    public function post_getEmpty()
     {
         $this->fields['users_id_recipient'] = Session::getLoginUserID();
     }
 
     //TODO delete useless lines
-    function pre_updateInDB()
+    public function pre_updateInDB()
     {
         global $DB;
 
@@ -3604,7 +3640,7 @@ class PluginReleasesRelease extends CommonITILObject
     //
     //      if (Session::getCurrentInterface() == 'central') {
     //         if ($isadmin) {
-    //            $actions['PluginReleasesRelease' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
+    //            $actions['Release' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
     //         }
     //      }
     //      return $actions;
@@ -3650,7 +3686,7 @@ class PluginReleasesRelease extends CommonITILObject
     //
     //         case "transfer" :
     //            $input = $ma->getInput();
-    //            if ($item->getType() == PluginReleasesRelease::getType()) {
+    //            if ($item->getType() == Release::getType()) {
     //               foreach ($ids as $key) {
     //                  $item->getFromDB($key);
     //
@@ -3660,11 +3696,11 @@ class PluginReleasesRelease extends CommonITILObject
     //                  $values["entities_id"] = $input['entities_id'];
     //
     //                  if ($item->update($values)) {
-    //                     PluginReleasesDeploytask::transfer($key, $input["entities_id"]);
-    //                     PluginReleasesTest::transfer($key, $input["entities_id"]);
-    //                     PluginReleasesRisk::transfer($key, $input["entities_id"]);
-    //                     PluginReleasesRollback::transfer($key, $input["entities_id"]);
-    //                     PluginReleasesReview::transfer($key, $input["entities_id"]);
+    //                     Deploytask::transfer($key, $input["entities_id"]);
+    //                     Test::transfer($key, $input["entities_id"]);
+    //                     Risk::transfer($key, $input["entities_id"]);
+    //                     Rollback::transfer($key, $input["entities_id"]);
+    //                     Review::transfer($key, $input["entities_id"]);
     //                     self::transferDocument($key, $input["entities_id"]);
     //                     $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
     //                  } else {
@@ -3704,8 +3740,8 @@ class PluginReleasesRelease extends CommonITILObject
      */
     public function getAssociatedDocumentsCriteria($bypass_rights = false): array
     {
-        $task_class = PluginReleasesDeploytask::getType();
-        $review_class = PluginReleasesReview::getType();
+        $task_class = Deploytask::getType();
+        $review_class = Review::getType();
 
         $or_crits = [
             // documents associated to ITIL item directly
@@ -3756,12 +3792,12 @@ class PluginReleasesRelease extends CommonITILObject
 
     public static function getItemLinkClass(): string
     {
-        return PluginReleasesRelease_Item::class;
+        return Release_Item::class;
     }
 
     public static function getTaskClass()
     {
-        return PluginReleasesDeploytask::class;
+        return Deploytask::class;
     }
 
     public static function getContentTemplatesParametersClass(): string
@@ -3770,9 +3806,7 @@ class PluginReleasesRelease extends CommonITILObject
     }
 
     public static function getContentTemplatesParametersClassInstance(
-    ): \Glpi\ContentTemplates\Parameters\CommonITILObjectParameters
-    {
+    ): CommonITILObjectParameters {
         // TODO: Implement getContentTemplatesParametersClassInstance() method.
     }
 }
-

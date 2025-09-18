@@ -30,15 +30,12 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 0.85
- */
-
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Releasetemplate_Supplier;
 
-
-$link = new PluginReleasesReleasetemplate_Supplier();
+$link = new Releasetemplate_Supplier();
 
 Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
@@ -57,7 +54,7 @@ if (isset($_POST["update"])) {
 
    Event::log($link->fields['plugin_releases_releasetemplates_id'], "plugin_releases", 4, "maintain",
               sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]));
-   Html::redirect(PluginReleasesRelease::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
+   Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
 
 } else if (isset($_GET["id"])) {
    $link->showSupplierNotificationForm($_GET["id"]);

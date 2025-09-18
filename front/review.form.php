@@ -28,6 +28,9 @@
  */
 
 
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Review;
+
 Session::checkLoginUser();
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
@@ -36,7 +39,7 @@ if (!isset($_GET["withtemplate"])) {
    $_GET["withtemplate"] = "";
 }
 
-$release = new PluginReleasesReview();
+$release = new Review();
 
 if (isset($_POST["add"])) {
    $release->check(-1, CREATE, $_POST);
@@ -70,17 +73,17 @@ if (isset($_POST["add"])) {
    $d = new Document_Item();
    $d->getFromDBByCrit(["documents_id" => $_GET["documents_id"],
                         "items_id"     => $_GET["plugin_releases_reviews_id"],
-                        "itemtype"     => PluginReleasesReview::getType()]);
+                        "itemtype"     => Review::getType()]);
    $d->delete(["id"           => $d->getID(),
                "documents_id" => $_GET["documents_id"],
                "items_id"     => $_GET["plugin_releases_reviews_id"],
-               "itemtype"     => PluginReleasesReview::getType()]);;
+               "itemtype"     => Review::getType()]);;
    Html::back();
 } else if (isset($_POST["conclude"])) {
    global $CFG_GLPI;
-   $r               = new PluginReleasesRelease();
+   $r               = new Release();
    $input["id"]     = $_POST["plugin_releases_releases_id"];
-   $input["status"] = PluginReleasesRelease::CLOSED;
+   $input["status"] = Release::CLOSED;
    $r->update($input);
    $r->getFromDBByCrit(["id" => $_POST["plugin_releases_releases_id"]]);
    if ($CFG_GLPI['use_notifications']) {
@@ -91,7 +94,7 @@ if (isset($_POST["add"])) {
 
    $release->checkGlobal(READ);
 
-   Html::header(PluginReleasesRelease::getTypeName(2), '', "help", PluginReleasesRelease::getType());
+   Html::header(Release::getTypeName(2), '', "help", Release::class);
 
    $release->display($_GET);
 

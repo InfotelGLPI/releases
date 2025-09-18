@@ -27,14 +27,25 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Releases;
+
+use CommonDBTM;
+use CommonGLPI;
+use DbUtils;
+use Document;
+use Document_Item;
+use Dropdown;
+use Html;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginReleasesReview
+ * Class Review
  */
-class PluginReleasesReview extends CommonDBTM {
+class Review extends CommonDBTM {
 
    static $rightname = 'plugin_releases_releases';
 
@@ -45,7 +56,7 @@ class PluginReleasesReview extends CommonDBTM {
    /**
     * @param int $nb
     *
-    * @return translated
+    * @return string
     */
    static function getTypeName($nb = 0) {
 
@@ -54,7 +65,7 @@ class PluginReleasesReview extends CommonDBTM {
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
-      if ($item->getType() == PluginReleasesRelease::getType()) {
+      if ($item->getType() == Release::getType()) {
          return self::createTabEntry(self::getTypeName(1));
       }
 
@@ -63,7 +74,7 @@ class PluginReleasesReview extends CommonDBTM {
 
    static function countForItem(CommonDBTM $item) {
       $dbu   = new DbUtils();
-      $table = CommonDBTM::getTable(PluginReleasesReview::class);
+      $table = CommonDBTM::getTable(Review::class);
       return $dbu->countElementsInTable($table,
                                         ["plugin_releases_releases_id" => $item->getID()]);
    }
@@ -71,10 +82,10 @@ class PluginReleasesReview extends CommonDBTM {
 
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
-      if ($item->getType() == PluginReleasesRelease::getType()) {
+      if ($item->getType() == Release::getType()) {
          $self = new self();
          if (self::canCreate()) {
-            $review = new PluginReleasesReview();
+            $review = new Review();
             if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
                $ID = $review->getID();
             } else {
@@ -91,12 +102,12 @@ class PluginReleasesReview extends CommonDBTM {
       // Add document if needed, without notification
       $this->input = $this->addFiles($this->input, ['force_update' => true]);
 
-      $release = new PluginReleasesRelease();
+      $release = new Release();
       $release->getFromDB($this->input['plugin_releases_releases_id']);
-      if ($release->getField('status') < PluginReleasesRelease::REVIEW) {
+      if ($release->getField('status') < Release::REVIEW) {
          $val           = [];
          $val['id']     = $release->getID();
-         $val['status'] = PluginReleasesRelease::REVIEW;
+         $val['status'] = Release::REVIEW;
          $release->update($val);
       }
 
@@ -115,11 +126,11 @@ class PluginReleasesReview extends CommonDBTM {
     * @return void
     **/
    function post_purgeItem() {
-      $release = new PluginReleasesRelease();
+      $release = new Release();
       $release->getFromDB($this->getField("plugin_releases_releases_id"));
       $val           = [];
       $val['id']     = $this->getField("plugin_releases_releases_id");
-      $val['status'] = PluginReleasesRelease::FINALIZE;
+      $val['status'] = Release::FINALIZE;
       $release->update($val);
    }
 
@@ -179,7 +190,7 @@ class PluginReleasesReview extends CommonDBTM {
 
       echo "<td colspan='3'>";
       $document = new Document_Item();
-      $type     = PluginReleasesReview::getType();
+      $type     = Review::getType();
 
 
       $content_id = "content$rand";
@@ -249,9 +260,9 @@ class PluginReleasesReview extends CommonDBTM {
       echo "</tr>";
 
       $this->showFormButtons($options);
-      $release = new PluginReleasesRelease();
+      $release = new Release();
       $release->getFromDB($plugin_releases_releases_id);
-      if ($release->getField("status") == PluginReleasesRelease::REVIEW) {
+      if ($release->getField("status") == Release::REVIEW) {
          echo "<form method='post' action='" . $this->getFormURL() . "'>";
          echo "<br><table class='tab_cadre_fixe'>";
          echo "<tr class='tab_bg_2 center'>";
@@ -269,7 +280,7 @@ class PluginReleasesReview extends CommonDBTM {
 
    function prepareInputForAdd($input) {
 
-      $release = new PluginReleasesRelease();
+      $release = new Release();
       $release->getFromDB($input["plugin_releases_releases_id"]);
       $input["entities_id"] = $release->getField("entities_id");
 

@@ -30,11 +30,9 @@
  * ---------------------------------------------------------------------
  */
 
-/**
- * @since 9.1
- */
-
+use GlpiPlugin\Releases\Risktemplate;
 
 Session::checkLoginUser();
-$dropdown = new PluginReleasesRisktemplate();
+
+$dropdown = new Risktemplate();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");
