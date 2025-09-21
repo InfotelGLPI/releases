@@ -112,7 +112,7 @@ function plugin_version_releases()
       'name'           => _n('Release', 'Releases', 2, 'releases'),
       'version'      => PLUGIN_RELEASES_VERSION,
       'license'        => 'GPLv2+',
-      'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Alban Lesellier",
+      'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD, Alban LESELLIER",
       'homepage'       => 'https://github.com/InfotelGLPI/releases',
       'minGlpiVersion' => '11.0',// For compatibility / no install
       'requirements'   => [

@@ -93,7 +93,7 @@ class Releasetemplate_Item extends CommonDBRelation
     /**
      * Print the HTML array for Items linked to a problem
      *
-     * @param $problem Problem object
+     * @param $release Releasetemplate object
      *
      * @return void
      **/

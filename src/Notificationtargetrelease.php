@@ -44,6 +44,7 @@ use Log;
 use NotificationTarget;
 use NotificationTargetCommonITILObject;
 use CommonDBTM;
+use Planning;
 use Session;
 use Supplier;
 use Ticket;

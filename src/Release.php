@@ -740,7 +740,7 @@ class Release extends CommonITILObject
         if (isset($this->input["releasetemplates_id"])) {
             foreach ($relations_classes as $classname) {
                 if (!is_a($classname, CommonDBConnexity::class, true)) {
-                    Toolbox::logWarning(
+                    Toolbox::logInfo(
                         sprintf(
                             'Unable to clone elements of class %s as it does not extends "CommonDBConnexity"',
                             $classname

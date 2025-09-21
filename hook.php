@@ -55,35 +55,37 @@ use GlpiPlugin\Releases\TypeTest;
 /**
  * @return bool
  */
-function plugin_releases_install() {
-   global $DB;
+function plugin_releases_install()
+{
+    global $DB;
 
-   if (!$DB->tableExists("glpi_plugin_releases_releases")) {
+    if (!$DB->tableExists("glpi_plugin_releases_releases")) {
+        $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/empty-2.1.0.sql");
+        install_notifications();
+    } else {
+        $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/update-2.1.0.sql");
+    }
+    $rep_files_release = GLPI_PLUGIN_DOC_DIR . "/releases";
+    if (!is_dir($rep_files_release)) {
+        mkdir($rep_files_release);
+    }
 
-      $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/empty-2.1.0.sql");
-      install_notifications();
-   } else {
-       $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/update-2.1.0.sql");
-   }
-   $rep_files_release = GLPI_PLUGIN_DOC_DIR . "/releases";
-   if (!is_dir($rep_files_release)) {
-      mkdir($rep_files_release);
-   }
-
-   Profile::initProfile();
+    Profile::initProfile();
     Profile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
 
-   return true;
+    return true;
 }
+
 
 /**
  * @return bool
  */
-function plugin_releases_uninstall() {
-   global $DB;
+function plugin_releases_uninstall()
+{
+    global $DB;
 
 
-   $tables = [
+    $tables = [
       Release::getTable(),
       Review::getTable(),
       Change_Release::getTable(),
@@ -107,27 +109,32 @@ function plugin_releases_uninstall() {
       Releasetemplate_User::getTable(),
       Testtemplate::getTable(),
       Releasetemplate::getTable()
-   ];
+    ];
 
-   foreach ($tables as $table) {
-       if ($DB->tableExists($table)) {
-           $DB->dropTable($table, true);
-       }
-   }
+    foreach ($tables as $table) {
+        if ($DB->tableExists($table)) {
+            $DB->dropTable($table, true);
+        }
+    }
 
-   $tables_glpi = ["glpi_displaypreferences",
-                   "glpi_savedsearches",
-                   "glpi_logs",
-                   "glpi_documents_items",
-                   "glpi_notepads",
-                   "glpi_items_tickets",
-                   "glpi_knowbaseitems_items",
-                   "glpi_itilfollowups"
-   ];
+    $itemtypes = ['Alert',
+        'DisplayPreference',
+        'Document_Item',
+        'ImpactItem',
+        'Item_Ticket',
+        'Link_Itemtype',
+        'Notepad',
+        'SavedSearch',
+        'DropdownTranslation',
+        'NotificationTemplate',
+        'Notification'];
+    foreach ($itemtypes as $itemtype) {
+        $item = new $itemtype;
+        $item->deleteByCriteria(['itemtype' => Release::class]);
 
-   foreach ($tables_glpi as $table_glpi) {
-       $DB->delete($table_glpi, ['itemtype' => ['LIKE' => 'GlpiPlugin\Releases%']]);
-   }
+        $item = new $itemtype;
+        $item->deleteByCriteria(['itemtype' => Releasetemplate::class]);
+    }
 
    //TODO add drop profiles & menu in session ?
    //Delete rights associated with the plugin
@@ -136,69 +143,63 @@ function plugin_releases_uninstall() {
    //      $profileRight->deleteByCriteria(['name' => $right['field']]);
    //   }
 
-   $options = ['itemtype' => Release::class,
-               'event'    => 'newRelease',
-               'FIELDS'   => 'id'];
+    $options = ['itemtype' => Release::class];
 
-   $notif = new Notification();
+    $notif = new Notification();
     foreach ($DB->request([
         'FROM'  => 'glpi_notifications',
         'WHERE' => $options
     ]) as $data) {
         $notif->delete($data);
-   }
+    }
 
    //templates
-   $template       = new NotificationTemplate();
-   $translation    = new NotificationTemplateTranslation();
-   $notif_template = new Notification_NotificationTemplate();
-   $options        = ['itemtype' => Release::class,
-//                      'FIELDS'   => 'id'
-   ];
+    $template       = new NotificationTemplate();
+    $translation    = new NotificationTemplateTranslation();
+    $notif_template = new Notification_NotificationTemplate();
+    $options        = ['itemtype' => Release::class,
+    ];
 
     foreach ($DB->request([
         'FROM'  => 'glpi_notificationtemplates',
         'WHERE' => $options
     ]) as $data) {
-        $options_template = ['notificationtemplates_id' => $data['id'],
-                           'FIELDS'                   => 'id'];
+        $options_template = ['notificationtemplates_id' => $data['id']];
         foreach ($DB->request([
             'FROM'  => 'glpi_notificationtemplatetranslations',
             'WHERE' => $options_template
         ]) as $data_template) {
-
             $translation->delete($data_template);
-      }
-      $template->delete($data);
+        }
+        $template->delete($data);
 
         foreach ($DB->request([
             'FROM'  => 'glpi_notifications_notificationtemplates',
             'WHERE' => $options_template
         ]) as $data_template) {
-
             $notif_template->delete($data_template);
-      }
-   }
+        }
+    }
 
 
-   return true;
+    return true;
 }
 
-function plugin_releases_postinit() {
-   global $PLUGIN_HOOKS;
+function plugin_releases_postinit()
+{
+    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['item_purge']['releases'] = [];
-   $release                                = new Release();
-   $types                                  = $release->getAllTypesForHelpdesk();
-   if (isset($types) && is_array($types)) {
-      foreach ($types as $type => $name) {
-
-         $PLUGIN_HOOKS['item_purge']['releases'][$type]
+    $PLUGIN_HOOKS['item_purge']['releases'] = [];
+    $release                                = new Release();
+    $types                                  = $release->getAllTypesForHelpdesk();
+    if (isset($types) && is_array($types)) {
+        foreach ($types as $type => $name) {
+            $PLUGIN_HOOKS['item_purge']['releases'][$type]
             = [Release_Item::class, 'cleanForItem'];
 
-         CommonGLPI::registerStandardTab($type, Release_Item::class);
-      }
-   }
+            CommonGLPI::registerStandardTab($type, Release_Item::class);
+        }
+    }
 }
 
 // Define dropdown relations
@@ -286,10 +287,11 @@ function plugin_releases_postinit() {
 /**
  * @return array
  */
-function plugin_releases_getDropdown() {
+function plugin_releases_getDropdown()
+{
 
-   if (Plugin::isPluginActive("releases")) {
-      return [Deploytasktemplate::getType() => Deploytasktemplate::getTypeName(2),
+    if (Plugin::isPluginActive("releases")) {
+        return [Deploytasktemplate::getType() => Deploytasktemplate::getTypeName(2),
               Testtemplate::getType()       => Testtemplate::getTypeName(2),
               Risktemplate::getType()       => Risktemplate::getTypeName(2),
               Rollbacktemplate::getType()   => Rollbacktemplate::getTypeName(2),
@@ -298,10 +300,10 @@ function plugin_releases_getDropdown() {
               TypeTest::getType()           => TypeTest::getTypeName(2),
               TypeRisk::getType()           => TypeRisk::getTypeName(2)
 
-      ];
-   } else {
-      return [];
-   }
+        ];
+    } else {
+        return [];
+    }
 }
 
 /**
@@ -309,13 +311,14 @@ function plugin_releases_getDropdown() {
  *
  * @return mixed
  */
-function plugin_releases_AssignToTicket($types) {
-   if (Session::haveRight("plugin_releases_releases", "1")
+function plugin_releases_AssignToTicket($types)
+{
+    if (Session::haveRight("plugin_releases_releases", "1")
        && isset($_REQUEST["_itemtype"]) && $_REQUEST["_itemtype"] == "Ticket") {
-      $types[Release::class] = Release::getTypeName(2);
-   }
+        $types[Release::class] = Release::getTypeName(2);
+    }
 
-   return $types;
+    return $types;
 }
 
 
@@ -324,159 +327,164 @@ function plugin_releases_AssignToTicket($types) {
  *
  * @return bool for success (will die for most error)
  * */
-function install_notifications() {
+function install_notifications()
+{
 
-   global $DB;
+    global $DB;
 
-   $migration = new Migration(1.0);
+    $migration = new Migration(1.0);
 
    // Notification
    // Request
-    $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`) VALUES ('New release','GlpiPlugin\\Releases\\Release', NOW());";
-    $result = $DB->doQuery($query_id) or die($DB->error());
-    $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='GlpiPlugin\\Releases\\Release' AND `name` = 'New release'";
-    $result = $DB->doQuery($query_id) or die($DB->error());
-   $templates_id = $DB->result($result, 0, 'id');
+    $options_notif        = ['itemtype' => Release::class,
+        'name' => 'New release'];
+    $DB->insert(
+        "glpi_notificationtemplates",
+        $options_notif
+    );
 
-    $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
-VALUES('" . $templates_id . "',
-'##lang.pluginreleasesrelease.release## : ##pluginreleasesrelease.title##',
-'##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
-##lang.pluginreleasesrelease.url## : ##pluginreleasesrelease.url##
-##lang.pluginreleasesrelease.status## : ##pluginreleasesrelease.status##
+    foreach ($DB->request([
+        'FROM' => 'glpi_notificationtemplates',
+        'WHERE' => $options_notif]) as $data) {
+        $templates_id = $data['id'];
 
-##lang.pluginreleasesrelease.description## : ##pluginreleasesrelease.description##
+        if ($templates_id) {
+            $DB->insert(
+                "glpi_notificationtemplatetranslations",
+                [
+                    'notificationtemplates_id' => $templates_id,
+                    'subject' => '##lang.pluginreleasesrelease.release## : ##pluginreleasesrelease.title##',
+                    'content_text' => '##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
+                                    ##lang.pluginreleasesrelease.url## : ##pluginreleasesrelease.url##
+                                    ##lang.pluginreleasesrelease.status## : ##pluginreleasesrelease.status##
 
-##lang.pluginreleasesrelease.risks##
-##FOREACHrisks##
+                                    ##lang.pluginreleasesrelease.description## : ##pluginreleasesrelease.description##
 
-##lang.risk.name## : ##risk.name##
-##lang.risk.description## : ##risk.description##
+                                    ##lang.pluginreleasesrelease.risks##
+                                    ##FOREACHrisks##
 
-##ENDFOREACHrisks##
+                                    ##lang.risk.name## : ##risk.name##
+                                    ##lang.risk.description## : ##risk.description##
 
-##lang.pluginreleasesrelease.rollbacks##
-##FOREACHrollbacks##
+                                    ##ENDFOREACHrisks##
 
-##lang.rollback.name## : ##rollback.name##
-##lang.rollback.description## : ##rollback.description##
+                                    ##lang.pluginreleasesrelease.rollbacks##
+                                    ##FOREACHrollbacks##
 
-##ENDFOREACHrollbacks##
+                                    ##lang.rollback.name## : ##rollback.name##
+                                    ##lang.rollback.description## : ##rollback.description##
 
-##lang.pluginreleasesrelease.numberofrollbacks## : ##pluginreleasesrelease.numberofrollbacks##
+                                    ##ENDFOREACHrollbacks##
 
-
-##lang.pluginreleasesrelease.tasks##
-##FOREACHtasks##
-
-[##task.date##]
-##lang.task.author## : ##task.author##
-##lang.task.description## : ##task.description##
-##lang.task.time## : ##task.time##
-##lang.task.type## : ##task.type##
-##lang.task.status## : ##task.status##
-
-##ENDFOREACHtasks##
-
-##lang.pluginreleasesrelease.numberoftasks## : ##pluginreleasesrelease.numberoftasks##
-
-##lang.pluginreleasesrelease.tests##
-##FOREACHtests##
-
-##lang.test.author## ##test.author##
-##lang.test.description## ##test.description##
-##lang.test.type## ##test.type##
-##lang.test.status## : ##test.status##
-##ENDFOREACHtests##
+                                    ##lang.pluginreleasesrelease.numberofrollbacks## : ##pluginreleasesrelease.numberofrollbacks##
 
 
+                                    ##lang.pluginreleasesrelease.tasks##
+                                    ##FOREACHtasks##
 
-','');";
-    $DB->doQuery($query);
+                                    [##task.date##]
+                                    ##lang.task.author## : ##task.author##
+                                    ##lang.task.description## : ##task.description##
+                                    ##lang.task.time## : ##task.time##
+                                    ##lang.task.type## : ##task.type##
+                                    ##lang.task.status## : ##task.status##
 
-    $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
-              VALUES ('New release', 0, 'GlpiPlugin\\Releases\\Release', 'newRelease', 1);";
-    $DB->doQuery($query);
+                                    ##ENDFOREACHtasks##
 
-   //retrieve notification id
-    $query_id = "SELECT `id` FROM `glpi_notifications`
-               WHERE `name` = 'New release' AND `itemtype` = 'GlpiPlugin\\Releases\\Release' AND `event` = 'newRelease'";
-    $result = $DB->doQuery($query_id) or die ($DB->error());
-    $notification = $DB->result($result, 0, 'id');
+                                    ##lang.pluginreleasesrelease.numberoftasks## : ##pluginreleasesrelease.numberoftasks##
 
-    $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
-               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
-    $DB->doQuery($query);
-    //
+                                    ##lang.pluginreleasesrelease.tests##
+                                    ##FOREACHtests##
 
-    //
-   //      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
-   //              VALUES ('Consumable request', 0, 'PluginConsumablesRequest', 'ConsumableRequest', 1);";
-   //      $DB->query($query);
-   //
-   //      //retrieve notification id
-   //      $query_id = "SELECT `id` FROM `glpi_notifications`
-   //               WHERE `name` = 'Consumable request' AND `itemtype` = 'PluginConsumablesRequest' AND `event` = 'ConsumableRequest'";
-   //      $result = $DB->query($query_id) or die ($DB->error());
-   //      $notification = $DB->result($result, 0, 'id');
-   //
-   //      $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
-   //               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
-   //      $DB->query($query);
-   //
-   //      // Request validation
-   //      $query_id = "INSERT INTO `glpi_notificationtemplates`(`name`, `itemtype`, `date_mod`, `comment`, `css`) VALUES ('Consumables Request Validation','PluginConsumablesRequest', NOW(),'','');";
-   //      $result = $DB->query($query_id) or die($DB->error());
-   //      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginConsumablesRequest' AND `name` = 'Consumables Request Validation'";
-   //      $result = $DB->query($query_id) or die($DB->error());
-   //      $templates_id = $DB->result($result, 0, 'id');
-   //
-   //      $query = "INSERT INTO `glpi_notificationtemplatetranslations` (`notificationtemplates_id`, `subject`, `content_text`, `content_html`)
-   //VALUES('" . $templates_id . "', '##consumable.action## : ##consumable.entity##',
-   //'##FOREACHconsumabledatas##
-   //##lang.consumable.entity## :##consumable.entity##
-   //##lang.consumablerequest.requester## : ##consumablerequest.requester##
-   //##lang.consumablerequest.validator## : ##consumablerequest.validator##
-   //##lang.consumablerequest.consumabletype## : ##consumablerequest.consumabletype##
-   //##lang.consumablerequest.consumable## : ##consumablerequest.consumable##
-   //##lang.consumablerequest.number## : ##consumablerequest.number##
-   //##lang.consumablerequest.requestdate## : ##consumablerequest.requestdate##
-   //##lang.consumablerequest.status## : ##consumablerequest.status##
-   //##ENDFOREACHconsumabledatas##
-   //##lang.consumablerequest.comment## : ##consumablerequest.comment##',
-   //'##FOREACHconsumabledatas##&lt;br /&gt; &lt;br /&gt;
-   //&lt;p&gt;##lang.consumable.entity## :##consumable.entity##&lt;br /&gt; &lt;br /&gt;
-   //##lang.consumablerequest.requester## : ##consumablerequest.requester##&lt;br /&gt;
-   //##lang.consumablerequest.validator## : ##consumablerequest.validator##&lt;br /&gt;
-   //##lang.consumablerequest.consumabletype## : ##consumablerequest.consumabletype##&lt;br /&gt;
-   //##lang.consumablerequest.consumable## : ##consumablerequest.consumable##&lt;br /&gt;
-   //##lang.consumablerequest.number## : ##consumablerequest.number##&lt;br /&gt;
-   //##lang.consumablerequest.requestdate## : ##consumablerequest.requestdate##&lt;br /&gt;
-   //##lang.consumablerequest.status## : ##consumablerequest.status##&lt;br /&gt;
-   //##lang.consumablerequest.comment## : ##consumablerequest.comment##&lt;br /&gt;
-   //##ENDFOREACHconsumabledatas##');";
-   //      $DB->query($query);
-   //
-   //      $query = "INSERT INTO `glpi_notifications` (`name`, `entities_id`, `itemtype`, `event`, `is_recursive`)
-   //              VALUES ('Consumable request validation', 0, 'PluginConsumablesRequest', 'ConsumableResponse', 1);";
-   //      $DB->query($query);
-   //
-   //      //retrieve notification id
-   //      $query_id = "SELECT `id` FROM `glpi_notifications`
-   //               WHERE `name` = 'Consumable request validation' AND `itemtype` = 'PluginConsumablesRequest'
-   //               AND `event` = 'ConsumableResponse'";
-   //      $result = $DB->query($query_id) or die ($DB->error());
-   //      $notification = $DB->result($result, 0, 'id');
-   //
-   //      $query = "INSERT INTO `glpi_notifications_notificationtemplates` (`notifications_id`, `mode`, `notificationtemplates_id`)
-   //               VALUES (" . $notification . ", 'mailing', " . $templates_id . ");";
-   //      $DB->query($query);
+                                    ##lang.test.author## ##test.author##
+                                    ##lang.test.description## ##test.description##
+                                    ##lang.test.type## ##test.type##
+                                    ##lang.test.status## : ##test.status##
+                                    ##ENDFOREACHtests##',
+                                                        'content_html' => '##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
+                                    ##lang.pluginreleasesrelease.url## : ##pluginreleasesrelease.url##
+                                    ##lang.pluginreleasesrelease.status## : ##pluginreleasesrelease.status##
 
-   $migration->executeMigration();
+                                    ##lang.pluginreleasesrelease.description## : ##pluginreleasesrelease.description##
 
-   return true;
+                                    ##lang.pluginreleasesrelease.risks##
+                                    ##FOREACHrisks##
+
+                                    ##lang.risk.name## : ##risk.name##
+                                    ##lang.risk.description## : ##risk.description##
+
+                                    ##ENDFOREACHrisks##
+
+                                    ##lang.pluginreleasesrelease.rollbacks##
+                                    ##FOREACHrollbacks##
+
+                                    ##lang.rollback.name## : ##rollback.name##
+                                    ##lang.rollback.description## : ##rollback.description##
+
+                                    ##ENDFOREACHrollbacks##
+
+                                    ##lang.pluginreleasesrelease.numberofrollbacks## : ##pluginreleasesrelease.numberofrollbacks##
 
 
+                                    ##lang.pluginreleasesrelease.tasks##
+                                    ##FOREACHtasks##
+
+                                    [##task.date##]
+                                    ##lang.task.author## : ##task.author##
+                                    ##lang.task.description## : ##task.description##
+                                    ##lang.task.time## : ##task.time##
+                                    ##lang.task.type## : ##task.type##
+                                    ##lang.task.status## : ##task.status##
+
+                                    ##ENDFOREACHtasks##
+
+                                    ##lang.pluginreleasesrelease.numberoftasks## : ##pluginreleasesrelease.numberoftasks##
+
+                                    ##lang.pluginreleasesrelease.tests##
+                                    ##FOREACHtests##
+
+                                    ##lang.test.author## ##test.author##
+                                    ##lang.test.description## ##test.description##
+                                    ##lang.test.type## ##test.type##
+                                    ##lang.test.status## : ##test.status##
+                                    ##ENDFOREACHtests##',
+                ]
+            );
+
+            $DB->insert(
+                "glpi_notifications",
+                [
+                    'name' => 'New release',
+                    'entities_id' => 0,
+                    'itemtype' => Release::class,
+                    'event' => 'newRelease',
+                    'is_recursive' => 1,
+                ]
+            );
+
+            $options_notif        = ['itemtype' => Release::class,
+                'name' => 'New release',
+                'event' => 'newRelease'];
+
+            foreach ($DB->request([
+                'FROM' => 'glpi_notifications',
+                'WHERE' => $options_notif]) as $data_notif) {
+                $notification = $data_notif['id'];
+                if ($notification) {
+                    $DB->insert(
+                        "glpi_notifications_notificationtemplates",
+                        [
+                            'notifications_id' => $notification,
+                            'mode' => 'mailing',
+                            'notificationtemplates_id' => $templates_id,
+                        ]
+                    );
+                }
+            }
+        }
+    }
+
+    $migration->executeMigration();
+
+    return true;
 }
-
-
