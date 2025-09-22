@@ -44,31 +44,37 @@ Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
 
 if (isset($_POST["update"])) {
-   $link->check($_POST["id"], UPDATE);
+    $link->check($_POST["id"], UPDATE);
 
-   $link->update($_POST);
-   echo "<script type='text/javascript' >\n";
-   echo "window.parent.location.reload();";
-   echo "</script>";
+    $link->update($_POST);
+    echo "<script type='text/javascript' >\n";
+    echo "window.parent.location.reload();";
+    echo "</script>";
+} elseif (isset($_POST['delete'])) {
+    $link->check($_POST['id'], DELETE);
+    $link->delete($_POST);
 
-} else if (isset($_POST['delete'])) {
-   $link->check($_POST['id'], DELETE);
-   $link->delete($_POST);
+    Event::log(
+        $link->fields['plugin_releases_releases_id'],
+        "plugin_releases",
+        4,
+        "maintain",
+        sprintf(__('%s deletes an actor'), $_SESSION["glpiname"])
+    );
 
-   Event::log($link->fields['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
-              sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]));
 
+    if ($item->can($link->fields["plugin_releases_releases_id"], READ)) {
+        Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releases_id']));
+    }
+    Session::addMessageAfterRedirect(
+        __('You have been redirected because you no longer have access to this item'),
+        true,
+        ERROR
+    );
 
-   if ($item->can($link->fields["plugin_releases_releases_id"], READ)) {
-      Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releases_id']));
-   }
-   Session::addMessageAfterRedirect(__('You have been redirected because you no longer have access to this item'),
-                                    true, ERROR);
-
-   Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/release.php");
-
-} else if (isset($_GET["id"])) {
-   $link->showUserNotificationForm($_GET["id"]);
+    Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/release.php");
+} elseif (isset($_GET["id"])) {
+    $link->showUserNotificationForm($_GET["id"]);
 } else {
     throw new BadRequestHttpException('Lost');
 }

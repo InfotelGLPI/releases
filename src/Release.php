@@ -3447,7 +3447,15 @@ class Release extends CommonITILObject
 
                 if ($p['followups']
                     && ($p['output_type'] == Search::HTML_OUTPUT)) {
-                    $eigth_column .= ITILFollowup::showShortForITILObject($item->fields["id"], static::class);
+                    $eigth_column = sprintf(
+                        __('%1$s (%2$s)'),
+                        $eigth_column,
+                        sprintf(
+                            __('%1$s - %2$s'),
+                            $item->numberOfFollowups($showprivate),
+                            $item->numberOfTasks($showprivate)
+                        )
+                    );
                 } else {
                     $eigth_column = sprintf(
                         __('%1$s (%2$s)'),
