@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-22 17:25+0000\n"
+"POT-Creation-Date: 2025-09-23 12:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,8 +51,8 @@ msgstr ""
 msgid "%s / %s tests"
 msgstr ""
 
-#: front/finalization.php:95 front/finalization.php:110
-#: src/Finalization.php:210
+#: src/Finalization.php:210 front/finalization.php:95
+#: front/finalization.php:110
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr ""
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Confirm the final deletion?"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:736 src/Review.php:164
+#: src/Review.php:164 src/Notificationtargetrelease.php:736
 msgid "Conforming realization"
 msgstr ""
 
@@ -199,17 +199,17 @@ msgstr[1] ""
 msgid "Deploy Task type"
 msgstr ""
 
-#: src/Deploytask.php:73 src/Finalization.php:208
+#: src/Finalization.php:208 src/Release.php:1984 src/Release.php:1986
 #: src/Notificationtargetrelease.php:879 src/Notificationtargetrelease.php:899
-#: src/Release.php:1984 src/Release.php:1986 src/Releasetemplate.php:186
-#: src/Releasetemplate.php:754 src/Releasetemplate.php:1335
-#: src/Releasetemplate.php:1336 templates/timeline.html.twig:95
+#: src/Releasetemplate.php:186 src/Releasetemplate.php:754
+#: src/Releasetemplate.php:1335 src/Releasetemplate.php:1336
+#: src/Deploytask.php:73 templates/timeline.html.twig:95
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Notificationtargetrelease.php:841 src/Typedeploytask.php:56
+#: src/Typedeploytask.php:56 src/Notificationtargetrelease.php:841
 msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] ""
@@ -247,8 +247,8 @@ msgid_plural "Entities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Deploytask.php:346 src/Deploytask.php:1105 src/Release.php:807
-#: src/Test.php:324 src/Test.php:363 templates/form_deploytask.html.twig:49
+#: src/Test.php:324 src/Test.php:363 src/Release.php:807 src/Deploytask.php:346
+#: src/Deploytask.php:1105 templates/form_deploytask.html.twig:49
 #: templates/form_deploytask.html.twig:56
 #: templates/form_deploytask.html.twig:63
 #: templates/form_deploytask.html.twig:289 templates/form_test.html.twig:50 templates/form_test.html.twig:53
@@ -276,7 +276,7 @@ msgstr ""
 msgid "Group in charge of the release"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:738 src/Review.php:176
+#: src/Review.php:176 src/Notificationtargetrelease.php:738
 msgid "Incidents during process"
 msgstr ""
 
@@ -311,22 +311,22 @@ msgstr ""
 msgid "Not yet completed"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:721 src/Release.php:265
+#: src/Release.php:265 src/Notificationtargetrelease.php:721
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:727 src/Release.php:278
+#: src/Release.php:278 src/Notificationtargetrelease.php:727
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:848 src/Release.php:305
+#: src/Release.php:305 src/Notificationtargetrelease.php:848
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:734 src/Release.php:291
+#: src/Release.php:291 src/Notificationtargetrelease.php:734
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr ""
@@ -370,14 +370,14 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr ""
 
-#: src/Change_release.php:342 src/Notificationtargetrelease.php:735
-#: src/Review.php:154
+#: src/Change_release.php:342 src/Review.php:154
+#: src/Notificationtargetrelease.php:735
 msgid "Real production run date"
 msgstr ""
 
-#: setup.php:112 front/change_release.form.php:52
-#: src/Notificationtargetrelease.php:903 src/Profile.php:60 src/Release.php:108
-#: src/Releasetemplate.php:971
+#: setup.php:112 src/Release.php:108 src/Notificationtargetrelease.php:903
+#: src/Profile.php:60 src/Releasetemplate.php:971
+#: front/change_release.form.php:52
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] ""
@@ -425,10 +425,10 @@ msgstr[1] ""
 msgid "Reviewed"
 msgstr ""
 
-#: src/Deploytasktemplate.php:344 src/Finalization.php:190
-#: src/Notificationtargetrelease.php:754 src/Notificationtargetrelease.php:881
-#: src/Notificationtargetrelease.php:901 src/Risk.php:56
-#: src/Testtemplate.php:75 templates/timeline.html.twig:91
+#: src/Finalization.php:190 src/Testtemplate.php:75 src/Risk.php:56
+#: src/Deploytasktemplate.php:344 src/Notificationtargetrelease.php:754
+#: src/Notificationtargetrelease.php:881 src/Notificationtargetrelease.php:901
+#: templates/timeline.html.twig:91
 msgid "Risk"
 msgid_plural "Risk"
 msgstr[0] ""
@@ -440,8 +440,8 @@ msgid_plural "Risk templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Notificationtargetrelease.php:719 src/Risktemplate.php:168
-#: src/Typerisk.php:54 templates/form_risk.html.twig:143
+#: src/Typerisk.php:54 src/Notificationtargetrelease.php:719
+#: src/Risktemplate.php:168 templates/form_risk.html.twig:143
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] ""
@@ -514,9 +514,10 @@ msgstr[1] ""
 msgid "Technical Support Document"
 msgstr ""
 
-#: src/Finalization.php:220 src/Notificationtargetrelease.php:880
-#: src/Notificationtargetrelease.php:900 src/Releasetemplate.php:178
-#: src/Releasetemplate.php:705 src/Test.php:60 templates/timeline.html.twig:89
+#: src/Finalization.php:220 src/Test.php:60
+#: src/Notificationtargetrelease.php:880 src/Notificationtargetrelease.php:900
+#: src/Releasetemplate.php:178 src/Releasetemplate.php:705
+#: templates/timeline.html.twig:89
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] ""
@@ -528,8 +529,8 @@ msgid_plural "Test templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Notificationtargetrelease.php:732 src/Testtemplate.php:70
-#: src/Testtemplate.php:179 src/Typetest.php:54 templates/form_test.html.twig:155
+#: src/Testtemplate.php:70 src/Testtemplate.php:179 src/Typetest.php:54
+#: src/Notificationtargetrelease.php:732 templates/form_test.html.twig:155
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] ""
