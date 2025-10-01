@@ -958,7 +958,7 @@ class Deploytask extends CommonDBTM
             $html .= "<strong>" . __('End date') . "</strong> : " . Html::convdatetime($val["end"]) . "<br>";
         }
        //      if ($val["type"]) {
-       //         $html .= "<strong>" . PluginResourcesTaskType::getTypeName(1) . "</strong> : " .
+       //         $html .= "<strong>" . TaskType::getTypeName(1) . "</strong> : " .
        //            $val["type"] . "<br>";
        //      }
         if ($val["content"]) {

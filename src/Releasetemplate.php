@@ -1568,7 +1568,7 @@ class Releasetemplate extends CommonDropdown {
          $timeline_index++;
       }
       if (count($timeline) == 0) {
-         $display = "<br><br><div align='center'><h3 class='noinfo'>";
+         $display = "<br><br><div class='center'><h3 class='noinfo'>";
          $display .= __("No data available", 'releases');
          $display .= "</h3></div>";
          echo $display;
