@@ -2197,12 +2197,7 @@ class Release extends CommonITILObject
                     echo "</div>";
 
                     echo "<span class='h_user_name'>";
-                    $userdata = getUserName($item_i['users_id']);
-                    echo $user->getLink() . "&nbsp;";
-                    echo Html::showToolTip(
-                        $userdata["comment"],
-                        ['link' => $userdata['link']]
-                    );
+                    echo $user->getLink();
                     echo "</span>";
                 } else {
                     echo __("Requester");
@@ -2455,7 +2450,6 @@ class Release extends CommonITILObject
                 && $item_i['users_id_editor'] > 0) {
                 echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
                 $user->getFromDB($item_i['users_id_editor']);
-                $userdata = getUserName($item_i['users_id_editor']);
                 if (isset($item_i['date_mod'])) {
                     echo sprintf(
                         __('Last edited on %1$s by %2$s'),
@@ -2463,10 +2457,6 @@ class Release extends CommonITILObject
                         $user->getLink()
                     );
                 }
-                echo Html::showToolTip(
-                    $userdata["comment"],
-                    ['link' => $userdata['link']]
-                );
                 echo "</div>";
             }
 
@@ -3322,18 +3312,7 @@ class Release extends CommonITILObject
             $fourth_col = "";
 
             foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
-                $userdata = getUserName($d["users_id"]);
-                $fourth_col .= sprintf(
-                    __('%1$s %2$s'),
-                    "<span class='b'>" . $userdata['name'] . "</span>",
-                    Html::showToolTip(
-                        $userdata["comment"],
-                        [
-                            'link' => $userdata["link"],
-                            'display' => false,
-                        ]
-                    )
-                );
+                $fourth_col .= "<span class='b'>" . getUserName($d["users_id"]) . "</span>";
                 $fourth_col .= "<br>";
             }
 
@@ -3355,18 +3334,7 @@ class Release extends CommonITILObject
                 if ($anonymize_helpdesk) {
                     $fifth_col .= __("Helpdesk");
                 } else {
-                    $userdata = getUserName($d["users_id"]);
-                    $fifth_col .= sprintf(
-                        __('%1$s %2$s'),
-                        "<span class='b'>" . $userdata['name'] . "</span>",
-                        Html::showToolTip(
-                            $userdata["comment"],
-                            [
-                                'link' => $userdata["link"],
-                                'display' => false,
-                            ]
-                        )
-                    );
+                    $fifth_col .= "<span class='b'>" . getUserName($d["users_id"]) . "</span>";
                 }
 
                 $fifth_col .= "<br>";
