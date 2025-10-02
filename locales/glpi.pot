@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-01 10:16+0000\n"
+"POT-Creation-Date: 2025-10-02 11:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,7 +83,7 @@ msgctxt "button"
 msgid "Add a followup"
 msgstr ""
 
-#: src/Change_release.php:298
+#: src/Change_Release.php:298
 msgid "Add a release"
 msgstr ""
 
@@ -135,7 +135,7 @@ msgstr ""
 msgid "Child entities"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:74
+#: src/NotificationTargetRelease.php:74
 msgid "Closure of a releases"
 msgstr ""
 
@@ -160,7 +160,7 @@ msgstr ""
 msgid "Confirm the final deletion?"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:736 src/Review.php:164
+#: src/Review.php:164 src/NotificationTargetRelease.php:736
 msgid "Conforming realization"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgctxt "button"
 msgid "Delete permanently"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:75
+#: src/NotificationTargetRelease.php:75
 msgid "Deleting a releases"
 msgstr ""
 
@@ -197,9 +197,9 @@ msgstr[1] ""
 msgid "Deploy Task type"
 msgstr ""
 
-#: src/Release.php:1984 src/Release.php:1986
-#: src/Notificationtargetrelease.php:879 src/Notificationtargetrelease.php:899
-#: src/Finalization.php:208 src/Deploytask.php:73 src/Releasetemplate.php:186
+#: src/Release.php:1984 src/Release.php:1986 src/Finalization.php:208
+#: src/NotificationTargetRelease.php:879 src/NotificationTargetRelease.php:899
+#: src/Deploytask.php:73 src/Releasetemplate.php:186
 #: src/Releasetemplate.php:754 src/Releasetemplate.php:1335
 #: src/Releasetemplate.php:1336 templates/timeline.html.twig:95
 msgid "Deploy task"
@@ -207,7 +207,7 @@ msgid_plural "Deploy tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Notificationtargetrelease.php:841 src/Typedeploytask.php:56
+#: src/TypeDeployTask.php:56 src/NotificationTargetRelease.php:841
 msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] ""
@@ -276,11 +276,11 @@ msgstr ""
 msgid "Group in charge of the release"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:738 src/Review.php:176
+#: src/Review.php:176 src/NotificationTargetRelease.php:738
 msgid "Incidents during process"
 msgstr ""
 
-#: src/Change_release.php:61
+#: src/Change_Release.php:61
 msgid "Link Release/Change"
 msgid_plural "Links Release/Change"
 msgstr[0] ""
@@ -290,7 +290,7 @@ msgstr[1] ""
 msgid "Mark as failed"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:72
+#: src/NotificationTargetRelease.php:72
 msgid "New release"
 msgstr ""
 
@@ -311,22 +311,22 @@ msgstr ""
 msgid "Not yet completed"
 msgstr ""
 
-#: src/Release.php:265 src/Notificationtargetrelease.php:721
+#: src/Release.php:265 src/NotificationTargetRelease.php:721
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr ""
 
-#: src/Release.php:278 src/Notificationtargetrelease.php:727
+#: src/Release.php:278 src/NotificationTargetRelease.php:727
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr ""
 
-#: src/Release.php:305 src/Notificationtargetrelease.php:848
+#: src/Release.php:305 src/NotificationTargetRelease.php:848
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr ""
 
-#: src/Release.php:291 src/Notificationtargetrelease.php:734
+#: src/Release.php:291 src/NotificationTargetRelease.php:734
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr ""
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Plan this task"
 msgstr ""
 
-#: src/Change_release.php:340 src/Releasetemplate.php:660
+#: src/Change_Release.php:340 src/Releasetemplate.php:660
 #: templates/fields_panel.html.twig:117
 msgid "Pre-production planned date"
 msgstr ""
@@ -356,7 +356,7 @@ msgstr ""
 msgid "Processing release"
 msgstr ""
 
-#: src/Change_release.php:341 src/Releasetemplate.php:665
+#: src/Change_Release.php:341 src/Releasetemplate.php:665
 #: templates/fields_panel.html.twig:124
 msgid "Production planned date"
 msgstr ""
@@ -370,13 +370,13 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:735 src/Review.php:154
-#: src/Change_release.php:342
+#: src/Change_Release.php:342 src/Review.php:154
+#: src/NotificationTargetRelease.php:735
 msgid "Real production run date"
 msgstr ""
 
 #: setup.php:112 front/change_release.form.php:52 src/Release.php:108
-#: src/Notificationtargetrelease.php:903 src/Profile.php:60
+#: src/Profile.php:60 src/NotificationTargetRelease.php:903
 #: src/Releasetemplate.php:971
 msgid "Release"
 msgid_plural "Releases"
@@ -387,7 +387,7 @@ msgstr[1] ""
 msgid "Release actions details"
 msgstr ""
 
-#: src/Change_release.php:339 src/Releasetemplate.php:651
+#: src/Change_Release.php:339 src/Releasetemplate.php:651
 #: src/Releasetemplate.php:877
 msgid "Release area"
 msgstr ""
@@ -425,12 +425,12 @@ msgstr[1] ""
 msgid "Reviewed"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:754 src/Notificationtargetrelease.php:881
-#: src/Notificationtargetrelease.php:901 src/Finalization.php:190
-#: src/Deploytasktemplate.php:344 src/Testtemplate.php:75 src/Risk.php:56
-#: templates/timeline.html.twig:91
+#: src/Finalization.php:190 src/Deploytasktemplate.php:344
+#: src/Testtemplate.php:75 src/NotificationTargetRelease.php:754
+#: src/NotificationTargetRelease.php:881 src/NotificationTargetRelease.php:901
+#: src/Risk.php:56 templates/timeline.html.twig:91
 msgid "Risk"
-msgid_plural "Risks"
+msgid_plural "Risk"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -440,8 +440,8 @@ msgid_plural "Risk templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Notificationtargetrelease.php:719 src/Risktemplate.php:168
-#: src/Typerisk.php:54 templates/form_risk.html.twig:143
+#: src/TypeRisk.php:54 src/NotificationTargetRelease.php:719
+#: src/Risktemplate.php:168 templates/form_risk.html.twig:143
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] ""
@@ -451,10 +451,11 @@ msgstr[1] ""
 msgid "Risks defined"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:755 src/Notificationtargetrelease.php:756
-#: src/Notificationtargetrelease.php:882 src/Notificationtargetrelease.php:902
-#: src/Finalization.php:199 src/Rollback.php:58 src/Releasetemplate.php:182
-#: src/Releasetemplate.php:729 templates/timeline.html.twig:93
+#: src/Finalization.php:199 src/NotificationTargetRelease.php:755
+#: src/NotificationTargetRelease.php:756 src/NotificationTargetRelease.php:882
+#: src/NotificationTargetRelease.php:902 src/Rollback.php:58
+#: src/Releasetemplate.php:182 src/Releasetemplate.php:729
+#: templates/timeline.html.twig:93
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] ""
@@ -477,7 +478,7 @@ msgctxt "button"
 msgid "Save"
 msgstr ""
 
-#: src/Release.php:335 src/Change_release.php:343 src/Releasetemplate.php:166
+#: src/Release.php:335 src/Change_Release.php:343 src/Releasetemplate.php:166
 #: src/Releasetemplate.php:677 src/Releasetemplate.php:889
 #: templates/fields_panel.html.twig:196 templates/fields_panel.html.twig:208
 msgid "Service shutdown"
@@ -512,9 +513,10 @@ msgstr[1] ""
 msgid "Technical Support Document"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:880 src/Notificationtargetrelease.php:900
-#: src/Finalization.php:220 src/Test.php:60 src/Releasetemplate.php:178
-#: src/Releasetemplate.php:705 templates/timeline.html.twig:89
+#: src/Finalization.php:220 src/Test.php:60
+#: src/NotificationTargetRelease.php:880 src/NotificationTargetRelease.php:900
+#: src/Releasetemplate.php:178 src/Releasetemplate.php:705
+#: templates/timeline.html.twig:89
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] ""
@@ -526,8 +528,8 @@ msgid_plural "Test templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Notificationtargetrelease.php:732 src/Testtemplate.php:70
-#: src/Testtemplate.php:179 src/Typetest.php:54
+#: src/Testtemplate.php:70 src/Testtemplate.php:179
+#: src/NotificationTargetRelease.php:732 src/TypeTest.php:54
 #: templates/form_test.html.twig:155
 msgid "Test type"
 msgid_plural "Test types"
@@ -565,7 +567,7 @@ msgstr ""
 msgid "Toggle panels width"
 msgstr ""
 
-#: src/Notificationtargetrelease.php:73
+#: src/NotificationTargetRelease.php:73
 msgid "Update of a release"
 msgstr ""
 
