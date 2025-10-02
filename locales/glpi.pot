@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-02 11:04+0000\n"
+"POT-Creation-Date: 2025-10-02 15:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3023
+#: src/Release.php:3013
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -113,7 +113,7 @@ msgstr[1] ""
 msgid "Associated risk"
 msgstr ""
 
-#: src/Release.php:2433 src/Releasetemplate.php:1527
+#: src/Release.php:2428 src/Releasetemplate.php:1527
 msgid "Associated with"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Conforming realization"
 msgstr ""
 
-#: src/Release.php:2662 src/Releasetemplate.php:998
+#: src/Release.php:2652 src/Releasetemplate.php:998
 msgid "Create a release"
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: src/Release.php:2643 templates/fields_panel.html.twig:100
+#: src/Release.php:2633 templates/fields_panel.html.twig:100
 msgid "For this change"
 msgstr ""
 
@@ -294,11 +294,11 @@ msgstr ""
 msgid "New release"
 msgstr ""
 
-#: src/Release.php:2484 src/Releasetemplate.php:1572
+#: src/Release.php:2474 src/Releasetemplate.php:1572
 msgid "No data available"
 msgstr ""
 
-#: src/Release.php:3027 src/Release.php:3074
+#: src/Release.php:3017 src/Release.php:3064
 msgid "No release found."
 msgstr ""
 
@@ -383,7 +383,7 @@ msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:2877 src/Releasetemplate.php:1609
+#: src/Release.php:2867 src/Releasetemplate.php:1609
 msgid "Release actions details"
 msgstr ""
 
@@ -406,7 +406,7 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3062
+#: src/Release.php:3052
 msgid "Releases on linked items"
 msgstr ""
 
