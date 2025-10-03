@@ -436,7 +436,7 @@ msgstr "Onaylanmış"
 msgid "Risk"
 msgid_plural "Risk"
 msgstr[0] "Risk"
-msgstr[1] "Risk"
+msgstr[1] "Riskler"
 
 #: src/Risktemplate.php:66 templates/form_risk.html.twig:116
 msgid "Risk template"
