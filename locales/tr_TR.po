@@ -530,7 +530,7 @@ msgstr[1] "Sınamalar"
 msgid "Test template"
 msgid_plural "Test templates"
 msgstr[0] "Deneme kalıbı"
-msgstr[1] "Deneme kalıpları"
+msgstr[1] "Sınama kalıpları"
 
 #: src/Testtemplate.php:70 src/Testtemplate.php:179
 #: src/NotificationTargetRelease.php:732 src/TypeTest.php:54
