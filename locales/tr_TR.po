@@ -524,7 +524,7 @@ msgstr "Teknik destek belgesi"
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Deneme"
-msgstr[1] "Denemeler"
+msgstr[1] "Sınamalar"
 
 #: src/Testtemplate.php:61 templates/form_test.html.twig:128
 msgid "Test template"
