@@ -63,7 +63,7 @@ msgstr "%s dağıtım görevi tamamlanamadı"
 #: front/finalization.php:98 front/finalization.php:113
 #, php-format
 msgid "%s tests failed"
-msgstr "%s deneme tamamlanamadı"
+msgstr "%s sınama tamamlanamadı"
 
 #: templates/fields_panel.html.twig:150
 msgid "Actors"
