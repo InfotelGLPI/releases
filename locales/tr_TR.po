@@ -32,7 +32,7 @@ msgstr[1] "%d son sürüm"
 #: src/Finalization.php:222
 #, php-format
 msgid "%s  tests failed"
-msgstr "%s deneme tamamlanamadı"
+msgstr "%s sınama tamamlanamadı"
 
 #: src/Finalization.php:209
 #, php-format
