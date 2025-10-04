@@ -52,7 +52,7 @@ msgstr "%s / %s geri alma"
 #: src/Finalization.php:221
 #, php-format
 msgid "%s / %s tests"
-msgstr "%s / %s deneme"
+msgstr "%s / %s sınama"
 
 #: front/finalization.php:95 front/finalization.php:110
 #: src/Finalization.php:210
