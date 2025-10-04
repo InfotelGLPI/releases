@@ -98,7 +98,7 @@ msgstr "Bir risk ekle"
 #: src/Release.php:1230
 msgctxt "button"
 msgid "Add a rollback"
-msgstr "Bir geri alma eklem"
+msgstr "Bir geri alma ekle"
 
 #: src/Release.php:1268
 msgctxt "button"
