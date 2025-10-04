@@ -538,7 +538,7 @@ msgstr[1] "Sınama kalıpları"
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Deneme türü"
-msgstr[1] "Deneme türleri"
+msgstr[1] "Sınama türleri"
 
 #: src/Release.php:803
 msgid "Tests in progress"
