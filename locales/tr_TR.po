@@ -523,7 +523,7 @@ msgstr "Teknik destek belgesi"
 #: templates/timeline.html.twig:89
 msgid "Test"
 msgid_plural "Tests"
-msgstr[0] "Deneme"
+msgstr[0] "Sınama"
 msgstr[1] "Sınamalar"
 
 #: src/Testtemplate.php:61 templates/form_test.html.twig:128
