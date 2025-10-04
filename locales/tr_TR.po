@@ -529,7 +529,7 @@ msgstr[1] "Sınamalar"
 #: src/Testtemplate.php:61 templates/form_test.html.twig:128
 msgid "Test template"
 msgid_plural "Test templates"
-msgstr[0] "Deneme kalıbı"
+msgstr[0] "Sınama kalıbı"
 msgstr[1] "Sınama kalıpları"
 
 #: src/Testtemplate.php:70 src/Testtemplate.php:179
