@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-01 10:16+0000\n"
+"POT-Creation-Date: 2025-10-08 15:25+0200\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2025\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12376/fr_FR/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3023
+#: src/Release.php:3013
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -67,13 +67,16 @@ msgstr "%s tâches de déploiement échouées"
 msgid "%s tests failed"
 msgstr "%s tests échoués"
 
-#: templates/fields_panel.html.twig:150
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/fields_panel.html.twig:150
 msgid "Actors"
 msgstr "Acteurs"
 
-#: templates/form_risk.html.twig:194 templates/form_rollback.html.twig:164
-#: templates/footer.html.twig:125 templates/footer.html.twig:127
-#: templates/form_deploytask.html.twig:377 templates/form_test.html.twig:236
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:125
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:127
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:377
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:194
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:164
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:236
 msgctxt "button"
 msgid "Add"
 msgstr "Ajouter"
@@ -88,7 +91,7 @@ msgctxt "button"
 msgid "Add a followup"
 msgstr "Ajouter un suivi"
 
-#: src/Change_release.php:298
+#: src/Change_Release.php:298
 msgid "Add a release"
 msgstr "Créer une mise en production"
 
@@ -107,19 +110,20 @@ msgctxt "button"
 msgid "Add a test"
 msgstr "Ajouter un test"
 
-#: templates/fields_panel.html.twig:168
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/fields_panel.html.twig:168
 msgid "Associated change"
 msgid_plural "Associated changes"
 msgstr[0] "Changement associé"
 msgstr[1] "Changements associés"
 msgstr[2] "Changements associés"
 
-#: src/Testtemplate.php:199 templates/form_deploytask.html.twig:262
-#: templates/form_test.html.twig:190
+#: src/Testtemplate.php:199
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:262
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:190
 msgid "Associated risk"
 msgstr "Risque associé"
 
-#: src/Release.php:2433 src/Releasetemplate.php:1527
+#: src/Release.php:2428 src/Releasetemplate.php:1527
 msgid "Associated with"
 msgstr "Associé avec"
 
@@ -127,7 +131,7 @@ msgstr "Associé avec"
 msgid "Care all steps are not finish !"
 msgstr "Attention toutes les étapes ne sont pas terminées !"
 
-#: templates/form_deploytask.html.twig:245
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:245
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Catégorie"
@@ -138,21 +142,16 @@ msgstr[2] "Catégories"
 msgid "Changes defined"
 msgstr "Changements définis"
 
-#: templates/fields_panel.html.twig:89
-msgid "Child entities"
-msgstr "Sous-entités"
-
-#: src/Notificationtargetrelease.php:74
+#: src/NotificationTargetRelease.php:74
 msgid "Closure of a releases"
 msgstr "Clôture d'une mise en production"
 
 #: src/Release.php:352 src/Releasetemplate.php:915
-#: templates/fields_panel.html.twig:250 templates/fields_panel.html.twig:262
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/fields_panel.html.twig:250
 msgid "Communication"
 msgstr "Communication"
 
 #: src/Release.php:367 src/Releasetemplate.php:920
-#: templates/fields_panel.html.twig:269
 msgid "Communication type"
 msgstr "Type de communication"
 
@@ -161,36 +160,37 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr "Terminer la revue"
 
-#: templates/form_risk.html.twig:206 templates/form_rollback.html.twig:176
-#: templates/footer.html.twig:142 templates/form_deploytask.html.twig:406
-#: templates/form_test.html.twig:248
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:142
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:406
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:206
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:176
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:248
 msgid "Confirm the final deletion?"
 msgstr "Confirmer la suppression définitive ?"
 
-#: src/Notificationtargetrelease.php:736 src/Review.php:164
+#: src/NotificationTargetRelease.php:736 src/Review.php:164
 msgid "Conforming realization"
 msgstr "Réalisation conforme"
 
-#: src/Release.php:2662 src/Releasetemplate.php:998
+#: src/Release.php:2652 src/Releasetemplate.php:998
 msgid "Create a release"
 msgstr "Créer une mise en production"
-
-#: templates/form_risk.html.twig:179
-msgid "Create a test from this risk"
-msgstr "Ajouter un test depuis ce risque"
 
 #: src/Release.php:798
 msgid "Dates defined"
 msgstr "Dates définies"
 
-#: templates/form_risk.html.twig:208 templates/form_rollback.html.twig:178
-#: templates/footer.html.twig:141 templates/footer.html.twig:144
-#: templates/form_deploytask.html.twig:408 templates/form_test.html.twig:250
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:141
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:144
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:408
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:208
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:178
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:250
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Supprimer définitivement"
 
-#: src/Notificationtargetrelease.php:75
+#: src/NotificationTargetRelease.php:75
 msgid "Deleting a releases"
 msgstr "Suppression d'une mise en production"
 
@@ -205,18 +205,19 @@ msgstr[2] "Gabarits de tâche de déploiement"
 msgid "Deploy Task type"
 msgstr "Type de tâche de déploiement"
 
-#: src/Release.php:1984 src/Release.php:1986
-#: src/Notificationtargetrelease.php:879 src/Notificationtargetrelease.php:899
-#: src/Finalization.php:208 src/Deploytask.php:73 src/Releasetemplate.php:186
+#: src/Deploytask.php:73 src/Finalization.php:208
+#: src/NotificationTargetRelease.php:879 src/NotificationTargetRelease.php:899
+#: src/Release.php:1984 src/Release.php:1986 src/Releasetemplate.php:186
 #: src/Releasetemplate.php:754 src/Releasetemplate.php:1335
-#: src/Releasetemplate.php:1336 templates/timeline.html.twig:95
+#: src/Releasetemplate.php:1336
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:95
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Tâche de déploiement"
 msgstr[1] "Tâches de déploiement"
 msgstr[2] "Tâches de déploiement"
 
-#: src/Notificationtargetrelease.php:841 src/Typedeploytask.php:56
+#: src/NotificationTargetRelease.php:841 src/TypeDeployTask.php:56
 msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] "Type de tâche de déploiement"
@@ -231,17 +232,19 @@ msgstr "Tâche de déploiement en cours"
 msgid "Description"
 msgstr "Description"
 
-#: templates/form_risk.html.twig:51 templates/form_rollback.html.twig:51
-#: templates/form_deploytask.html.twig:46
-#: templates/form_deploytask.html.twig:53
-#: templates/form_deploytask.html.twig:60
-#: templates/form_deploytask.html.twig:288 templates/timeline.html.twig:121
-#: templates/form_test.html.twig:49 templates/form_test.html.twig:52
-#: templates/form_test.html.twig:55 templates/form_test.html.twig:216
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:46
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:53
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:60
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:51
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:51
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:49
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:52
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:55
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:121
 msgid "Done"
 msgstr "Fait"
 
-#: templates/form_deploytask.html.twig:299
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:299
 msgid "Duration"
 msgstr "Durée"
 
@@ -250,21 +253,14 @@ msgctxt "status"
 msgid "End"
 msgstr "Terminée"
 
-#: templates/fields_panel.html.twig:64 templates/fields_panel.html.twig:78
-msgid "Entity"
-msgid_plural "Entities"
-msgstr[0] "Entité"
-msgstr[1] "Entités"
-msgstr[2] "Entités"
-
-#: src/Release.php:807 src/Test.php:324 src/Test.php:363
-#: src/Deploytask.php:346 src/Deploytask.php:1105
-#: templates/form_deploytask.html.twig:49
-#: templates/form_deploytask.html.twig:56
-#: templates/form_deploytask.html.twig:63
-#: templates/form_deploytask.html.twig:289 templates/form_test.html.twig:50
-#: templates/form_test.html.twig:53 templates/form_test.html.twig:56
-#: templates/form_test.html.twig:217
+#: src/Deploytask.php:346 src/Deploytask.php:1105 src/Release.php:807
+#: src/Test.php:324 src/Test.php:363
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:49
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:56
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:63
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:50
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:53
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:56
 msgid "Failed"
 msgstr "Echouée"
 
@@ -276,11 +272,11 @@ msgstr "Finalisation"
 msgid "Finalize"
 msgstr "Finaliser"
 
-#: templates/timeline.html.twig:97
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:97
 msgid "Followup"
 msgstr "Suivi"
 
-#: src/Release.php:2643 templates/fields_panel.html.twig:100
+#: src/Release.php:2633
 msgid "For this change"
 msgstr "Pour ce changement"
 
@@ -288,11 +284,11 @@ msgstr "Pour ce changement"
 msgid "Group in charge of the release"
 msgstr "Groupe en charge de la mise en production"
 
-#: src/Notificationtargetrelease.php:738 src/Review.php:176
+#: src/NotificationTargetRelease.php:738 src/Review.php:176
 msgid "Incidents during process"
 msgstr "Incidents durant le traitement"
 
-#: src/Change_release.php:61
+#: src/Change_Release.php:61
 msgid "Link Release/Change"
 msgid_plural "Links Release/Change"
 msgstr[0] "Lien Mise en production/Changement"
@@ -303,20 +299,20 @@ msgstr[2] "Liens Mise en production/Changement"
 msgid "Mark as failed"
 msgstr "Marquer comme échouée"
 
-#: src/Notificationtargetrelease.php:72
+#: src/NotificationTargetRelease.php:72
 msgid "New release"
 msgstr "Nouvelle mise en production"
 
-#: src/Release.php:2484 src/Releasetemplate.php:1572
+#: src/Release.php:2474 src/Releasetemplate.php:1572
 msgid "No data available"
 msgstr "Pas d'informations trouvées"
 
-#: src/Release.php:3027 src/Release.php:3074
+#: src/Release.php:3017 src/Release.php:3064
 msgid "No release found."
 msgstr "Pas de mise en production trouvé."
 
 #: src/Releasetemplate.php:174 src/Releasetemplate.php:691
-#: src/Releasetemplate.php:857 templates/fields_panel.html.twig:215
+#: src/Releasetemplate.php:857
 msgid "Non-working hours"
 msgstr "Heures non travaillées"
 
@@ -324,36 +320,31 @@ msgstr "Heures non travaillées"
 msgid "Not yet completed"
 msgstr "Pas encore terminé"
 
-#: src/Release.php:265 src/Notificationtargetrelease.php:721
+#: src/NotificationTargetRelease.php:721 src/Release.php:265
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Nombre de risques"
 
-#: src/Release.php:278 src/Notificationtargetrelease.php:727
+#: src/NotificationTargetRelease.php:727 src/Release.php:278
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Nombre de retours en arrière"
 
-#: src/Release.php:305 src/Notificationtargetrelease.php:848
+#: src/NotificationTargetRelease.php:848 src/Release.php:305
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Nombre de tâches"
 
-#: src/Release.php:291 src/Notificationtargetrelease.php:734
+#: src/NotificationTargetRelease.php:734 src/Release.php:291
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Nombre de tests"
 
-#: templates/fields_panel.html.twig:110
-msgid "Opening date"
-msgstr "Date d'ouverture"
-
-#: templates/form_deploytask.html.twig:364
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:364
 msgid "Plan this task"
 msgstr "Planifier cette tâche"
 
-#: src/Change_release.php:340 src/Releasetemplate.php:660
-#: templates/fields_panel.html.twig:117
+#: src/Change_Release.php:340 src/Releasetemplate.php:660
 msgid "Pre-production planned date"
 msgstr "Date planifiée de mise en pré production"
 
@@ -361,7 +352,8 @@ msgstr "Date planifiée de mise en pré production"
 msgid "Pre-production run date"
 msgstr "Date de mise en pré production"
 
-#: src/Deploytasktemplate.php:269 templates/form_deploytask.html.twig:214
+#: src/Deploytasktemplate.php:269
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:214
 msgid "Previous task"
 msgstr "Tâche précédente"
 
@@ -369,39 +361,38 @@ msgstr "Tâche précédente"
 msgid "Processing release"
 msgstr "Traitement de la mise en production"
 
-#: src/Change_release.php:341 src/Releasetemplate.php:665
-#: templates/fields_panel.html.twig:124
+#: src/Change_Release.php:341 src/Releasetemplate.php:665
 msgid "Production planned date"
 msgstr "Date planifiée de mise en production"
 
-#: src/Release.php:327 src/Finalization.php:303 src/Releasetemplate.php:162
+#: src/Finalization.php:303 src/Release.php:327 src/Releasetemplate.php:162
 msgid "Production run date"
 msgstr "Date de mise en production"
 
-#: templates/footer.html.twig:148
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:148
 msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Mettre à la corbeille"
 
-#: src/Notificationtargetrelease.php:735 src/Review.php:154
-#: src/Change_release.php:342
+#: src/Change_Release.php:342 src/NotificationTargetRelease.php:735
+#: src/Review.php:154
 msgid "Real production run date"
 msgstr "Date de mise en production réelle"
 
-#: setup.php:112 front/change_release.form.php:52 src/Release.php:108
-#: src/Notificationtargetrelease.php:903 src/Profile.php:60
-#: src/Releasetemplate.php:971
+#: front/change_release.form.php:52 setup.php:112
+#: src/NotificationTargetRelease.php:903 src/Profile.php:60
+#: src/Release.php:108 src/Releasetemplate.php:971
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Mise en production"
 msgstr[1] "Mises en production"
 msgstr[2] "Mises en production"
 
-#: src/Release.php:2877 src/Releasetemplate.php:1609
+#: src/Release.php:2867 src/Releasetemplate.php:1609
 msgid "Release actions details"
 msgstr "Détails des actions de la mise en production"
 
-#: src/Change_release.php:339 src/Releasetemplate.php:651
+#: src/Change_Release.php:339 src/Releasetemplate.php:651
 #: src/Releasetemplate.php:877
 msgid "Release area"
 msgstr "Périmètre de la mise en production"
@@ -421,11 +412,12 @@ msgstr[0] "Gabarit de mise en production"
 msgstr[1] "Gabarits de mise en production"
 msgstr[2] "Gabarits de mise en production"
 
-#: src/Release.php:3062
+#: src/Release.php:3052
 msgid "Releases on linked items"
 msgstr "Mise en production sur les objets liés"
 
-#: templates/footer.html.twig:135 templates/footer.html.twig:137
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:135
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:137
 msgctxt "button"
 msgid "Restore"
 msgstr "Restaurer"
@@ -441,25 +433,28 @@ msgstr[2] "Revues"
 msgid "Reviewed"
 msgstr "Revue"
 
-#: src/Notificationtargetrelease.php:754 src/Notificationtargetrelease.php:881
-#: src/Notificationtargetrelease.php:901 src/Finalization.php:190
-#: src/Deploytasktemplate.php:344 src/Testtemplate.php:75 src/Risk.php:56
-#: templates/timeline.html.twig:91
+#: src/Deploytasktemplate.php:344 src/Finalization.php:190
+#: src/NotificationTargetRelease.php:754 src/NotificationTargetRelease.php:881
+#: src/NotificationTargetRelease.php:901 src/Risk.php:56
+#: src/Testtemplate.php:75
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:91
 msgid "Risk"
-msgid_plural "Risks"
+msgid_plural "Risk"
 msgstr[0] "Risque"
 msgstr[1] "Risques"
 msgstr[2] "Risques"
 
-#: src/Risktemplate.php:66 templates/form_risk.html.twig:116
+#: src/Risktemplate.php:66
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:116
 msgid "Risk template"
 msgid_plural "Risk templates"
 msgstr[0] "Gabarit de risque"
 msgstr[1] "Gabarits de risque"
 msgstr[2] "Gabarits de risque"
 
-#: src/Notificationtargetrelease.php:719 src/Risktemplate.php:168
-#: src/Typerisk.php:54 templates/form_risk.html.twig:143
+#: src/NotificationTargetRelease.php:719 src/Risktemplate.php:168
+#: src/TypeRisk.php:54
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:143
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] "Type de risque"
@@ -470,17 +465,19 @@ msgstr[2] "Types de risques"
 msgid "Risks defined"
 msgstr "Risques définis"
 
-#: src/Notificationtargetrelease.php:755 src/Notificationtargetrelease.php:756
-#: src/Notificationtargetrelease.php:882 src/Notificationtargetrelease.php:902
-#: src/Finalization.php:199 src/Rollback.php:58 src/Releasetemplate.php:182
-#: src/Releasetemplate.php:729 templates/timeline.html.twig:93
+#: src/Finalization.php:199 src/NotificationTargetRelease.php:755
+#: src/NotificationTargetRelease.php:756 src/NotificationTargetRelease.php:882
+#: src/NotificationTargetRelease.php:902 src/Releasetemplate.php:182
+#: src/Releasetemplate.php:729 src/Rollback.php:58
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:93
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] "Retour en arrière"
 msgstr[1] "Retours en arrière"
 msgstr[2] "Retours en arrière"
 
-#: src/Rollbacktemplate.php:61 templates/form_rollback.html.twig:116
+#: src/Rollbacktemplate.php:61
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:116
 msgid "Rollback template"
 msgid_plural "Rollback templates"
 msgstr[0] "Gabarit de retour en arrière"
@@ -491,40 +488,44 @@ msgstr[2] "Gabarits de retours en arrière"
 msgid "Rollbacks defined"
 msgstr "Retours en arrière définis"
 
-#: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
-#: templates/footer.html.twig:165 templates/footer.html.twig:167
-#: templates/form_deploytask.html.twig:401 templates/form_test.html.twig:243
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:165
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:167
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:401
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:201
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:171
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:243
 msgctxt "button"
 msgid "Save"
 msgstr "Sauver"
 
-#: src/Release.php:335 src/Change_release.php:343 src/Releasetemplate.php:166
+#: src/Change_Release.php:343 src/Release.php:335 src/Releasetemplate.php:166
 #: src/Releasetemplate.php:677 src/Releasetemplate.php:889
-#: templates/fields_panel.html.twig:196 templates/fields_panel.html.twig:208
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/fields_panel.html.twig:196
 msgid "Service shutdown"
 msgstr "Arrêt du service"
 
 #: src/Release.php:343 src/Releasetemplate.php:170 src/Releasetemplate.php:684
-#: src/Releasetemplate.php:906 templates/fields_panel.html.twig:222
+#: src/Releasetemplate.php:906
 msgid "Service shutdown details"
 msgstr "Détail de l'arrêt de service"
 
-#: templates/form_deploytask.html.twig:380
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:380
 msgid "Set the status to pending"
 msgstr "Mettre en attente"
 
-#: templates/form_deploytask.html.twig:284 templates/form_test.html.twig:212
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:284
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:212
 msgid "Status"
 msgstr "Statut"
 
-#: templates/timeline.html.twig:193
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:193
 msgid "Task"
 msgid_plural "Tasks"
 msgstr[0] "Tâche"
 msgstr[1] "Tâches"
 msgstr[2] "Tâches"
 
-#: templates/form_deploytask.html.twig:169
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_deploytask.html.twig:169
 msgid "Task template"
 msgid_plural "Task templates"
 msgstr[0] "Gabarit de tâche"
@@ -535,25 +536,27 @@ msgstr[2] "Gabarits de tâche"
 msgid "Technical Support Document"
 msgstr "Document d'Architecture Technique"
 
-#: src/Notificationtargetrelease.php:880 src/Notificationtargetrelease.php:900
-#: src/Finalization.php:220 src/Test.php:60 src/Releasetemplate.php:178
-#: src/Releasetemplate.php:705 templates/timeline.html.twig:89
+#: src/Finalization.php:220 src/NotificationTargetRelease.php:880
+#: src/NotificationTargetRelease.php:900 src/Releasetemplate.php:178
+#: src/Releasetemplate.php:705 src/Test.php:60
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:89
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Test"
 msgstr[1] "Tests"
 msgstr[2] "Tests"
 
-#: src/Testtemplate.php:61 templates/form_test.html.twig:128
+#: src/Testtemplate.php:61
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:128
 msgid "Test template"
 msgid_plural "Test templates"
 msgstr[0] "Gabarit de test"
 msgstr[1] "Gabarits de test"
 msgstr[2] "Gabarits de test"
 
-#: src/Notificationtargetrelease.php:732 src/Testtemplate.php:70
-#: src/Testtemplate.php:179 src/Typetest.php:54
-#: templates/form_test.html.twig:155
+#: src/NotificationTargetRelease.php:732 src/Testtemplate.php:70
+#: src/Testtemplate.php:179 src/TypeTest.php:54
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_test.html.twig:155
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Type de test"
@@ -568,18 +571,13 @@ msgstr "Tests en cours"
 msgid "The release has been finalized"
 msgstr "La mise en production a été finalisée"
 
-#: templates/filter_timeline.html.twig:89
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/filter_timeline.html.twig:89
 msgid "Timeline filter"
 msgstr "Filtrer l'historique"
 
-#: templates/form_risk.html.twig:134 templates/form_rollback.html.twig:134
-#: templates/form_deploytask.html.twig:188 templates/form_test.html.twig:146
-msgid "Title"
-msgstr "Titre"
-
-#: templates/form_risk.html.twig:49 templates/form_rollback.html.twig:49
-#: templates/form_deploytask.html.twig:287 templates/timeline.html.twig:119
-#: templates/form_test.html.twig:215
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_risk.html.twig:49
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/form_rollback.html.twig:49
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:119
 msgid "To do"
 msgstr "A faire"
 
@@ -587,25 +585,25 @@ msgstr "A faire"
 msgid "To finalized"
 msgstr "A finaliser"
 
-#: templates/footer.html.twig:113
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:113
 msgid "Toggle panels width"
 msgstr "Basculer la largeur du panel"
 
-#: src/Notificationtargetrelease.php:73
+#: src/NotificationTargetRelease.php:73
 msgid "Update of a release"
 msgstr "Mise à jour d'une mise en production"
 
-#: templates/timeline.html.twig:199
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/timeline.html.twig:199
 msgid "Validation"
 msgid_plural "Validations"
 msgstr[0] "Validation"
 msgstr[1] "Validations"
 msgstr[2] "Validations"
 
-#: templates/filter_timeline.html.twig:122
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/filter_timeline.html.twig:122
 msgid "View TODO list"
 msgstr "Voir la TODO liste"
 
-#: templates/footer.html.twig:86
+#: /c/wamp/www/glpi11symfony/marketplace/releases/templates/footer.html.twig:86
 msgid "View other actions"
 msgstr "Voir les autres actions"
