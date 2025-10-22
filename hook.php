@@ -51,6 +51,7 @@ use GlpiPlugin\Releases\Testtemplate;
 use GlpiPlugin\Releases\TypeDeployTask;
 use GlpiPlugin\Releases\TypeRisk;
 use GlpiPlugin\Releases\TypeTest;
+use function Safe\mkdir;
 
 /**
  * @return bool
