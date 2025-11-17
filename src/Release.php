@@ -3712,9 +3712,11 @@ class Release extends CommonITILObject
     /**
      * Returns criteria that can be used to get documents related to current instance.
      *
+     * @param false $bypass_rights
+     * @param User|null $user
      * @return array
      */
-    public function getAssociatedDocumentsCriteria($bypass_rights = false): array
+    public function getAssociatedDocumentsCriteria($bypass_rights = false, ?User $user = null): array
     {
         $task_class = Deploytask::getType();
         $review_class = Review::getType();
