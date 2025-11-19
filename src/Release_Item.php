@@ -293,7 +293,13 @@ class Release_Item extends CommonDBRelation {
                return self::createTabEntry(Release::getTypeName(Session::getPluralNumber()), $nb);
                break;
             default :
-               if (Session::haveRight("plugin_releases_releases", READ)) {
+                $release = new Release();
+                $types = [];
+                foreach ($release->getAllTypesForHelpdesk() as $key => $val) {
+                    $types[] = $key;
+                }
+               if (in_array($item->getType(), $types)
+               && Session::haveRight("plugin_releases_releases", READ)) {
                   if ($_SESSION['glpishow_count_on_tabs']) {
                      // Direct one
                      $nb = self::countForItem($item);
