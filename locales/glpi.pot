@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-19 15:18+0000\n"
+"POT-Creation-Date: 2025-12-05 11:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -199,7 +199,7 @@ msgstr ""
 
 #: src/Release.php:1984 src/Release.php:1986 src/Finalization.php:208
 #: src/NotificationTargetRelease.php:879 src/NotificationTargetRelease.php:899
-#: src/Deploytask.php:73 src/Releasetemplate.php:186
+#: src/Deploytask.php:74 src/Releasetemplate.php:186
 #: src/Releasetemplate.php:754 src/Releasetemplate.php:1335
 #: src/Releasetemplate.php:1336 templates/timeline.html.twig:95
 msgid "Deploy task"
@@ -246,8 +246,8 @@ msgid_plural "Entities"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:807 src/Test.php:324 src/Test.php:363 src/Deploytask.php:346
-#: src/Deploytask.php:1105 templates/form_deploytask.html.twig:49
+#: src/Release.php:807 src/Test.php:324 src/Test.php:363 src/Deploytask.php:347
+#: src/Deploytask.php:1125 templates/form_deploytask.html.twig:49
 #: templates/form_deploytask.html.twig:56
 #: templates/form_deploytask.html.twig:63
 #: templates/form_deploytask.html.twig:289 templates/form_test.html.twig:50
