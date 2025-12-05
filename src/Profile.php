@@ -57,11 +57,15 @@ class Profile extends \Profile {
       if ($item->getType() == 'Profile'
           && $item->getField('interface') != 'helpdesk'
       ) {
-         return _n('Release', 'Releases', 2, 'releases');
+         return self::createTabEntry(_n('Release', 'Releases', 2, 'releases'));
       }
       return '';
    }
 
+    public static function getIcon()
+    {
+        return "ti ti-building-factory";
+    }
 
    /**
     * @param CommonGLPI $item
