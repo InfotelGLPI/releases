@@ -37,7 +37,7 @@ use GlpiPlugin\Releases\Profile;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Release_Item;
 
-define('PLUGIN_RELEASES_VERSION', '2.1.4');
+define('PLUGIN_RELEASES_VERSION', '2.1.5');
 
 if (!defined("PLUGIN_RELEASES_DIR")) {
     define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));

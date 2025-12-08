@@ -141,6 +141,8 @@ function plugin_releases_install()
         }
     }
 
+    $DB->runFile(PLUGIN_RELEASES_DIR . "/sql/update-2.1.5.sql");
+
     $rep_files_release = GLPI_PLUGIN_DOC_DIR . "/releases";
     if (!is_dir($rep_files_release)) {
         mkdir($rep_files_release);
