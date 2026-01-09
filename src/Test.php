@@ -124,7 +124,7 @@ class Test extends CommonDBTM {
 
       $release           = new Release();
       $release->getFromDB($input["items_id"]);
-      $input["entities_id"] = $release->getField("entities_id");
+      $input["entities_id"] = $release->fields["entities_id"] ?? 0;
 
       return $input;
    }

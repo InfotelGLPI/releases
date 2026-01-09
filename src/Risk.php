@@ -97,7 +97,7 @@ class Risk extends CommonDBTM {
       $input["plugin_releases_releases_id"] = $input["items_id"];
       $release           = new Release();
       $release->getFromDB($input["items_id"]);
-      $input["entities_id"] = $release->getField("entities_id");
+      $input["entities_id"] = $release->fields["entities_id"] ?? 0;
 
 
       return $input;
@@ -106,7 +106,8 @@ class Risk extends CommonDBTM {
    function post_addItem() {
       parent::post_addItem();
 
-      if (isset($this->input["create_test"]) && $this->input["create_test"] == 1) {
+      if (isset($this->input["create_test"])
+          && $this->input["create_test"] == 1) {
          $test                                     = new Test();
          $inputTest                                = [];
          $inputTest["entities_id"]                 = $this->fields["entities_id"];
@@ -115,6 +116,7 @@ class Risk extends CommonDBTM {
          $inputTest["name"]                        = $this->fields["name"];
          $inputTest["users_id"]                    = $this->fields["users_id"];
          $inputTest["content"]                     = $this->fields["content"];
+          $inputTest["items_id"]                    = $this->fields["plugin_releases_releases_id"];
          $test->add($inputTest);
       }
 
