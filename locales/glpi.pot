@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 16:44+0000\n"
+"POT-Creation-Date: 2026-01-14 16:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,7 +247,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/Release.php:807 src/Test.php:324 src/Test.php:363 src/Deploytask.php:347
-#: src/Deploytask.php:1125 templates/form_deploytask.html.twig:49
+#: src/Deploytask.php:1128 templates/form_deploytask.html.twig:49
 #: templates/form_deploytask.html.twig:56
 #: templates/form_deploytask.html.twig:63
 #: templates/form_deploytask.html.twig:289 templates/form_test.html.twig:50
