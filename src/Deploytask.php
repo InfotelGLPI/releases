@@ -878,18 +878,21 @@ class Deploytask extends CommonDBTM
         $query = [
             'SELECT' => 'glpi_plugin_releases_deploytasks.*',
             'FROM'   => 'glpi_plugin_releases_deploytasks',
-            'LEFT JOIN' => [
+            'LEFT JOIN'       => [
                 'glpi_plugin_releases_typedeploytasks' => [
-                    'ON' => 'glpi_plugin_releases_typedeploytasks.id = glpi_plugin_releases_deploytasks.plugin_releases_typedeploytasks_id',
-                ],
+                    'ON' => [
+                        'glpi_plugin_releases_typedeploytasks' => 'id',
+                        'glpi_plugin_releases_deploytasks'          => 'plugin_releases_typedeploytasks_id'
+                    ]
+                ]
             ],
             'WHERE'  => $WHERE,
-            'ORDER BY' => 'begin',
+            'ORDERBY' => 'begin',
         ];
-        $result = $DB->doQuery($query);
+        $iterator = $DB->request($query);
 
-        if ($DB->numrows($result) > 0) {
-            for ($i = 0; $data = $DB->fetchArray($result); $i++) {
+        if (count($iterator) > 0) {
+            foreach ($iterator as $data) {
                 $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_releases";
                 $output[$key]['color']            = $parm['color'] ?? null;
                 $output[$key]['event_type_color'] = $parm['event_type_color'] ?? null;
