@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-14 16:22+0000\n"
+"POT-Creation-Date: 2026-02-12 12:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3013
+#: src/Release.php:3017
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -73,12 +73,12 @@ msgctxt "button"
 msgid "Add"
 msgstr ""
 
-#: src/Release.php:1249
+#: src/Release.php:1253
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr ""
 
-#: src/Release.php:1192
+#: src/Release.php:1196
 msgctxt "button"
 msgid "Add a followup"
 msgstr ""
@@ -87,17 +87,17 @@ msgstr ""
 msgid "Add a release"
 msgstr ""
 
-#: src/Release.php:1211
+#: src/Release.php:1215
 msgctxt "button"
 msgid "Add a risk"
 msgstr ""
 
-#: src/Release.php:1230
+#: src/Release.php:1234
 msgctxt "button"
 msgid "Add a rollback"
 msgstr ""
 
-#: src/Release.php:1268
+#: src/Release.php:1272
 msgctxt "button"
 msgid "Add a test"
 msgstr ""
@@ -113,7 +113,7 @@ msgstr[1] ""
 msgid "Associated risk"
 msgstr ""
 
-#: src/Release.php:2428 src/Releasetemplate.php:1527
+#: src/Release.php:2432 src/Releasetemplate.php:1527
 msgid "Associated with"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Conforming realization"
 msgstr ""
 
-#: src/Release.php:2652 src/Releasetemplate.php:998
+#: src/Release.php:2656 src/Releasetemplate.php:998
 msgid "Create a release"
 msgstr ""
 
@@ -197,7 +197,7 @@ msgstr[1] ""
 msgid "Deploy Task type"
 msgstr ""
 
-#: src/Release.php:1984 src/Release.php:1986 src/Finalization.php:208
+#: src/Release.php:1988 src/Release.php:1990 src/Finalization.php:208
 #: src/NotificationTargetRelease.php:879 src/NotificationTargetRelease.php:899
 #: src/Deploytask.php:74 src/Releasetemplate.php:186
 #: src/Releasetemplate.php:754 src/Releasetemplate.php:1335
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: src/Release.php:2633 templates/fields_panel.html.twig:100
+#: src/Release.php:2637 templates/fields_panel.html.twig:100
 msgid "For this change"
 msgstr ""
 
@@ -294,11 +294,11 @@ msgstr ""
 msgid "New release"
 msgstr ""
 
-#: src/Release.php:2474 src/Releasetemplate.php:1572
+#: src/Release.php:2478 src/Releasetemplate.php:1572
 msgid "No data available"
 msgstr ""
 
-#: src/Release.php:3017 src/Release.php:3064
+#: src/Release.php:3021 src/Release.php:3068
 msgid "No release found."
 msgstr ""
 
@@ -383,7 +383,7 @@ msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:2867 src/Releasetemplate.php:1609
+#: src/Release.php:2871 src/Releasetemplate.php:1609
 msgid "Release actions details"
 msgstr ""
 
@@ -406,7 +406,7 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3052
+#: src/Release.php:3056
 msgid "Releases on linked items"
 msgstr ""
 
