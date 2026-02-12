@@ -934,7 +934,9 @@ class Release extends CommonITILObject
      */
     public function prepareInputForUpdate($input)
     {
-        //      $input = parent::prepareInputForUpdate($input);
+
+        $input = $this->transformActorsInput($input);
+
         if ((isset($input['target']) && empty($input['target']))
             || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
             $input['target'] = [];
@@ -952,213 +954,215 @@ class Release extends CommonITILObject
             $input['status'] = self::RELEASEDEFINITION;
         }
         $do_not_compute_takeintoaccount = $this->isTakeIntoAccountComputationBlocked($input);
-        if (isset($input['_itil_requester'])) {
-            if (isset($input['_itil_requester']['_type'])) {
-                $input['_itil_requester'] = [
-                    'type' => CommonITILActor::REQUESTER,
-                    $this->getForeignKeyField() => $input['id'],
-                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                    '_from_object' => true,
-                ] + $input['_itil_requester'];
-
-                switch ($input['_itil_requester']['_type']) {
-                    case "user":
-                        if (isset($input['_itil_requester']['use_notification'])
-                            && is_array($input['_itil_requester']['use_notification'])) {
-                            $input['_itil_requester']['use_notification'] = $input['_itil_requester']['use_notification'][0];
-                        }
-                        if (isset($input['_itil_requester']['alternative_email'])
-                            && is_array($input['_itil_requester']['alternative_email'])) {
-                            $input['_itil_requester']['alternative_email'] = $input['_itil_requester']['alternative_email'][0];
-                        }
-
-                        if (!empty($this->userlinkclass)) {
-                            if (isset($input['_itil_requester']['alternative_email'])
-                                && $input['_itil_requester']['alternative_email']
-                                && !NotificationMailing::isUserAddressValid(
-                                    $input['_itil_requester']['alternative_email']
-                                )) {
-                                $input['_itil_requester']['alternative_email'] = '';
-                                Session::addMessageAfterRedirect(__('Invalid email address'), false, ERROR);
-                            }
-
-                            if ((isset($input['_itil_requester']['alternative_email'])
-                                    && $input['_itil_requester']['alternative_email'])
-                                || ($input['_itil_requester']['users_id'] > 0)) {
-                                $useractors = new $this->userlinkclass();
-                                if (isset($input['_auto_update'])
-                                    || $useractors->can(-1, CREATE, $input['_itil_requester'])) {
-                                    $useractors->add($input['_itil_requester']);
-                                    $input['_forcenotif'] = true;
-                                }
-                            }
-                        }
-                        break;
-
-                    case "group":
-                        if (!empty($this->grouplinkclass)
-                            && ($input['_itil_requester']['groups_id'] > 0)) {
-                            $groupactors = new $this->grouplinkclass();
-                            if (isset($input['_auto_update'])
-                                || $groupactors->can(-1, CREATE, $input['_itil_requester'])) {
-                                $groupactors->add($input['_itil_requester']);
-                                $input['_forcenotif'] = true;
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-
-        if (isset($input['_itil_observer'])) {
-            if (isset($input['_itil_observer']['_type'])) {
-                $input['_itil_observer'] = [
-                    'type' => CommonITILActor::OBSERVER,
-                    $this->getForeignKeyField() => $input['id'],
-                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                    '_from_object' => true,
-                ] + $input['_itil_observer'];
-
-                switch ($input['_itil_observer']['_type']) {
-                    case "user":
-                        if (isset($input['_itil_observer']['use_notification'])
-                            && is_array($input['_itil_observer']['use_notification'])) {
-                            $input['_itil_observer']['use_notification'] = $input['_itil_observer']['use_notification'][0];
-                        }
-                        if (isset($input['_itil_observer']['alternative_email'])
-                            && is_array($input['_itil_observer']['alternative_email'])) {
-                            $input['_itil_observer']['alternative_email'] = $input['_itil_observer']['alternative_email'][0];
-                        }
-
-                        if (!empty($this->userlinkclass)) {
-                            if (isset($input['_itil_observer']['alternative_email'])
-                                && $input['_itil_observer']['alternative_email']
-                                && !NotificationMailing::isUserAddressValid(
-                                    $input['_itil_observer']['alternative_email']
-                                )) {
-                                $input['_itil_observer']['alternative_email'] = '';
-                                Session::addMessageAfterRedirect(__('Invalid email address'), false, ERROR);
-                            }
-                            if ((isset($input['_itil_observer']['alternative_email'])
-                                    && $input['_itil_observer']['alternative_email'])
-                                || ($input['_itil_observer']['users_id'] > 0)) {
-                                $useractors = new $this->userlinkclass();
-                                if (isset($input['_auto_update'])
-                                    || $useractors->can(-1, CREATE, $input['_itil_observer'])) {
-                                    $useractors->add($input['_itil_observer']);
-                                    $input['_forcenotif'] = true;
-                                }
-                            }
-                        }
-                        break;
-
-                    case "group":
-                        if (!empty($this->grouplinkclass)
-                            && ($input['_itil_observer']['groups_id'] > 0)) {
-                            $groupactors = new $this->grouplinkclass();
-                            if (isset($input['_auto_update'])
-                                || $groupactors->can(-1, CREATE, $input['_itil_observer'])) {
-                                $groupactors->add($input['_itil_observer']);
-                                $input['_forcenotif'] = true;
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-
-        if (isset($input['_itil_assign'])) {
-            if (isset($input['_itil_assign']['_type'])) {
-                $input['_itil_assign'] = [
-                    'type' => CommonITILActor::ASSIGN,
-                    $this->getForeignKeyField() => $input['id'],
-                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
-                    '_from_object' => true,
-                ] + $input['_itil_assign'];
-
-                if (isset($input['_itil_assign']['use_notification'])
-                    && is_array($input['_itil_assign']['use_notification'])) {
-                    $input['_itil_assign']['use_notification'] = $input['_itil_assign']['use_notification'][0];
-                }
-                if (isset($input['_itil_assign']['alternative_email'])
-                    && is_array($input['_itil_assign']['alternative_email'])) {
-                    $input['_itil_assign']['alternative_email'] = $input['_itil_assign']['alternative_email'][0];
-                }
-
-                switch ($input['_itil_assign']['_type']) {
-                    case "user":
-                        if (!empty($this->userlinkclass)
-                            && ((isset($input['_itil_assign']['alternative_email'])
-                                    && $input['_itil_assign']['alternative_email'])
-                                || $input['_itil_assign']['users_id'] > 0)) {
-                            $useractors = new $this->userlinkclass();
-                            if (isset($input['_auto_update'])
-                                || $useractors->can(-1, CREATE, $input['_itil_assign'])) {
-                                $useractors->add($input['_itil_assign']);
-                                $input['_forcenotif'] = true;
-                                //                        if (((!isset($input['status'])
-                                //                              && in_array($this->fields['status'], $this->getNewStatusArray()))
-                                //                             || (isset($input['status'])
-                                //                                 && in_array($input['status'], $this->getNewStatusArray())))
-                                //                            && !$this->isStatusComputationBlocked($input)) {
-                                //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-                                //                              $input['status'] = self::ASSIGNED;
-                                //                           }
-                                //                        }
-                            }
-                        }
-                        break;
-
-                    case "group":
-                        if (!empty($this->grouplinkclass)
-                            && ($input['_itil_assign']['groups_id'] > 0)) {
-                            $groupactors = new $this->grouplinkclass();
-
-                            if (isset($input['_auto_update'])
-                                || $groupactors->can(-1, CREATE, $input['_itil_assign'])) {
-                                $groupactors->add($input['_itil_assign']);
-                                $input['_forcenotif'] = true;
-                                //                        if (((!isset($input['status'])
-                                //                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
-                                //                             || (isset($input['status'])
-                                //                                 && (in_array($input['status'], $this->getNewStatusArray()))))
-                                //                            && !$this->isStatusComputationBlocked($input)) {
-                                //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-                                //                              $input['status'] = self::ASSIGNED;
-                                //                           }
-                                //                        }
-                            }
-                        }
-                        break;
-
-                    case "supplier":
-                        if (!empty($this->supplierlinkclass)
-                            && ((isset($input['_itil_assign']['alternative_email'])
-                                    && $input['_itil_assign']['alternative_email'])
-                                || $input['_itil_assign']['suppliers_id'] > 0)) {
-                            $supplieractors = new $this->supplierlinkclass();
-                            if (isset($input['_auto_update'])
-                                || $supplieractors->can(-1, CREATE, $input['_itil_assign'])) {
-                                $supplieractors->add($input['_itil_assign']);
-                                $input['_forcenotif'] = true;
-                                //                        if (((!isset($input['status'])
-                                //                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
-                                //                             || (isset($input['status'])
-                                //                                 && (in_array($input['status'], $this->getNewStatusArray()))))
-                                //                            && !$this->isStatusComputationBlocked($input)) {
-                                //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
-                                //                              $input['status'] = self::ASSIGNED;
-                                //                           }
-                                //                        }
-                            }
-                        }
-                        break;
-                }
-            }
-        }
+//        if (isset($input['_itil_requester'])) {
+//            if (isset($input['_itil_requester']['_type'])) {
+//                $input['_itil_requester'] = [
+//                    'type' => CommonITILActor::REQUESTER,
+//                    $this->getForeignKeyField() => $input['id'],
+//                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+//                    '_from_object' => true,
+//                ] + $input['_itil_requester'];
+//
+//                switch ($input['_itil_requester']['_type']) {
+//                    case "user":
+//                        if (isset($input['_itil_requester']['use_notification'])
+//                            && is_array($input['_itil_requester']['use_notification'])) {
+//                            $input['_itil_requester']['use_notification'] = $input['_itil_requester']['use_notification'][0];
+//                        }
+//                        if (isset($input['_itil_requester']['alternative_email'])
+//                            && is_array($input['_itil_requester']['alternative_email'])) {
+//                            $input['_itil_requester']['alternative_email'] = $input['_itil_requester']['alternative_email'][0];
+//                        }
+//
+//                        if (!empty($this->userlinkclass)) {
+//                            if (isset($input['_itil_requester']['alternative_email'])
+//                                && $input['_itil_requester']['alternative_email']
+//                                && !NotificationMailing::isUserAddressValid(
+//                                    $input['_itil_requester']['alternative_email']
+//                                )) {
+//                                $input['_itil_requester']['alternative_email'] = '';
+//                                Session::addMessageAfterRedirect(__('Invalid email address'), false, ERROR);
+//                            }
+//
+//                            if ((isset($input['_itil_requester']['alternative_email'])
+//                                    && $input['_itil_requester']['alternative_email'])
+//                                || ($input['_itil_requester']['users_id'] > 0)) {
+//                                $useractors = new $this->userlinkclass();
+//                                if (isset($input['_auto_update'])
+//                                    || $useractors->can(-1, CREATE, $input['_itil_requester'])) {
+//                                    $useractors->add($input['_itil_requester']);
+//                                    $input['_forcenotif'] = true;
+//                                }
+//                            }
+//                        }
+//                        break;
+//
+//                    case "group":
+//                        if (!empty($this->grouplinkclass)
+//                            && ($input['_itil_requester']['groups_id'] > 0)) {
+//                            $groupactors = new $this->grouplinkclass();
+//                            if (isset($input['_auto_update'])
+//                                || $groupactors->can(-1, CREATE, $input['_itil_requester'])) {
+//                                $groupactors->add($input['_itil_requester']);
+//                                $input['_forcenotif'] = true;
+//                            }
+//                        }
+//                        break;
+//                }
+//            }
+//        }
+//
+//        if (isset($input['_itil_observer'])) {
+//            if (isset($input['_itil_observer']['_type'])) {
+//                $input['_itil_observer'] = [
+//                    'type' => CommonITILActor::OBSERVER,
+//                    $this->getForeignKeyField() => $input['id'],
+//                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+//                    '_from_object' => true,
+//                ] + $input['_itil_observer'];
+//
+//                switch ($input['_itil_observer']['_type']) {
+//                    case "user":
+//                        if (isset($input['_itil_observer']['use_notification'])
+//                            && is_array($input['_itil_observer']['use_notification'])) {
+//                            $input['_itil_observer']['use_notification'] = $input['_itil_observer']['use_notification'][0];
+//                        }
+//                        if (isset($input['_itil_observer']['alternative_email'])
+//                            && is_array($input['_itil_observer']['alternative_email'])) {
+//                            $input['_itil_observer']['alternative_email'] = $input['_itil_observer']['alternative_email'][0];
+//                        }
+//
+//                        if (!empty($this->userlinkclass)) {
+//                            if (isset($input['_itil_observer']['alternative_email'])
+//                                && $input['_itil_observer']['alternative_email']
+//                                && !NotificationMailing::isUserAddressValid(
+//                                    $input['_itil_observer']['alternative_email']
+//                                )) {
+//                                $input['_itil_observer']['alternative_email'] = '';
+//                                Session::addMessageAfterRedirect(__('Invalid email address'), false, ERROR);
+//                            }
+//                            if ((isset($input['_itil_observer']['alternative_email'])
+//                                    && $input['_itil_observer']['alternative_email'])
+//                                || ($input['_itil_observer']['users_id'] > 0)) {
+//                                $useractors = new $this->userlinkclass();
+//                                if (isset($input['_auto_update'])
+//                                    || $useractors->can(-1, CREATE, $input['_itil_observer'])) {
+//                                    $useractors->add($input['_itil_observer']);
+//                                    $input['_forcenotif'] = true;
+//                                }
+//                            }
+//                        }
+//                        break;
+//
+//                    case "group":
+//                        if (!empty($this->grouplinkclass)
+//                            && ($input['_itil_observer']['groups_id'] > 0)) {
+//                            $groupactors = new $this->grouplinkclass();
+//                            if (isset($input['_auto_update'])
+//                                || $groupactors->can(-1, CREATE, $input['_itil_observer'])) {
+//                                $groupactors->add($input['_itil_observer']);
+//                                $input['_forcenotif'] = true;
+//                            }
+//                        }
+//                        break;
+//                }
+//            }
+//        }
+//
+//        if (isset($input['_itil_assign'])) {
+//            if (isset($input['_itil_assign']['_type'])) {
+//                $input['_itil_assign'] = [
+//                    'type' => CommonITILActor::ASSIGN,
+//                    $this->getForeignKeyField() => $input['id'],
+//                    '_do_not_compute_takeintoaccount' => $do_not_compute_takeintoaccount,
+//                    '_from_object' => true,
+//                ] + $input['_itil_assign'];
+//
+//                if (isset($input['_itil_assign']['use_notification'])
+//                    && is_array($input['_itil_assign']['use_notification'])) {
+//                    $input['_itil_assign']['use_notification'] = $input['_itil_assign']['use_notification'][0];
+//                }
+//                if (isset($input['_itil_assign']['alternative_email'])
+//                    && is_array($input['_itil_assign']['alternative_email'])) {
+//                    $input['_itil_assign']['alternative_email'] = $input['_itil_assign']['alternative_email'][0];
+//                }
+//
+//                switch ($input['_itil_assign']['_type']) {
+//                    case "user":
+//                        if (!empty($this->userlinkclass)
+//                            && ((isset($input['_itil_assign']['alternative_email'])
+//                                    && $input['_itil_assign']['alternative_email'])
+//                                || $input['_itil_assign']['users_id'] > 0)) {
+//                            $useractors = new $this->userlinkclass();
+//                            if (isset($input['_auto_update'])
+//                                || $useractors->can(-1, CREATE, $input['_itil_assign'])) {
+//                                $useractors->add($input['_itil_assign']);
+//                                $input['_forcenotif'] = true;
+//                                //                        if (((!isset($input['status'])
+//                                //                              && in_array($this->fields['status'], $this->getNewStatusArray()))
+//                                //                             || (isset($input['status'])
+//                                //                                 && in_array($input['status'], $this->getNewStatusArray())))
+//                                //                            && !$this->isStatusComputationBlocked($input)) {
+//                                //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+//                                //                              $input['status'] = self::ASSIGNED;
+//                                //                           }
+//                                //                        }
+//                            }
+//                        }
+//                        break;
+//
+//                    case "group":
+//                        if (!empty($this->grouplinkclass)
+//                            && ($input['_itil_assign']['groups_id'] > 0)) {
+//                            $groupactors = new $this->grouplinkclass();
+//
+//                            if (isset($input['_auto_update'])
+//                                || $groupactors->can(-1, CREATE, $input['_itil_assign'])) {
+//                                $groupactors->add($input['_itil_assign']);
+//                                $input['_forcenotif'] = true;
+//                                //                        if (((!isset($input['status'])
+//                                //                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+//                                //                             || (isset($input['status'])
+//                                //                                 && (in_array($input['status'], $this->getNewStatusArray()))))
+//                                //                            && !$this->isStatusComputationBlocked($input)) {
+//                                //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+//                                //                              $input['status'] = self::ASSIGNED;
+//                                //                           }
+//                                //                        }
+//                            }
+//                        }
+//                        break;
+//
+//                    case "supplier":
+//                        if (!empty($this->supplierlinkclass)
+//                            && ((isset($input['_itil_assign']['alternative_email'])
+//                                    && $input['_itil_assign']['alternative_email'])
+//                                || $input['_itil_assign']['suppliers_id'] > 0)) {
+//                            $supplieractors = new $this->supplierlinkclass();
+//                            if (isset($input['_auto_update'])
+//                                || $supplieractors->can(-1, CREATE, $input['_itil_assign'])) {
+//                                $supplieractors->add($input['_itil_assign']);
+//                                $input['_forcenotif'] = true;
+//                                //                        if (((!isset($input['status'])
+//                                //                              && (in_array($this->fields['status'], $this->getNewStatusArray())))
+//                                //                             || (isset($input['status'])
+//                                //                                 && (in_array($input['status'], $this->getNewStatusArray()))))
+//                                //                            && !$this->isStatusComputationBlocked($input)) {
+//                                //                           if (in_array(self::ASSIGNED, array_keys($this->getAllStatusArray()))) {
+//                                //                              $input['status'] = self::ASSIGNED;
+//                                //                           }
+//                                //                        }
+//                            }
+//                        }
+//                        break;
+//                }
+//            }
+//        }
 
         //      $this->addAdditionalActors($input);
 
+        $input = parent::prepareInputForUpdate($input);
+        
         return $input;
     }
 
