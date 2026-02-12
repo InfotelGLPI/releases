@@ -135,6 +135,7 @@ if ($_POST['action'] == 'done_fail') {
         exit;
     }
 
+    $_REQUEST['parenttype'] = Release::class;
     header("Content-Type: text/html; charset=UTF-8");
 
     $objType    = $_REQUEST['parenttype']::getType();
@@ -188,9 +189,9 @@ if ($_POST['action'] == 'done_fail') {
                     ObjectLock::setReadOnlyProfile();
                 }
                 if ($item->getType() == "ITILFollowup") {
-                    $item->fields["itemtype"] = $parent->getType();
-                    $item->fields["items_id"] = $_REQUEST["id"];
+                    $item->getFromDB($_REQUEST["id"]);
                 }
+
                 $parent::showSubForm($item, $_REQUEST["id"], ['parent'    => $parent,
                                                           "itemtype"  => $parent->getType(),
                                                           "items_id"  => $parent->getID(),

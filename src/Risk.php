@@ -149,6 +149,13 @@ class Risk extends CommonDBTM {
          $this->getEmpty();
       }
 
+       if ($ID > 0) {
+           $this->check($ID, READ);
+       } else {
+           // Create item
+           $this->check(-1, CREATE, $options);
+       }
+
       TemplateRenderer::getInstance()->display('@releases/form_risk.html.twig', [
          'item'      => $options['parent'],
          'subitem'   => $this

@@ -1162,7 +1162,7 @@ class Release extends CommonITILObject
         //      $this->addAdditionalActors($input);
 
         $input = parent::prepareInputForUpdate($input);
-        
+
         return $input;
     }
 
@@ -1277,6 +1277,7 @@ class Release extends CommonITILObject
 
         return $itemtypes;
     }
+
 
     public function showForm($ID, $options = [])
     {

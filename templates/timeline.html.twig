@@ -29,7 +29,6 @@
 {# # ---------------------------------------------------------------------#}
 {# #}
 
-{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
 {% set timeline_order = "flex-column" %}
 {% if user_pref('timeline_order') == constant('CommonITILObject::TIMELINE_ORDER_REVERSE') %}
     {% set timeline_order = "flex-column-reverse" %}
@@ -216,7 +215,7 @@ $(function() {
       content_block.find(".edit-content").show()
          .find(".ajax-content")
          .html('<i class="fas fa-3x fa-spinner fa-spin ms-auto"></i>')
-         .load("{{ path('/ajax/timeline.php') }}", {
+         .load('{{ rpath }}/ajax/timeline.php', {
             'action'    : 'viewsubitem',
             'type'      : itemtype,
             'parenttype': '{{ item.getType() }}',
