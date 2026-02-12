@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -35,15 +36,15 @@ use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Release_User;
 
 if (!isset($_GET["id"])) {
-   $_GET["id"] = 0;
+    $_GET["id"] = 0;
 }
 if (!isset($_GET["withtemplate"])) {
-   $_GET["withtemplate"] = "";
+    $_GET["withtemplate"] = "";
 }
 
 // as _actors virtual field stores json, bypass automatic escaping
-if (isset($_UPOST['_actors'])) {
-    $_POST['_actors'] = json_decode($_UPOST['_actors'], true);
+if (isset($_POST['_actors'])) {
+    $_POST['_actors'] = json_decode($_POST['_actors'], true);
     $_REQUEST['_actors'] = $_POST['_actors'];
 }
 
@@ -51,107 +52,117 @@ $release = new Release();
 
 if (isset($_POST["add"])) {
 
-   $release->check(-1, CREATE, $_POST);
+    $release->check(-1, CREATE, $_POST);
 
-   $newID = $release->add($_POST);
-   if ($_SESSION['glpibackcreated']) {
-      Html::redirect($release->getFormURL() . "?id=" . $newID);
-   }
-   Html::back();
-} else if (isset($_POST["delete"])) {
+    $newID = $release->add($_POST);
+    if ($_SESSION['glpibackcreated']) {
+        Html::redirect($release->getFormURL() . "?id=" . $newID);
+    }
+    Html::back();
+} elseif (isset($_POST["delete"])) {
 
-   $release->check($_POST['id'], DELETE);
-   $release->delete($_POST);
-   $release->redirectToList();
+    $release->check($_POST['id'], DELETE);
+    $release->delete($_POST);
+    $release->redirectToList();
 
-} else if (isset($_POST["restore"])) {
+} elseif (isset($_POST["restore"])) {
 
-   $release->check($_POST['id'], PURGE);
-   $release->restore($_POST);
-   $release->redirectToList();
+    $release->check($_POST['id'], PURGE);
+    $release->restore($_POST);
+    $release->redirectToList();
 
-} else if (isset($_POST["purge"])) {
-   $release->check($_POST['id'], PURGE);
-   $release->delete($_POST, 1);
-   $release->redirectToList();
+} elseif (isset($_POST["purge"])) {
+    $release->check($_POST['id'], PURGE);
+    $release->delete($_POST, 1);
+    $release->redirectToList();
 
-} else if (isset($_POST["update"])) {
+} elseif (isset($_POST["update"])) {
 
-   $release->check($_POST['id'], UPDATE);
-   $release->update($_POST);
-   Html::back();
+    $release->check($_POST['id'], UPDATE);
+    $release->update($_POST);
+    Html::back();
 
-} else if (isset($_POST["createRelease"])) {
+} elseif (isset($_POST["createRelease"])) {
 
-   $change = new Change();
-   $change->getFromDB($_POST["changes_id"]);
-   $input                = [];
-   $input["name"]        = $change->getField("name");
-   $input["content"]     = $change->getField("content");
-   $input["entities_id"] = $change->getField("entities_id");
+    $change = new Change();
+    $change->getFromDB($_POST["changes_id"]);
+    $input                = [];
+    $input["name"]        = $change->getField("name");
+    $input["content"]     = $change->getField("content");
+    $input["entities_id"] = $change->getField("entities_id");
 
-   $newID                                = $release->add($input);
-   $change_release                       = new Change_Release();
-   $input                                = [];
-   $input["changes_id"]                  = $change->getID();
-   $input["plugin_releases_releases_id"] = $newID;
-   $change_release->add($input);
-   if ($_SESSION['glpibackcreated']) {
-      Html::redirect($release->getFormURL() . "?id=" . $newID);
-   }
-   Html::back();
+    $newID                                = $release->add($input);
+    $change_release                       = new Change_Release();
+    $input                                = [];
+    $input["changes_id"]                  = $change->getID();
+    $input["plugin_releases_releases_id"] = $newID;
+    $change_release->add($input);
+    if ($_SESSION['glpibackcreated']) {
+        Html::redirect($release->getFormURL() . "?id=" . $newID);
+    }
+    Html::back();
 
-} else if (isset($_POST['addme_observer'])) {
-   $release->check($_POST['plugin_releases_releases_id'], READ);
-   $input = array_merge($release->fields, [
-      'plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
-      '_itil_observer'              => [
-         '_type'            => "user",
-         'users_id'         => Session::getLoginUserID(),
-         'use_notification' => 1,
-      ]
-   ]);
-   $release->update($input);
-   Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
-      //TRANS: %s is the user login
-              sprintf(__('%s adds an actor'), $_SESSION["glpiname"]));
-   Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
+} elseif (isset($_POST['addme_observer'])) {
+    $release->check($_POST['plugin_releases_releases_id'], READ);
+    $input = array_merge($release->fields, [
+        'plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
+        '_itil_observer'              => [
+            '_type'            => "user",
+            'users_id'         => Session::getLoginUserID(),
+            'use_notification' => 1,
+        ],
+    ]);
+    $release->update($input);
+    Event::log(
+        $_POST['plugin_releases_releases_id'],
+        "plugin_releases",
+        4,
+        "maintain",
+        //TRANS: %s is the user login
+        sprintf(__('%s adds an actor'), $_SESSION["glpiname"])
+    );
+    Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
-} else if (isset($_POST['addme_assign'])) {
-   $release_user = new Release_User();
+} elseif (isset($_POST['addme_assign'])) {
+    $release_user = new Release_User();
 
-   $release->check($_POST['plugin_releases_releases_id'], READ);
-   $input = ['plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
-             'users_id'                    => Session::getLoginUserID(),
-             'use_notification'            => 1,
-             'type'                        => CommonITILActor::ASSIGN];
-   $release_user->add($input);
-   Event::log($_POST['plugin_releases_releases_id'], "plugin_releases", 4, "maintain",
-      //TRANS: %s is the user login
-                    sprintf(__('%s adds an actor'), $_SESSION["glpiname"]));
-   Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
+    $release->check($_POST['plugin_releases_releases_id'], READ);
+    $input = ['plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
+        'users_id'                    => Session::getLoginUserID(),
+        'use_notification'            => 1,
+        'type'                        => CommonITILActor::ASSIGN];
+    $release_user->add($input);
+    Event::log(
+        $_POST['plugin_releases_releases_id'],
+        "plugin_releases",
+        4,
+        "maintain",
+        //TRANS: %s is the user login
+        sprintf(__('%s adds an actor'), $_SESSION["glpiname"])
+    );
+    Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
-} else if (isset($_REQUEST['delete_document'])) {
+} elseif (isset($_REQUEST['delete_document'])) {
 
-   $doc = new Document();
-   $doc->getFromDB(intval($_REQUEST['documents_id']));
-   if ($doc->can($doc->getID(), UPDATE)) {
-      $document_item        = new Document_Item;
-      $found_document_items = $document_item->find([
-                                                      'itemtype'     => Release::class,
-                                                      'items_id'     => (int)$_REQUEST[Release::class],
-                                                      'documents_id' => $doc->getID()
-                                                   ]);
-      foreach ($found_document_items as $item) {
-         $document_item->delete($item, true);
-      }
-   }
-   Html::back();
+    $doc = new Document();
+    $doc->getFromDB(intval($_REQUEST['documents_id']));
+    if ($doc->can($doc->getID(), UPDATE)) {
+        $document_item        = new Document_Item();
+        $found_document_items = $document_item->find([
+            'itemtype'     => Release::class,
+            'items_id'     => (int) $_REQUEST[Release::class],
+            'documents_id' => $doc->getID(),
+        ]);
+        foreach ($found_document_items as $item) {
+            $document_item->delete($item, true);
+        }
+    }
+    Html::back();
 
 } else {
 
-   $release->checkGlobal(READ);
+    $release->checkGlobal(READ);
 
-   $menus = ["helpdesk", Release::class];
-   Release::displayFullPageForItem($_REQUEST['id'] ?? 0, $menus, $_REQUEST);
+    $menus = ["helpdesk", Release::class];
+    Release::displayFullPageForItem($_REQUEST['id'] ?? 0, $menus, $_REQUEST);
 }

@@ -99,8 +99,14 @@
                     params['changes_id'],
                     __('For this change', 'releases'),
                     field_options|merge({
-                        'hide_if_no_elements': true
-
+                        'hide_if_no_elements': true,
+                        'full_width': true,
+                        'field_class': 'col-12 col-sm-12',
+                        'label_class': 'col-12 col-sm-12',
+                        'input_class': 'col-10 col-sm-10',
+                        'is_horizontal': false,
+                        'align_label_right': true,
+                        'mb': 'mb-2'
                     })
                 ) }}
                 {% endif %}
@@ -108,21 +114,48 @@
                     'date',
                     item.fields['date'],
                     __('Opening date'),
-                    field_options
+                    field_options|merge({
+                        'full_width': true,
+                        'field_class': 'col-12 col-sm-12',
+                        'label_class': 'col-12 col-sm-12',
+                        'input_class': 'col-10 col-sm-10',
+                        'is_horizontal': false,
+                        'align_label_right': true,
+                        'mb': 'mb-2'
+
+                    })
                 ) }}
 
                 {{ fields.datetimeField(
                     'date_preproduction',
                     item.fields['date_preproduction'],
                     __('Pre-production planned date', 'releases'),
-                    field_options
+                    field_options|merge({
+                        'full_width': true,
+                        'field_class': 'col-12 col-sm-12',
+                        'label_class': 'col-12 col-sm-12',
+                        'input_class': 'col-10 col-sm-10',
+                        'is_horizontal': false,
+                        'align_label_right': true,
+                        'mb': 'mb-2'
+
+                    })
                 ) }}
 
                 {{ fields.datetimeField(
                     'date_production',
                     item.fields['date_production'],
                     __('Production planned date', 'releases'),
-                    field_options
+                    field_options|merge({
+                        'full_width': true,
+                        'field_class': 'col-12 col-sm-12',
+                        'label_class': 'col-12 col-sm-12',
+                        'input_class': 'col-10 col-sm-10',
+                        'is_horizontal': false,
+                        'align_label_right': true,
+                        'mb': 'mb-2'
+
+                    })
                 ) }}
 
                 {{ include('components/itilobject/fields/status.html.twig') }}
