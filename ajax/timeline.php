@@ -43,6 +43,8 @@ Session::checkRight('plugin_releases_releases', UPDATE);
 if ($_POST['action'] == 'done_fail') {
     header("Content-Type: application/json; charset=UTF-8");
 
+    $_POST['parenttype'] = Release::class;
+
     if (!isset($_POST['items_id'])
       || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
     ) {

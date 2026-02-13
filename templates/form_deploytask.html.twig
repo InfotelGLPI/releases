@@ -31,7 +31,7 @@
 
 {% extends 'components/itilobject/timeline/form_timeline_item.html.twig' %}
 {% import 'components/form/fields_macros.html.twig' as fields %}
-{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
+{#{% set rpath = "$CFG_GLPI['root_doc'] . /plugins/releases" %}#}
 {% set params = {'parent': item}|merge(params|default({})) %}
 
 {% set candedit = item.maySolve() %}
@@ -39,27 +39,27 @@
 
 {% block timeline_card %}
    {% if form_mode == 'view' %}
-    <div class="read-only-content {{ entry_i['state'] is constant('GlpiPlugin\Releases\Deploytask::DONE') ? 'done' : '' }}">
-        {% if entry_i['state'] is constant('GlpiPlugin\Releases\Deploytask::TODO') %}
+    <div class="read-only-content {{ entry_i['state'] is constant('GlpiPlugin\\Releases\\Deploytask::DONE') ? 'done' : '' }}">
+        {% if entry_i['state'] is constant('GlpiPlugin\\Releases\\Deploytask::TODO') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Done') }}"></i>
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Failed', 'releases') }}"></i>
-        {% elseif entry_i['state'] is constant('GlpiPlugin\Releases\Test::DONE') %}
+        {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::DONE') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Done') }}"></i>
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Failed', 'releases') }}"></i>
-        {% elseif entry_i['state'] is constant('GlpiPlugin\Releases\Test::FAIL') %}
+        {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::FAIL') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Done') }}"></i>
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Failed', 'releases') }}"></i>
         {% endif %}
 
@@ -93,7 +93,7 @@
 
             {% if entry_i['plugin_releases_deploytasks_id'] %}
                 <span class="badge bg-orange-lt">
-                  {{ get_item_name('GlpiPlugin\Releases\Deploytask', entry_i['plugin_releases_deploytasks_id']) }}
+                  {{ get_item_name('GlpiPlugin\\Releases\\Deploytask', entry_i['plugin_releases_deploytasks_id']) }}
                </span>
             {% endif %}
 
@@ -124,7 +124,7 @@
              {
                 'action': 'done_fail',
                 'items_id': items_id,
-                'itemtype': 'GlpiPlugin\Releases\Deploytask',
+                'itemtype': 'GlpiPlugin\\Releases\\Deploytask',
                 'parenttype': '{{ item.getType() }}',
                 '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }},
                 'newStatus': newStatus
@@ -169,7 +169,7 @@
                        title="{{ _n('Task template', 'Task templates', get_plural_number(), 'releases') }}"></i>
                 {% endset %}
                 {{ fields.dropdownField(
-                    'GlpiPlugin\Releases\Deploytasktemplate',
+                    'GlpiPlugin\\Releases\\Deploytasktemplate',
                     'deploytasktemplates_id',
                     subitem.fields['deploytasktemplates_id'],
                     fup_template_lbl,
@@ -227,7 +227,7 @@
                         {% endif %}
                     {% endif %}
                     {{ fields.dropdownField(
-                        'GlpiPlugin\Releases\Deploytask',
+                        'GlpiPlugin\\Releases\\Deploytask',
                         'plugin_releases_deploytasks_id',
                         subitem.fields['plugin_releases_deploytasks_id'],
                         fup_source_lbl,
@@ -245,7 +245,7 @@
                         <i class="fas fa-tag fa-fw me-1" title="{{ _n('Category', 'Categories', 1) }}"></i>
                     {% endset %}
                     {{ fields.dropdownField(
-                        'GlpiPlugin\Releases\TypeDeployTask',
+                        'GlpiPlugin\\Releases\\TypeDeployTask',
                         'plugin_releases_typedeploytasks_id',
                         subitem.fields['plugin_releases_typedeploytasks_id'],
                         task_category_lbl,
@@ -266,7 +266,7 @@
                     } %}
 
                     {{ fields.dropdownField(
-                        'GlpiPlugin\Releases\Risk',
+                        'GlpiPlugin\\Releases\\Risk',
                         'plugin_releases_risks_id',
                         subitem.fields['plugin_releases_risks_id'],
                         fup_source_lbl,

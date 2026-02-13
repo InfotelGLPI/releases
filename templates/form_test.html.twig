@@ -33,7 +33,7 @@
 {% import 'components/form/fields_macros.html.twig' as fields %}
 
 {% set params = {'item': item}|merge(params|default({})) %}
-{% set rpath = "$CFG_GLPI['root_doc'] . '/plugins/releases'" %}
+{#{% set rpath = "$CFG_GLPI['root_doc'] . /plugins/releases" %}#}
 {% set candedit = item.maySolve() %}
 {% set rand = random() %}
 {% set field_options = {
@@ -44,16 +44,16 @@
 
 {% block timeline_card %}
     {% if form_mode == 'view' %}
-        <div class="read-only-content {{ entry_i['state'] is constant('GlpiPlugin\Releases\Test::DONE') ? 'done' : '' }}">
-            {% if entry_i['state'] is constant('GlpiPlugin\Releases\Test::TODO') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
-            {% elseif entry_i['state'] is constant('GlpiPlugin\Releases\Test::DONE') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
-            {% elseif entry_i['state'] is constant('GlpiPlugin\Releases\Test::FAIL') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\Releases\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
+        <div class="read-only-content {{ entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::DONE') ? 'done' : '' }}">
+            {% if entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::TODO') %}
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
+            {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::DONE') %}
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
+            {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::FAIL') %}
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
             {% endif %}
 
             <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
@@ -73,7 +73,7 @@
               $.post(rpath,
                  {'action':     'done_fail',
                     'items_id':   items_id,
-                    'itemtype':   'GlpiPlugin\Releases\Test',
+                    'itemtype':   'GlpiPlugin\\Releases\\Test',
                     'parenttype': '{{ item.getType() }}',
                     '{{ item.getForeignKeyField() }}': {{ item.fields['id'] }},
                     'newStatus': newStatus
@@ -128,7 +128,7 @@
                                title="{{ _n('Test template', 'Test templates', get_plural_number(), 'releases') }}"></i>
                         {% endset %}
                         {{ fields.dropdownField(
-                            'GlpiPlugin\Releases\Testtemplate',
+                            'GlpiPlugin\\Releases\\Testtemplate',
                             'testtemplates_id',
                             subitem.fields['testtemplates_id'],
                             fup_template_lbl,
@@ -155,7 +155,7 @@
                             <i class="fas fa-inbox fa-fw me-1" title="{{ __("Test type", 'releases') }}"></i>
                         {% endset %}
                         {{ fields.dropdownField(
-                            'GlpiPlugin\Releases\TypeTest',
+                            'GlpiPlugin\\Releases\\TypeTest',
                             'plugin_releases_typetests_id',
                             subitem.fields['plugin_releases_typetests_id'],
                             fup_source_lbl,
@@ -194,7 +194,7 @@
                                 } %}
 
                                 {{ fields.dropdownField(
-                                    'GlpiPlugin\Releases\Risk',
+                                    'GlpiPlugin\\Releases\\Risk',
                                     'plugin_releases_risks_id',
                                     subitem.fields['plugin_releases_risks_id'],
                                     fup_source_lbl,

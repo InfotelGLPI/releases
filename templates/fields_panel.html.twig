@@ -87,7 +87,15 @@
                             'is_recursive',
                             item.fields['is_recursive'],
                             __('Child entities'),
-                            field_options
+                            field_options|merge({
+                                'full_width': true,
+                                'field_class': 'col-12 col-sm-12',
+                                'label_class': 'col-12 col-sm-12',
+                                'input_class': 'col-10 col-sm-10',
+                                'is_horizontal': false,
+                                'align_label_right': true,
+                                'mb': 'mb-2'
+                            })
                         ) }}
                     {% endif %}
                 {% endif %}
@@ -168,6 +176,13 @@
                         'Location'|itemtype_name,
                         field_options|merge({
                             'hide_if_no_elements': true,
+                            'full_width': true,
+                            'field_class': 'col-12 col-sm-12',
+                            'label_class': 'col-12 col-sm-12',
+                            'input_class': 'col-10 col-sm-10',
+                            'is_horizontal': false,
+                            'align_label_right': true,
+                            'mb': 'mb-2'
 
                         })
                     ) }}
@@ -209,7 +224,7 @@
         </div>
     {% endif %}
 
-    {% if item.getType() == 'GlpiPlugin\Releases\Release' %}
+    {% if item.getType() == 'GlpiPlugin\\Releases\\Release' %}
         {% set shutdowns_fields = {
             'service_shutdown': __('Service shutdown', 'releases'),
         } %}
@@ -239,14 +254,32 @@
                         'service_shutdown',
                         item.fields['service_shutdown'],
                         __('Service shutdown', 'releases'),
-                        field_options
+                        field_options|merge({
+                            'full_width': true,
+                            'field_class': 'col-12 col-sm-12',
+                            'label_class': 'col-12 col-sm-12',
+                            'input_class': 'col-10 col-sm-10',
+                            'is_horizontal': false,
+                            'align_label_right': true,
+                            'mb': 'mb-2'
+
+                        })
                     ) }}
 
                     {{ fields.dropdownYesNo(
                         'hour_type',
                         item.fields['hour_type'],
                         __('Non-working hours', 'releases'),
-                        field_options
+                        field_options|merge({
+                            'full_width': true,
+                            'field_class': 'col-12 col-sm-12',
+                            'label_class': 'col-12 col-sm-12',
+                            'input_class': 'col-10 col-sm-10',
+                            'is_horizontal': false,
+                            'align_label_right': true,
+                            'mb': 'mb-2'
+
+                        })
                     ) }}
 
                     {{ fields.textareaField(
@@ -256,6 +289,13 @@
                         field_options|merge({
                             'enable_richtext': true,
                             'is_horizontal': false,
+                            'full_width': true,
+                            'field_class': 'col-12 col-sm-12',
+                            'label_class': 'col-12 col-sm-12',
+                            'input_class': 'col-10 col-sm-10',
+                            'is_horizontal': false,
+                            'align_label_right': true,
+                            'mb': 'mb-2'
                         })
                     ) }}
                 </div>
@@ -263,7 +303,7 @@
         </div>
     {% endif %}
 
-    {% if item.getType() == 'GlpiPlugin\Releases\Release' %}
+    {% if item.getType() == 'GlpiPlugin\\Releases\\Release' %}
         {% set communications_fields = {
             'communication': __('Communication', 'releases'),
         } %}
@@ -293,7 +333,16 @@
                         'communication',
                         item.fields['communication'],
                         __('Communication', 'releases'),
-                        field_options
+                        field_options|merge({
+                            'full_width': true,
+                            'field_class': 'col-12 col-sm-12',
+                            'label_class': 'col-12 col-sm-12',
+                            'input_class': 'col-10 col-sm-10',
+                            'is_horizontal': false,
+                            'align_label_right': true,
+                            'mb': 'mb-2'
+
+                        })
                     ) }}
 
                     {{ fields.dropdownItemTypes(
@@ -301,7 +350,14 @@
                         item.fields['communication_type'],
                         __('Communication type', 'releases'),
                         field_options|merge({
-                            'types': ['Entity', 'Group','Profile','User','Location']
+                            'types': ['Entity', 'Group','Profile','User','Location'],
+                            'full_width': true,
+                            'field_class': 'col-12 col-sm-12',
+                            'label_class': 'col-12 col-sm-12',
+                            'input_class': 'col-10 col-sm-10',
+                            'is_horizontal': false,
+                            'align_label_right': true,
+                            'mb': 'mb-2'
                         })
                     ) }}
 
