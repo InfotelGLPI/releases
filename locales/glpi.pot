@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 18:07+0000\n"
+"POT-Creation-Date: 2026-02-13 08:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "%s tests failed"
 msgstr ""
 
-#: templates/fields_panel.html.twig:183
+#: templates/fields_panel.html.twig:198
 msgid "Actors"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgctxt "button"
 msgid "Add a test"
 msgstr ""
 
-#: templates/fields_panel.html.twig:201
+#: templates/fields_panel.html.twig:216
 msgid "Associated change"
 msgid_plural "Associated changes"
 msgstr[0] ""
@@ -140,12 +140,12 @@ msgid "Closure of a releases"
 msgstr ""
 
 #: src/Release.php:352 src/Releasetemplate.php:915
-#: templates/fields_panel.html.twig:283 templates/fields_panel.html.twig:295
+#: templates/fields_panel.html.twig:323 templates/fields_panel.html.twig:335
 msgid "Communication"
 msgstr ""
 
 #: src/Release.php:367 src/Releasetemplate.php:920
-#: templates/fields_panel.html.twig:302
+#: templates/fields_panel.html.twig:351
 msgid "Communication type"
 msgstr ""
 
@@ -268,7 +268,7 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: src/Release.php:2638 templates/fields_panel.html.twig:100
+#: src/Release.php:2638 templates/fields_panel.html.twig:108
 msgid "For this change"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgid "No release found."
 msgstr ""
 
 #: src/Releasetemplate.php:174 src/Releasetemplate.php:691
-#: src/Releasetemplate.php:857 templates/fields_panel.html.twig:248
+#: src/Releasetemplate.php:857 templates/fields_panel.html.twig:272
 msgid "Non-working hours"
 msgstr ""
 
@@ -331,7 +331,7 @@ msgctxt "quantity"
 msgid "Number of tests"
 msgstr ""
 
-#: templates/fields_panel.html.twig:116
+#: templates/fields_panel.html.twig:124
 msgid "Opening date"
 msgstr ""
 
@@ -340,7 +340,7 @@ msgid "Plan this task"
 msgstr ""
 
 #: src/Releasetemplate.php:660 src/Change_Release.php:340
-#: templates/fields_panel.html.twig:132
+#: templates/fields_panel.html.twig:140
 msgid "Pre-production planned date"
 msgstr ""
 
@@ -357,7 +357,7 @@ msgid "Processing release"
 msgstr ""
 
 #: src/Releasetemplate.php:665 src/Change_Release.php:341
-#: templates/fields_panel.html.twig:148
+#: templates/fields_panel.html.twig:156
 msgid "Production planned date"
 msgstr ""
 
@@ -479,12 +479,12 @@ msgstr ""
 
 #: src/Release.php:335 src/Releasetemplate.php:166 src/Releasetemplate.php:677
 #: src/Releasetemplate.php:889 src/Change_Release.php:343
-#: templates/fields_panel.html.twig:229 templates/fields_panel.html.twig:241
+#: templates/fields_panel.html.twig:244 templates/fields_panel.html.twig:256
 msgid "Service shutdown"
 msgstr ""
 
 #: src/Release.php:343 src/Releasetemplate.php:170 src/Releasetemplate.php:684
-#: src/Releasetemplate.php:906 templates/fields_panel.html.twig:255
+#: src/Releasetemplate.php:906 templates/fields_panel.html.twig:288
 msgid "Service shutdown details"
 msgstr ""
 
