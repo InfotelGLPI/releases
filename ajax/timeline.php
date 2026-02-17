@@ -34,6 +34,7 @@
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Releases\Deploytask;
 use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Risk;
 use GlpiPlugin\Releases\Rollback;
 use GlpiPlugin\Releases\Test;
 
@@ -150,8 +151,14 @@ if ($_POST['action'] == 'done_fail') {
             if (!isset($_REQUEST['items_id'])) {
                 throw new NotFoundHttpException();
             }
+            if ($_REQUEST['itemtype'] == 'Rollback') {
+                $_REQUEST['itemtype'] = Rollback::class;
+            } else if ($_REQUEST['itemtype'] == 'Risk') {
+                $_REQUEST['itemtype'] = Risk::class;
+            }
             $objClass = $_REQUEST['itemtype'];
-            $obj      = new $objClass;
+
+            $obj      = new $objClass();
             $obj->getFromDB(intval($_REQUEST['items_id']));
 
             if (!in_array($obj->fields['state'], [0, Planning::INFO])) {

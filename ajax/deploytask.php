@@ -33,12 +33,15 @@
 use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Releases\Deploytasktemplate;
+use GlpiPlugin\Releases\Release;
 
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
 Session::checkLoginUser();
 Session::checkRight('plugin_releases_releases', UPDATE);
+
+$_POST['itemtype'] = Release::class;
 
 // Mandatory parameter: deploytasktemplates_id
 $deploytasktemplates_id = $_POST['deploytasktemplates_id'] ?? null;

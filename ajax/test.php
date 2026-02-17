@@ -32,6 +32,7 @@
 
 use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\RichText\RichText;
+use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Testtemplate;
 
 header("Content-Type: application/json; charset=UTF-8");
@@ -40,7 +41,9 @@ Html::header_nocache();
 Session::checkLoginUser();
 Session::checkRight('plugin_releases_releases', UPDATE);
 
-// Mandatory parameter: risktemplates_id
+$_POST['itemtype'] = Release::class;
+
+// Mandatory parameter: testtemplates_id
 $testtemplates_id = $_POST['testtemplates_id'] ?? null;
 if ($testtemplates_id === null) {
     throw new BadRequestHttpException("Missing or invalid parameter: 'testtemplates_id'");

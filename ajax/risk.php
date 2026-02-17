@@ -32,6 +32,7 @@
 
 use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\RichText\RichText;
+use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Risktemplate;
 
 header("Content-Type: application/json; charset=UTF-8");
@@ -39,6 +40,8 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 Session::checkRight('plugin_releases_releases', UPDATE);
+
+$_POST['itemtype'] = Release::class;
 
 // Mandatory parameter: risktemplates_id
 $risktemplates_id = $_POST['risktemplates_id'] ?? null;
