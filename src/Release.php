@@ -3721,7 +3721,7 @@ class Release extends CommonITILObject
      * @param User|null $user
      * @return array
      */
-    public function getAssociatedDocumentsCriteria($bypass_rights = false, ?User $user = null): array
+    public function getAssociatedDocumentsCriteria($bypass_rights = false, ?User $user = null, bool $for_anonymous_user = false): array
     {
         $task_class = Deploytask::getType();
         $review_class = Review::getType();
