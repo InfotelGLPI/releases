@@ -29,7 +29,7 @@ class ReleaseObjectTest extends DbTestCase
 {
     private int $entities_id;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
         // Super-admin pour disposer de tous les droits (y compris droits plugin)
