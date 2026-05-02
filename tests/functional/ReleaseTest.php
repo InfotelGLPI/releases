@@ -15,7 +15,7 @@ use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Review;
 use GlpiPlugin\Releases\Risk;
 use GlpiPlugin\Releases\Rollback;
-use GlpiPlugin\Releases\Test as ReleaseTest;
+use GlpiPlugin\Releases\Test as ReleaseTestItem;
 use ITILFollowup;
 
 /**
@@ -25,7 +25,7 @@ use ITILFollowup;
  * Lancer depuis la racine GLPI :
  *   vendor/bin/phpunit -c marketplace/releases/phpunit.xml
  */
-class ReleaseObjectTest extends DbTestCase
+class ReleaseTest extends DbTestCase
 {
     private int $entities_id;
 
@@ -212,7 +212,7 @@ class ReleaseObjectTest extends DbTestCase
     public function testAjouterTestDeRelease(): void
     {
         $release     = $this->createRelease();
-        $releaseTest = new ReleaseTest();
+        $releaseTest = new ReleaseTestItem();
         $id          = $releaseTest->add([
             'name'          => 'Test de non-régression login',
             'items_id'      => $release->getID(),
@@ -223,14 +223,14 @@ class ReleaseObjectTest extends DbTestCase
             'name'                        => 'Test de non-régression login',
             'plugin_releases_releases_id' => $release->getID(),
             'entities_id'                 => $this->entities_id,
-            'state'                       => ReleaseTest::TODO,
+            'state'                       => ReleaseTestItem::TODO,
         ]);
     }
 
     public function testEchecTestDeRelease(): void
     {
         $release     = $this->createRelease();
-        $releaseTest = new ReleaseTest();
+        $releaseTest = new ReleaseTestItem();
         $id          = $releaseTest->add([
             'name'          => 'Test de performance',
             'items_id'      => $release->getID(),
@@ -238,9 +238,9 @@ class ReleaseObjectTest extends DbTestCase
         ]);
         $this->assertGreaterThan(0, $id);
 
-        $releaseTest->update(['id' => $id, 'state' => ReleaseTest::FAIL]);
+        $releaseTest->update(['id' => $id, 'state' => ReleaseTestItem::FAIL]);
         $releaseTest->getFromDB($id);
-        $this->assertEquals(ReleaseTest::FAIL, (int) $releaseTest->fields['state']);
+        $this->assertEquals(ReleaseTestItem::FAIL, (int) $releaseTest->fields['state']);
     }
 
     // -------------------------------------------------------------------------
