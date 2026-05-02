@@ -31,11 +31,11 @@
  */
 
 use GlpiPlugin\Releases\Release;
-use GlpiPlugin\Releases\Releasetemplate;
+use GlpiPlugin\Releases\ReleaseTemplate;
 
 Session::checkLoginUser();
 
-$item = new Releasetemplate();
+$item = new ReleaseTemplate();
 
 Html::header(Release::getTypeName(2), '', "helpdesk", Release::class);
 $item->displayMenu("");

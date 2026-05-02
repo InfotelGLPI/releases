@@ -108,6 +108,35 @@ class Release extends CommonITILObject
         return _n('Release', 'Releases', $nb, 'releases');
     }
 
+    public static function getTemplateClass(): string
+    {
+        return ReleaseTemplate::class;
+    }
+
+    public function getTemplateFieldName($type = null): string
+    {
+        // Retourne un nom de champ court sans namespace pour éviter les backslashes
+        // dans les clés de config d'entité construites par CommonITILObject
+        return 'releasetemplates_id';
+    }
+
+    public function getITILTemplateToUse(
+        $force_template = 0,
+        $type = null,
+        $itilcategories_id = 0,
+        $entities_id = -1
+    ) {
+        $tt = getItemForItemtype(static::getTemplateClass());
+
+        if ($force_template && $tt->getFromDBWithData($force_template, true)) {
+            return $tt;
+        }
+
+        // Les colonnes releasetemplates_strategy/releasetemplates_id n'existent pas
+        // dans glpi_entities — on retourne le template vide pour éviter l'erreur SQL
+        // causée par CommonITILObject qui utilise strtolower(getType()) avec namespace
+        return $tt;
+    }
 
     public static function countForItem($ID, $class, $state = 0)
     {
@@ -637,7 +666,7 @@ class Release extends CommonITILObject
         global $DB, $CFG_GLPI;
 
         if (isset($this->input["releasetemplates_id"])) {
-            $template = new Releasetemplate();
+            $template = new ReleaseTemplate();
             $template->getFromDB($this->input["releasetemplates_id"]);
             $risks = [];
             $releaseTest = new Test();
@@ -648,7 +677,7 @@ class Release extends CommonITILObject
             $rollbackTemplate = new Rollbacktemplate();
             $releaseRisk = new Risk();
             $riskTemplate = new Risktemplate();
-            $itemLinkTemplate = new Releasetemplate_Item();
+            $itemLinkTemplate = new ReleaseTemplate_Item();
             $itemLink = new Release_Item();
             $risks = $riskTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
             $tests = $testTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
@@ -1307,7 +1336,7 @@ class Release extends CommonITILObject
             }
 
             if (isset($options["template_id"]) && $options["template_id"] > 0) {
-                $template = new Releasetemplate();
+                $template = new ReleaseTemplate();
                 $template->getFromDB($options["template_id"]);
 
                 foreach ($this->fields as $key => $field) {
@@ -1320,9 +1349,9 @@ class Release extends CommonITILObject
                 }
 
                 $this->fields["status"] = self::NEWRELEASE;
-                $release_user = new Releasetemplate_User();
-                $release_supplier = new Releasetemplate_Supplier();
-                $group_release = new Group_Releasetemplate();
+                $release_user = new ReleaseTemplate_User();
+                $release_supplier = new ReleaseTemplate_Supplier();
+                $group_release = new Group_ReleaseTemplate();
                 $users = $release_user->find(['plugin_releases_releasetemplates_id' => $options["template_id"]]);
                 $suppliers = $release_supplier->find(
                     ['plugin_releases_releasetemplates_id' => $options["template_id"]]
@@ -1407,7 +1436,7 @@ class Release extends CommonITILObject
         //      }
         //
         //      // Load template if available :
-        //      $tt = new Releasetemplate();
+        //      $tt = new ReleaseTemplate();
         //
         //      // Predefined fields from template : reset them
         //      if (isset($options['_predefined_fields'])) {
@@ -2628,10 +2657,10 @@ class Release extends CommonITILObject
 
     public static function showCreateRelease($item)
     {
-        $item_t = new Releasetemplate();
+        $item_t = new ReleaseTemplate();
         $dbu = new DbUtils();
         $condition = $dbu->getEntitiesRestrictCriteria($item_t->getTable());
-        Releasetemplate::dropdown(
+        ReleaseTemplate::dropdown(
             [
                 "comments" => false,
                 "addicon" => false,

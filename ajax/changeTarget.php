@@ -45,7 +45,10 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
       $dbu = new DbUtils();
 
 
-      $item      = new $_POST["type"]();
+      $item = getItemForItemtype($_POST["type"]);
+      if ($item === false) {
+          return;
+      }
       $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
       $items     = $item->find();
 

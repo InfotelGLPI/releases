@@ -39,16 +39,16 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Group_Releasetemplate Class
+ * Group_ReleaseTemplate Class
  *
  * @since 0.85
  *
  * Relation between Groups and Releases
  **/
-class Group_Releasetemplate extends CommonITILActor {
+class Group_ReleaseTemplate extends CommonITILActor {
 
    // From CommonDBRelation
-   static public $itemtype_1 = Releasetemplate::class;
+   static public $itemtype_1 = ReleaseTemplate::class;
    static public $items_id_1 = 'plugin_releases_releasetemplates_id';
    static public $itemtype_2 = 'Group';
    static public $items_id_2 = 'groups_id';

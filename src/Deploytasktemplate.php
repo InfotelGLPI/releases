@@ -135,9 +135,9 @@ class Deploytasktemplate extends CommonDropdown
 
         $tab[] = [
             'id' => '5',
-            'name' => Releasetemplate::getTypeName(),
+            'name' => ReleaseTemplate::getTypeName(),
             'field' => 'name',
-            'table' => getTableForItemType(Releasetemplate::class),
+            'table' => getTableForItemType(ReleaseTemplate::class),
             'datatype' => 'dropdown'
         ];
 
@@ -252,7 +252,7 @@ class Deploytasktemplate extends CommonDropdown
         }
         echo "<tr class='tab_bg_1' hidden>";
         echo "<td colspan='4'>";
-        $foreignKey = Releasetemplate::getForeignKeyField();
+        $foreignKey = ReleaseTemplate::getForeignKeyField();
         echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
         echo "</td>";
         echo "</tr>";

@@ -2,11 +2,11 @@
 
 
 use Glpi\Exception\Http\BadRequestHttpException;
-use GlpiPlugin\Releases\Releasetemplate_Item;
+use GlpiPlugin\Releases\ReleaseTemplate_Item;
 
 Session::checkLoginUser();
 
-$item = new Releasetemplate_Item();
+$item = new ReleaseTemplate_Item();
 
 if (isset($_POST["add"])) {
    $item->check(-1, CREATE, $_POST);

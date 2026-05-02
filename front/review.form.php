@@ -74,6 +74,7 @@ if (isset($_POST["add"])) {
    $d->getFromDBByCrit(["documents_id" => $_GET["documents_id"],
                         "items_id"     => $_GET["plugin_releases_reviews_id"],
                         "itemtype"     => Review::getType()]);
+   $d->check($d->getID(), DELETE);
    $d->delete(["id"           => $d->getID(),
                "documents_id" => $_GET["documents_id"],
                "items_id"     => $_GET["plugin_releases_reviews_id"],
@@ -82,7 +83,8 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["conclude"])) {
    global $CFG_GLPI;
    $r               = new Release();
-   $input["id"]     = $_POST["plugin_releases_releases_id"];
+   $r->check((int)$_POST["plugin_releases_releases_id"], UPDATE);
+   $input["id"]     = (int)$_POST["plugin_releases_releases_id"];
    $input["status"] = Release::CLOSED;
    $r->update($input);
    $r->getFromDBByCrit(["id" => $_POST["plugin_releases_releases_id"]]);

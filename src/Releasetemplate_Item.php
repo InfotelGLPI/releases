@@ -47,14 +47,14 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Releasetemplate_Item Class
+ * ReleaseTemplate_Item Class
  *
- *  Relation between Releasetemplates and Items
+ *  Relation between ReleaseTemplates and Items
  **/
-class Releasetemplate_Item extends CommonDBRelation
+class ReleaseTemplate_Item extends CommonDBRelation
 {
     // From CommonDBRelation
-    public static $itemtype_1 = Releasetemplate::class;
+    public static $itemtype_1 = ReleaseTemplate::class;
     public static $items_id_1 = 'plugin_releases_releasetemplates_id';
 
     public static $itemtype_2         = 'itemtype';
@@ -93,11 +93,11 @@ class Releasetemplate_Item extends CommonDBRelation
     /**
      * Print the HTML array for Items linked to a problem
      *
-     * @param $release Releasetemplate object
+     * @param $release ReleaseTemplate object
      *
      * @return void
      **/
-    public static function showForRelease(Releasetemplate $release)
+    public static function showForRelease(ReleaseTemplate $release)
     {
         $instID = $release->fields['id'];
 
@@ -232,7 +232,7 @@ class Releasetemplate_Item extends CommonDBRelation
     public static function countForItem(CommonDBTM $item)
     {
         $dbu   = new DbUtils();
-        $table = CommonDBTM::getTable(Releasetemplate_Item::class);
+        $table = CommonDBTM::getTable(ReleaseTemplate_Item::class);
         return $dbu->countElementsInTable(
             $table,
             ["plugin_releases_releasetemplates_id" => $item->getID()]
@@ -256,7 +256,7 @@ class Releasetemplate_Item extends CommonDBRelation
         if (!$withtemplate) {
             $nb = 0;
             switch ($item->getType()) {
-                case Releasetemplate::class:
+                case ReleaseTemplate::class:
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = self::countForItem($item);
                     }
@@ -268,7 +268,7 @@ class Releasetemplate_Item extends CommonDBRelation
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = self::countReleaseForItem($item);
                     }
-                    return self::createTabEntry(Releasetemplate::getTypeName(Session::getPluralNumber()), $nb);
+                    return self::createTabEntry(ReleaseTemplate::getTypeName(Session::getPluralNumber()), $nb);
 
                 default:
                     if (Session::haveRight("release", READ)) {
@@ -300,7 +300,7 @@ class Releasetemplate_Item extends CommonDBRelation
     {
 
         switch ($item->getType()) {
-            case Releasetemplate::class:
+            case ReleaseTemplate::class:
                 self::showForRelease($item);
                 break;
 

@@ -154,7 +154,7 @@ class Risktemplate extends CommonDropdown
 
         echo "<tr class='tab_bg_1' hidden>";
         echo "<td colspan='4'>";
-        $foreignKey = Releasetemplate::getForeignKeyField();
+        $foreignKey = ReleaseTemplate::getForeignKeyField();
         echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
         echo "</td>";
         echo "</tr>";

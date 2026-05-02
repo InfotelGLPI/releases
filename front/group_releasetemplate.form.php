@@ -32,14 +32,14 @@
 
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
-use GlpiPlugin\Releases\Group_Releasetemplate;
+use GlpiPlugin\Releases\Group_ReleaseTemplate;
 use GlpiPlugin\Releases\Release;
-use GlpiPlugin\Releases\Releasetemplate;
+use GlpiPlugin\Releases\ReleaseTemplate;
 
 global $CFG_GLPI;
 
-$link = new Group_Releasetemplate();
-$item = new Releasetemplate();
+$link = new Group_ReleaseTemplate();
+$item = new ReleaseTemplate();
 
 Session::checkLoginUser();
 

@@ -152,7 +152,8 @@ div.workflow li {
 
 
 .action-Risk {
-   color: #ff3c10!important;
+   /*color: #fff !important;*/
+    background-color: rgba(255, 60, 16, 0.29);
 }
 
 .timeline-item.Risk .timeline-content {
@@ -165,7 +166,8 @@ div.workflow li {
 }
 
 .action-Test {
-   color: #2385bb!important;
+    /*color: #fff !important;*/
+    background-color: rgba(159, 221, 255, 0.72);
 }
 
 .timeline-item.Test .timeline-content {
@@ -178,7 +180,8 @@ div.workflow li {
 }
 
 .action-Rollback {
-   color: #8fd57c!important;
+    /*color: #fff !important;*/
+    background-color: rgba(143, 213, 124, 0.74);
 }
 
 .timeline-item.Rollback .timeline-content {
@@ -191,7 +194,8 @@ div.workflow li {
 }
 
 .action-Deploytask {
-   color: #ff9d24!important;
+    /*color: #fff !important;*/
+    background-color: #fda02d8f;
 }
 
 .timeline-item.Deploytask .timeline-content {

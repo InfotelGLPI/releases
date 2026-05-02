@@ -39,16 +39,16 @@ if (!defined('GLPI_ROOT')) {
 }
 
 /**
- * Releasetemplate_Supplier Class
+ * ReleaseTemplate_Supplier Class
  *
  * Relation between Releases and Suppliers
  *
  * @since 0.84
  **/
-class Releasetemplate_Supplier extends CommonITILActor {
+class ReleaseTemplate_Supplier extends CommonITILActor {
 
    // From CommonDBRelation
-   static public $itemtype_1 = Releasetemplate::class;
+   static public $itemtype_1 = ReleaseTemplate::class;
    static public $items_id_1 = 'plugin_releases_releasetemplates_id';
    static public $itemtype_2 = 'Supplier';
    static public $items_id_2 = 'suppliers_id';

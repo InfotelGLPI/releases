@@ -150,7 +150,9 @@ class Deploytask extends CommonDBTM
     public function prepareInputForAdd($input)
     {
 
-        Toolbox::manageBeginAndEndPlanDates($input['plan']);
+        if (isset($input['plan'])) {
+            Toolbox::manageBeginAndEndPlanDates($input['plan']);
+        }
 
         if (isset($input["plan"])) {
             $input["begin"] = $input['plan']["begin"];

@@ -33,13 +33,13 @@
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Releases\Release;
-use GlpiPlugin\Releases\Releasetemplate;
-use GlpiPlugin\Releases\Releasetemplate_User;
+use GlpiPlugin\Releases\ReleaseTemplate;
+use GlpiPlugin\Releases\ReleaseTemplate_User;
 
 global $CFG_GLPI;
 
-$link = new Releasetemplate_User();
-$item = new Releasetemplate();
+$link = new ReleaseTemplate_User();
+$item = new ReleaseTemplate();
 
 Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);

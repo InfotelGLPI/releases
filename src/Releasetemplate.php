@@ -60,16 +60,22 @@ if (!defined('GLPI_ROOT')) {
  * Template for Release
  * @since 9.1
  **/
-class Releasetemplate extends CommonDropdown {
+class ReleaseTemplate extends CommonDropdown {
 
    // From CommonDBTM
    public $dohistory         = true;
    public $can_be_translated = true;
-   public $userlinkclass     = Releasetemplate_User::class; //todo chnage after table create for template
-   public $grouplinkclass    = Group_Releasetemplate::class;//todo chnage after table create for template
-   public $supplierlinkclass = Releasetemplate_Supplier::class;//todo chnage after table create for template
+   public $userlinkclass     = ReleaseTemplate_User::class; //todo chnage after table create for template
+   public $grouplinkclass    = Group_ReleaseTemplate::class;//todo chnage after table create for template
+   public $supplierlinkclass = ReleaseTemplate_Supplier::class;//todo chnage after table create for template
 
    static $rightname = 'plugin_releases_releases';
+
+   // Propriétés attendues par les plugins qui itèrent sur les CommonITILObject
+   // (ex. metademands) — Release n'utilise pas de champs ITIL template
+   public array $mandatory  = [];
+   public array $predefined = [];
+   public array $hidden     = [];
 
    /// Use user entity to select entity of the object
    protected $userentity_oncreate = false;
@@ -81,6 +87,16 @@ class Releasetemplate extends CommonDropdown {
 
    static function getTypeName($nb = 0) {
       return _n('Release template', 'Release templates', $nb, 'releases');
+   }
+
+   /**
+    * Retourne la liste des champs autorisés pour ce type de template.
+    * Release n'utilise pas de restrictions de champs ITIL — retourne un tableau vide
+    * pour la compatibilité avec les plugins qui appellent cette méthode sur tout CommonITILObject.
+    */
+   public static function getAllowedFields(bool $withtypeandcategory = false, bool $withitemtype = false): array
+   {
+      return [];
    }
 
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -137,7 +153,7 @@ class Releasetemplate extends CommonDropdown {
       $this->addStandardTab(self::getType(), $ong, $options);
       $this->addDefaultFormTab($ong);
       //      $this->defineDefaultObjectTabs($ong, $options);
-      $this->addStandardTab(Releasetemplate_Item::class, $ong, $options);
+      $this->addStandardTab(ReleaseTemplate_Item::class, $ong, $options);
       $this->addStandardTab('Document_Item', $ong, $options); // todo hide in template
       $this->addStandardTab('KnowbaseItem_Item', $ong, $options);
 
@@ -357,9 +373,9 @@ class Releasetemplate extends CommonDropdown {
 
       }
 
-      $release_user     = new Releasetemplate_User();
-      $release_supplier = new Releasetemplate_Supplier();
-      $group_release    = new Group_Releasetemplate();
+      $release_user     = new ReleaseTemplate_User();
+      $release_supplier = new ReleaseTemplate_Supplier();
+      $group_release    = new Group_ReleaseTemplate();
 
       $release_user->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
       $release_supplier->deleteByCriteria(["plugin_releases_releasetemplates_id" => $this->getID()]);
@@ -975,7 +991,7 @@ class Releasetemplate extends CommonDropdown {
       echo "<td class='center b' >";
       $dbu       = new DbUtils();
       $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', true);
-      $template  = new Releasetemplate();
+      $template  = new ReleaseTemplate();
       $templates = $template->find($condition);
       if (count($templates) != 0) {
          self::dropdown(["name" => "releasetemplates_id"] + $condition);
@@ -1673,9 +1689,9 @@ class Releasetemplate extends CommonDropdown {
          $options['_default_use_notification'] = Entity::getUsedConfig('is_notif_enable_default', $options['entities_id'], '', 1);
       }
       if ($ID) {
-         $release_user     = new Releasetemplate_User();
-         $release_supplier = new Releasetemplate_Supplier();
-         $group_release    = new Group_Releasetemplate();
+         $release_user     = new ReleaseTemplate_User();
+         $release_supplier = new ReleaseTemplate_Supplier();
+         $group_release    = new Group_ReleaseTemplate();
          $users            = $release_user->find(['plugin_releases_releasetemplates_id' => $ID]);
          $suppliers        = $release_supplier->find(['plugin_releases_releasetemplates_id' => $ID]);
          $groups           = $group_release->find(['plugin_releases_releasetemplates_id' => $ID]);
@@ -3054,7 +3070,7 @@ class Releasetemplate extends CommonDropdown {
 
       if (Session::getCurrentInterface() == 'central') {
          if ($isadmin) {
-            $actions['GlpiPlugin\Releases\Releasetemplate' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
+            $actions['GlpiPlugin\Releases\ReleaseTemplate' . MassiveAction::CLASS_ACTION_SEPARATOR . 'transfer'] = __('Transfer');
          }
       }
       return $actions;
@@ -3100,7 +3116,7 @@ class Releasetemplate extends CommonDropdown {
 
          case "transfer" :
             $input = $ma->getInput();
-            if ($item->getType() == Releasetemplate::getType()) {
+            if ($item->getType() == ReleaseTemplate::getType()) {
                foreach ($ids as $key) {
                   $item->getFromDB($key);
 

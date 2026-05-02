@@ -31,16 +31,16 @@ use GlpiPlugin\Releases\Change_Release;
 use GlpiPlugin\Releases\Deploytask;
 use GlpiPlugin\Releases\Deploytasktemplate;
 use GlpiPlugin\Releases\Group_Release;
-use GlpiPlugin\Releases\Group_Releasetemplate;
+use GlpiPlugin\Releases\Group_ReleaseTemplate;
 use GlpiPlugin\Releases\Profile;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Release_Item;
 use GlpiPlugin\Releases\Release_Supplier;
 use GlpiPlugin\Releases\Release_User;
-use GlpiPlugin\Releases\Releasetemplate;
-use GlpiPlugin\Releases\Releasetemplate_Item;
-use GlpiPlugin\Releases\Releasetemplate_Supplier;
-use GlpiPlugin\Releases\Releasetemplate_User;
+use GlpiPlugin\Releases\ReleaseTemplate;
+use GlpiPlugin\Releases\ReleaseTemplate_Item;
+use GlpiPlugin\Releases\ReleaseTemplate_Supplier;
+use GlpiPlugin\Releases\ReleaseTemplate_User;
 use GlpiPlugin\Releases\Review;
 use GlpiPlugin\Releases\Risk;
 use GlpiPlugin\Releases\Risktemplate;
@@ -69,7 +69,7 @@ function plugin_releases_install()
 
     //DisplayPreferences Migration
     $classes = ['PluginReleasesRelease' => Release::class,
-        'PluginReleasesReleasetemplate' => Releasetemplate::class,
+        'PluginReleasesReleaseTemplate' => ReleaseTemplate::class,
         'PluginReleasesDeploytasktemplate' => Deploytasktemplate::class];
 
     foreach ($classes as $old => $new) {
@@ -178,17 +178,17 @@ function plugin_releases_uninstall()
       Rollback::getTable(),
       Deploytasktemplate::getTable(),
       Group_Release::getTable(),
-      Group_Releasetemplate::getTable(),
+      Group_ReleaseTemplate::getTable(),
       Release_Item::getTable(),
-      Releasetemplate_Supplier::getTable(),
+      ReleaseTemplate_Supplier::getTable(),
       Release_Supplier::getTable(),
       Release_User::getTable(),
-      Releasetemplate_Item::getTable(),
+      ReleaseTemplate_Item::getTable(),
       Risktemplate::getTable(),
       Rollbacktemplate::getTable(),
-      Releasetemplate_User::getTable(),
+      ReleaseTemplate_User::getTable(),
       Testtemplate::getTable(),
-      Releasetemplate::getTable()
+      ReleaseTemplate::getTable()
     ];
 
     foreach ($tables as $table) {
@@ -213,7 +213,7 @@ function plugin_releases_uninstall()
         $item->deleteByCriteria(['itemtype' => Release::class]);
 
         $item = new $itemtype;
-        $item->deleteByCriteria(['itemtype' => Releasetemplate::class]);
+        $item->deleteByCriteria(['itemtype' => ReleaseTemplate::class]);
     }
 
    //TODO add drop profiles & menu in session ?
@@ -375,7 +375,7 @@ function plugin_releases_getDropdown()
               Testtemplate::getType()       => Testtemplate::getTypeName(2),
               Risktemplate::getType()       => Risktemplate::getTypeName(2),
               Rollbacktemplate::getType()   => Rollbacktemplate::getTypeName(2),
-//              Releasetemplate::getType()    => Releasetemplate::getTypeName(2),
+//              ReleaseTemplate::getType()    => ReleaseTemplate::getTypeName(2),
               TypeDeployTask::getType()     => TypeDeployTask::getTypeName(2),
               TypeTest::getType()           => TypeTest::getTypeName(2),
               TypeRisk::getType()           => TypeRisk::getTypeName(2)

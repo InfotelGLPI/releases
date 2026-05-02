@@ -33,9 +33,9 @@
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Releases\Release;
-use GlpiPlugin\Releases\Releasetemplate_Supplier;
+use GlpiPlugin\Releases\ReleaseTemplate_Supplier;
 
-$link = new Releasetemplate_Supplier();
+$link = new ReleaseTemplate_Supplier();
 
 Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);

@@ -52,6 +52,10 @@ if ($_POST['action'] == 'done_fail') {
         throw new NotFoundHttpException();
     }
 
+    $allowed_task_classes = [Deploytask::class, Risk::class, Rollback::class, Test::class];
+    if (!in_array($_POST['itemtype'], $allowed_task_classes, true)) {
+        throw new NotFoundHttpException();
+    }
     $taskClass = $_POST['itemtype'];
     $task      = new $taskClass();
     $task->getFromDB(intval($_POST['items_id']));
@@ -98,6 +102,10 @@ if ($_POST['action'] == 'done_fail') {
         throw new NotFoundHttpException();
     }
 
+    $allowed_task_classes = [Deploytask::class, Risk::class, Rollback::class, Test::class];
+    if (!in_array($_POST['itemtype'], $allowed_task_classes, true)) {
+        throw new NotFoundHttpException();
+    }
     $taskClass = $_POST['itemtype'];
     $task      = new $taskClass();
     $task->getFromDB(intval($_POST['items_id']));
@@ -155,6 +163,10 @@ if ($_POST['action'] == 'done_fail') {
                 $_REQUEST['itemtype'] = Rollback::class;
             } else if ($_REQUEST['itemtype'] == 'Risk') {
                 $_REQUEST['itemtype'] = Risk::class;
+            }
+            $allowed_task_classes = [Deploytask::class, Risk::class, Rollback::class, Test::class];
+            if (!in_array($_REQUEST['itemtype'], $allowed_task_classes, true)) {
+                throw new NotFoundHttpException();
             }
             $objClass = $_REQUEST['itemtype'];
 

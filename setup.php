@@ -37,7 +37,7 @@ use GlpiPlugin\Releases\Profile;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Release_Item;
 
-define('PLUGIN_RELEASES_VERSION', '2.1.7');
+define('PLUGIN_RELEASES_VERSION', '2.1.8');
 
 if (!defined("PLUGIN_RELEASES_DIR")) {
     define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
@@ -48,9 +48,8 @@ function plugin_init_releases()
 {
     global $PLUGIN_HOOKS, $CFG_GLPI;
     $CFG_GLPI['glpiitemtypetables']['glpi_plugin_releases_releases'] = Release::class;
-    $PLUGIN_HOOKS['csrf_compliant']['releases']   = true;
-    $PLUGIN_HOOKS['change_profile']['releases']   = [Profile::class, 'initProfile'];
-    $PLUGIN_HOOKS['assign_to_ticket']['releases'] = true;
+    $PLUGIN_HOOKS[Hooks::CHANGE_PROFILE]['releases']   = [Profile::class, 'initProfile'];
+    $PLUGIN_HOOKS[Hooks::ASSIGN_TO_TICKET]['releases'] = true;
     if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
 //      $PLUGIN_HOOKS["javascript"]['releases'] = ["plugins/releases/js/releases.js"];
@@ -83,7 +82,7 @@ function plugin_init_releases()
         ]);
 
         if (Session::haveRight("plugin_releases_releases", READ)) {
-            $PLUGIN_HOOKS['menu_toadd']['releases'] = ['helpdesk' => Release::class];
+            $PLUGIN_HOOKS[Hooks::MENU_TOADD]['releases'] = ['helpdesk' => Release::class];
         }
     }
 
@@ -98,7 +97,7 @@ function plugin_init_releases()
     }
 
    // End init, when all types are registered
-    $PLUGIN_HOOKS['post_init']['releases'] = 'plugin_releases_postinit';
+    $PLUGIN_HOOKS[Hooks::POST_INIT]['releases'] = 'plugin_releases_postinit';
 }
 
 // Get the name and the version of the plugin - Needed

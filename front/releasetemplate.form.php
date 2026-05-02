@@ -31,8 +31,8 @@
  */
 
 
-use GlpiPlugin\Releases\Releasetemplate;
+use GlpiPlugin\Releases\ReleaseTemplate;
 
 Session::checkLoginUser();
-$dropdown = new Releasetemplate();
+$dropdown = new ReleaseTemplate();
 include(GLPI_ROOT . "/front/dropdown.common.form.php");
