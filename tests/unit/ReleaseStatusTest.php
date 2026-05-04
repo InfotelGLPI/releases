@@ -3,7 +3,7 @@
 /*
  -------------------------------------------------------------------------
  Releases plugin for GLPI
- Copyright (C) 2018-2022 by the Releases Development Team.
+ Copyright (C) 2018-2026 by the Releases Development Team.
  -------------------------------------------------------------------------
  */
 
