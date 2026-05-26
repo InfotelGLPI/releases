@@ -1,19 +1,18 @@
 <?php
 
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
- Releases plugin for GLPI
- Copyright (C) 2018-2026 by the Releases Development Team.
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
 
- https://github.com/InfotelGLPI/Releases
+ https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------
 
  LICENSE
 
- This file is part of Releases.
+ This file is part of releases.
 
- Releases is free software; you can redistribute it and/or modify
+ releases is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.

@@ -1,9 +1,9 @@
 <?php
+
 /*
- * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
  releases plugin for GLPI
- Copyright (C) 2018-2026 by the Releases Development Team.
+ Copyright (C) 2020-2026 by the releases Development Team.
 
  https://github.com/InfotelGLPI/releases
  -------------------------------------------------------------------------
