@@ -1,12 +1,14 @@
-# Releases
-Plugin Releases for GLPI
+## Releases plugin for GLPI
+
+[![License](https://img.shields.io/badge/License-GNU%20v2-blue.svg?style=flat-square)](https://github.com/InfotelGLPI/releases/blob/master/LICENSE)
+[![Web](https://img.shields.io/badge/Web-Infotel-blue.svg?style=flat-square)](https://blogglpi.infotel.com)
+[![Translate](https://img.shields.io/badge/Translate-Transifex-cyan)](https://explore.transifex.com/infotelGLPI/GLPI_releases/)
 
 ![Plugin Releases](https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases.png "Plugin Releases")
 
 ![Plugin Releases](https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases_finalize.png "Plugin Releases")
 
-Ce plugin est sur Transifex - Aidez-nous à le traduire :
-https://www.transifex.com/infotelglpi/GLPI_releases/
+### French
 
 Ce plugin vous permet d'ajouter la gestion de mise en production à GLPI d'y associer des changements, des articles de la base de connaissance.
 > * description des risques
@@ -16,8 +18,7 @@ Ce plugin vous permet d'ajouter la gestion de mise en production à GLPI d'y ass
 > * ajout d'une revue sur la mise en production
 >   
 
-This plugin is on Transifex - Help us to translate :
-https://www.transifex.com/infotelglpi/GLPI_releases/
+### English
 
 This plugin allows you to add the management of release to GLPI to associate changes, articles from the knowledge base.
 > * description of risks
