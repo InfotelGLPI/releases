@@ -38,13 +38,17 @@
     'fields_template': itiltemplate,
 } %}
 
+{% set status_closed = item.fields['status'] in item.getClosedStatusArray() %}
+
 {% block timeline_card %}
     {% if form_mode == 'view' %}
         <div class="read-only-content {{ entry_i['state'] is constant('Planning::DONE') ? 'done' : '' }}">
+            {% if not status_closed %}
             {% if entry_i['state'] is constant('Planning::TODO') %}
                 <span class="state state_1" onclick="change_risk_state({{ entry_i['id'] }}, this, '{{ rpath }}/ajax/timeline.php')" title="{{ __('To do') }}"></span>
             {% elseif entry_i['state'] is constant('Planning::DONE') %}
                 <span class="state state_2" onclick="change_risk_state({{ entry_i['id'] }}, this, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></span>
+            {% endif %}
             {% endif %}
 
             <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"

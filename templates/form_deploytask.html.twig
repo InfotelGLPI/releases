@@ -33,9 +33,12 @@
 {% set candedit = item.maySolve() %}
 {% set rand = random() %}
 
+{% set status_closed = item.fields['status'] in item.getClosedStatusArray() %}
+
 {% block timeline_card %}
    {% if form_mode == 'view' %}
     <div class="read-only-content {{ entry_i['state'] is constant('GlpiPlugin\\Releases\\Deploytask::DONE') ? 'done' : '' }}">
+        {% if not status_closed %}
         {% if entry_i['state'] is constant('GlpiPlugin\\Releases\\Deploytask::TODO') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
                onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
@@ -57,6 +60,7 @@
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;'
                onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
                title="{{ __('Failed', 'releases') }}"></i>
+        {% endif %}
         {% endif %}
 
         <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"

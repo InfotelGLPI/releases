@@ -42,6 +42,10 @@ if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && is
    global $DB;
    $item = new Release();
    $item->getFromDB($_POST["plugin_releases_releases_id"]);
+   // Forbid any state change once the release reached a terminal status
+   if (in_array($item->getField('status'), Release::getClosedStatusArray(), true)) {
+      exit;
+   }
    if ($_POST["status"] > $item->getField('status')) {
       $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID(), 'status' => $_POST["status"]];
    } else {

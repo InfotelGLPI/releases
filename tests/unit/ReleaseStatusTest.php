@@ -69,6 +69,19 @@ class ReleaseStatusTest extends TestCase
         $this->assertSame(ReleaseTemplate::class, Release::getTemplateClass());
     }
 
+    /**
+     * The terminal-status guard added to the timeline/changeitemstate AJAX
+     * controllers relies on getClosedStatusArray() listing both CLOSED and FAIL.
+     * If this contract changes, those guards must be revisited.
+     */
+    public function testClosedStatusArrayContainsTerminalStatuses(): void
+    {
+        $closed = Release::getClosedStatusArray();
+
+        $this->assertContains(Release::CLOSED, $closed);
+        $this->assertContains(Release::FAIL, $closed);
+    }
+
     // -------------------------------------------------------------------------
     // Constantes Risk
     // -------------------------------------------------------------------------

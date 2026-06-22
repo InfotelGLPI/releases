@@ -56,6 +56,13 @@ if ($_POST['action'] == 'done_fail') {
     $task      = new $taskClass();
     $task->getFromDB(intval($_POST['items_id']));
 
+    // Forbid any state change once the parent release reached a terminal status
+    $release = new Release();
+    $release->getFromDB($task->fields["plugin_releases_releases_id"]);
+    if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
+        throw new NotFoundHttpException();
+    }
+
     if ($_POST["newStatus"] == $task->fields['state']) {
         $new_state = Test::TODO;
     } else {
@@ -74,8 +81,6 @@ if ($_POST['action'] == 'done_fail') {
                     $foreignKey => intval($_POST[$foreignKey]),
                     'state'     => $new_state
                  ]);
-    $release = new Release();
-    $release->getFromDB($task->fields["plugin_releases_releases_id"]);
     if (Test::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
                         'status' => Release::TESTDEFINITION]);
@@ -106,6 +111,13 @@ if ($_POST['action'] == 'done_fail') {
     $task      = new $taskClass();
     $task->getFromDB(intval($_POST['items_id']));
 
+    // Forbid any state change once the parent release reached a terminal status
+    $release = new Release();
+    $release->getFromDB($task->fields["plugin_releases_releases_id"]);
+    if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
+        throw new NotFoundHttpException();
+    }
+
       $new_state = ($task->fields['state'] == Planning::DONE)
          ? Planning::TODO
          : Planning::DONE;
@@ -122,8 +134,6 @@ if ($_POST['action'] == 'done_fail') {
                        'state'     => $new_state
                     ]);
 
-      $release = new Release();
-      $release->getFromDB($task->fields["plugin_releases_releases_id"]);
     if (Test::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
                          'status' => Release::TESTDEFINITION]);
@@ -168,6 +178,13 @@ if ($_POST['action'] == 'done_fail') {
 
             $obj      = new $objClass();
             $obj->getFromDB(intval($_REQUEST['items_id']));
+
+            // Forbid any state change once the parent release reached a terminal status
+            $release = new Release();
+            $release->getFromDB($obj->fields["plugin_releases_releases_id"]);
+            if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
+                throw new NotFoundHttpException();
+            }
 
             if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
                 $new_state = ($obj->fields['state'] == Planning::DONE)
