@@ -8,6 +8,11 @@
 
 ![Plugin Releases](https://raw.githubusercontent.com/InfotelGLPI/releases/master/screenshots/plugin_releases_finalize.png "Plugin Releases")
 
+### Documentation
+
+- [Documentation française](docs/fr_FR.md)
+- [English documentation](docs/en_GB.md)
+
 ### French
 
 Ce plugin vous permet d'ajouter la gestion de mise en production à GLPI d'y associer des changements, des articles de la base de connaissance.
