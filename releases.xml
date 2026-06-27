@@ -129,7 +129,7 @@ The plugin allows:
         <lang>en_GB</lang>
         <lang>fr_FR</lang>
     </langs>
-   <license><![CDATA[GPLv2+]]></license>
+   <license><![CDATA[GPLv3+]]></license>
       <tags>
          <fr>
             <tag>changement</tag>

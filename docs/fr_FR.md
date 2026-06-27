@@ -4,7 +4,7 @@
 
 Le plugin **Releases** permet de gérer les mises en production de changements au sein de GLPI. Il s'intègre au processus ITIL en associant des changements, des articles de base de connaissances et des acteurs à chaque mise en production.
 
-**Licence** : GPLv2+  
+**Licence** : GPLv3+  
 **Auteurs** : Xavier Caillaud, Alban Lesellier, Infotel  
 **Dépôt** : https://github.com/InfotelGLPI/releases
 

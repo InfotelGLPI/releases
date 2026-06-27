@@ -4,7 +4,7 @@
 
 The **Releases** plugin adds release management to GLPI, following the ITIL change management process. It lets you track production deployments by linking changes, knowledge base articles, inventory items, and actors to each release.
  
-**License**: GPLv2+  
+**License**: GPLv3+  
 **Authors**: Xavier Caillaud, Alban Lesellier, Infotel  
 **Repository**: https://github.com/InfotelGLPI/releases
 
