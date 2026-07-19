@@ -79,7 +79,7 @@
                     {% endif %}
 
                     {% if item.isField('is_recursive') %}
-                        {{ fields.dropdownYesNo(
+                        {{ fields.sliderField(
                             'is_recursive',
                             item.fields['is_recursive'],
                             __('Child entities'),
@@ -246,7 +246,7 @@
             <div id="shutdowns" class="accordion-collapse collapse {{ shutdowns_show ? "show" : "" }}" aria-labelledby="shutdowns-heading">
                 <div class="accordion-body row m-0 mt-n2">
 
-                    {{ fields.dropdownYesNo(
+                    {{ fields.sliderField(
                         'service_shutdown',
                         item.fields['service_shutdown'],
                         __('Service shutdown', 'releases'),
@@ -262,7 +262,7 @@
                         })
                     ) }}
 
-                    {{ fields.dropdownYesNo(
+                    {{ fields.sliderField(
                         'hour_type',
                         item.fields['hour_type'],
                         __('Non-working hours', 'releases'),
@@ -325,7 +325,7 @@
             <div id="communications" class="accordion-collapse collapse {{ communications_show ? "show" : "" }}" aria-labelledby="communications-heading">
                 <div class="accordion-body row m-0 mt-n2">
 
-                    {{ fields.dropdownYesNo(
+                    {{ fields.sliderField(
                         'communication',
                         item.fields['communication'],
                         __('Communication', 'releases'),

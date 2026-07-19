@@ -199,7 +199,10 @@ class Release_Item extends CommonDBRelation {
                   $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);
                }
                $link     = $itemtype::getFormURLWithID($data['id']);
-               $namelink = "<a href=\"" . $link . "\">" . $name . "</a>";
+               // Stored XSS: asset name/serial/otherserial come straight from the DB
+               // (stored un-escaped on GLPI 10+/11) and are echoed into the central page.
+               // Escape every DB-sourced value before it reaches the HTML.
+               $namelink = "<a href=\"" . $link . "\">" . htmlspecialchars($name) . "</a>";
 
                echo "<tr class='tab_bg_1'>";
                if ($canedit) {
@@ -218,10 +221,10 @@ class Release_Item extends CommonDBRelation {
                echo "<td class='center" .
                     (isset($data['is_deleted']) && $data['is_deleted'] ? " tab_bg_2_2'" : "'");
                echo ">" . $namelink . "</td>";
-               echo "<td class='center'>" . (isset($data["serial"]) ? "" . $data["serial"] . "" : "-") .
+               echo "<td class='center'>" . (isset($data["serial"]) ? htmlspecialchars($data["serial"]) : "-") .
                     "</td>";
                echo "<td class='center'>" .
-                    (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-") . "</td>";
+                    (isset($data["otherserial"]) ? htmlspecialchars($data["otherserial"]) : "-") . "</td>";
                echo "</tr>";
             }
             $totalnb += $nb;

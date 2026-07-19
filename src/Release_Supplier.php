@@ -79,7 +79,9 @@ class Release_Supplier extends CommonITILActor
         echo "<tr class='tab_bg_2'><td>" . $item->getTypeName(1) . "</td>";
         echo "<td>";
         if ($item->getFromDB($this->fields[static::getItilObjectForeignKey()])) {
-            echo $item->getField('name');
+            // Stored XSS: the parent release name is user-supplied and stored un-escaped
+            // on GLPI 10+/11, so it must be escaped before being echoed into this form.
+            echo htmlspecialchars($item->getField('name'));
         }
         echo "</td></tr>";
 
