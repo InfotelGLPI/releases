@@ -30,8 +30,7 @@
 namespace GlpiPlugin\Releases;
 
 use CommonITILActor;
-use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Supplier;
 
 if (!defined('GLPI_ROOT')) {
@@ -73,17 +72,10 @@ class Release_Supplier extends CommonITILActor
         }
         $item = new static::$itemtype_1();
 
-        echo "<br><form method='post' action='" . $_SERVER['PHP_SELF'] . "'>";
-        echo "<div class='center'>";
-        echo "<table class='tab_cadre' width='80%'>";
-        echo "<tr class='tab_bg_2'><td>" . $item->getTypeName(1) . "</td>";
-        echo "<td>";
+        $parent_name = '';
         if ($item->getFromDB($this->fields[static::getItilObjectForeignKey()])) {
-            // Stored XSS: the parent release name is user-supplied and stored un-escaped
-            // on GLPI 10+/11, so it must be escaped before being echoed into this form.
-            echo htmlspecialchars($item->getField('name'));
+            $parent_name = $item->getField('name');
         }
-        echo "</td></tr>";
 
         $supplier      = new Supplier();
         $default_email = "";
@@ -91,31 +83,23 @@ class Release_Supplier extends CommonITILActor
             $default_email = $supplier->fields['email'];
         }
 
-        echo "<tr class='tab_bg_2'><td>" . Supplier::getTypeName(1) . "</td>";
-        echo "<td>" . $supplier->getName() . "</td></tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __('Email Followup') . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo('use_notification', $this->fields['use_notification']);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . _n('Email', 'Emails', 1) . "</td>";
-        echo "<td>";
         if (empty($this->fields['alternative_email'])) {
             $this->fields['alternative_email'] = $default_email;
         }
-        echo "<input type='text' size='40' name='alternative_email' value='"
-            . $this->fields['alternative_email'] . "'>";
-        echo "</td></tr>";
 
-        echo "<tr class='tab_bg_2'>";
-        echo "<td class='center' colspan='2'>";
-        echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='btn btn-primary'>";
-        echo "<input type='hidden' name='id' value='$ID'>";
-        echo "</td></tr>";
-
-        echo "</table></div>";
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display('@releases/actor_notification.html.twig', [
+            'form_action'       => static::getFormURL(),
+            'parent_type_name'  => $item->getTypeName(1),
+            'parent_name'       => $parent_name,
+            'actor_type_name'   => Supplier::getTypeName(1),
+            'actor_name'        => $supplier->getName(),
+            'use_notification'  => $this->fields['use_notification'],
+            'email_mode'        => 'text',
+            'default_email'     => $default_email,
+            'emails'            => [],
+            'alternative_email' => $this->fields['alternative_email'],
+            'id'                => $ID,
+        ]);
     }
 
 

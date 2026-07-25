@@ -3813,11 +3813,13 @@ class Release extends CommonITILObject
 
     public static function getContentTemplatesParametersClass(): string
     {
-        // TODO: Implement getContentTemplatesParametersClass() method.
+        // Minimal implementation: default to the core Ticket content-template parameters.
+        return \Glpi\ContentTemplates\Parameters\TicketParameters::class;
     }
 
     public static function getContentTemplatesParametersClassInstance(
     ): CommonITILObjectParameters {
-        // TODO: Implement getContentTemplatesParametersClassInstance() method.
+        // Minimal implementation: default to the core Ticket content-template parameters.
+        return new \Glpi\ContentTemplates\Parameters\TicketParameters();
     }
 }

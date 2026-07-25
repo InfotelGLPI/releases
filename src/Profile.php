@@ -31,6 +31,7 @@ namespace GlpiPlugin\Releases;
 
 use CommonGLPI;
 use DbUtils;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
 use ProfileRight;
 use Session;
@@ -67,30 +68,37 @@ class Profile extends \Profile {
         return "ti ti-building-factory";
     }
 
-   /**
-    * @param CommonGLPI $item
-    * @param int        $tabnum
-    * @param int        $withtemplate
-    *
-    * @return bool
-    */
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+    /**
+     * @param CommonGLPI $item
+     * @param int $tabnum
+     * @param int $withtemplate
+     *
+     * @return bool
+     */
+    public static function displayTabContentForItem(
+        CommonGLPI $item,
+        $tabnum = 1,
+        $withtemplate = 0
+    ) {
+        if (!$item instanceof \Profile || !self::canView()) {
+            return false;
+        }
 
-      if ($item->getType() == 'Profile') {
-         $ID   = $item->getID();
-         $prof = new self();
+        $profile = new \Profile();
+        $profile->getFromDB($item->getID());
 
-         self::addDefaultProfileInfos($ID,
-                                      ['plugin_releases_releases'  => 0,
-                                       'plugin_releases_tests'     => 0,
-                                       'plugin_releases_risks'     => 0,
-                                       'plugin_releases_rollbacks' => 0,
-                                       'plugin_releases_tasks'     => 0
-                                      ]);
-         $prof->showForm($ID);
-      }
-      return true;
-   }
+        $rights = self::getAllRights(true);
+
+        $twig = TemplateRenderer::getInstance();
+        $twig->display('@releases/profile.html.twig', [
+            'id' => $item->getID(),
+            'profile' => $profile,
+            'title' => self::getTypeName(Session::getPluralNumber()),
+            'rights' => $rights,
+        ]);
+
+        return true;
+    }
 
    /**
     * @param $ID
@@ -134,48 +142,6 @@ class Profile extends \Profile {
             $_SESSION['glpiactiveprofile'][$right] = $value;
          }
       }
-   }
-
-   /**
-    * Show profile form
-    *
-    * @param int  $profiles_id
-    * @param bool $openform
-    * @param bool $closeform
-    *
-    * @return nothing
-    * @internal param int $items_id id of the profile
-    * @internal param value $target url of target
-    */
-   function showForm($profiles_id = 0, $openform = true, $closeform = true) {
-
-      echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
-          && $openform
-      ) {
-         $profile = new \Profile();
-         echo "<form method='post' action='" . $profile->getFormURL() . "'>";
-      }
-
-      $profile = new \Profile();
-      $profile->getFromDB($profiles_id);
-      if ($profile->getField('interface') == 'central') {
-         $rights = $this->getAllRights();
-         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
-                                                       'default_class' => 'tab_bg_2',
-                                                       'title'         => __('General')]);
-      }
-
-      if ($canedit
-          && $closeform
-      ) {
-         echo "<div class='center'>";
-         echo Html::hidden('id', ['value' => $profiles_id]);
-         echo Html::submit(_sx('button', 'Save'), ['name' => 'update', 'class' => 'btn btn-primary']);
-         echo "</div>\n";
-         Html::closeForm();
-      }
-      echo "</div>";
    }
 
    /**

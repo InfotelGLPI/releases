@@ -33,10 +33,8 @@ use CommonDBTM;
 use CommonDropdown;
 use CommonITILObject;
 use DbUtils;
-use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\ContentTemplates\TemplateManager;
-use Html;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -142,66 +140,15 @@ class Risktemplate extends CommonDropdown
 
     public function showForm($ID, $options = [])
     {
-        global $CFG_GLPI, $DB;
-        $rand_text = mt_rand();
-        $rand_name = mt_rand();
-        $rand_type = mt_rand();
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        echo "<tr class='tab_bg_1' hidden>";
-        echo "<td colspan='4'>";
-        $foreignKey = ReleaseTemplate::getForeignKeyField();
-        echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]
-        );
-        echo "</td>";
-        echo "<td>";
-        echo __("Risk type", 'releases');
-        echo "</td>";
+        $typerisks_id = $_GET["typeriskid"] ?? $this->fields["plugin_releases_typerisks_id"];
 
-        echo "<td>";
-        if (isset($_GET["typeriskid"])) {
-            $value = $_GET["typeriskid"];
-        } else {
-            $value = $this->fields["plugin_releases_typerisks_id"];
-        }
-        Dropdown::show(TypeRisk::getType(), [
-            'name' => "plugin_releases_typerisks_id",
-            'value' => $value,
-            'rand' => $rand_type
+        TemplateRenderer::getInstance()->display('@releases/form_risktemplate.html.twig', [
+            'item'         => $this,
+            'typerisks_id' => $typerisks_id,
+            'params'       => $options,
         ]);
-        echo "</td>";
-
-
-        echo "</tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Description') . "</td>";
-        echo "<td colspan='3'>";
-        //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
-        $content_id = "content$rand_text";
-        $cols = 100;
-        $rows = 10;
-        Html::textarea([
-            'name' => 'content',
-            'value' => $this->fields["content"],
-            'rand' => $rand_text,
-            'editor_id' => $content_id,
-            'enable_fileupload' => false,
-            'enable_richtext' => true,
-            'cols' => $cols,
-            'rows' => $rows
-        ]);
-        echo "</td>";
-        echo "</tr>";
-
-        $this->showFormButtons($options);
     }
 
     /**

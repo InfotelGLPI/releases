@@ -1,0 +1,1369 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/changeitemstate.php
+
+		-
+			message: '#^Call to function is_subclass_of\(\) with ''GlpiPlugin\\\\Releases\\\\Release'' and ''CommonITILObject'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: ajax/deploytask.php
+
+		-
+			message: '#^Offset ''itemtype'' on non\-empty\-array\<mixed\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: ajax/deploytask.php
+
+		-
+			message: '#^Variable \$parents_itemtype in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: ajax/deploytask.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/deploytask.php
+
+		-
+			message: '#^Call to function is_subclass_of\(\) with ''GlpiPlugin\\\\Releases\\\\Release'' and ''CommonITILObject'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: ajax/risk.php
+
+		-
+			message: '#^Offset ''itemtype'' on non\-empty\-array\<mixed\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: ajax/risk.php
+
+		-
+			message: '#^Variable \$parents_itemtype in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: ajax/risk.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/risk.php
+
+		-
+			message: '#^Call to function is_subclass_of\(\) with ''GlpiPlugin\\\\Releases\\\\Release'' and ''CommonITILObject'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: ajax/rollback.php
+
+		-
+			message: '#^Offset ''itemtype'' on non\-empty\-array\<mixed\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: ajax/rollback.php
+
+		-
+			message: '#^Variable \$parents_itemtype in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: ajax/rollback.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/rollback.php
+
+		-
+			message: '#^Call to function is_subclass_of\(\) with ''GlpiPlugin\\\\Releases\\\\Release'' and ''CommonITILObject'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: ajax/test.php
+
+		-
+			message: '#^Offset ''itemtype'' on non\-empty\-array\<mixed\> on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: ajax/test.php
+
+		-
+			message: '#^Variable \$parents_itemtype in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: ajax/test.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/test.php
+
+		-
+			message: '#^Offset ''parenttype'' on non\-empty\-array\<mixed\> in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 2
+			path: ajax/timeline.php
+
+		-
+			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: ajax/timeline.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/deploytask.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/release.form.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Releases\\ReleaseTemplate_Supplier\:\:showSupplierNotificationForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/releasetemplate_supplier.form.php
+
+		-
+			message: '#^Call to an undefined method GlpiPlugin\\Releases\\ReleaseTemplate_User\:\:showUserNotificationForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: front/releasetemplate_user.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/review.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/risk.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/rollback.form.php
+
+		-
+			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: front/test.form.php
+
+		-
+			message: '#^Parameter \#1 \$ver of class Migration constructor expects string, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Parameter \#2 \$right of static method Session\:\:haveRight\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: hook.php
+
+		-
+			message: '#^Class GlpiPlugin\\Mydashboard\\Alert not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: setup.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Change_Release.php
+
+		-
+			message: '#^Parameter \#1 \$release of static method GlpiPlugin\\Releases\\Change_Release\:\:showForRelease\(\) expects GlpiPlugin\\Releases\\Release, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Change_Release.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 2
+			path: src/Change_Release.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Change_Release.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Deploytask\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 3
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:displayPlanningItem\(\) has invalid return type GlpiPlugin\\Releases\\Nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:displayPlanningItem\(\) should return GlpiPlugin\\Releases\\Nothing but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:prepareInputForUpdate\(\) should return array but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^PHPDoc tag @throws with type GlpitestSQLError is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Deploytask.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Deploytasktemplate\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytasktemplate\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytasktemplate\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytasktemplate\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytasktemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytasktemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Deploytasktemplate\:\:transfer\(\) should return GlpiPlugin\\Releases\\ID\|GlpiPlugin\\Releases\\the\|int but returns true\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Deploytasktemplate.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Finalization.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Finalization\:\:getStateItem\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Finalization.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Finalization\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Finalization.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: src/Finalization.php
+
+		-
+			message: '#^Variable \$pourcentageTask might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Finalization.php
+
+		-
+			message: '#^Variable \$pourcentageTest might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Finalization.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Finalization.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Group_Release.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Group_ReleaseTemplate.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 5
+			path: src/NotificationTargetRelease.php
+
+		-
+			message: '#^Variable \$risk might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/NotificationTargetRelease.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/NotificationTargetRelease.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Profile\:\:getTabNameForItem\(\) has invalid return type GlpiPlugin\\Releases\\translated\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) has invalid return type GlpiPlugin\\Releases\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) should return GlpiPlugin\\Releases\\nothing but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Parameter \#2 \$openform \(bool\) of method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) should be compatible with parameter \$options \(array\<string, mixed\>\) of method Profile\:\:showForm\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Releases\\nothing\) of method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) should be compatible with return type \(bool\) of method Profile\:\:showForm\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Profile.php
+
+		-
+			message: '#^Array has 2 duplicate keys with value ''massiveaction'' \(''massiveaction'', ''massiveaction''\)\.$#'
+			identifier: array.duplicateKey
+			count: 2
+			path: src/Release.php
+
+		-
+			message: '#^Call to an undefined method CommonDBTM\:\:haveChildren\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Call to an undefined static method CommonITILObject\:\:getCssClass\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Call to function is_a\(\) with arguments ''Document_Item''\|''KnowbaseItem_Item''\|''Notepad'', ''CommonDBConnexity'' and true will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Release\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Default value of the parameter \#2 \$withtemplate \(int\) of method GlpiPlugin\\Releases\\Release\:\:showListForItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 2
+			path: src/Release.php
+
+		-
+			message: '#^Loose comparison using \=\= between ''circle'' and null will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:getTaskClass\(\) should return class\-string\<CommonITILTask\>\|null but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:getTemplateClass\(\) should return class\-string\<ITILTemplate\> but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:getTimelineItems\(\) should return array\<array\{type\: class\-string\<CommonITILObject\>, itiltype\: class\-string\<CommonITILObject\>, item\: array\{id\: int, content\: string, date\: string\|null, users_id\: int, solutiontypes_id\: int, can_edit\: bool, timeline_position\: \-1\|0\|1\|2\|3\|4, users_id_editor\: int, \.\.\.\}, object\: mixed\}\> but returns array\<non\-falsy\-string, array\{type\: ''GlpiPlugin\\\\Releases\\\\Deploytask'', item\: mixed, itiltype\: ''Deploytask''\}\|array\{type\: ''GlpiPlugin\\\\Releases\\\\Risk'', item\: mixed, itiltype\: ''Risk''\}\|array\{type\: ''GlpiPlugin\\\\Releases\\\\Rollback'', item\: mixed, itiltype\: ''Rollback''\}\|array\{type\: ''GlpiPlugin\\\\Releases\\\\Test'', item\: mixed, itiltype\: ''Test''\}\|array\{type\: ''ITILFollowup'', item\: mixed, itiltype\: ''ITILFollowup''\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) has invalid return type GlpiPlugin\\Releases\\datas\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) should return GlpiPlugin\\Releases\\datas but returns array\<string, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) has invalid return type GlpiPlugin\\Releases\\datas\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) should return GlpiPlugin\\Releases\\datas but returns array\<string, mixed\>\|false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release\:\:showTimelineForm\(\) with return type void returns false but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$autolink_options$#'
+			identifier: glpi.missingGlobalVarType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Offset ''name'' does not exist on array\{id\: int, content\: string, date\: string\|null, users_id\: int, solutiontypes_id\: int, can_edit\: bool, timeline_position\: \-1\|0\|1\|2\|3\|4, users_id_editor\: int, \.\.\.\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \#1 \$input \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) should be compatible with parameter \$input \(array\<string, mixed\>\) of method CommonITILObject\:\:prepareInputForAdd\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \#1 \$input \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) should be compatible with parameter \$input \(array\<string, mixed\>\) of method CommonITILObject\:\:prepareInputForUpdate\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \#1 \$input of method CommonITILObject\:\:prepareInputForAdd\(\) expects array\<string, mixed\>, GlpiPlugin\\Releases\\datas given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \#1 \$input of method CommonITILObject\:\:transformActorsInput\(\) expects array, GlpiPlugin\\Releases\\datas given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \#2 \$odd of static method Search\:\:showNewLine\(\) expects bool, int\<\-1, 1\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \$input of method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) has invalid type GlpiPlugin\\Releases\\datas\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Parameter \$input of method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) has invalid type GlpiPlugin\\Releases\\datas\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Property CommonDBTM\:\:\$updates \(list\<string\>\) does not accept array\{\}\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Result of method DBmysqlIterator\:\:next\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonITILObject\:\:prepareInputForAdd\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Return type \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonITILObject\:\:prepareInputForUpdate\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Right side of && is always false\.$#'
+			identifier: booleanAnd.rightAlwaysFalse
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Static method CommonGLPI\:\:getMenuName\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: src/Release.php
+
+		-
+			message: '#^Variable \$filename in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Variable \$template might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Release.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Release.php
+
+		-
+			message: '#^Access to an undefined property \$this\(GlpiPlugin\\Releases\\ReleaseTemplate\)\:\:\$userentities\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getTimelineItems\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showTimeline\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:showTimelineForm\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Call to function method_exists\(\) with CommonDBTM and ''showForm'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Function autolink not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 20
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate\:\:getDefaultActorRightSearch\(\) should return bool but returns string\.$#'
+			identifier: return.type
+			count: 2
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate\:\:getFromDBWithData\(\) should return true but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate\:\:processMassiveActionsForOneItemtype\(\) has invalid return type GlpiPlugin\\Releases\\nothing\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Missing PHPDoc tag @var for global variable \$autolink_options$#'
+			identifier: glpi.missingGlobalVarType
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Offset ''comment'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 4
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Offset ''link'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 3
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Offset ''name'' does not exist on string\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Parameter \#1 \$checkitem \(null\) of method GlpiPlugin\\Releases\\ReleaseTemplate\:\:getSpecificMassiveActions\(\) should be compatible with parameter \$checkitem \(CommonDBTM\) of method CommonDropdown\:\:getSpecificMassiveActions\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate of static method Document_Item\:\:showAddFormForItem\(\) expects int, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Parameter \#3 \$withcomment of static method Dropdown\:\:getDropdownName\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Parameter \#4 \$toobserve of static method Ajax\:\:updateItem\(\) expects string, true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 3
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Static method Entity\:\:getUsedConfig\(\) invoked with 1 parameter, 2\-4 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between null and null will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ReleaseTemplate.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getLinkedItems\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate_Item\:\:showForRelease\(\) with return type void returns false but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Releases\\Release\:\:showListForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Releases\\ReleaseTemplate_Item\:\:countForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Releases\\ReleaseTemplate_Item\:\:countReleaseForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Parameter \#1 \$release of static method GlpiPlugin\\Releases\\ReleaseTemplate_Item\:\:showForRelease\(\) expects GlpiPlugin\\Releases\\ReleaseTemplate, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate of static method GlpiPlugin\\Releases\\Release\:\:showListForItem\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ReleaseTemplate_Item.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ReleaseTemplate_Supplier.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/ReleaseTemplate_User.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getLinkedItems\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release_Item\:\:showForRelease\(\) with return type void returns false but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$item with type object is not subtype of native type CommonDBTM\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Releases\\Release\:\:showListForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Releases\\Release_Item\:\:countForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Release_Item.php
+
+		-
+			message: '#^Parameter \#1 \$item of static method GlpiPlugin\\Releases\\Release_Item\:\:countReleaseForItem\(\) expects CommonDBTM, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Parameter \#1 \$release of static method GlpiPlugin\\Releases\\Release_Item\:\:showForRelease\(\) expects GlpiPlugin\\Releases\\Release, CommonGLPI given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Parameter \#2 \$withtemplate of static method GlpiPlugin\\Releases\\Release\:\:showListForItem\(\) expects bool, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: src/Release_Item.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Release_Item.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Release_Supplier.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release_Supplier\:\:showSupplierNotificationForm\(\) should return false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Release_Supplier.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Release_Supplier.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/Release_User.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Release_User\:\:showUserNotificationForm\(\) should return false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Release_User.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Release_User.php
+
+		-
+			message: '#^Call to an undefined method CommonGLPI\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Review.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Review\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Review.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Review\:\:displayTabContentForItem\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 2
+			path: src/Review.php
+
+		-
+			message: '#^Variable \$filename in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Review.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Review.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Risk\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Risk.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risk\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Risk.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risk\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Risk.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risk\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Risk.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Risk.php
+
+		-
+			message: '#^Function __ invoked with 3 parameters, 1\-2 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Risktemplate\:\:transfer\(\) should return GlpiPlugin\\Releases\\ID\|GlpiPlugin\\Releases\\the\|int but returns true\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Risktemplate.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Rollback\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Rollback.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollback\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Rollback.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollback\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Rollback.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollback\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Rollback.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Rollback.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Rollbacktemplate\:\:transfer\(\) should return GlpiPlugin\\Releases\\ID\|GlpiPlugin\\Releases\\the\|int but returns true\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Rollbacktemplate.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$history \(int\) of method GlpiPlugin\\Releases\\Test\:\:post_updateItem\(\) is incompatible with type bool\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/Test.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Test\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Test.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Test\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Test.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Test\:\:showForm\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Test.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Test.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Testtemplate\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Testtemplate\:\:getCssClass\(\) has invalid return type GlpiPlugin\\Releases\\css\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Testtemplate\:\:getCssClass\(\) should return GlpiPlugin\\Releases\\css but returns string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Testtemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Testtemplate\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\Testtemplate\:\:transfer\(\) should return GlpiPlugin\\Releases\\ID\|GlpiPlugin\\Releases\\the\|int but returns true\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/Testtemplate.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeDeployTask\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeDeployTask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeDeployTask\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeDeployTask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeDeployTask\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeDeployTask.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/TypeDeployTask.php
+
+		-
+			message: '#^Parameter \#1 \$query of method DBmysql\:\:doQuery\(\) expects string, array\<string, array\<string, mixed\>\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TypeDeployTask.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TypeDeployTask.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeRisk\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeRisk.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeRisk\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeRisk.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeRisk\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeRisk.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/TypeRisk.php
+
+		-
+			message: '#^Parameter \#1 \$query of method DBmysql\:\:doQuery\(\) expects string, array\<string, array\<string, mixed\>\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TypeRisk.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TypeRisk.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeTest\:\:canView\(\) has invalid return type GlpiPlugin\\Releases\\booleen\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeTest.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeTest\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\ID\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeTest.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\TypeTest\:\:transfer\(\) has invalid return type GlpiPlugin\\Releases\\the\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/TypeTest.php
+
+		-
+			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/TypeTest.php
+
+		-
+			message: '#^Parameter \#1 \$query of method DBmysql\:\:doQuery\(\) expects string, array\<string, array\<string, mixed\>\|string\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TypeTest.php
+
+		-
+			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
+			identifier: glpi.forbidExit
+			count: 1
+			path: src/TypeTest.php

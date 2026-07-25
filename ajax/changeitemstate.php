@@ -39,9 +39,21 @@ Session::checkRight('plugin_releases_releases', UPDATE);
 
 
 if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && isset($_POST["field"]) && isset($_POST["status"])) {
-   global $DB;
    $item = new Release();
-   $item->getFromDB($_POST["plugin_releases_releases_id"]);
+   // Enforce right + entity + item access, never trust the raw id from the POST
+   $item->check((int) $_POST["plugin_releases_releases_id"], UPDATE);
+
+   // Only allow inline edition of a fixed set of columns, never security/scope columns
+   $allowed_fields = [
+      'name', 'content', 'date', 'date_preproduction', 'date_production',
+      'begin_waiting_date', 'service_shutdown', 'service_shutdown_details',
+      'hour_type', 'communication', 'communication_type', 'target',
+      'locations_id', 'date_end',
+   ];
+   if (!in_array($_POST["field"], $allowed_fields, true)) {
+      throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+   }
+
    // Forbid any state change once the release reached a terminal status
    if (in_array($item->getField('status'), Release::getClosedStatusArray(), true)) {
       exit;

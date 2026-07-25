@@ -30,8 +30,7 @@
 namespace GlpiPlugin\Releases;
 
 use CommonITILActor;
-use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use NotificationMailing;
 use User;
 
@@ -83,67 +82,50 @@ class Release_User extends CommonITILActor {
         }
         $item = new static::$itemtype_1();
 
-        echo "<br><form method='post' action='" . $_SERVER['PHP_SELF'] . "'>";
-        echo "<div class='center'>";
-        echo "<table class='tab_cadre' width='80%'>";
-        echo "<tr class='tab_bg_2'><td>" . $item->getTypeName(1) . "</td>";
-        echo "<td>";
+        $parent_name = '';
         if ($item->getFromDB($this->fields[static::getItilObjectForeignKey()])) {
-            // Stored XSS: the parent release name is user-supplied and stored un-escaped
-            // on GLPI 10+/11, so it must be escaped before being echoed into this form.
-            echo htmlspecialchars($item->getField('name'));
+            $parent_name = $item->getField('name');
         }
-        echo "</td></tr>";
 
         $user          = new User();
         $default_email = "";
-        $emails = [];
+        $emails        = [];
         if ($user->getFromDB($this->fields["users_id"])) {
             $default_email = $user->getDefaultEmail();
             $emails        = $user->getAllEmails();
         }
 
-        echo "<tr class='tab_bg_2'><td>" . User::getTypeName(1) . "</td>";
-        echo "<td>" . $user->getName() . "</td></tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . __('Email Followup') . "</td>";
-        echo "<td>";
-        Dropdown::showYesNo('use_notification', $this->fields['use_notification']);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'><td>" . _n('Email', 'Emails', 1) . "</td>";
-        echo "<td>";
+        // Choose how the email field is rendered depending on available user emails
         if (
-            (count($emails) ==  1)
+            (count($emails) == 1)
             && !empty($default_email)
             && NotificationMailing::isUserAddressValid($default_email)
         ) {
-            echo $default_email;
-        } else if (count($emails) > 1) {
-            // Several emails : select in the list
-            $emailtab = [];
-            foreach ($emails as $new_email) {
-                $emailtab[$new_email] = $new_email;
-            }
-            Dropdown::showFromArray(
-                "alternative_email",
-                $emailtab,
-                ['value'   => $this->fields['alternative_email']]
-            );
+            $email_mode = 'single';
+        } elseif (count($emails) > 1) {
+            $email_mode = 'select';
         } else {
-            echo "<input type='text' size='40' name='alternative_email' value='" .
-                $this->fields['alternative_email'] . "'>";
+            $email_mode = 'text';
         }
-        echo "</td></tr>";
 
-        echo "<tr class='tab_bg_2'>";
-        echo "<td class='center' colspan='2'>";
-        echo "<input type='submit' name='update' value=\"" . _sx('button', 'Save') . "\" class='btn btn-primary'>";
-        echo "<input type='hidden' name='id' value='$ID'>";
-        echo "</td></tr>";
+        $emailtab = [];
+        foreach ($emails as $new_email) {
+            $emailtab[$new_email] = $new_email;
+        }
 
-        echo "</table></div>";
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display('@releases/actor_notification.html.twig', [
+            'form_action'      => static::getFormURL(),
+            'parent_type_name' => $item->getTypeName(1),
+            'parent_name'      => $parent_name,
+            'actor_type_name'  => User::getTypeName(1),
+            'actor_name'       => $user->getName(),
+            'use_notification' => $this->fields['use_notification'],
+            'email_mode'       => $email_mode,
+            'default_email'    => $default_email,
+            'emails'           => $emailtab,
+            'alternative_email' => $this->fields['alternative_email'],
+            'id'               => $ID,
+        ]);
     }
 
 }

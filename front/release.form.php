@@ -83,8 +83,10 @@ if (isset($_POST["add"])) {
 
 } elseif (isset($_POST["createRelease"])) {
 
+    // Enforce creation right and access to the source change (global right + entity + item access)
+    $release->check(-1, CREATE);
     $change = new Change();
-    $change->getFromDB($_POST["changes_id"]);
+    $change->check($_POST["changes_id"], READ);
     $input                = [];
     $input["name"]        = $change->getField("name");
     $input["content"]     = $change->getField("content");

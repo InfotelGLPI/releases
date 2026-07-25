@@ -216,12 +216,11 @@ function plugin_releases_uninstall()
         $item->deleteByCriteria(['itemtype' => ReleaseTemplate::class]);
     }
 
-   //TODO add drop profiles & menu in session ?
-   //Delete rights associated with the plugin
-   //   $profileRight = new ProfileRight();
-   //   foreach (Profile::getAllRights(true) as $right) {
-   //      $profileRight->deleteByCriteria(['name' => $right['field']]);
-   //   }
+    // Delete rights associated with the plugin
+    $profileRight = new ProfileRight();
+    foreach (Profile::getAllRights(true) as $right) {
+        $profileRight->deleteByCriteria(['name' => $right['field']]);
+    }
 
     $options = ['itemtype' => Release::class];
 

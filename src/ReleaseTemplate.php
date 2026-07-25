@@ -2149,7 +2149,8 @@ class ReleaseTemplate extends CommonDropdown {
                   if ($showuserlink) {
                      $param['link'] = $userdata["link"];
                   }
-                  echo $userdata['name'] . "&nbsp;" . Html::showToolTip($userdata["comment"], $param);
+                  // Escape user-supplied display name (stored raw since GLPI 10+) to prevent stored XSS
+                  echo htmlspecialchars($userdata['name']) . "&nbsp;" . Html::showToolTip($userdata["comment"], $param);
                } else {
                   echo $userdata;
                }

@@ -1,0 +1,56 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+<form method="post" action="{{ form_action }}" class="mt-3">
+    <div class="card">
+        <div class="card-body">
+            {{ fields.readOnlyField('parent_name', parent_name, parent_type_name) }}
+
+            {{ fields.readOnlyField('actor_name', actor_name, actor_type_name) }}
+
+            {{ fields.dropdownYesNo('use_notification', use_notification, __('Email Followup')) }}
+
+            {% if email_mode == 'single' %}
+                {{ fields.readOnlyField('email', default_email, _n('Email', 'Emails', 1)) }}
+            {% elseif email_mode == 'select' %}
+                {{ fields.dropdownArrayField('alternative_email', alternative_email, emails, _n('Email', 'Emails', 1)) }}
+            {% else %}
+                {{ fields.textField('alternative_email', alternative_email, _n('Email', 'Emails', 1)) }}
+            {% endif %}
+        </div>
+        <div class="card-footer d-flex">
+            <input type="hidden" name="id" value="{{ id }}"/>
+            {{ fields.csrfField() }}
+            <button type="submit" name="update" class="btn btn-primary ms-auto">
+                <i class="far fa-save"></i>
+                <span>{{ _x('button', 'Save') }}</span>
+            </button>
+        </div>
+    </div>
+</form>

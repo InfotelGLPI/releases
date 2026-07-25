@@ -117,6 +117,9 @@ if (isset($_REQUEST["id"]) && isset($_REQUEST["date_production"])) {
    }
 } else if (isset($_REQUEST["release_id"])) {
 
+   // Enforce right + entity + item access before disclosing the release progress
+   $release = new Release();
+   $release->check((int)$_REQUEST["release_id"], UPDATE);
    Finalization::showFinalizeForm($_REQUEST);
 
 }

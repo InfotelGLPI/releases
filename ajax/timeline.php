@@ -27,6 +27,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Releases\Deploytask;
 use GlpiPlugin\Releases\Release;
@@ -59,6 +60,10 @@ if ($_POST['action'] == 'done_fail') {
     // Forbid any state change once the parent release reached a terminal status
     $release = new Release();
     $release->getFromDB($task->fields["plugin_releases_releases_id"]);
+    // Enforce entity + item access on the parent release, not only the global right
+    if (!$release->can($release->getID(), UPDATE)) {
+        throw new AccessDeniedHttpException();
+    }
     if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
         throw new NotFoundHttpException();
     }
@@ -114,6 +119,10 @@ if ($_POST['action'] == 'done_fail') {
     // Forbid any state change once the parent release reached a terminal status
     $release = new Release();
     $release->getFromDB($task->fields["plugin_releases_releases_id"]);
+    // Enforce entity + item access on the parent release, not only the global right
+    if (!$release->can($release->getID(), UPDATE)) {
+        throw new AccessDeniedHttpException();
+    }
     if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
         throw new NotFoundHttpException();
     }
@@ -182,6 +191,10 @@ if ($_POST['action'] == 'done_fail') {
             // Forbid any state change once the parent release reached a terminal status
             $release = new Release();
             $release->getFromDB($obj->fields["plugin_releases_releases_id"]);
+            // Enforce entity + item access on the parent release, not only the global right
+            if (!$release->can($release->getID(), UPDATE)) {
+                throw new AccessDeniedHttpException();
+            }
             if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
                 throw new NotFoundHttpException();
             }
@@ -212,6 +225,12 @@ if ($_POST['action'] == 'done_fail') {
                 throw new NotFoundHttpException();
             }
 
+            // Restrict the rendered itemtype to the plugin's own subitem classes
+            $allowed_subitem_classes = [Deploytask::class, Risk::class, Rollback::class, Test::class];
+            if (!in_array($_REQUEST['type'], $allowed_subitem_classes, true)) {
+                throw new NotFoundHttpException();
+            }
+
             $item   = getItemForItemtype($_REQUEST['type']);
             $parent = getItemForItemtype($_REQUEST['parenttype']);
 
@@ -231,7 +250,7 @@ if ($_POST['action'] == 'done_fail') {
                                                           "items_id"  => $parent->getID(),
                                                           $foreignKey => $_REQUEST[$foreignKey]]);
             } else {
-                echo __('Access denied');
+                throw new AccessDeniedHttpException();
             }
 
 

@@ -1,0 +1,88 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+{% set bg = "" %}
+{% if item.isDeleted() %}
+    {% set bg = "asset-deleted" %}
+{% endif %}
+
+<div class="asset {{ bg }}">
+    {% include("components/form/header.html.twig") %}
+
+    <div class="card-body d-flex">
+        <div class="col-12 flex-column">
+            <div class="row flex-row">
+
+                {{ fields.hiddenField(
+                    'plugin_releases_releasetemplates_id',
+                    item.fields['plugin_releases_releasetemplates_id']
+                ) }}
+
+                {{ fields.textField(
+                    'name',
+                    item.fields['name'],
+                    __('Name')
+                ) }}
+
+                {{ fields.dropdownField(
+                    'GlpiPlugin\\Releases\\TypeTest',
+                    'plugin_releases_typetests_id',
+                    typetests_id,
+                    __('Test type', 'releases')
+                ) }}
+
+                {{ fields.dropdownField(
+                    'GlpiPlugin\\Releases\\Risktemplate',
+                    'plugin_releases_risks_id',
+                    item.fields['plugin_releases_risks_id'],
+                    __('Associated risk', 'releases'),
+                    {
+                        'condition': {
+                            'plugin_releases_releasetemplates_id': item.fields['plugin_releases_releasetemplates_id']
+                        }
+                    }
+                ) }}
+
+                {{ fields.textareaField(
+                    'content',
+                    item.fields['content'],
+                    __('Description'),
+                    {
+                        'full_width': true,
+                        'enable_richtext': true,
+                        'enable_fileupload': false,
+                        'rows': 10,
+                    }
+                ) }}
+            </div>
+        </div>
+    </div>
+
+    {% include("components/form/buttons.html.twig") %}
+</div>

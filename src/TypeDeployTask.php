@@ -78,21 +78,20 @@ class TypeDeployTask extends CommonTreeDropdown
                 'WHERE'  => ['id' => $ID],
             ];
 
-            if ($result = $DB->doQuery($query)) {
-                if ($DB->numrows($result)) {
-                    $data                 = $DB->fetchAssoc($result);
-                    $input['name']        = $data['name'];
-                    $input['entities_id'] = $entity;
+            $iterator = $DB->request($query);
+            if (count($iterator)) {
+                $data                 = $iterator->current();
+                $input['name']        = $data['name'];
+                $input['entities_id'] = $entity;
 
-                    $temp  = new self();
-                    $newID = $temp->getID();
+                $temp  = new self();
+                $newID = $temp->getID();
 
-                    if ($newID < 0) {
-                        $newID = $temp->import($input);
-                    }
-
-                    return $newID;
+                if ($newID < 0) {
+                    $newID = $temp->import($input);
                 }
+
+                return $newID;
             }
         }
         return 0;

@@ -50,7 +50,7 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
           return;
       }
       $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $items     = $item->find();
+      $items     = $item->find($condition);
 
 
       foreach ($items as $vals) {

@@ -27,7 +27,13 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Releases\Deploytask;
+use GlpiPlugin\Releases\Release;
+use GlpiPlugin\Releases\Risk;
+use GlpiPlugin\Releases\Rollback;
+use GlpiPlugin\Releases\Test;
 
 if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
    header("Content-Type: text/html; charset=UTF-8");
@@ -37,7 +43,6 @@ Session::checkRight('plugin_releases_releases', UPDATE);
 
 Session::checkCentralAccess();
 global $CFG_GLPI;
-$foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 Html::header_nocache();
 if (!isset($_REQUEST['type'])) {
     throw new NotFoundHttpException();
@@ -45,6 +50,18 @@ if (!isset($_REQUEST['type'])) {
 if (!isset($_REQUEST['parenttype'])) {
     throw new NotFoundHttpException();
 }
+
+// Restrict handled itemtypes to the plugin's own classes (avoid arbitrary itemtype instantiation)
+$allowed_types   = [Deploytask::class, Risk::class, Rollback::class, Test::class];
+$allowed_parents = [Release::class];
+if (!in_array($_REQUEST['type'], $allowed_types, true)) {
+    throw new NotFoundHttpException();
+}
+if (!in_array($_REQUEST['parenttype'], $allowed_parents, true)) {
+    throw new NotFoundHttpException();
+}
+
+$foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 
 $item   = getItemForItemtype($_REQUEST['type']);
 $parent = getItemForItemtype($_REQUEST['parenttype']);
@@ -65,7 +82,7 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
    $item->showForm($id);
 
 } else {
-   echo __('Access denied');
+    throw new AccessDeniedHttpException();
 }
 
 

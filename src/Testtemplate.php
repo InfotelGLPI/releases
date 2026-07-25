@@ -32,8 +32,7 @@ namespace GlpiPlugin\Releases;
 use CommonDBTM;
 use CommonDropdown;
 use DbUtils;
-use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Session;
 
 if (!defined('GLPI_ROOT')) {
@@ -152,81 +151,14 @@ class Testtemplate extends CommonDropdown
     function showForm($ID, $options = [])
     {
         $this->initForm($ID, $options);
-        $this->showFormHeader($options);
 
-        $rand_text = mt_rand();
-        $rand_name = mt_rand();
-        $rand_type = mt_rand();
-        $rand_risk = mt_rand();
+        $typetests_id = $_GET["typetestid"] ?? $this->fields["plugin_releases_typetests_id"];
 
-        echo "<tr class='tab_bg_1' hidden>";
-        echo "<td colspan='4'>";
-        $foreignKey = ReleaseTemplate::getForeignKeyField();
-        echo Html::hidden($foreignKey, ["value" => $this->fields[$foreignKey]]);
-        echo "</td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-
-        echo "<td>" . __('Name') . "</td>";
-        echo "<td>";
-        echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name')]);
-        echo "</td>";
-
-        echo "<td>";
-        echo __("Test type", 'releases');
-        echo "</td>";
-
-        echo "<td>";
-        if (isset($_GET["typetestid"])) {
-            $value = $_GET["typetestid"];
-        } else {
-            $value = $this->fields["plugin_releases_typetests_id"];
-        }
-        Dropdown::show(TypeTest::getType(), [
-            'rand' => $rand_type,
-            'name' => "plugin_releases_typetests_id",
-            'value' => $value
+        TemplateRenderer::getInstance()->display('@releases/form_testtemplate.html.twig', [
+            'item'         => $this,
+            'typetests_id' => $typetests_id,
+            'params'       => $options,
         ]);
-        echo "</td>";
-
-
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        echo __("Associated risk", 'releases');
-        echo "</td>";
-
-        echo "<td>";
-
-        Dropdown::show(Risktemplate::getType(), [
-            'rand' => $rand_risk,
-            'name' => "plugin_releases_risks_id",
-            'value' => $this->fields["plugin_releases_risks_id"],
-            "condition" => ["plugin_releases_releasetemplates_id" => $this->fields[$foreignKey]]
-        ]);
-        echo "</td>";
-        echo "<td colspan='2'></td>";
-        echo "</tr>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Description') . "</td>";
-        echo "<td colspan='3'>";
-        //       Html::textarea(["name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content')]);
-        $content_id = "content$rand_text";
-        $cols = 100;
-        $rows = 10;
-        Html::textarea([
-            'name' => 'content',
-            'value' => $this->fields["content"],
-            'rand' => $rand_text,
-            'editor_id' => $content_id,
-            'enable_fileupload' => false,
-            'enable_richtext' => true,
-            'cols' => $cols,
-            'rows' => $rows
-        ]);
-        echo "</td>";
-        echo "</tr>";
-        $this->showFormButtons($options);
     }
 
     /**
