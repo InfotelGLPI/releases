@@ -30,6 +30,9 @@
 namespace GlpiPlugin\Releases;
 
 use CommonITILActor;
+use Glpi\Application\View\TemplateRenderer;
+use NotificationMailing;
+use User;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -60,4 +63,68 @@ class ReleaseTemplate_User extends CommonITILActor {
       parent::post_addItem();
       unset($this->_force_log_option);
    }
+
+    /**
+     * Print the object user form for notification
+     *
+     * @param $ID              integer ID of the item
+     * @param $options   array
+     *
+     * @return false
+     **/
+    public function showUserNotificationForm($ID, $options = [])
+    {
+
+        $this->check($ID, UPDATE);
+
+        if (!isset($this->fields['users_id'])) {
+            return false;
+        }
+        $item = new static::$itemtype_1();
+
+        $parent_name = '';
+        if ($item->getFromDB($this->fields[static::getItilObjectForeignKey()])) {
+            $parent_name = $item->getField('name');
+        }
+
+        $user          = new User();
+        $default_email = "";
+        $emails        = [];
+        if ($user->getFromDB($this->fields["users_id"])) {
+            $default_email = $user->getDefaultEmail();
+            $emails        = $user->getAllEmails();
+        }
+
+        // Choose how the email field is rendered depending on available user emails
+        if (
+            (count($emails) == 1)
+            && !empty($default_email)
+            && NotificationMailing::isUserAddressValid($default_email)
+        ) {
+            $email_mode = 'single';
+        } elseif (count($emails) > 1) {
+            $email_mode = 'select';
+        } else {
+            $email_mode = 'text';
+        }
+
+        $emailtab = [];
+        foreach ($emails as $new_email) {
+            $emailtab[$new_email] = $new_email;
+        }
+
+        TemplateRenderer::getInstance()->display('@releases/actor_notification.html.twig', [
+            'form_action'      => static::getFormURL(),
+            'parent_type_name' => $item->getTypeName(1),
+            'parent_name'      => $parent_name,
+            'actor_type_name'  => User::getTypeName(1),
+            'actor_name'       => $user->getName(),
+            'use_notification' => $this->fields['use_notification'],
+            'email_mode'       => $email_mode,
+            'default_email'    => $default_email,
+            'emails'           => $emailtab,
+            'alternative_email' => $this->fields['alternative_email'],
+            'id'               => $ID,
+        ]);
+    }
 }

@@ -30,6 +30,8 @@
 namespace GlpiPlugin\Releases;
 
 use CommonITILActor;
+use Glpi\Application\View\TemplateRenderer;
+use Supplier;
 
 if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
@@ -50,5 +52,51 @@ class ReleaseTemplate_Supplier extends CommonITILActor {
    static public $itemtype_2 = 'Supplier';
    static public $items_id_2 = 'suppliers_id';
 
+    /**
+     * Print the object supplier form for notification
+     *
+     * @param $ID              integer ID of the item
+     * @param $options   array
+     *
+     * @return false
+     **/
+    public function showSupplierNotificationForm($ID, $options = [])
+    {
 
+        $this->check($ID, UPDATE);
+
+        if (!isset($this->fields['suppliers_id'])) {
+            return false;
+        }
+        $item = new static::$itemtype_1();
+
+        $parent_name = '';
+        if ($item->getFromDB($this->fields[static::getItilObjectForeignKey()])) {
+            $parent_name = $item->getField('name');
+        }
+
+        $supplier      = new Supplier();
+        $default_email = "";
+        if ($supplier->getFromDB($this->fields["suppliers_id"])) {
+            $default_email = $supplier->fields['email'];
+        }
+
+        if (empty($this->fields['alternative_email'])) {
+            $this->fields['alternative_email'] = $default_email;
+        }
+
+        TemplateRenderer::getInstance()->display('@releases/actor_notification.html.twig', [
+            'form_action'       => static::getFormURL(),
+            'parent_type_name'  => $item->getTypeName(1),
+            'parent_name'       => $parent_name,
+            'actor_type_name'   => Supplier::getTypeName(1),
+            'actor_name'        => $supplier->getName(),
+            'use_notification'  => $this->fields['use_notification'],
+            'email_mode'        => 'text',
+            'default_email'     => $default_email,
+            'emails'            => [],
+            'alternative_email' => $this->fields['alternative_email'],
+            'id'                => $ID,
+        ]);
+    }
 }
