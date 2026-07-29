@@ -28,6 +28,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Releases\Deploytask;
 use GlpiPlugin\Releases\Release;
@@ -171,6 +172,12 @@ if ($_POST['action'] == 'done_fail') {
     switch ($_REQUEST['action']) {
         case "change_task_state":
             header("Content-Type: application/json; charset=UTF-8");
+            // Toggling a task state mutates data; require POST so the
+            // CheckCsrfListener enforces the CSRF token (it only validates
+            // non-GET requests, so a GET-routed switch action bypasses it).
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new BadRequestHttpException();
+            }
             if (!isset($_REQUEST['items_id'])) {
                 throw new NotFoundHttpException();
             }

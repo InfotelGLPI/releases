@@ -68,16 +68,19 @@ if (isset($_POST["add"])) {
    $release->update($_POST);
    Html::back();
 
-} else if (isset($_GET["delete_document"])) {
+} else if (isset($_POST["delete_document"])) {
+   // Detaching a document mutates state: read it from POST only so the
+   // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
+   // only). A GET-triggered detach would otherwise be forgeable.
    $d = new Document_Item();
-   $d->getFromDBByCrit(["documents_id" => $_GET["documents_id"],
-                        "items_id"     => $_GET["plugin_releases_reviews_id"],
+   $d->getFromDBByCrit(["documents_id" => (int) $_POST["documents_id"],
+                        "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
                         "itemtype"     => Review::getType()]);
    $d->check($d->getID(), DELETE);
    $d->delete(["id"           => $d->getID(),
-               "documents_id" => $_GET["documents_id"],
-               "items_id"     => $_GET["plugin_releases_reviews_id"],
-               "itemtype"     => Review::getType()]);;
+               "documents_id" => (int) $_POST["documents_id"],
+               "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
+               "itemtype"     => Review::getType()]);
    Html::back();
 } else if (isset($_POST["conclude"])) {
    global $CFG_GLPI;

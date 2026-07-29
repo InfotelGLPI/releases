@@ -143,15 +143,18 @@ if (isset($_POST["add"])) {
     );
     Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
-} elseif (isset($_REQUEST['delete_document'])) {
+} elseif (isset($_POST['delete_document'])) {
 
+    // Detaching a document mutates state: read it from POST only so the
+    // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
+    // only). A GET-triggered detach would otherwise be forgeable.
     $doc = new Document();
-    $doc->getFromDB(intval($_REQUEST['documents_id']));
+    $doc->getFromDB((int) ($_POST['documents_id'] ?? 0));
     if ($doc->can($doc->getID(), UPDATE)) {
         $document_item        = new Document_Item();
         $found_document_items = $document_item->find([
             'itemtype'     => Release::class,
-            'items_id'     => (int) $_REQUEST[Release::class],
+            'items_id'     => (int) ($_POST[Release::class] ?? 0),
             'documents_id' => $doc->getID(),
         ]);
         foreach ($found_document_items as $item) {

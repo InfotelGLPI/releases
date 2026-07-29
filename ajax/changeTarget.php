@@ -44,6 +44,14 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
       }
       $dbu = new DbUtils();
 
+      // Whitelist the itemtype before instantiating it: $_POST["type"] is
+      // user-controlled and getItemForItemtype() would otherwise let a caller
+      // enumerate any DB-backed itemtype (object injection / information
+      // disclosure). Only actor targets are legitimate here.
+      $allowed_types = [User::class, Group::class, Supplier::class];
+      if (!in_array($_POST["type"], $allowed_types, true)) {
+          return;
+      }
 
       $item = getItemForItemtype($_POST["type"]);
       if ($item === false) {

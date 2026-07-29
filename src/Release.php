@@ -2419,12 +2419,19 @@ class Release extends CommonITILObject
                         $doc = new Document();
                         $doc->getFromDB($item_i_['id']);
                         if ($doc->can($item_i_['id'], UPDATE)) {
-                            echo "<a href='" . static::getFormURL()
-                                . "?delete_document&documents_id=" . $item_i_['id']
-                                . "&$foreignKey=" . $this->getID(
-                                ) . "' class='delete_document fas fa-trash-alt pointer' title='"
-                                . _sx("button", "Delete permanently") . "'>";
-                            echo "<span class='sr-only'>" . _sx('button', 'Delete permanently') . "</span></a>";
+                            // Submit the detach as a POST (with CSRF token) instead of a
+                            // bare GET link: the CheckCsrfListener only validates non-GET
+                            // requests, so a GET-triggered mutation is forgeable (CSRF).
+                            echo Html::showSimpleForm(
+                                static::getFormURL(),
+                                'delete_document',
+                                _sx('button', 'Delete permanently'),
+                                [
+                                    'documents_id' => $item_i_['id'],
+                                    $foreignKey    => $this->getID(),
+                                ],
+                                'fa-trash-alt'
+                            );
                         }
                         echo "</span>";
                         echo "<br />";
