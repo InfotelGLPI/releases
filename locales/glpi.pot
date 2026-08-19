@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-28 09:04+0000\n"
+"POT-Creation-Date: 2026-08-01 07:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3046
+#: src/Release.php:3053
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -113,7 +113,7 @@ msgstr[1] ""
 msgid "Associated risk"
 msgstr ""
 
-#: src/ReleaseTemplate.php:1540 src/Release.php:2461
+#: src/ReleaseTemplate.php:1540 src/Release.php:2468
 msgid "Associated with"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 msgid "Communication type"
 msgstr ""
 
-#: src/Review.php:272
+#: src/Review.php:280
 msgctxt "button"
 msgid "Conclude the review"
 msgstr ""
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Conforming realization"
 msgstr ""
 
-#: src/ReleaseTemplate.php:1011 src/Release.php:2685
+#: src/ReleaseTemplate.php:1011 src/Release.php:2692
 msgid "Create a release"
 msgstr ""
 
@@ -281,7 +281,7 @@ msgstr ""
 msgid "Followup"
 msgstr ""
 
-#: src/Release.php:2666 templates/fields_panel.html.twig:104
+#: src/Release.php:2673 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr ""
 
@@ -312,11 +312,11 @@ msgstr ""
 msgid "New release"
 msgstr ""
 
-#: src/ReleaseTemplate.php:1585 src/Release.php:2507
+#: src/ReleaseTemplate.php:1585 src/Release.php:2514
 msgid "No data available"
 msgstr ""
 
-#: src/Release.php:3050 src/Release.php:3097
+#: src/Release.php:3057 src/Release.php:3104
 msgid "No release found."
 msgstr ""
 
@@ -401,7 +401,7 @@ msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/ReleaseTemplate.php:1622 src/Release.php:2900
+#: src/ReleaseTemplate.php:1622 src/Release.php:2907
 msgid "Release actions details"
 msgstr ""
 
@@ -424,7 +424,7 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3085
+#: src/Release.php:3092
 msgid "Releases on linked items"
 msgstr ""
 
