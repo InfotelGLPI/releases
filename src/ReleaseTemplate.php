@@ -1495,7 +1495,7 @@ class ReleaseTemplate extends CommonDropdown {
          echo "</div>";
          if (isset($item_i['content'])) {
             if (isset($item_i["name"])) {
-               $content = "<h2>" . $item_i['name'] . "  </h2>" . RichText::getEnhancedHtml($item_i['content']);
+               $content = RichText::getEnhancedHtml("<h2>" . $item_i['name'] . "  </h2>" . $item_i['content']);
             } else {
                $content = RichText::getEnhancedHtml($item_i['content']);
             }

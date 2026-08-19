@@ -31,6 +31,7 @@ use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\ReleaseTemplate;
 
 Session::checkLoginUser();
+Session::checkRight('plugin_releases_releases', CREATE);
 
 $item = new ReleaseTemplate();
 

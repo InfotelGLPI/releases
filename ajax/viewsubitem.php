@@ -66,9 +66,11 @@ $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
 $item   = getItemForItemtype($_REQUEST['type']);
 $parent = getItemForItemtype($_REQUEST['parenttype']);
 
+// Enforce right + entity + object access on the parent Release, never trust the raw id.
+// Mirrors the write paths; without this, the display path leaks cross-entity subitems.
 if (isset($_REQUEST[$parent->getForeignKeyField()])
     && isset($_REQUEST["id"])
-    && $parent->getFromDB($_REQUEST[$parent->getForeignKeyField()])) {
+    && $parent->can((int) $_REQUEST[$parent->getForeignKeyField()], READ)) {
 
    $ol = ObjectLock::isLocked($_REQUEST['parenttype'], $parent->getID());
    if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {

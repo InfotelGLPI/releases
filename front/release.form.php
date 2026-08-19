@@ -127,7 +127,9 @@ if (isset($_POST["add"])) {
 } elseif (isset($_POST['addme_assign'])) {
     $release_user = new Release_User();
 
-    $release->check($_POST['plugin_releases_releases_id'], READ);
+    // Self-adding as an ASSIGN actor (technician) is an operator action: require UPDATE,
+    // not just READ (READ stays enough for addme_observer). Mirrors core ITIL assignment.
+    $release->check($_POST['plugin_releases_releases_id'], UPDATE);
     $input = ['plugin_releases_releases_id' => $_POST['plugin_releases_releases_id'],
         'users_id'                    => Session::getLoginUserID(),
         'use_notification'            => 1,
