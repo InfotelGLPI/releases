@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-01 07:58+0000\n"
+"POT-Creation-Date: 2026-08-20 15:49+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12376/tr_TR/)\n"
@@ -22,40 +22,40 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3053
+#: src/Release.php:3068
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
 msgstr[0] "%d son sürüm"
 msgstr[1] "%d son sürüm"
 
-#: src/Finalization.php:221
+#: templates/form_finalization.html.twig:77
 #, php-format
 msgid "%s  tests failed"
 msgstr "%s sınama tamamlanamadı"
 
-#: src/Finalization.php:208
+#: templates/form_finalization.html.twig:65
 #, php-format
 msgid "%s / %s deploy tasks"
 msgstr "%s / %s dağıtım görevi"
 
-#: src/Finalization.php:190
+#: templates/form_finalization.html.twig:47
 #, php-format
 msgid "%s / %s risks"
 msgstr "%s / %s risk"
 
-#: src/Finalization.php:199
+#: templates/form_finalization.html.twig:56
 #, php-format
 msgid "%s / %s rollbacks"
 msgstr "%s / %s geri alma"
 
-#: src/Finalization.php:220
+#: templates/form_finalization.html.twig:76
 #, php-format
 msgid "%s / %s tests"
 msgstr "%s / %s sınama"
 
 #: front/finalization.php:103 front/finalization.php:118
-#: src/Finalization.php:209
+#: templates/form_finalization.html.twig:66
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr "%s dağıtım görevi tamamlanamadı"
@@ -65,42 +65,52 @@ msgstr "%s dağıtım görevi tamamlanamadı"
 msgid "%s tests failed"
 msgstr "%s sınama tamamlanamadı"
 
+#: templates/form_releasetemplate.html.twig:88
+msgid "Actor"
+msgid_plural "Actors"
+msgstr[0] "Aktör"
+msgstr[1] "Aktörler"
+
 #: templates/fields_panel.html.twig:194
 msgid "Actors"
 msgstr "Aktörler"
 
-#: templates/form_risk.html.twig:194 templates/form_rollback.html.twig:164
-#: templates/footer.html.twig:119 templates/footer.html.twig:121
-#: templates/form_test.html.twig:236 templates/form_deploytask.html.twig:377
+#: templates/form_change_release_add.html.twig:41
+#: templates/form_test.html.twig:236
+#: templates/timeline_form_releasetemplate.html.twig:39
+#: templates/timeline_form_releasetemplate.html.twig:48
+#: templates/form_rollback.html.twig:164 templates/footer.html.twig:119
+#: templates/footer.html.twig:121 templates/form_risk.html.twig:194
+#: templates/form_deploytask.html.twig:377
 msgctxt "button"
 msgid "Add"
 msgstr "Ekle"
 
-#: src/Release.php:1281
+#: src/Release.php:1300
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Bir dağıtım görevi ekle"
 
-#: src/Release.php:1224
+#: src/Release.php:1243
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Bir izleme ekle"
 
-#: src/Change_Release.php:298
+#: src/Change_Release.php:317
 msgid "Add a release"
 msgstr "Bir sürüm ekle"
 
-#: src/Release.php:1243
+#: src/Release.php:1262
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Bir risk ekle"
 
-#: src/Release.php:1262
+#: src/Release.php:1281
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Bir geri alma ekle"
 
-#: src/Release.php:1300
+#: src/Release.php:1319
 msgctxt "button"
 msgid "Add a test"
 msgstr "Bir deneme ekle"
@@ -111,16 +121,20 @@ msgid_plural "Associated changes"
 msgstr[0] "İlişkili değişiklik"
 msgstr[1] "İlişkili değişiklikler"
 
-#: templates/form_test.html.twig:190 templates/form_deploytask.html.twig:262
-#: templates/form_testtemplate.html.twig:64
+#: templates/form_test.html.twig:190 templates/form_testtemplate.html.twig:64
+#: templates/form_deploytask.html.twig:262
 msgid "Associated risk"
 msgstr "İlişkili risk"
 
-#: src/ReleaseTemplate.php:1540 src/Release.php:2468
+#: src/Release.php:2487 src/ReleaseTemplate.php:1165
 msgid "Associated with"
 msgstr "Şununla ilişkili"
 
-#: src/Finalization.php:296
+#: templates/form_deploytasktemplate.html.twig:115
+msgid "By"
+msgstr "İlgili"
+
+#: templates/form_finalization_confirm.html.twig:32
 msgid "Care all steps are not finish !"
 msgstr "Tamamlamadığım tüm adımlar hesaba katılsın!"
 
@@ -130,7 +144,7 @@ msgid_plural "Categories"
 msgstr[0] "Kategori"
 msgstr[1] "Kategoriler"
 
-#: src/Release.php:827
+#: src/Release.php:846
 msgid "Changes defined"
 msgstr "Tanımlanmış değişiklikler"
 
@@ -138,36 +152,46 @@ msgstr "Tanımlanmış değişiklikler"
 msgid "Child entities"
 msgstr "Alt birimler"
 
+#: templates/form_finalization.html.twig:111
+msgid "Close"
+msgstr "Kapat"
+
 #: src/NotificationTargetRelease.php:71
 msgid "Closure of a releases"
 msgstr "Bir sürümün kapatılması"
 
-#: src/ReleaseTemplate.php:928 src/Release.php:380
+#: src/Release.php:380 templates/form_releasetemplate.html.twig:149
+#: templates/form_releasetemplate.html.twig:157
 #: templates/fields_panel.html.twig:319 templates/fields_panel.html.twig:331
 msgid "Communication"
 msgstr "İletişim"
 
-#: src/ReleaseTemplate.php:933 src/Release.php:395
+#: src/Release.php:395 templates/form_releasetemplate.html.twig:163
 #: templates/fields_panel.html.twig:347
 msgid "Communication type"
 msgstr "İletişim türü"
 
-#: src/Review.php:280
+#: templates/form_review.html.twig:149
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "İncelemeyi sonlandır"
 
-#: templates/form_risk.html.twig:206 templates/form_rollback.html.twig:176
-#: templates/footer.html.twig:136 templates/form_test.html.twig:248
-#: templates/form_deploytask.html.twig:406
+#: templates/form_test.html.twig:248 templates/form_rollback.html.twig:176
+#: templates/footer.html.twig:136 templates/form_review.html.twig:131
+#: templates/form_risk.html.twig:206 templates/form_deploytask.html.twig:406
 msgid "Confirm the final deletion?"
 msgstr "Son silme onaylansın mı?"
 
-#: src/NotificationTargetRelease.php:733 src/Review.php:164
+#: src/NotificationTargetRelease.php:732 templates/form_review.html.twig:59
 msgid "Conforming realization"
 msgstr "Uyumlu gerçekleştirme"
 
-#: src/ReleaseTemplate.php:1011 src/Release.php:2692
+#: templates/form_deploytasktemplate.html.twig:147
+msgid "Content"
+msgstr "İçerik"
+
+#: templates/create_release_link.html.twig:34
+#: templates/form_releasetemplate_menu.html.twig:45
 msgid "Create a release"
 msgstr "Bir sürüm oluştur"
 
@@ -175,13 +199,22 @@ msgstr "Bir sürüm oluştur"
 msgid "Create a test from this risk"
 msgstr "Bu risk için bir deneme oluştur"
 
-#: src/Release.php:826
+#: templates/form_finalization.html.twig:37
+msgid "Creation date"
+msgstr "Oluşturulma tarihi"
+
+#: templates/form_deploytasktemplate.html.twig:137
+msgid "Date"
+msgstr "Tarih"
+
+#: src/Release.php:845
 msgid "Dates defined"
 msgstr "Tanımlanmış tarihler"
 
-#: templates/form_risk.html.twig:208 templates/form_rollback.html.twig:178
+#: templates/form_test.html.twig:250 templates/form_rollback.html.twig:178
 #: templates/footer.html.twig:135 templates/footer.html.twig:138
-#: templates/form_test.html.twig:250 templates/form_deploytask.html.twig:408
+#: templates/form_review.html.twig:130 templates/form_risk.html.twig:208
+#: templates/form_deploytask.html.twig:408
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Kalıcı olarak sil"
@@ -190,52 +223,54 @@ msgstr "Kalıcı olarak sil"
 msgid "Deleting a releases"
 msgstr "Bir sürümün silinmesi"
 
-#: src/Deploytasktemplate.php:63
+#: src/Deploytasktemplate.php:62
 msgid "Deploy Task template"
 msgid_plural "Deploy Task templates"
 msgstr[0] "Dağıtma görevi kalıbı"
 msgstr[1] "Dağıtma görevi kalıpları"
 
-#: src/ReleaseTemplate.php:220 src/Deploytasktemplate.php:79
+#: src/ReleaseTemplate.php:220 src/Deploytasktemplate.php:78
+#: templates/form_deploytasktemplate.html.twig:68
 msgid "Deploy Task type"
 msgstr "Dağıtma görevi türü"
 
-#: src/ReleaseTemplate.php:199 src/ReleaseTemplate.php:767
-#: src/ReleaseTemplate.php:1348 src/ReleaseTemplate.php:1349
-#: src/NotificationTargetRelease.php:876 src/NotificationTargetRelease.php:896
-#: src/Release.php:2017 src/Release.php:2019 src/Deploytask.php:73
-#: src/Finalization.php:207 templates/timeline.html.twig:120
+#: src/Release.php:2036 src/Release.php:2038 src/ReleaseTemplate.php:199
+#: src/ReleaseTemplate.php:966 src/ReleaseTemplate.php:967
+#: src/Deploytask.php:73 src/NotificationTargetRelease.php:875
+#: src/NotificationTargetRelease.php:895 templates/timeline.html.twig:120
+#: templates/form_finalization.html.twig:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Dağıtma görevi"
 msgstr[1] "Dağıtma görevleri"
 
-#: src/TypeDeployTask.php:55 src/NotificationTargetRelease.php:838
+#: src/TypeDeployTask.php:55 src/NotificationTargetRelease.php:837
 msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] "Dağıtma görevi türü"
 msgstr[1] "Dağıtma görevi türleri"
 
-#: src/Release.php:830
+#: src/Release.php:849
 msgid "Deployment tasks in progress"
 msgstr "İşlenen dağıtma görevleri"
 
-#: src/ReleaseTemplate.php:167 templates/form_rollbacktemplate.html.twig:56
-#: templates/form_testtemplate.html.twig:75
-#: templates/form_risktemplate.html.twig:63
+#: src/ReleaseTemplate.php:167 templates/form_testtemplate.html.twig:75
+#: templates/form_rollbacktemplate.html.twig:56
+#: templates/form_review.html.twig:77 templates/form_risktemplate.html.twig:63
 msgid "Description"
 msgstr "Açıklama"
 
-#: templates/form_risk.html.twig:50 templates/timeline.html.twig:146
-#: templates/form_rollback.html.twig:50 templates/form_test.html.twig:48
-#: templates/form_test.html.twig:51 templates/form_test.html.twig:54
-#: templates/form_test.html.twig:216 templates/form_deploytask.html.twig:45
+#: templates/form_test.html.twig:48 templates/form_test.html.twig:51
+#: templates/form_test.html.twig:54 templates/form_test.html.twig:216
+#: templates/form_rollback.html.twig:50 templates/form_risk.html.twig:50
+#: templates/timeline.html.twig:146 templates/form_deploytask.html.twig:45
 #: templates/form_deploytask.html.twig:52
 #: templates/form_deploytask.html.twig:59
 #: templates/form_deploytask.html.twig:288
 msgid "Done"
 msgstr "Bitti"
 
+#: templates/form_deploytasktemplate.html.twig:101
 #: templates/form_deploytask.html.twig:299
 msgid "Duration"
 msgstr "Süre"
@@ -252,10 +287,14 @@ msgstr[1] "E-postalar"
 msgid "Email Followup"
 msgstr "E-posta izleme"
 
-#: src/Release.php:834
+#: src/Release.php:853
 msgctxt "status"
 msgid "End"
 msgstr "Bitiş"
+
+#: templates/form_finalization.html.twig:86
+msgid "End date"
+msgstr "Bitiş tarihi"
 
 #: templates/fields_panel.html.twig:60 templates/fields_panel.html.twig:74
 msgid "Entity"
@@ -263,21 +302,24 @@ msgid_plural "Entities"
 msgstr[0] "Birim"
 msgstr[1] "Birimler"
 
-#: src/Release.php:835 src/Deploytask.php:348 src/Deploytask.php:1136
-#: src/Test.php:329 src/Test.php:368 templates/form_test.html.twig:49
-#: templates/form_test.html.twig:52 templates/form_test.html.twig:55
-#: templates/form_test.html.twig:217 templates/form_deploytask.html.twig:48
+#: src/Release.php:854 src/Deploytasktemplate.php:250 src/Deploytask.php:348
+#: src/Deploytask.php:690 src/Test.php:203 src/Test.php:219
+#: templates/form_test.html.twig:49 templates/form_test.html.twig:52
+#: templates/form_test.html.twig:55 templates/form_test.html.twig:217
+#: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
 #: templates/form_deploytask.html.twig:289
 msgid "Failed"
 msgstr "Tamamlanamadı"
 
-#: src/Finalization.php:65
+#: src/Finalization.php:66
 msgid "Finalization"
 msgstr "Sonuçlandırma"
 
-#: src/Finalization.php:244 src/Finalization.php:249 src/Finalization.php:313
+#: templates/form_finalization_confirm.html.twig:57
+#: templates/form_finalization.html.twig:92
+#: templates/form_finalization.html.twig:110
 msgid "Finalize"
 msgstr "Sonuçlandır"
 
@@ -285,30 +327,42 @@ msgstr "Sonuçlandır"
 msgid "Followup"
 msgstr "İzle"
 
-#: src/Release.php:2673 templates/fields_panel.html.twig:104
+#: src/Release.php:2697 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Bu değişikliği"
 
-#: src/ReleaseTemplate.php:2211
+#: templates/form_deploytasktemplate.html.twig:126
+msgid "Group"
+msgstr "Grup"
+
+#: src/ReleaseTemplate.php:1856
 msgid "Group in charge of the release"
 msgstr "Bu sürümden sorumlu grup"
 
-#: src/NotificationTargetRelease.php:735 src/Review.php:176
+#: src/NotificationTargetRelease.php:734 templates/form_review.html.twig:71
 msgid "Incidents during process"
 msgstr "İşlenirken çıkan sorunlar"
 
-#: src/Change_Release.php:61
+#: src/Change_Release.php:62
 msgid "Link Release/Change"
 msgid_plural "Links Release/Change"
 msgstr[0] "Sürüm/Değişiklik bağlantısı"
 msgstr[1] "Sürüm/Değişiklik bağlantıları"
 
-#: src/Finalization.php:253 src/Finalization.php:258 src/Finalization.php:308
+#: templates/form_releasetemplate.html.twig:54
+msgid "Location"
+msgstr "Konum"
+
+#: templates/form_finalization_confirm.html.twig:53
+#: templates/form_finalization.html.twig:92
+#: templates/form_finalization.html.twig:110
 msgid "Mark as failed"
 msgstr "Tamamlanmamış olarak işaretle"
 
-#: templates/form_rollbacktemplate.html.twig:50
 #: templates/form_testtemplate.html.twig:50
+#: templates/form_rollbacktemplate.html.twig:50
+#: templates/form_review.html.twig:65
+#: templates/form_deploytasktemplate.html.twig:50
 #: templates/form_risktemplate.html.twig:50
 msgid "Name"
 msgstr "Ad"
@@ -317,39 +371,39 @@ msgstr "Ad"
 msgid "New release"
 msgstr "Yeni sürüm"
 
-#: src/ReleaseTemplate.php:1585 src/Release.php:2514
+#: src/Release.php:2533 src/ReleaseTemplate.php:1210
 msgid "No data available"
 msgstr "Kullanılabilecek bir veri yok"
 
-#: src/Release.php:3057 src/Release.php:3104
+#: src/Release.php:3072 src/Release.php:3119
 msgid "No release found."
 msgstr "Herhangi bir sürüm bulunamadı."
 
-#: src/ReleaseTemplate.php:187 src/ReleaseTemplate.php:704
-#: src/ReleaseTemplate.php:870 templates/fields_panel.html.twig:268
+#: src/ReleaseTemplate.php:187 templates/form_releasetemplate.html.twig:60
+#: templates/fields_panel.html.twig:268
 msgid "Non-working hours"
 msgstr "Çalışılmayan saatler"
 
-#: src/Finalization.php:228
+#: src/Finalization.php:173
 msgid "Not yet completed"
 msgstr "Henüz tamamlanmamış"
 
-#: src/NotificationTargetRelease.php:718 src/Release.php:293
+#: src/Release.php:293 src/NotificationTargetRelease.php:717
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Risk sayısı"
 
-#: src/NotificationTargetRelease.php:724 src/Release.php:306
+#: src/Release.php:306 src/NotificationTargetRelease.php:723
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Geri alma sayısı"
 
-#: src/NotificationTargetRelease.php:845 src/Release.php:333
+#: src/Release.php:333 src/NotificationTargetRelease.php:844
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Görev sayısı"
 
-#: src/NotificationTargetRelease.php:731 src/Release.php:319
+#: src/Release.php:319 src/NotificationTargetRelease.php:730
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Deneme sayısı"
@@ -362,29 +416,37 @@ msgstr "Açılış tarihi"
 msgid "Plan this task"
 msgstr "Bu görevi planla"
 
-#: src/ReleaseTemplate.php:673 src/Change_Release.php:340
-#: templates/fields_panel.html.twig:136
+#: src/Change_Release.php:359 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Planlanan üretim öncesi tarihi"
 
-#: src/ReleaseTemplate.php:171 src/Release.php:285
+#: src/Release.php:285 src/ReleaseTemplate.php:171
 msgid "Pre-production run date"
 msgstr "Üretim öncesi çalışma tarihi"
 
-#: src/Deploytasktemplate.php:266 templates/form_deploytask.html.twig:214
+#: templates/form_deploytasktemplate.html.twig:57
+#: templates/form_deploytask.html.twig:214
 msgid "Previous task"
 msgstr "Önceki görev"
+
+#: templates/form_deploytasktemplate.html.twig:94
+msgid "Private"
+msgstr "Kişisel"
 
 #: src/ReleaseTemplate.php:109
 msgid "Processing release"
 msgstr "Sürüm işleniyor"
 
-#: src/ReleaseTemplate.php:678 src/Change_Release.php:341
-#: templates/fields_panel.html.twig:152
+#: templates/form_releasetemplate.html.twig:45
+msgid "Production deployment details"
+msgstr "Üretim dağıtımı bilgileri"
+
+#: src/Change_Release.php:360 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Planlanan üretim zamanı"
 
-#: src/ReleaseTemplate.php:175 src/Release.php:355 src/Finalization.php:302
+#: src/Release.php:355 src/ReleaseTemplate.php:175
+#: templates/form_finalization_confirm.html.twig:40
 msgid "Production run date"
 msgstr "Üretim çalışma tarihi"
 
@@ -393,29 +455,28 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Çöpe at"
 
-#: src/NotificationTargetRelease.php:732 src/Review.php:154
-#: src/Change_Release.php:342
+#: src/Change_Release.php:361 src/NotificationTargetRelease.php:731
+#: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Gerçek üretim çalışma tarihi"
 
-#: front/change_release.form.php:48 src/Profile.php:61
-#: src/ReleaseTemplate.php:984 src/NotificationTargetRelease.php:900
-#: src/Release.php:107 setup.php:111
+#: front/change_release.form.php:48 src/Profile.php:61 src/Release.php:107
+#: src/NotificationTargetRelease.php:899 setup.php:114
+#: templates/form_releasetemplate_menu.html.twig:32
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Sürüm"
 msgstr[1] "Sürümler"
 
-#: src/ReleaseTemplate.php:1622 src/Release.php:2907
+#: src/Release.php:2922 src/ReleaseTemplate.php:1247
 msgid "Release actions details"
 msgstr "Sürüm işlemleri bilgileri"
 
-#: src/ReleaseTemplate.php:664 src/ReleaseTemplate.php:890
-#: src/Change_Release.php:339
+#: src/Change_Release.php:358 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Sürüm bölgesi"
 
-#: src/Release.php:825
+#: src/Release.php:844
 msgid "Release area defined"
 msgstr "Tanımlanmış sürüm bölgeleri"
 
@@ -429,7 +490,7 @@ msgid_plural "Release templates"
 msgstr[0] "Sürüm kalıbı"
 msgstr[1] "Sürüm kalıpları"
 
-#: src/Release.php:3092
+#: src/Release.php:3107
 msgid "Releases on linked items"
 msgstr "İlgili ögelerdeki sürümler"
 
@@ -438,20 +499,21 @@ msgctxt "button"
 msgid "Restore"
 msgstr "Geri yükle"
 
-#: src/Review.php:63
+#: src/Review.php:62
 msgid "Review"
 msgid_plural "Reviews"
 msgstr[0] "Değerlendirme"
 msgstr[1] "Değerlendirmeler"
 
-#: src/Release.php:833
+#: src/Release.php:852
 msgid "Reviewed"
 msgstr "Onaylanmış"
 
-#: src/NotificationTargetRelease.php:751 src/NotificationTargetRelease.php:878
-#: src/NotificationTargetRelease.php:898 src/Deploytasktemplate.php:341
-#: src/Risk.php:56 src/Testtemplate.php:71 src/Finalization.php:189
-#: templates/timeline.html.twig:116
+#: src/Testtemplate.php:71 src/NotificationTargetRelease.php:750
+#: src/NotificationTargetRelease.php:877 src/NotificationTargetRelease.php:897
+#: src/Risk.php:56 templates/timeline.html.twig:116
+#: templates/form_deploytasktemplate.html.twig:75
+#: templates/form_finalization.html.twig:46
 msgid "Risk"
 msgid_plural "Risks"
 msgstr[0] "Risk"
@@ -463,22 +525,21 @@ msgid_plural "Risk templates"
 msgstr[0] "Risk kalıbı"
 msgstr[1] "Risk kalıpları"
 
-#: src/NotificationTargetRelease.php:716 src/TypeRisk.php:54
+#: src/NotificationTargetRelease.php:715 src/TypeRisk.php:54
 #: templates/form_risk.html.twig:143 templates/form_risktemplate.html.twig:57
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] "Risk türü"
 msgstr[1] "Risk türleri"
 
-#: src/Release.php:828
+#: src/Release.php:847
 msgid "Risks defined"
 msgstr "Tanımlanmış riskler"
 
-#: src/ReleaseTemplate.php:195 src/ReleaseTemplate.php:742
-#: src/NotificationTargetRelease.php:752 src/NotificationTargetRelease.php:753
-#: src/NotificationTargetRelease.php:879 src/NotificationTargetRelease.php:899
-#: src/Rollback.php:58 src/Finalization.php:198
-#: templates/timeline.html.twig:118
+#: src/ReleaseTemplate.php:195 src/Rollback.php:58
+#: src/NotificationTargetRelease.php:751 src/NotificationTargetRelease.php:752
+#: src/NotificationTargetRelease.php:878 src/NotificationTargetRelease.php:898
+#: templates/timeline.html.twig:118 templates/form_finalization.html.twig:55
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] "Geri alma"
@@ -490,26 +551,27 @@ msgid_plural "Rollback templates"
 msgstr[0] "Geri alma kalıbı"
 msgstr[1] "Geri alma kalıpları"
 
-#: src/Release.php:829
+#: src/Release.php:848
 msgid "Rollbacks defined"
 msgstr "Tanımlanmış geri almalar"
 
-#: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
+#: templates/form_test.html.twig:243 templates/form_rollback.html.twig:171
 #: templates/footer.html.twig:159 templates/footer.html.twig:161
-#: templates/actor_notification.html.twig:52 templates/form_test.html.twig:243
-#: templates/form_deploytask.html.twig:401 templates/profile.html.twig:34
+#: templates/actor_notification.html.twig:52 templates/form_risk.html.twig:201
+#: templates/profile.html.twig:34 templates/form_deploytask.html.twig:401
 msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/ReleaseTemplate.php:179 src/ReleaseTemplate.php:690
-#: src/ReleaseTemplate.php:902 src/Release.php:363 src/Change_Release.php:343
+#: src/Release.php:363 src/ReleaseTemplate.php:179 src/Change_Release.php:362
+#: templates/form_releasetemplate.html.twig:116
+#: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:240 templates/fields_panel.html.twig:252
 msgid "Service shutdown"
 msgstr "Hizmet durdurma"
 
-#: src/ReleaseTemplate.php:183 src/ReleaseTemplate.php:697
-#: src/ReleaseTemplate.php:919 src/Release.php:371
+#: src/Release.php:371 src/ReleaseTemplate.php:183
+#: templates/form_releasetemplate.html.twig:132
 #: templates/fields_panel.html.twig:284
 msgid "Service shutdown details"
 msgstr "Hizmet durdurma bilgileri"
@@ -518,9 +580,22 @@ msgstr "Hizmet durdurma bilgileri"
 msgid "Set the status to pending"
 msgstr "Durumu bekliyor olarak ayarla"
 
-#: templates/form_test.html.twig:212 templates/form_deploytask.html.twig:284
+#: templates/form_review.html.twig:121 templates/form_review.html.twig:122
+msgctxt "button"
+msgid "Show"
+msgstr "Görüntüle"
+
+#: templates/form_test.html.twig:212
+#: templates/form_deploytasktemplate.html.twig:86
+#: templates/form_deploytask.html.twig:284
 msgid "Status"
 msgstr "Durum"
+
+#: templates/form_releasetemplate.html.twig:178
+msgid "Target"
+msgid_plural "Targets"
+msgstr[0] "Hedef"
+msgstr[1] "Hedefler"
 
 #: templates/timeline.html.twig:218
 msgid "Task"
@@ -534,13 +609,13 @@ msgid_plural "Task templates"
 msgstr[0] "Görev kalıbı"
 msgstr[1] "Görev kalıpları"
 
-#: src/Review.php:189
+#: templates/form_review.html.twig:97
 msgid "Technical Support Document"
 msgstr "Teknik destek belgesi"
 
-#: src/ReleaseTemplate.php:191 src/ReleaseTemplate.php:718
-#: src/NotificationTargetRelease.php:877 src/NotificationTargetRelease.php:897
-#: src/Test.php:59 src/Finalization.php:219 templates/timeline.html.twig:114
+#: src/ReleaseTemplate.php:191 src/Test.php:59
+#: src/NotificationTargetRelease.php:876 src/NotificationTargetRelease.php:896
+#: templates/timeline.html.twig:114 templates/form_finalization.html.twig:75
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Sınama"
@@ -552,15 +627,15 @@ msgid_plural "Test templates"
 msgstr[0] "Sınama kalıbı"
 msgstr[1] "Sınama kalıpları"
 
-#: src/NotificationTargetRelease.php:729 src/TypeTest.php:54
-#: src/Testtemplate.php:66 templates/form_test.html.twig:155
+#: src/Testtemplate.php:66 src/TypeTest.php:54
+#: src/NotificationTargetRelease.php:728 templates/form_test.html.twig:155
 #: templates/form_testtemplate.html.twig:57
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Sınama türü"
 msgstr[1] "Sınama türleri"
 
-#: src/Release.php:831
+#: src/Release.php:850
 msgid "Tests in progress"
 msgstr "İşlenen sınamalar"
 
@@ -572,18 +647,19 @@ msgstr "Sürüm sonuçlandırıldı"
 msgid "Timeline filter"
 msgstr "Zaman akışı süzgeci"
 
-#: templates/form_risk.html.twig:134 templates/form_rollback.html.twig:134
-#: templates/form_test.html.twig:146 templates/form_deploytask.html.twig:188
+#: templates/form_test.html.twig:146 templates/form_rollback.html.twig:134
+#: templates/form_releasetemplate.html.twig:66
+#: templates/form_risk.html.twig:134 templates/form_deploytask.html.twig:188
 msgid "Title"
 msgstr "Başlık"
 
+#: templates/form_test.html.twig:215 templates/form_rollback.html.twig:48
 #: templates/form_risk.html.twig:48 templates/timeline.html.twig:144
-#: templates/form_rollback.html.twig:48 templates/form_test.html.twig:215
 #: templates/form_deploytask.html.twig:287
 msgid "To do"
 msgstr "Yapılacak iş"
 
-#: src/Release.php:832
+#: src/Release.php:851
 msgid "To finalized"
 msgstr "Sonuçlandırılacak"
 
@@ -594,6 +670,10 @@ msgstr "Pano genişliğini değiştir"
 #: src/NotificationTargetRelease.php:70
 msgid "Update of a release"
 msgstr "Bir sürümün güncellemesi"
+
+#: templates/form_releasetemplate_menu.html.twig:40
+msgid "Use this template"
+msgstr "Bu kalıp kullanılsın"
 
 #: templates/timeline.html.twig:224
 msgid "Validation"
