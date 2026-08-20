@@ -1,0 +1,153 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+{% set bg = "" %}
+{% if item.isDeleted() %}
+    {% set bg = "asset-deleted" %}
+{% endif %}
+
+<div class="asset {{ bg }}">
+    {% include("components/form/header.html.twig") %}
+
+    <div class="card-body d-flex">
+        <div class="col-12 flex-column">
+            <div class="row flex-row">
+
+                {{ fields.hiddenField(
+                    'plugin_releases_releases_id',
+                    plugin_releases_releases_id
+                ) }}
+
+                {{ fields.datetimeField(
+                    'real_date_release',
+                    item.fields['real_date_release'],
+                    __('Real production run date', 'releases'),
+                    {
+                        'readonly': date_locked,
+                    }
+                ) }}
+
+                {{ fields.dropdownYesNo(
+                    'conforming_realization',
+                    item.fields['conforming_realization'],
+                    __('Conforming realization', 'releases')
+                ) }}
+
+                {{ fields.textField(
+                    'name',
+                    item.fields['name'],
+                    __('Name')
+                ) }}
+
+                {{ fields.dropdownYesNo(
+                    'incident',
+                    item.fields['incident'],
+                    __('Incidents during process', 'releases')
+                ) }}
+
+                {{ fields.textareaField(
+                    'incident_description',
+                    item.fields['incident_description'],
+                    __('Description'),
+                    {
+                        'full_width': true,
+                        'enable_richtext': true,
+                        'enable_fileupload': true,
+                        'rows': 10,
+                    }
+                ) }}
+            </div>
+        </div>
+    </div>
+
+    {% include("components/form/buttons.html.twig") %}
+</div>
+
+{# Attached documents are rendered outside the main form: each detach action is
+   its own POST form, and nesting <form> elements is invalid HTML. #}
+{% if documents|length > 0 %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <h4 class="card-title">{{ __('Technical Support Document', 'releases') }}</h4>
+            {% for doc in documents %}
+                <div class="d-flex align-items-center mb-2">
+                    <img src="{{ doc.icon }}" alt="" class="me-1"/>
+                    {% if doc.filename %}
+                        <a href="{{ doc.url }}" target="_blank" rel="noopener">
+                            {{ doc.filename }}
+                            {% if doc.is_image %}
+                                <div class="timeline_img_preview">
+                                    <img src="{{ doc.preview_url }}" alt="{{ doc.filename }}"/>
+                                </div>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    {% if doc.link %}
+                        <a href="{{ doc.link }}" target="_blank" rel="noopener">
+                            <i class="ti ti-external-link"></i>{{ doc.link_name }}
+                        </a>
+                    {% endif %}
+                    {% if doc.mime %}
+                        &nbsp;({{ doc.mime }})
+                    {% endif %}
+                    <span class="buttons ms-2">
+                        <a href="{{ doc.show_url }}" class="edit_document ti ti-eye pointer"
+                           title="{{ _x('button', 'Show') }}">
+                            <span class="sr-only">{{ _x('button', 'Show') }}</span>
+                        </a>
+                        {% if doc.can_update %}
+                            <form method="post" action="{{ form_url }}" class="d-inline">
+                                <input type="hidden" name="documents_id" value="{{ doc.id }}"/>
+                                <input type="hidden" name="plugin_releases_reviews_id" value="{{ review_id }}"/>
+                                <button type="submit" name="delete_document"
+                                        class="btn btn-link p-0 text-danger align-baseline"
+                                        title="{{ _x('button', 'Delete permanently') }}"
+                                        onclick="return confirm('{{ __('Confirm the final deletion?')|e('js') }}');">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                                <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
+                            </form>
+                        {% endif %}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{# Conclude the review: closes the parent release once it reached the review stage. #}
+{% if can_conclude %}
+    <form method="post" action="{{ form_url }}" class="text-center mt-3">
+        <input type="hidden" name="plugin_releases_releases_id" value="{{ plugin_releases_releases_id }}"/>
+        <button type="submit" name="conclude" class="btn btn-primary">
+            {{ _x('button', 'Conclude the review', 'releases') }}
+        </button>
+        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
+    </form>
+{% endif %}

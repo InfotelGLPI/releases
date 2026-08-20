@@ -1,0 +1,63 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+{% if not allfinish %}
+    <div class="alert alert-important alert-warning d-flex">
+        {{ __('Care all steps are not finish !', 'releases') }}
+    </div>
+{% endif %}
+
+<form name="release_form" id="release_form" method="post" action="{{ action_url }}">
+    {{ fields.datetimeField(
+        'date_production',
+        '',
+        __('Production run date', 'releases'),
+        {'maybeempty': false}
+    ) }}
+
+    <input type="hidden" name="id" value="{{ id }}"/>
+    {% if is_failed %}
+        <input type="hidden" name="failedtasks" value="{{ failed_tasks }}"/>
+        <input type="hidden" name="failedtests" value="{{ failed_tests }}"/>
+    {% endif %}
+
+    <div class="d-flex justify-content-center mt-2">
+        {% if is_failed %}
+            <button type="submit" name="failed" class="btn btn-danger">
+                <i class="ti ti-x"></i>&nbsp;{{ __('Mark as failed', 'releases') }}
+            </button>
+        {% else %}
+            <button type="submit" name="finalize" class="btn btn-success">
+                <i class="ti ti-check"></i>&nbsp;{{ __('Finalize', 'releases') }}
+            </button>
+        {% endif %}
+    </div>
+
+    <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
+</form>

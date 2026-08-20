@@ -18,6 +18,68 @@
    font-weight: bold;
 }
 
+/* Per-type colored chips for the ReleaseTemplate timeline choice bar
+   (showTimelineForm). Mirrors the subitem palette used by the Finalization
+   bulles: Risk = red, Rollback = green, Deploytask = orange, Test = blue.
+   The active filter (anchor gets .h_active) fills the chip with the solid
+   type color; text stays dark via the existing a.h_active rule above,
+   matching the .Finalization-* pairing. */
+.timeline_choices li.Risk,
+.timeline_choices li.Rollback,
+.timeline_choices li.Deploytask,
+.timeline_choices li.Test {
+   border-radius: 6px 6px 0 0;
+   border-bottom: 3px solid transparent;
+   transition: background-color .15s ease;
+}
+
+.timeline_choices li.Risk a,
+.timeline_choices li.Rollback a,
+.timeline_choices li.Deploytask a,
+.timeline_choices li.Test a {
+   color: inherit;
+}
+
+.timeline_choices li.Risk {
+   background-color: rgba(255, 60, 16, 0.12);
+   border-bottom-color: #ff3c10;
+}
+.timeline_choices li.Rollback {
+   background-color: rgba(143, 213, 124, 0.18);
+   border-bottom-color: #8fd57c;
+}
+.timeline_choices li.Deploytask {
+   background-color: rgba(255, 157, 36, 0.15);
+   border-bottom-color: #ff9d24;
+}
+.timeline_choices li.Test {
+   background-color: rgba(159, 221, 255, 0.25);
+   border-bottom-color: #9fddff;
+}
+
+/* Hover: deepen the tint. */
+.timeline_choices li.Risk:hover       { background-color: rgba(255, 60, 16, 0.22); }
+.timeline_choices li.Rollback:hover   { background-color: rgba(143, 213, 124, 0.30); }
+.timeline_choices li.Deploytask:hover { background-color: rgba(255, 157, 36, 0.28); }
+.timeline_choices li.Test:hover       { background-color: rgba(159, 221, 255, 0.45); }
+
+/* Active filter: solid fill with the type color. */
+.timeline_choices li.Risk:has(a.h_active)       { background-color: rgba(255, 60, 16, 0.12); }
+.timeline_choices li.Rollback:has(a.h_active)   { background-color: #8fd57c; }
+.timeline_choices li.Deploytask:has(a.h_active) { background-color: #ff9d24; }
+.timeline_choices li.Test:has(a.h_active)       { background-color: #9fddff; }
+
+/* Per-type tint applied to the whole timeline item (.h_item), keyed off the
+   type class Releases{itiltype} carried by the .h_item itself. */
+.timeline_releasehistory .h_item.ReleasesRisk       { background-color: rgba(255, 60, 16, 0.10); }
+.timeline_releasehistory .h_item.ReleasesRollback   { background-color: rgba(143, 213, 124, 0.15); }
+.timeline_releasehistory .h_item.ReleasesDeploytask { background-color: rgba(255, 157, 36, 0.12); }
+.timeline_releasehistory .h_item.ReleasesTest       { background-color: rgba(159, 221, 255, 0.20); }
+.timeline_releasehistory .h_item[class*="Releases"] {
+   border-radius: 6px;
+   padding: 4px;
+}
+
 h3.noinfo {
    font-weight: bold;
    color: #D4D7DA;

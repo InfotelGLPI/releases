@@ -1,0 +1,50 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+<div class="d-flex justify-content-center">
+    <div class="card mb-3" style="min-width: 22rem;">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-rocket me-1"></i>{{ __('Release', 'releases') }}
+            </h3>
+        </div>
+        <div class="card-body text-center">
+            {# GET form so the selected template id (template_id) is always
+               submitted to release.form.php, independent of any client JS. #}
+            <form method="get" action="{{ form_action }}">
+                {% if has_templates %}
+                    <label class="form-label fw-bold">{{ __('Use this template', 'releases') }}</label>
+                    {{ dropdown_html|raw }}
+                    <div class="my-3"></div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-circle-plus"></i>&nbsp;{{ __('Create a release', 'releases') }}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

@@ -198,7 +198,6 @@ class NotificationTargetRelease extends NotificationTargetCommonITILObject {
                $tmp                          = [];
                $tmp['##supplier.id##']       = $sid;
                $tmp['##supplier.name##']     = $supplier->getName();
-               $tmp['##supplier.email##']    = $supplier->getField('email');
                $tmp['##supplier.phone##']    = $supplier->getField('phonenumber');
                $tmp['##supplier.fax##']      = $supplier->getField('fax');
                $tmp['##supplier.website##']  = $supplier->getField('website');

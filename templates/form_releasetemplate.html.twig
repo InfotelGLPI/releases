@@ -1,0 +1,185 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+{% import "components/form/fields_macros.html.twig" as fields %}
+
+{% set bg = "" %}
+{% if item.isDeleted() %}
+    {% set bg = "asset-deleted" %}
+{% endif %}
+
+{% set shutdown_on = item.fields['service_shutdown'] not in [0, '0', false, null] %}
+{% set current_type = item.fields['communication_type'] ?: '' %}
+
+<div class="asset {{ bg }}">
+    {% include("components/form/header.html.twig") %}
+
+    {# ===== Card 1: production deployment details ===== #}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-truck me-1"></i>{{ __('Production deployment details', 'releases') }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row flex-row">
+                {{ fields.dropdownField(
+                    'Location',
+                    'locations_id',
+                    item.fields['locations_id'],
+                    __('Location')
+                ) }}
+
+                {{ fields.dropdownYesNo(
+                    'hour_type',
+                    item.fields['hour_type'],
+                    __('Non-working hours', 'releases')
+                ) }}
+
+                {{ fields.textField(
+                    'name',
+                    item.fields['name'],
+                    __('Title'),
+                    {'maxlength': 250}
+                ) }}
+
+                {{ fields.textareaField(
+                    'content',
+                    item.fields['content'],
+                    __('Release area', 'releases'),
+                    {
+                        'full_width': true,
+                        'enable_richtext': true,
+                        'rows': 10,
+                    }
+                ) }}
+            </div>
+        </div>
+    </div>
+
+    {# ===== Card 2: actors on three columns ===== #}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-users me-1"></i>{{ _n('Actor', 'Actors', get_plural_number()) }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row flex-row">
+                <div class="col-12 col-md-4">
+                    <div class="tab_actors tab_cadre_fixe">
+                        {{ actors_requester_html|raw }}
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="tab_actors tab_cadre_fixe">
+                        {{ actors_observer_html|raw }}
+                    </div>
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="tab_actors tab_cadre_fixe">
+                        {{ actors_assign_html|raw }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ===== Card 3: service shutdown ===== #}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-ban me-1"></i>{{ __('Service shutdown', 'releases') }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row flex-row">
+                {{ fields.dropdownYesNo(
+                    'service_shutdown',
+                    item.fields['service_shutdown'],
+                    __('Service shutdown', 'releases')
+                ) }}
+
+                <div id="shutdowndetails-row" class="col-12"{% if not shutdown_on %} style="display:none"{% endif %}>
+                    <div class="row flex-row">
+                        {{ fields.textareaField(
+                            'service_shutdown_details',
+                            item.fields['service_shutdown_details'],
+                            __('Service shutdown details', 'releases'),
+                            {
+                                'full_width': true,
+                                'enable_richtext': true,
+                                'rows': 6,
+                            }
+                        ) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ===== Card 4: communication ===== #}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="ti ti-message me-1"></i>{{ __('Communication', 'releases') }}
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row flex-row">
+                {{ fields.dropdownYesNo(
+                    'communication',
+                    item.fields['communication'],
+                    __('Communication', 'releases')
+                ) }}
+
+                {{ fields.dropdownItemTypes(
+                    'communication_type',
+                    current_type,
+                    __('Communication type', 'releases'),
+                    {'types': comm_types}
+                ) }}
+
+                {% set targets_field %}
+                    <div id="targets"
+                         data-releases-targets
+                         data-autoload
+                         data-url="{{ targets_url }}"
+                         data-current-type="{{ current_type }}"
+                         data-values="{{ targets|json_encode }}"></div>
+                {% endset %}
+                {{ fields.field(
+                    'targets_display',
+                    targets_field,
+                    _n('Target', 'Targets', get_plural_number())
+                ) }}
+            </div>
+        </div>
+    </div>
+
+    {% include("components/form/buttons.html.twig") %}
+</div>

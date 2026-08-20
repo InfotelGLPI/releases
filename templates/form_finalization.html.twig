@@ -1,0 +1,119 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+<table class="tab_cadre_fixe" id="mainformtable">
+    <tr class="tab_bg_1">
+        <td>
+            <section id="timeline">
+                <article>
+                    <div class="inner">
+                        <span class="bulle bulleMarge">
+                            <span style="margin-left: 5px;"><i class="ti ti-player-play-filled" style="font-size:3em;"></i></span>
+                        </span>
+                        <h2 class="dateColor">{{ __('Creation date') }}<i class="ti ti-calendar" style="float: right;"></i></h2>
+                        <p>{{ creation_date }}</p>
+                    </div>
+                </article>
+                <article>
+                    <div class="inner">
+                        <span class="bulle riskBulle bulleMarge">
+                            {{ risk_icon|raw }}
+                        </span>
+                        <h2 class="Finalization-Risk">{{ _n('Risk', 'Risk', 2, 'releases') }}<i class="ti ti-bug" style="float: right;"></i></h2>
+                        <p>{{ __('%s / %s risks', 'releases')|format(risk_done, risk_total) }}</p>
+                    </div>
+                </article>
+                <article>
+                    <div class="inner">
+                        <span class="bulle rollbackBulle bulleMarge">
+                            {{ rollback_icon|raw }}
+                        </span>
+                        <h2 class="Finalization-Rollback">{{ _n('Rollback', 'Rollbacks', 2, 'releases') }}<i class="ti ti-arrow-back-up" style="float: right;"></i></h2>
+                        <p>{{ __('%s / %s rollbacks', 'releases')|format(rollback_done, rollback_total) }}</p>
+                    </div>
+                </article>
+                <article>
+                    <div class="inner">
+                        <span class="bulle taskBulle {{ task_failed_class }} bulleMarge">
+                            {{ task_icon|raw }}
+                        </span>
+                        <h2 class="Finalization-Deploytask">{{ _n('Deploy task', 'Deploy tasks', 2, 'releases') }}<i class="ti ti-checkbox" style="float: right;"></i></h2>
+                        <p>{{ __('%s / %s deploy tasks', 'releases')|format(deploy_task_done, deploy_task_total) }}</br>
+                            {{ __('%s deploy tasks failed', 'releases')|format(deploy_task_fail) }}
+                        <p><span class="percent" style="float: right;">{{ pourcentage_task }} %</span></p></p>
+                    </div>
+                </article>
+                <article>
+                    <div class="inner">
+                        <span class="bulle testBulle {{ test_failed_class }} bulleMarge">
+                            {{ test_icon|raw }}
+                        </span>
+                        <h2 class="Finalization-Test">{{ _n('Test', 'Tests', 2, 'releases') }}<i class="ti ti-check" style="float: right;"></i></h2>
+                        <p>{{ __('%s / %s tests', 'releases')|format(test_done, test_total) }}</br>
+                            {{ __('%s  tests failed', 'releases')|format(test_fail) }}
+                        <p><span class="percent" style="float: right;">{{ pourcentage_test }} %</span></p></p>
+                    </div>
+                </article>
+                <article>
+                    <div class="inner">
+                        <span class="bulle bulleMarge">
+                            <span><i class="ti ti-player-stop-filled" style="font-size:3em;"></i></span>
+                        </span>
+                        <h2 class="dateColor">{{ __('End date') }}<i class="ti ti-calendar" style="float: right;"></i></h2>
+                        <p>{{ date_end }}<br><br>
+                            {% if can_finalize %}
+                                <a href="#" id="finalize"
+                                   class="submit btn {{ is_failed ? 'btn-danger' : 'btn-primary' }}"
+                                   data-bs-toggle="modal" data-bs-target="#alert-message">
+                                    {{ is_failed ? __('Mark as failed', 'releases') : __('Finalize', 'releases') }}
+                                </a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </article>
+            </section>
+        </td>
+    </tr>
+</table>
+
+{% if can_finalize %}
+    {# Static Bootstrap modal replacing Ajax::createIframeModalWindow: the confirm
+       form is rendered by front/finalization.php inside the iframe. #}
+    <div class="modal fade" id="alert-message" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ is_failed ? __('Mark as failed', 'releases') : __('Finalize', 'releases') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <iframe src="{{ confirm_url }}" style="width: 100%; height: 320px; border: 0;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

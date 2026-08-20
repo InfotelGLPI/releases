@@ -34,312 +34,190 @@ use CommonGLPI;
 use DbUtils;
 use Document;
 use Document_Item;
-use Dropdown;
-use Html;
-use Session;
+use Glpi\Application\View\TemplateRenderer;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 /**
  * Class Review
  */
-class Review extends CommonDBTM {
+class Review extends CommonDBTM
+{
+    public static $rightname = 'plugin_releases_releases';
 
-   static $rightname = 'plugin_releases_releases';
-
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-eye ";
     }
-   /**
-    * @param int $nb
-    *
-    * @return string
-    */
-   static function getTypeName($nb = 0) {
+    /**
+     * @param int $nb
+     *
+     * @return string
+     */
+    public static function getTypeName($nb = 0)
+    {
 
-      return _n('Review', 'Reviews', $nb, 'releases');
-   }
+        return _n('Review', 'Reviews', $nb, 'releases');
+    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
 
-      if ($item->getType() == Release::getType()) {
-         return self::createTabEntry(self::getTypeName(1));
-      }
+        if ($item->getType() == Release::getType()) {
+            return self::createTabEntry(self::getTypeName(1));
+        }
 
-      return '';
-   }
+        return '';
+    }
 
-   static function countForItem(CommonDBTM $item) {
-      $dbu   = new DbUtils();
-      $table = CommonDBTM::getTable(Review::class);
-      return $dbu->countElementsInTable($table,
-                                        ["plugin_releases_releases_id" => $item->getID()]);
-   }
+    public static function countForItem(CommonDBTM $item)
+    {
+        $dbu   = new DbUtils();
+        $table = CommonDBTM::getTable(Review::class);
+        return $dbu->countElementsInTable(
+            $table,
+            ["plugin_releases_releases_id" => $item->getID()]
+        );
+    }
 
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
-      global $CFG_GLPI;
-      if ($item->getType() == Release::getType()) {
-         $self = new self();
-         if (self::canCreate()) {
-            $review = new Review();
-            if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
-               $ID = $review->getID();
-            } else {
-               $ID = 0;
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        global $CFG_GLPI;
+        if ($item->getType() == Release::getType()) {
+            $self = new self();
+            if (self::canCreate()) {
+                $review = new Review();
+                if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
+                    $ID = $review->getID();
+                } else {
+                    $ID = 0;
+                }
+                $self->showForm($ID, ['plugin_releases_releases_id' => $item->getField('id'),
+                    'target'                      => $CFG_GLPI['root_doc'] . "/plugins/releases/front/review.form.php"]);
             }
-            $self->showForm($ID, ['plugin_releases_releases_id' => $item->getField('id'),
-                                  'target'                      => $CFG_GLPI['root_doc'] . "/plugins/releases/front/review.form.php"]);
-         }
-      }
-   }
+        }
+    }
 
 
-   function post_addItem() {
-      // Add document if needed, without notification
-      $this->input = $this->addFiles($this->input, ['force_update' => true]);
+    public function post_addItem()
+    {
+        // Add document if needed, without notification
+        $this->input = $this->addFiles($this->input, ['force_update' => true]);
 
-      $release = new Release();
-      $release->getFromDB($this->input['plugin_releases_releases_id']);
-      if ($release->getField('status') < Release::REVIEW) {
-         $val           = [];
-         $val['id']     = $release->getID();
-         $val['status'] = Release::REVIEW;
-         $release->update($val);
-      }
-
-
-   }
-
-   function post_updateItem($history = 1) {
-      // Add document if needed, without notification
-      $this->input = $this->addFiles($this->input, ['force_update' => true]);
-
-   }
-
-   /**
-    * Actions done after the PURGE of the item in the database
-    *
-    * @return void
-    **/
-   function post_purgeItem() {
-      $release = new Release();
-      $release->getFromDB($this->getField("plugin_releases_releases_id"));
-      $val           = [];
-      $val['id']     = $this->getField("plugin_releases_releases_id");
-      $val['status'] = Release::FINALIZE;
-      $release->update($val);
-   }
-
-   function showForm($ID, $options = []) {
-      global $CFG_GLPI;
-
-      $this->getFromDB($ID);
-
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-       $plugin_releases_releases_id = $this->getField("plugin_releases_releases_id");
-      if (isset($options["plugin_releases_releases_id"])) {
-          $plugin_releases_releases_id = $options["plugin_releases_releases_id"];
-      }
-
-      echo Html::hidden('plugin_releases_releases_id', ['value' => $plugin_releases_releases_id]);
-      $rand = mt_rand();
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo __("Real production run date", 'releases');
-      echo "</td>";
-
-      echo "<td>";
-      $canedit = true;
-      if ($this->getField("date_lock") == 1) {
-         $canedit = false;
-      }
-      Html::showDateTimeField('real_date_release', ["value" => $this->getField('real_date_release'), 'canedit' => $canedit]);
-      echo "</td>";
-      echo "<td>" . __('Conforming realization', 'releases') . "</td>";
-      echo "<td>";
-      Dropdown::showYesNo("conforming_realization", $this->getField("conforming_realization"));
-      echo "</td>";
-
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ['id' => 'name', "value" => $this->getField('name')]);
-
-      echo "</td>";
-      echo "<td>" . __('Incidents during process', 'releases') . "</td>";
-      echo "<td>";
-      Dropdown::showYesNo("incident", $this->getField("incident"));
-      echo "</td>";
-
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Description') . "</td>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name" => "incident_description", "enable_richtext" => true, "value" => $this->getField('incident_description')]);
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __("Technical Support Document", "releases") . "</td>";
-
-      echo "<td colspan='3'>";
-      $document = new Document_Item();
-      $type     = Review::getType();
+        $release = new Release();
+        $release->getFromDB($this->input['plugin_releases_releases_id']);
+        if ($release->getField('status') < Release::REVIEW) {
+            $val           = [];
+            $val['id']     = $release->getID();
+            $val['status'] = Release::REVIEW;
+            $release->update($val);
+        }
 
 
-      $content_id = "content$rand";
-      Html::file(['filecontainer' => 'fileupload_info_ticket',
-                  'editor_id'     => $content_id,
-                  'showtitle'     => false,
-                  'multiple'      => true]);
-      if ($document->find(["itemtype" => $type, "items_id" => $this->getID()])) {
-         $d       = new Document();
-         $items_i = $document->find(["itemtype" => $type, "items_id" => $this->getID()]);
-         //         $item_i = reset($items_i);
-         foreach ($items_i as $item) {
-            $items_i    = $d->find(["id" => $item["documents_id"]]);
-            $item_i     = reset($items_i);
-            $foreignKey = "plugin_releases_reviews_id";
-            $pics_url   = $CFG_GLPI['root_doc'] . "/pics/timeline";
+    }
 
-            if ($item_i['filename']) {
-               $filename = $item_i['filename'];
-               $ext      = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-               echo "<img src='";
-               if (empty($filename)) {
-                  $filename = $item_i['name'];
-               }
-               if (file_exists(GLPI_ROOT . "/pics/icones/$ext-dist.png")) {
-                  echo $CFG_GLPI['root_doc'] . "/pics/icones/$ext-dist.png";
-               } else {
-                  echo "$pics_url/file.png";
-               }
-               echo "'/>&nbsp;";
+    public function post_updateItem($history = 1)
+    {
+        // Add document if needed, without notification
+        $this->input = $this->addFiles($this->input, ['force_update' => true]);
 
-               echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
-                    . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
-               if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i['filepath'])) {
-                  echo "<div class='timeline_img_preview'>";
-                  echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i['id']
-                       . "&$foreignKey=" . $this->getID() . "&context=timeline'/>";
-                  echo "</div>";
-               }
-               echo "</a>";
+    }
+
+    /**
+     * Actions done after the PURGE of the item in the database
+     *
+     * @return void
+     **/
+    public function post_purgeItem()
+    {
+        $release = new Release();
+        $release->getFromDB($this->getField("plugin_releases_releases_id"));
+        $val           = [];
+        $val['id']     = $this->getField("plugin_releases_releases_id");
+        $val['status'] = Release::FINALIZE;
+        $release->update($val);
+    }
+
+    public function showForm($ID, $options = [])
+    {
+        global $CFG_GLPI;
+
+        $this->initForm($ID, $options);
+
+        $plugin_releases_releases_id = $options["plugin_releases_releases_id"]
+           ?? $this->getField("plugin_releases_releases_id");
+
+        // A locked real production run date must stay read-only (kept, not editable).
+        $date_locked = ($this->getField("date_lock") == 1);
+
+        // Build the attached-documents list for display: icon, links, image preview
+        // and the per-document detach guard (UPDATE right on the document).
+        $documents  = [];
+        $foreignKey = "plugin_releases_reviews_id";
+        $pics_url   = $CFG_GLPI['root_doc'] . "/pics/timeline";
+        if ($this->getID() > 0) {
+            $document_item = new Document_Item();
+            $links         = $document_item->find(["itemtype" => self::getType(),
+                "items_id" => $this->getID()]);
+            $doc           = new Document();
+            foreach ($links as $link_row) {
+                if (!$doc->getFromDB($link_row["documents_id"])) {
+                    continue;
+                }
+                $fields = $doc->fields;
+                $ext    = strtolower(pathinfo($fields['filename'] ?? '', PATHINFO_EXTENSION));
+                $icon   = file_exists(GLPI_ROOT . "/pics/icones/$ext-dist.png")
+                   ? $CFG_GLPI['root_doc'] . "/pics/icones/$ext-dist.png"
+                   : "$pics_url/file.png";
+                $send_url = $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $fields['id']
+                   . "&$foreignKey=" . $this->getID();
+                $documents[] = [
+                    'id'          => $fields['id'],
+                    'filename'    => $fields['filename'],
+                    'icon'        => $icon,
+                    'url'         => $send_url,
+                    'is_image'    => Document::isImage(GLPI_DOC_DIR . '/' . $fields['filepath']),
+                    'preview_url' => $send_url . "&context=timeline",
+                    'link'        => $fields['link'],
+                    'link_name'   => $fields['name'],
+                    'mime'        => $fields['mime'],
+                    'show_url'    => Document::getFormURLWithID($fields['id']),
+                    'can_update'  => $doc->can($fields['id'], UPDATE),
+                ];
             }
-            if ($item_i['link']) {
-               echo "<a href='{$item_i['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
-            }
-            if (!empty($item_i['mime'])) {
-               echo "&nbsp;(" . $item_i['mime'] . ")";
-            }
-            echo "<span class='buttons'>";
-            echo "<a href='" . Document::getFormURLWithID($item_i['id']) . "' class='edit_document fa fa-eye pointer' title='" .
-                 _sx("button", "Show") . "'>";
-            echo "<span class='sr-only'>" . _sx('button', 'Show') . "</span></a>";
+        }
 
-            $doc = new Document();
-            $doc->getFromDB($item_i['id']);
-            if ($doc->can($item_i['id'], UPDATE)) {
-               // Submit the detach as a POST (with CSRF token) instead of a bare GET
-               // link: the CheckCsrfListener only validates non-GET requests, so a
-               // GET-triggered mutation is forgeable (CSRF).
-               echo Html::showSimpleForm(
-                   static::getFormURL(),
-                   'delete_document',
-                   _sx('button', 'Delete permanently'),
-                   [
-                       'documents_id' => $item_i['id'],
-                       $foreignKey    => $this->getID(),
-                   ],
-                   'fa-trash-alt'
-               );
-            }
-            echo "</span>";
-         }
-      }
+        $release = new Release();
+        $release->getFromDB($plugin_releases_releases_id);
+        $can_conclude = ($release->getField("status") == Release::REVIEW);
 
-      echo "</td>";
-      echo "</tr>";
+        TemplateRenderer::getInstance()->display('@releases/form_review.html.twig', [
+            'item'                        => $this,
+            'params'                      => $options,
+            'plugin_releases_releases_id' => $plugin_releases_releases_id,
+            'date_locked'                 => $date_locked,
+            'documents'                   => $documents,
+            'review_id'                   => $this->getID(),
+            'form_url'                    => $this->getFormURL(),
+            'can_conclude'                => $can_conclude,
+        ]);
 
-      $this->showFormButtons($options);
-      $release = new Release();
-      $release->getFromDB($plugin_releases_releases_id);
-      if ($release->getField("status") == Release::REVIEW) {
-         echo "<form method='post' action='" . $this->getFormURL() . "'>";
-         echo "<br><table class='tab_cadre_fixe'>";
-         echo "<tr class='tab_bg_2 center'>";
-         echo Html::hidden('_glpi_csrf_token', ['value' => Session::getNewCSRFToken()]);
-         echo Html::hidden('plugin_releases_releases_id', ['value' => $plugin_releases_releases_id]);
-         echo "<td>";
-         echo Html::submit(_sx('button', 'Conclude the review', 'releases'), ['name' => 'conclude', 'class' => 'btn btn-primary']);
-         echo "</td></tr>";
-         echo "</table>";
-      }
+        return true;
+    }
 
+    public function prepareInputForAdd($input)
+    {
 
-      return true;
-   }
+        $release = new Release();
+        $release->getFromDB($input["plugin_releases_releases_id"]);
+        $input["entities_id"] = $release->getField("entities_id");
 
-   function prepareInputForAdd($input) {
-
-      $release = new Release();
-      $release->getFromDB($input["plugin_releases_releases_id"]);
-      $input["entities_id"] = $release->getField("entities_id");
-
-      if (empty($input["real_date_release"])) {
-          $input["real_date_release"] = NULL;
-      }
-      return $input;
-   }
-
-//   /**
-//    * @param $ID
-//    * @param $entity
-//    *
-//    * @return ID|int|the
-//    */
-//   static function transfer($ID, $entity) {
-//      global $DB;
-//
-//      if ($ID > 0) {
-//         $self  = new self();
-//         $items = $self->find(["plugin_releases_releases_id" => $ID]);
-//         foreach ($items as $id => $vals) {
-//            $input                = [];
-//            $input["id"]          = $id;
-//            $input["entities_id"] = $entity;
-//            $self->update($input);
-//            self::transferDocument($id, $entity);
-//         }
-//         return true;
-//
-//      }
-//      return 0;
-//   }
-//
-//   static function transferDocument($ID, $entity) {
-//      global $DB;
-//
-//      if ($ID > 0) {
-//         $self      = new self();
-//         $documents = new Document_Item();
-//         $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
-//         foreach ($items as $id => $vals) {
-//            $input                = [];
-//            $input["id"]          = $id;
-//            $input["entities_id"] = $entity;
-//            $documents->update($input);
-//         }
-//         return true;
-//
-//      }
-//      return 0;
-//   }
+        if (empty($input["real_date_release"])) {
+            $input["real_date_release"] = null;
+        }
+        return $input;
+    }
 }
-

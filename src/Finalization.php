@@ -29,10 +29,11 @@
 
 namespace GlpiPlugin\Releases;
 
-use Ajax;
 use CommonDBTM;
 use CommonGLPI;
+use Glpi\Application\View\TemplateRenderer;
 use Html;
+use Session;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -98,39 +99,33 @@ class Finalization extends CommonDBTM
     {
         switch ($state) {
             case self::TODO:
-                return "<span><i class=\"fas fa-3x fa-hourglass-half\"></i></span>";
-                break;
+                return "<span><i class=\"ti ti-hourglass\" style=\"font-size:3em;\"></i></span>";
             case self::DONE:
-                return "<span><i class=\"fas fa-3x fa-check\"></i></span>";
-                break;
+                return "<span><i class=\"ti ti-check\" style=\"font-size:3em;\"></i></span>";
             case self::FAIL:
-                return "<span><i class=\"fas fa-3x fa-times\"></i></span>";
-                break;
+                return "<span><i class=\"ti ti-x\" style=\"font-size:3em;\"></i></span>";
         }
+        return '';
     }
 
     public function showForm($ID, $options = [])
     {
-
-
         global $CFG_GLPI;
+
+        if (!Session::haveRight(self::$rightname, READ)) {
+            return;
+        }
+
         $release = new Release();
-        $release->getFromDB($ID);
-
-        echo "<table class='tab_cadre_fixe' id='mainformtable'>";
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>";
-        if (Risk::countForItem($release) == Risk::countDoneForItem($release)) {
-            $risk_state = Risk::DONE;
-        } else {
-            $risk_state = Risk::TODO;
+        if (!$release->getFromDB($ID)) {
+            return;
         }
 
-        if (Rollback::countForItem($release) == Rollback::countDoneForItem($release)) {
-            $rollback_state = Rollback::DONE;
-        } else {
-            $rollback_state = Rollback::TODO;
-        }
+        $risk_state = (Risk::countForItem($release) == Risk::countDoneForItem($release))
+            ? Risk::DONE : Risk::TODO;
+
+        $rollback_state = (Rollback::countForItem($release) == Rollback::countDoneForItem($release))
+            ? Rollback::DONE : Rollback::TODO;
 
         $deployTaskDone  = Release::countForItem($ID, Deploytask::class, Deploytask::DONE);
         $deployTaskTotal = Release::countForItem($ID, Deploytask::class);
@@ -141,6 +136,7 @@ class Finalization extends CommonDBTM
             $taskfailed = "bulleFailed";
             $task_state = Deploytask::FAIL;
         }
+        $pourcentageTask = 0;
         if ($deployTaskTotal != 0) {
             $pourcentageTask = $deployTaskDone / $deployTaskTotal * 100;
         }
@@ -158,6 +154,7 @@ class Finalization extends CommonDBTM
             $testfailed = "bulleFailed";
             $test_state = Test::FAIL;
         }
+        $pourcentageTest = 0;
         if ($testTotal != 0) {
             $pourcentageTest = $testDone / $testTotal * 100;
         }
@@ -171,105 +168,46 @@ class Finalization extends CommonDBTM
         $rollbackDone  = Release::countForItem($ID, Rollback::class, Rollback::DONE);
         $rollbackTotal = Release::countForItem($ID, Rollback::class);
 
-        echo "<section id=\"timeline\">
-        <article>
-          <div class=\"inner\" >
-                  <span class=\"bulle bulleMarge\">
-                    <span style=\"margin-left: 5px;\"><i class=\"fas fa-3x fa-play\"></i></span>
-                  </span>
-                  <h2 class='dateColor'>" . __("Creation date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-                  <p>" . Html::convDateTime($release->fields["date_creation"]) . "</p>
-             </div>
-        </article>
-        <article>
-          <div class=\"inner\" >
-            <span class=\"bulle riskBulle bulleMarge\">
-              " . self::getStateItem($risk_state) . "
-            </span>
-            <h2 class='Finalization-Risk'>" . _n('Risk', 'Risk', 2, 'releases') . "<i class='fas fa-bug' style=\"float: right;\"></i></h2>
-            <p>" . sprintf(__('%s / %s risks', 'releases'), $riskDone, $riskTotal) . "</p>
-          </div>
-        </article>
-        <article>
-          <div class=\"inner\">
-            <span class=\"bulle rollbackBulle bulleMarge\">
-              " . self::getStateItem($rollback_state) . "
-            </span>
-            <h2 class='Finalization-Rollback'>" . _n('Rollback', 'Rollbacks', 2, 'releases') . "<i class='fas fa-undo-alt' style=\"float: right;\"></i></h2>
-            <p>" . sprintf(__('%s / %s rollbacks', 'releases'), $rollbackDone, $rollbackTotal) . "</p>
-          </div>
-        </article>
-        <article>
-          <div class=\"inner\">
-            <span class=\"bulle taskBulle $taskfailed bulleMarge\">
-            " . self::getStateItem($task_state) . "
-            </span>
-            <h2 class='Finalization-Deploytask'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "<i class='fas fa-check-square' style=\"float: right;\"></i></h2>
-            <p>" . sprintf(__('%s / %s deploy tasks', 'releases'), $deployTaskDone, $deployTaskTotal) . "</br>
-            " . sprintf(__('%s deploy tasks failed', 'releases'), $deployTaskFail) . "<p><span class='percent' style=\"float: right;\">
-                  " . Html::formatNumber($pourcentageTask) . " %
-              </span></p></p>
-          </div>
-        </article>
-        <article>
-          <div class=\"inner\">
-          <span class=\"bulle testBulle $testfailed bulleMarge\">
-            " . self::getStateItem($test_state) . "
-            </span>
-            <h2 class='Finalization-Test'>" . _n('Test', 'Tests', 2, 'releases') . "<i class='fas fa-check' style=\"float: right;\"></i></h2>
-            <p>" . sprintf(__('%s / %s tests', 'releases'), $testDone, $testTotal) . "</br>
-            " . sprintf(__('%s  tests failed', 'releases'), $testFail) . "<p><span class='percent' style=\"float: right;\">
-                  " . Html::formatNumber($pourcentageTest) . " %
-              </span></p></p>
-          </div>
-        </article>
-        ";
+        $dateEnd = (!empty($release->fields["date_end"]))
+            ? Html::convDateTime($release->fields["date_end"])
+            : __("Not yet completed", 'releases');
 
-        $dateEnd = (!empty($release->fields["date_end"])) ? Html::convDateTime($release->fields["date_end"]) : __("Not yet completed", 'releases');
+        $can_finalize = (empty($release->fields["date_end"])
+                || $release->fields["status"] < Release::REVIEW)
+            && $this->canUpdate();
+        $is_failed = ($deployTaskFail != 0 || $testFail != 0);
 
-        echo "<article>
-         <div class=\"inner\" >
-            <span class=\"bulle bulleMarge\">
-              <span><i class=\"fas fa-3x fa-stop\"></i></span>
-            </span>
-            <h2 class='dateColor'>" . __("End date") . "<i class='fas fa-calendar' style=\"float: right;\"></i></h2>
-            <p>" . $dateEnd . "<br><br>";
-
-        $link = '';
-        $msg  = '';
-        if ((empty($release->fields["date_end"])
-           || $release->fields["status"] < Release::REVIEW)
-          && $this->canUpdate()) {
-            if ($deployTaskFail == 0 && $testFail == 0) {
-                $link = '<a href="#" id="finalize" class="submit btn btn-primary" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Finalize", 'releases') . '</a>';
-
-                echo Ajax::createIframeModalWindow(
-                    'alert-message',
-                    $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php?release_id=" . $release->fields['id'] . "&confirm=1",
-                    ['title'   => __("Finalize", 'releases'),
-                        'display' => false]
-                );
-            } else {
-                $link = '<a href="#" id="finalize" class="submit btn btn-danger" data-bs-toggle="modal" data-bs-target="#alert-message"> ' . __("Mark as failed", 'releases') . '</a>';
-
-                echo Ajax::createIframeModalWindow(
-                    'alert-message',
-                    $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php?release_id=" . $release->fields['id'] . "&failed=1",
-                    ['title'   => __("Mark as failed", 'releases'),
-                        'display' => false]
-                );
-            }
+        $confirm_url = '';
+        if ($can_finalize) {
+            $confirm_url = $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php?release_id="
+                . $release->fields['id'] . ($is_failed ? "&failed=1" : "&confirm=1");
         }
 
-        echo $link . "</p>
-       </div>
-     </article>";
-        echo $msg;
-
-        echo "</section>";
-        echo "</td>";
-        echo "</tr>";
-        echo "</table>";
+        TemplateRenderer::getInstance()->display('@releases/form_finalization.html.twig', [
+            'creation_date'     => Html::convDateTime($release->fields["date_creation"]),
+            'risk_icon'         => self::getStateItem($risk_state),
+            'risk_done'         => $riskDone,
+            'risk_total'        => $riskTotal,
+            'rollback_icon'     => self::getStateItem($rollback_state),
+            'rollback_done'     => $rollbackDone,
+            'rollback_total'    => $rollbackTotal,
+            'task_icon'         => self::getStateItem($task_state),
+            'task_failed_class' => $taskfailed,
+            'deploy_task_done'  => $deployTaskDone,
+            'deploy_task_total' => $deployTaskTotal,
+            'deploy_task_fail'  => $deployTaskFail,
+            'pourcentage_task'  => Html::formatNumber($pourcentageTask),
+            'test_icon'         => self::getStateItem($test_state),
+            'test_failed_class' => $testfailed,
+            'test_done'         => $testDone,
+            'test_total'        => $testTotal,
+            'test_fail'         => $testFail,
+            'pourcentage_test'  => Html::formatNumber($pourcentageTest),
+            'date_end'          => $dateEnd,
+            'can_finalize'      => $can_finalize,
+            'is_failed'         => $is_failed,
+            'confirm_url'       => $confirm_url,
+        ]);
     }
 
     public static function showFinalizeForm($params)
@@ -291,28 +229,13 @@ class Finalization extends CommonDBTM
                    && ($testTotal == $testDone)
                    && (Rollback::countForItem($release) == Rollback::countDoneForItem($release));
 
-        if (!$allfinish) {
-            echo '<div class="alert alert-important alert-warning d-flex">';
-            echo __("Care all steps are not finish !", "releases") . '</div>';
-        }
-        $target = $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php";
-        echo "<form name='release_form' id='release_form' method='post'
-                action='" . $target . "'>";
-
-        echo __("Production run date", "releases");
-        Html::showDateTimeField("date_production", ["id"         => "date_production",
-            "maybeempty" => false, "size" => 40]);
-
-
-        if (isset($params["failed"])) {
-            echo Html::submit(__("Mark as failed", 'releases'), ['name' => 'failed', 'class' => 'btn btn-danger']);
-            echo Html::hidden('id', ['value' => $ID]);
-            echo Html::hidden('failedtasks', ['value' => $deployTaskFail]);
-            echo Html::hidden('failedtests', ['value' => $testFail]);
-        } else {
-            echo Html::submit(__("Finalize", 'releases'), ['name' => 'finalize', 'class' => 'btn btn-success']);
-            echo Html::hidden('id', ['value' => $ID]);
-        }
-        Html::closeForm();
+        TemplateRenderer::getInstance()->display('@releases/form_finalization_confirm.html.twig', [
+            'allfinish'    => $allfinish,
+            'action_url'   => $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php",
+            'id'           => $ID,
+            'is_failed'    => isset($params["failed"]),
+            'failed_tasks' => $deployTaskFail,
+            'failed_tests' => $testFail,
+        ]);
     }
 }

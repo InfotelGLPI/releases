@@ -1,0 +1,58 @@
+{#
+ -------------------------------------------------------------------------
+ releases plugin for GLPI
+ Copyright (C) 2020-2026 by the releases Development Team.
+
+ https://github.com/InfotelGLPI/releases
+ -------------------------------------------------------------------------
+
+ LICENSE
+
+ This file is part of releases.
+
+ releases is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
+ releases is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with releases. If not, see <http://www.gnu.org/licenses/>.
+ --------------------------------------------------------------------------
+ #}
+
+<div class="timeline_form">
+    <div class="filter_timeline_release">
+        <ul class="timeline_choices">
+            {% for type in types %}
+                <li class="{{ type.li_class }}">
+                    <a href="#" data-type="{{ type.data_type }}" title="{{ type.name }}">
+                        <i class="ti {{ type.icon }}"></i>&nbsp;{{ type.name }} ({{ type.count }})
+                    </a>
+                    {% if type.canadd %}
+                        <button type="button"
+                                class="btn btn-sm btn-ghost-secondary px-1 ms-1"
+                                title="{{ _x('button', 'Add') }}"
+                                data-releases-add
+                                data-itemtype="{{ type.itemtype }}"
+                                data-parenttype="{{ parenttype }}"
+                                data-fkey="{{ foreign_key }}"
+                                data-parentid="{{ parent_id }}"
+                                data-target="#{{ ajax_box_id }}"
+                                data-url="{{ subitem_url }}">
+                            <i class="ti ti-circle-plus"></i>
+                            <span class="sr-only">{{ _x('button', 'Add') }}</span>
+                        </button>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="clear">&nbsp;</div>
+</div>
+
+<div class="ajax_box" id="{{ ajax_box_id }}"></div>

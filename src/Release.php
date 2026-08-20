@@ -710,16 +710,35 @@ class Release extends CommonITILObject
                 unset($test["id"]);
                 $corresTests[$old_id] = $releaseTest->add($test);
             }
+            // First pass: create every release task and map old template-task id
+            // to the new task id. The "previous task" pointer is resolved in a
+            // second pass so ordering is preserved whatever the iteration order.
+            $taskPrevious = [];
             foreach ($tasks as $task) {
                 $task["items_id"] = $this->getID();
                 unset($task["date_mod"]);
                 unset($task["date_creation"]);
                 unset($task["state"]);
-                $old_id = $task["id"];
+                $old_id          = $task["id"];
+                $previous_old_id = $task["plugin_releases_deploytasktemplates_id"] ?? 0;
                 $task["plugin_releases_risks_id"] = $corresRisks[$task["plugin_releases_risks_id"]] ?? 0;
-                $task["plugin_releases_deploytasks_id"] = $corresTasks[$task["plugin_releases_deploytasktemplates_id"]] ?? 0;
+                $task["plugin_releases_deploytasks_id"] = 0;
                 unset($task["id"]);
-                $corresTasks[$old_id] = $releaseTask->add($task);
+                $new_id               = $releaseTask->add($task);
+                $corresTasks[$old_id] = $new_id;
+                if ($previous_old_id > 0) {
+                    $taskPrevious[$new_id] = $previous_old_id;
+                }
+            }
+            // Second pass: every task now exists, remap the "previous task" pointer.
+            foreach ($taskPrevious as $new_id => $previous_old_id) {
+                $new_previous_id = $corresTasks[$previous_old_id] ?? 0;
+                if ($new_previous_id > 0) {
+                    $releaseTask->update([
+                        "id"                             => $new_id,
+                        "plugin_releases_deploytasks_id" => $new_previous_id,
+                    ]);
+                }
             }
             foreach ($rollbacks as $rollback) {
                 $rollback["items_id"] = $this->getID();
@@ -2628,7 +2647,9 @@ class Release extends CommonITILObject
 
         if ($task_obj->canview()) {
             //         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task);
-            $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level DESC']);
+            // Order by level ASC so deploy tasks display in execution order
+            // (root first), matching the template's authoring order.
+            $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level ASC']);
             foreach ($tasks as $tasks_id => $task) {
                 $task_obj->getFromDB($tasks_id);
                 $task['can_edit'] = $task_obj->canUpdate();
@@ -2663,39 +2684,33 @@ class Release extends CommonITILObject
 
     public static function showCreateRelease($item)
     {
-        $item_t = new ReleaseTemplate();
-        $dbu = new DbUtils();
+        $item_t    = new ReleaseTemplate();
+        $dbu       = new DbUtils();
         $condition = $dbu->getEntitiesRestrictCriteria($item_t->getTable());
+
+        // Capture the template dropdown (echoes internally) to embed it in Twig.
+        ob_start();
         ReleaseTemplate::dropdown(
             [
-                "comments" => false,
-                "addicon" => false,
+                "comments"   => false,
+                "addicon"    => false,
                 "emptylabel" => __("For this change", "releases"),
-                "name" => "releasetemplates_id",
+                "name"       => "releasetemplates_id",
             ] + $condition
         );
-        $url = Release::getFormURL();
-        echo "<br/><br/>";
-        echo "<a class='submit btn btn-primary' id='link' href='$url?changes_id=" . $item->getID() . "'>";
-        $url = $url . "?changes_id=" . $item->getID() . "&template_id=";
-        $script = "
-      var link = function (id,linkurl) {
-         var link = linkurl+id;
-         $(\"a#link\").attr(\"href\", link);
-      };
-      $(\"select[name='releasetemplates_id']\").change(function() {
-         link($(\"select[name='releasetemplates_id']\").val(),'$url');
-         });";
+        $dropdown_html = ob_get_clean();
 
+        $rand      = mt_rand();
+        $anchor_id = 'releases_link' . $rand;
+        $form_url  = Release::getFormURL();
 
-        echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
-        echo __("Create a release", 'releases');
-        echo "</a>";
-        //      echo "<form name='form' method='post' action='".$this->getFormURL()."'  enctype=\"multipart/form-data\">";
-        //      echo Html::hidden("changes_id",["value"=>$item->getID()]);
-        ////      echo '<a class="btn btn-primary"> '.__("Create a releases from this change",'release').'</a>';
-        //      echo Html::submit(__("Create a release from this change",'releases'), ['name' => 'createRelease']);
-        //      Html::closeForm();
+        // The dropdown change updates the anchor href via change_release_form.js.
+        TemplateRenderer::getInstance()->display('@releases/create_release_link.html.twig', [
+            'dropdown_html' => $dropdown_html,
+            'anchor_id'     => $anchor_id,
+            'initial_href'  => $form_url . "?changes_id=" . $item->getID(),
+            'base_url'      => $form_url . "?changes_id=" . $item->getID() . "&template_id=",
+        ]);
     }
 
     public function getLinkedItems(bool $addNames = true): array

@@ -1,6 +1,4 @@
-<?php
-
-/*
+{#
  -------------------------------------------------------------------------
  releases plugin for GLPI
  Copyright (C) 2020-2026 by the releases Development Team.
@@ -25,10 +23,14 @@
  You should have received a copy of the GNU General Public License
  along with releases. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
- */
+ #}
 
-use GlpiPlugin\Releases\ReleaseTemplate;
-
-Session::checkLoginUser();
-$dropdown = new ReleaseTemplate();
-include(GLPI_ROOT . "/front/dropdown.common.php");
+{# The dropdown change rewrites the anchor href via change_release_form.js
+   (config carried by the [data-releases-linkgroup] wrapper). #}
+<div class="mb-3" data-releases-linkgroup data-url="{{ base_url }}" data-target="#{{ anchor_id }}">
+    {{ dropdown_html|raw }}
+    <br/><br/>
+    <a class="submit btn btn-primary" id="{{ anchor_id }}" href="{{ initial_href }}">
+        <i class="ti ti-circle-plus"></i>&nbsp;{{ __('Create a release', 'releases') }}
+    </a>
+</div>

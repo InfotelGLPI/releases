@@ -125,13 +125,13 @@ class Risk extends CommonDBTM {
 
    function prepareInputForUpdate($input) {
       // update last editor if content change
+       $input['users_id_editor'] = Session::getLoginUserID();
       if (isset($input['update'])
           && ($uid = Session::getLoginUserID())) { // Change from task form
          $input["users_id_editor"] = $uid;
       }
       $this->fields['date_mod'] = $_SESSION["glpi_currenttime"];
       $input['date_mod']        = $_SESSION["glpi_currenttime"];
-      $input['users_id_editor'] = Session::getLoginUserID();
       $input                    = parent::prepareInputForUpdate($input);
       return $input;
    }
@@ -161,136 +161,6 @@ class Risk extends CommonDBTM {
          'subitem'   => $this
       ]);
 
-
-//      $rand_template = mt_rand();
-//      $rand_text     = mt_rand();
-//      $rand_name     = mt_rand();
-//      $rand_type     = mt_rand();
-//
-//      $this->initForm($ID, $options);
-//      $this->showFormHeader($options);
-//      if ($ID < 0) {
-//         echo "<tr class='tab_bg_1'>";
-//         echo "<td>";
-//         echo _n('Risk template', 'Risk templates', 1, 'releases');
-//         echo "</td>";
-//         echo "<td style='vertical-align: middle' >";
-//         //      echo
-//         //         "<div class='fa-label'>
-//         //            <i class='fas fa-reply fa-fw'
-//         //               title='"._n('Task template', 'Task templates', 2)."'></i>";
-//         Risktemplate::dropdown(['value'     => '',
-//                                               'entity'    => $this->getEntityID(),
-//                                               'rand'      => $rand_template,
-//                                               'on_change' => 'tasktemplate_update(this.value)']);
-//         //      echo "</div>";
-//         echo Html::scriptBlock('
-//            function tasktemplate_update(value) {
-//               $.ajax({
-//                  url: "' . PLUGIN_RELEASES_WEBDIR . '/ajax/risk.php",
-//                  type: "POST",
-//                  data: {
-//                     templates_id: value
-//                  }
-//               }).done(function(data) {
-//                  var plugin_releases_typerisks_id = isNaN(parseInt(data.plugin_releases_typerisks_id))
-//                     ? 0
-//                     : parseInt(data.plugin_releases_typerisks_id);
-//
-//                  // set textarea content
-//                  $("#content' . $rand_text . '").html(data.content);
-//                  // set name
-//                  $("#name' . $rand_name . '").val(data.name);
-//                  $("#dropdown_plugin_releases_typerisks_id' . $rand_type . '").trigger("setValue", plugin_releases_typerisks_id);
-//                  // set also tinmyce (if enabled)
-//                  if (tasktinymce = tinymce.get("content' . $rand_text . '")) {
-//                     tasktinymce.setContent(data.content.replace(/\r?\n/g, "<br />"));
-//                  }
-//
-//               });
-//            }
-//         ');
-//         echo "</td>";
-//         echo "<td>";
-//         echo __("Create a test from this risk", "releases");
-//         echo "</td>";
-//         echo "<td>";
-//         Html::showCheckbox(["name" => "create_test"]);
-//         echo "</td>";
-//
-//
-//         echo "</tr>";
-//      }
-//      echo "<tr class='tab_bg_1'>";
-//
-//      echo "<td>" . __('Name') . "</td>";
-//      echo "<td>";
-//      echo Html::input("name", ['id' => 'name' . $rand_name, "value" => $this->getField('name'), 'rand' => $rand_name]);
-//      echo Html::hidden('plugin_releases_releases_id', ['value' => $options["plugin_releases_releases_id"]]);
-//      echo "</td>";
-//
-//      echo "<td>";
-//      echo __("Risk type", 'releases');
-//      echo "</td>";
-//
-//      echo "<td>";
-//      if (isset($_GET["typeriskid"])) {
-//         $value = $_GET["typeriskid"];
-//      } else {
-//         $value = $this->fields["plugin_releases_typerisks_id"];
-//      }
-//      Dropdown::show(TypeRisk::getType(), ['name'  => "plugin_releases_typerisks_id",
-//                                                         'value' => $value, 'rand' => $rand_type]);
-//      echo "</td>";
-//
-//
-//      echo "</tr>";
-//
-//      echo "<tr class='tab_bg_1'>";
-//      echo "<td>" . __('Description') . "</td>";
-//      echo "<td colspan='3'>";
-//      //       Html::textarea(['id'=>'content'.$rand_content,"name"=>"content","enable_richtext"=>true,"value"=>$this->getField('content'),'rand'=>$rand_content]);
-//      $content_id = "content$rand_text";
-//      $cols       = 100;
-//      $rows       = 10;
-//      Html::textarea(['name'              => 'content',
-//                      'value'             => $this->fields["content"],
-//                      'rand'              => $rand_text,
-//                      'editor_id'         => $content_id,
-//                      'enable_fileupload' => false,
-//                      'enable_richtext'   => true,
-//                      'cols'              => $cols,
-//                      'rows'              => $rows]);
-//      echo "</td>";
-//      echo "</tr>";
-//
-//      $this->showFormButtons($options);
-//
-//      return true;
    }
-
-   /**
-    * @param $ID
-    * @param $entity
-    *
-    * @return ID|int|the
-    */
-//   static function transfer($ID, $entity) {
-//      global $DB;
-//
-//      if ($ID > 0) {
-//         $self  = new self();
-//         $items = $self->find(["plugin_releases_releases_id" => $ID]);
-//         foreach ($items as $id => $vals) {
-//            $input                = [];
-//            $input["id"]          = $id;
-//            $input["entities_id"] = $entity;
-//            $self->update($input);
-//         }
-//         return true;
-//
-//      }
-//      return 0;
-//   }
 }
 

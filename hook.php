@@ -374,7 +374,7 @@ function plugin_releases_getDropdown()
               Testtemplate::getType()       => Testtemplate::getTypeName(2),
               Risktemplate::getType()       => Risktemplate::getTypeName(2),
               Rollbacktemplate::getType()   => Rollbacktemplate::getTypeName(2),
-//              ReleaseTemplate::getType()    => ReleaseTemplate::getTypeName(2),
+              ReleaseTemplate::getType()    => ReleaseTemplate::getTypeName(2),
               TypeDeployTask::getType()     => TypeDeployTask::getTypeName(2),
               TypeTest::getType()           => TypeTest::getTypeName(2),
               TypeRisk::getType()           => TypeRisk::getTypeName(2)

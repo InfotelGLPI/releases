@@ -58,6 +58,11 @@ class ReleaseTemplate_Item extends CommonDBRelation
     public static $checkItem_2_Rights = self::DONT_CHECK_ITEM_RIGHTS;
 
 
+    public static function getIcon()
+    {
+        return "ti ti-package";
+    }
+
     /**
      * @since 0.84
      **/

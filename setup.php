@@ -54,6 +54,9 @@ function plugin_init_releases()
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
 //      $PLUGIN_HOOKS["javascript"]['releases'] = ["plugins/releases/js/releases.js"];
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "js/releases.js";
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/releasetemplate_form.js";
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/releasetemplate_timeline.js";
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/change_release_form.js";
         $PLUGIN_HOOKS[Hooks::ADD_CSS]['releases'][]      = "css/styles.css";
     }
 

@@ -39,10 +39,10 @@ use DbUtils;
 use Document_Item;
 use Dropdown;
 use Entity;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
 use Group;
 use Html;
-use Location;
 use MassiveAction;
 use Session;
 use Supplier;
@@ -644,179 +644,8 @@ class ReleaseTemplate extends CommonDropdown {
       return $input;
    }
 
-   function showFormOld($ID, $options = []) {
-      global $CFG_GLPI, $DB;
-      $this->initForm($ID, $options);
-      $this->showFormHeader($options);
-
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Name') . "</td>";
-      echo "<td>";
-      echo Html::input("name", ["value" => $this->getField('name')]);
-
-      echo "</td>";
-      echo "<td colspan='2'>";
-      echo "</td >";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Release area', 'releases') . "</td>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name"            => "content",
-                      "enable_richtext" => true,
-                      "value"           => $this->getField('content')]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Pre-production planned date', 'releases') . "</td>";
-      echo "<td >";
-      $date_preprod = Html::convDateTime($this->getField('date_preproduction'));
-      Html::showDateTimeField("date_preproduction", ["value" => $date_preprod]);
-      echo "</td>";
-      echo "<td>" . __('Production planned date', 'releases') . "</td>";
-      echo "<td >";
-      $date_prod = Html::convDateTime($this->getField('date_production'));
-      Html::showDateTimeField("date_production", ["value" => $date_prod]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Location') . "</td>";
-      echo "<td >";
-      Dropdown::show(Location::getType(), ["name" => "locations_id", "value" => $this->getField('locations_id')]);
-      echo "</td>";
-      echo "<td>" . __('Service shutdown', 'releases') . "</td>";
-      echo "<td >";
-      Dropdown::showYesNo("service_shutdown", $this->getField('service_shutdown'));
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Service shutdown details', 'releases') . "</td>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name" => "service_shutdown_details", "enable_richtext" => true, "value" => $this->getField('service_shutdown_details')]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>" . __('Non-working hours', 'releases') . "</td>";
-      echo "<td >";
-      Dropdown::showYesNo("hour_type", $this->getField('hour_type'));
-      echo "</td>";
-      echo "<td colspan='2'>";
-      echo "</td >";
-      //      echo "<td>" . __('Communication','releases') . "</td>";
-      //      echo "<td >";
-      //      Dropdown::showYesNo("communication",$this->getField('communication'));
-      //      echo "</td>";
-      echo "</tr>";
-      $dbu = new DbUtils();
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo _n('Test', 'Tests', 2, 'releases');
-
-
-      echo "</td>";
-
-      echo "<td>";
-      $item      = new Rollbacktemplate();
-      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $rolltemp  = new Rollbacktemplate();
-      $alltemps  = $rolltemp->find($condition);
-      $rolls     = [];
-      foreach ($alltemps as $roll) {
-         $rolls[$roll["id"]] = $roll["name"];
-      }
-
-      $val = $this->getField("rollbacks");
-      $val = json_decode($val);
-      if ($val == "") {
-         $val = [];
-      }
-      Dropdown::showFromArray("rollbacks", $rolls, array('id' => 'rollbacks', 'multiple' => true, 'values' => $val, "display" => true));
-
-      echo "</td>";
-      echo "<td>";
-      echo _n('Rollback', 'Rollbacks', 2, 'releases');
-
-
-      echo "</td>";
-      echo "<td>";
-
-      $item      = new Testtemplate();
-      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $testtemp  = new Testtemplate();
-      $alltemps  = $testtemp->find($condition);
-      $tests     = [];
-      foreach ($alltemps as $test) {
-         $tests[$test["id"]] = $test["name"];
-      }
-
-      $val = $this->getField("tests");
-      $val = json_decode($val);
-      if ($val == "") {
-         $val = [];
-      }
-      Dropdown::showFromArray("tests", $tests, array('id' => 'tests', 'multiple' => true, 'values' => $val, "display" => true));
-      echo "</td>";
-      echo "</tr>";
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>";
-      echo _n('Deploy task', 'Deploy tasks', 2, 'releases');
-      echo "</td>";
-      echo "<td>";
-      $item      = new Deploytasktemplate();
-      $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
-      $tasktemp  = new Deploytasktemplate();
-      $alltemps  = $tasktemp->find($condition);
-      $tasks     = [];
-      foreach ($alltemps as $task) {
-         $tasks[$task["id"]] = $task["name"];
-      }
-
-      $val = $this->getField("tasks");
-      $val = json_decode($val);
-      if ($val == "") {
-         $val = [];
-      }
-      Dropdown::showFromArray("tasks", $tasks, array('id' => 'tasks', 'multiple' => true, 'values' => $val, "display" => true));
-      echo "</td>";
-      echo "<td colspan='2'>";
-      echo "</td>";
-      echo "</tr>";
-
-      //      echo "<tr class='tab_bg_1'>";
-      //      echo "<td>" . __('Communication type','releases') . "</td>";
-      //      echo "<td >";
-      //      $types   = ['Entity'=>'Entity', 'Group'=>'Group', 'Profile'=>'Profile', 'User'=>'User','Location'=>'Location'];
-      //      $addrand = Dropdown::showItemTypes('communication_type', $types,["id"=>"communication_type","value"=>$this->getField('communication_type')]);
-      //      echo "</td>";
-      //      $targets = [];
-      //      $targets = json_decode($this->getField('target'));
-      ////      $targets = $this->getField('target');
-      //      echo "<td>" ._n('Target', 'Targets',
-      //            Session::getPluralNumber()) . "</td>";
-      //
-      //
-      //      echo "<td id='targets'>";
-      //
-      //
-      //      echo "</td>";
-      //      Ajax::updateItem( "targets",
-      //         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-      //         ['type' => $this->getField('communication_type'),'current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
-      //      Ajax::updateItemOnSelectEvent("dropdown_communication_type".$addrand, "targets",
-      //         $CFG_GLPI["root_doc"] . "/plugins/releases/ajax/changeTarget.php",
-      //         ['type' => '__VALUE__','current_type'=>$this->getField('communication_type'),'values'=>$targets], true);
-      //      echo "</tr>";
-      $this->showFormButtons($options);
-      return true;
-   }
-
    function showForm($ID, $options = []) {
-      global $CFG_GLPI, $DB;
+      global $CFG_GLPI;
 
       if ($ID > 0) {
          $this->check($ID, READ);
@@ -825,19 +654,7 @@ class ReleaseTemplate extends CommonDropdown {
          $this->check(-1, CREATE, $options);
       }
 
-      if (!$this->isNewItem()) {
-         $options['formtitle'] = sprintf(
-            __('%1$s - ID %2$d'),
-            $this->getTypeName(1),
-            $ID
-         );
-         //set ID as already defined
-         $options['noid'] = true;
-      }
-
-
       $this->initForm($ID, $options);
-      $this->showFormHeader($options);
       $default_values = self::getDefaultValues();
 
       // Restore saved value or override with page parameter
@@ -855,165 +672,72 @@ class ReleaseTemplate extends CommonDropdown {
          }
       }
 
+      // The actors widget (CommonITILActor dropdowns + hidden inputs consumed by
+      // prepareInputForUpdate) is self-contained legacy markup: capture each of the
+      // three blocs (requester/observer/assign) separately so the Twig template can
+      // lay them out on three columns inside the single <form>. The requester bloc
+      // also carries the entities_id hidden input.
+      [$actor_options, $can_admin, $can_assign, $can_assigntome] = $this->prepareActorsData($ID, $options);
 
-      // In percent
-      $colsize1 = '13';
-      $colsize2 = '37';
+      ob_start();
+      $this->showRequesterActorForm($actor_options, $can_admin);
+      $actors_requester_html = ob_get_clean();
 
+      ob_start();
+      $this->showObserverActorForm($actor_options, $can_admin);
+      $actors_observer_html = ob_get_clean();
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>" . __('Location') . "</th>";
-      echo "<td >";
-      Dropdown::show(Location::getType(), ["name"  => "locations_id",
-                                           "value" => $this->fields["locations_id"]]);
-      echo "</td>";
-      echo "<th>" . __('Non-working hours', 'releases') . "</th>";
-      echo "<td >";
-      Dropdown::showYesNo("hour_type", $this->fields["hour_type"]);
-      echo "</td>";
-      echo "</tr>";
+      ob_start();
+      $this->showAssignActorForm($actor_options, $can_assign, $can_assigntome);
+      $actors_assign_html = ob_get_clean();
 
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th style='width:$colsize1%'>" . __('Title') . "</th>";
-      echo "<td colspan='3'>";
-      $opt = [
-         'value'     => $this->fields['name'],
-         'maxlength' => 250,
-         'style'     => 'width:98%',
-      ];
-      echo Html::input("name", $opt);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th width='$colsize1%'>" . __('Release area', 'releases') . "</th>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name"            => "content",
-                      "enable_richtext" => true,
-                      "value"           => $this->fields["content"]]);
-      echo "</td>";
-      echo "</tr>";
-      echo "</table>";
-      $this->showActorsPartForm($ID, $options);
-      echo "<table class='tab_cadre_fixe' id='mainformtable3'>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th>" . __('Service shutdown', 'releases') . "</th>";
-      echo "<td width='$colsize1%'>";
-      $rand = mt_rand();
-      Dropdown::showYesNo("service_shutdown", $this->fields["service_shutdown"], -1, ["rand" => $rand]);
-      echo "</td>";
-      echo "<td colspan='2' name='fakeupdate' id='fakeupdate'></td>";
-      echo "</tr>";
-
-      $hidden = "";
-      if ($this->fields["service_shutdown"] == 0) {
-         $hidden = "hidden='true'";
+      $targets = json_decode($this->fields["target"] ?? '') ?: [];
+      if (!is_array($targets)) {
+         $targets = [];
       }
 
-      echo "<tr id='shutdowndetails' class='tab_bg_1' $hidden >";
-      Ajax::updateItemOnSelectEvent("dropdown_service_shutdown$rand", "fakeupdate",
-          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/showShutdownDetails.php", ["value" => '__VALUE__']);
-
-      echo "<th>" . __('Service shutdown details', 'releases') . "</th>";
-      echo "<td colspan='3'>";
-      Html::textarea(["name"            => "service_shutdown_details",
-                      "enable_richtext" => true,
-                      "value"           => $this->fields["service_shutdown_details"]]);
-      echo "</td>";
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<th width='$colsize1%'>" . __('Communication', 'releases') . "</th>";
-      echo "<td width='$colsize2%'>";
-      Dropdown::showYesNo("communication", $this->fields["communication"]);
-      echo "</td>";
-
-      echo "<th width='$colsize1%'>" . __('Communication type', 'releases') . "</th>";
-      echo "<td>";
-      $types   = ['Entity'   => 'Entity',
-                  'Group'    => 'Group',
-                  'Profile'  => 'Profile',
-                  'User'     => 'User',
-                  'Location' => 'Location'];
-      $addrand = Dropdown::showItemTypes('communication_type', $types, ["id" => "communication_type", "value" => $this->fields["communication_type"]]);
-      echo "</td>";
-
-      echo "</tr>";
-
-      echo "<tr class='tab_bg_1'>";
-
-      $targets = json_decode($this->fields["target"]);
-
-      echo "<th>" . _n('Target', 'Targets',
-                       Session::getPluralNumber()) . "</th>";
-
-      echo "<td id='targets'>";
-
-      echo "</td>";
-      Ajax::updateItem("targets",
-          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
-                       ['type'         => $this->fields["communication_type"],
-                        'current_type' => $this->fields["communication_type"],
-                        'values'       => $targets],
-                       true);
-      Ajax::updateItemOnSelectEvent("dropdown_communication_type" . $addrand, "targets",
-          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
-                                    ['type'         => '__VALUE__',
-                                     'current_type' => $this->fields["communication_type"],
-                                     'values'       => $targets],
-                                    true);
-      echo "</td>";
-
-      echo "<th></th>";
-      echo "<td></td>";
-
-      echo "</tr>";
-
-
-      $this->showFormButtons($options);
+      TemplateRenderer::getInstance()->display('@releases/form_releasetemplate.html.twig', [
+         'item'                  => $this,
+         'params'                => $options,
+         'actors_requester_html' => $actors_requester_html,
+         'actors_observer_html'  => $actors_observer_html,
+         'actors_assign_html'    => $actors_assign_html,
+         'comm_types'            => ['Entity'   => 'Entity',
+                                     'Group'    => 'Group',
+                                     'Profile'  => 'Profile',
+                                     'User'     => 'User',
+                                     'Location' => 'Location'],
+         'targets'               => array_values($targets),
+         'targets_url'           => $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/changeTarget.php",
+      ]);
 
       return true;
    }
 
    function displayMenu($ID, $options = []) {
-      echo "<div class='center'>";
-      echo "<table class='tab_cadre'>";
-      echo "<tr  class='tab_bg_1'>";
-      echo "<th>" . __("Release", "releases") . "</th>";
-      echo "</tr>";
-
-      echo "<tr  class='tab_bg_1'>";
-      echo "<td class='center b' >";
       $dbu       = new DbUtils();
       $condition = $dbu->getEntitiesRestrictCriteria($this->getTable(), '', '', true);
       $template  = new ReleaseTemplate();
       $templates = $template->find($condition);
-      if (count($templates) != 0) {
-         self::dropdown(["name" => "releasetemplates_id"] + $condition);
-         echo "<br/><br/>";
+
+      $has_templates = count($templates) != 0;
+      $dropdown_html = '';
+      if ($has_templates) {
+         // Capture the template dropdown (echoes internally) to embed it in Twig.
+         // Name is template_id so a plain GET form submits it to release.form.php
+         // (read by Release::showForm to prefill and set releasetemplates_id).
+         ob_start();
+         self::dropdown(["name" => "template_id"] + $condition);
+         $dropdown_html = ob_get_clean();
       }
-      $url = Release::getFormURL();
-      echo "<a  id='link' href='$url'>";
-      $url    = $url . "?template_id=";
-      $script = "
-      var link = function (id,linkurl) {
-         var link = linkurl+id;
-         $(\"a#link\").attr(\"href\", link);
-      };
-      $(\"select[name='releasetemplates_id']\").change(function() {
-         link($(\"select[name='releasetemplates_id']\").val(),'$url');
-         });";
 
-      echo Html::scriptBlock('$(document).ready(function() {' . $script . '});');
-
-      echo __("Create a release", 'releases');
-      echo "</a>";
-      echo "</td>";
-      echo "</tr>";
-      echo "</table>";
-      echo "</div>";
+      // Plain GET form: the chosen template id always reaches release.form.php,
+      // with no dependency on a client-side href rewrite.
+      TemplateRenderer::getInstance()->display('@releases/form_releasetemplate_menu.html.twig', [
+         'has_templates' => $has_templates,
+         'dropdown_html' => $dropdown_html,
+         'form_action'   => Release::getFormURL(),
+      ]);
    }
 
    function getTimelineItems() {
@@ -1098,156 +822,50 @@ class ReleaseTemplate extends CommonDropdown {
    function showTimelineForm($rand) {
       global $CFG_GLPI;
 
-      $objType    = static::getType();
       $foreignKey = static::getForeignKeyField();
 
       //check sub-items rights
-      $tmp       = [$foreignKey => $this->getID()];
-      $riskClass = Risktemplate::class;
-      $risk      = new $riskClass;
-      $risk->getEmpty();
-      $risk->fields['itemtype'] = $objType;
-      $risk->fields['items_id'] = $this->getID();
+      $tmp      = [$foreignKey => $this->getID()];
+      $risk     = new Risktemplate();
+      $rollback = new Rollbacktemplate();
+      $task     = new Deploytasktemplate();
+      $test     = new Testtemplate();
 
+      $closed = $this->getClosedStatusArray();
+      $status = $this->fields["status"] ?? null;
 
-      $rollbackClass = Rollbacktemplate::class;
-      $rollback      = new $rollbackClass;
-      $rollback->getEmpty();
-      $rollback->fields['itemtype'] = $objType;
-      $rollback->fields['items_id'] = $this->getID();
-
-      $taskClass = Deploytasktemplate::class;
-      $task      = new $taskClass;
-      $task->getEmpty();
-      $task->fields['itemtype'] = $objType;
-      $task->fields['items_id'] = $this->getID();
-
-      $testClass = Testtemplate::class;
-      $test      = new $testClass;
-      $test->getEmpty();
-      $test->fields['itemtype'] = $objType;
-      $test->fields['items_id'] = $this->getID();
-
-      $canadd_risk = $risk->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
-                                                               $this->getClosedStatusArray());
-
-      $canadd_rollback = $rollback->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
-                                                                       $this->getClosedStatusArray());
-
-      $canadd_task = $task->can(-1, CREATE, $tmp) && !in_array($this->fields["status"],
-                                                               $this->getClosedStatusArray());
-
-      $canadd_test = $test->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $this->getClosedStatusArray());
-
-      // javascript function for add and edit items
-      $objType    = self::getType();
-      $foreignKey = self::getForeignKeyField();
-
-      echo "<script type='text/javascript' >
-
-      function viewEditSubitem" . $this->fields['id'] . "$rand(e, itemtype, items_id, o, domid) {
-               domid = (typeof domid === 'undefined')
-                         ? 'viewitem" . $this->fields['id'] . $rand . "'
-                         : domid;
-               var target = e.target || window.event.srcElement;
-               if (target.nodeName == 'a') {
-                    exit;
-               }
-               if (target.className == 'read_more_button') exit;
-
-               var _eltsel = '[data-uid='+domid+']';
-               var _elt = $(_eltsel);
-               _elt.addClass('edited');
-               $(_eltsel + ' .displayed_content').hide();
-               $(_eltsel + ' .cancel_edit_item_content').show()
-                                                        .click(function() {
-                                                            $(this).hide();
-                                                            _elt.removeClass('edited');
-                                                            $(_eltsel + ' .edit_item_content').empty().hide();
-                                                            $(_eltsel + ' .displayed_content').show();
-                                                        });
-               $(_eltsel + ' .edit_item_content').show()
-                                                 .load('" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php',
-                                                       {'action'    : 'viewsubitem',
-                                                        'type'      : itemtype,
-                                                        'parenttype': '$objType',
-                                                        '$foreignKey': " . $this->fields['id'] . ",
-                                                        'id'        : items_id
-                                                       });
-      };
-      </script>";
+      $canadd_risk     = $risk->can(-1, CREATE, $tmp) && !in_array($status, $closed);
+      $canadd_rollback = $rollback->can(-1, CREATE, $tmp) && !in_array($status, $closed);
+      $canadd_task     = $task->can(-1, CREATE, $tmp) && !in_array($status, $closed);
+      $canadd_test     = $test->can(-1, CREATE, $tmp) && !in_array($status, $closed);
 
       if (!$canadd_risk && !$canadd_rollback && !$canadd_task && !$canadd_test && !$this->canReopen()) {
          return false;
       }
 
-      echo "<script type='text/javascript' >\n
-//      $(document).ready(function() {
-//                $('.ajax_box').show();
-//      });
-      function viewAddSubitem" . $this->fields['id'] . "$rand(itemtype) {\n";
-
-      $params = ['action'     => 'viewsubitem',
-                 'type'       => 'itemtype',
-                 'parenttype' => $objType,
-                 $foreignKey  => $this->fields['id'],
-                 'id'         => -1];
-      $out    = Ajax::updateItemJsCode("viewitem" . $this->fields['id'] . "$rand",
-          $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/timeline.php",
-                                       $params, "", false);
-      echo str_replace("\"itemtype\"", "itemtype", $out);
-      echo "};
-      ";
-
-      echo "</script>\n";
-      //show choices
-      echo "<div class='timeline_form'>";
-      echo "<div class='filter_timeline_release'>";
-      echo "<ul class='timeline_choices'>";
-
-      $release = new $objType();
-      $release->getFromDB($this->getID());
-
-      echo "<li class='Risk'>";
-      echo "<a href='#' data-type='risk' title='" . $riskClass::getTypeName(2) .
-           "'><i class='ti ti-bug'></i>&nbsp;" . $riskClass::getTypeName(2) . " (" . $riskClass::countForItem($release) . ")</a></li>";
-      if ($canadd_risk) {
-         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$riskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
+      // Each entry describes a subitem type: its filter link and (optionally) an add button.
+      $types = [
+         ['itemtype'  => Risktemplate::class,       'data_type' => 'risk',     'li_class' => 'Risk',       'icon' => 'ti-bug',           'canadd' => $canadd_risk],
+         ['itemtype'  => Rollbacktemplate::class,   'data_type' => 'rollback', 'li_class' => 'Rollback',   'icon' => 'ti-arrow-back-up', 'canadd' => $canadd_rollback],
+         ['itemtype'  => Deploytasktemplate::class, 'data_type' => 'task',     'li_class' => 'Deploytask', 'icon' => 'ti-checkbox',      'canadd' => $canadd_task],
+         ['itemtype'  => Testtemplate::class,       'data_type' => 'Test',     'li_class' => 'Test',       'icon' => 'ti-check',         'canadd' => $canadd_test],
+      ];
+      foreach ($types as &$type) {
+         $type['name']  = $type['itemtype']::getTypeName(2);
+         $type['count'] = $type['itemtype']::countForItem($this);
       }
+      unset($type);
 
+      TemplateRenderer::getInstance()->display('@releases/timeline_form_releasetemplate.html.twig', [
+         'types'       => $types,
+         'parenttype'  => static::class,
+         'foreign_key' => $foreignKey,
+         'parent_id'   => $this->fields['id'],
+         'ajax_box_id' => "viewitem" . $this->fields['id'] . $rand,
+         'subitem_url' => $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/viewsubitemtemplate.php",
+      ]);
 
-      echo "<li class='Rollback'>";
-      echo "<a href='#' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
-           "'><i class='ti ti-arrow-back-up'></i>&nbsp;" . $rollbackClass::getTypeName(2) . " (" . $rollbackClass::countForItem($release) . ")</a></li>";
-      if ($canadd_rollback) {
-         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$rollbackClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
-      }
-
-
-      echo "<li class='Deploytask'>";
-      echo "<a href='#' data-type='task' title='" . $taskClass::getTypeName(2) .
-           "'><i class='ti ti-checkbox'></i>&nbsp;" . $taskClass::getTypeName(2) . " (" . $taskClass::countForItem($release) . ")</a></li>";
-      if ($canadd_task) {
-         echo "<i class='fas fa-plus-circle pointer'  onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$taskClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
-      }
-
-
-      echo "<li class='Test'>";
-      echo "<a href='#' data-type='Test' title='" . $testClass::getTypeName(2) .
-           "'><i class='ti ti-check'></i>&nbsp;" . $testClass::getTypeName(2) . " (" . $testClass::countForItem($release) . ")</a></li>";
-      if ($canadd_test) {
-         echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"$testClass\");' style='margin-right: 10px;margin-left: -5px;'></i>";
-      }
-
-
-      echo "</ul>"; // timeline_choices
-      echo "</div>";
-
-      echo "<div class='clear'>&nbsp;</div>";
-
-      echo "</div>"; //end timeline_form
-
-      echo "<div class='ajax_box' id='viewitem" . $this->fields['id'] . "$rand'></div>\n";
+      return true;
    }
 
    static function isAllowedStatus($old, $new) {
@@ -1339,20 +957,20 @@ class ReleaseTemplate extends CommonDropdown {
       echo "<ul>";
 
       $riskClass = "Risk";
-      echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
+      echo "<li><a href='#' class='filterEle ti ti-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
            "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
       $rollbackClass = "Rollback";
-      echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
+      echo "<li><a href='#' class='filterEle ti ti-arrow-back-up pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
            "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
       $taskClass = "Deploytask";
-      echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
+      echo "<li><a href='#' class=' filterEle ti ti-checkbox pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
            "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
       $testClass = "Test";
-      echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
+      echo "<li><a href='#' class=' filterEle ti ti-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
            "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
-      echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __('Followup') .
+      echo "<li><a href='#' class=' filterEle ti ti-message pointer' data-type='ITILFollowup' title='" . __('Followup') .
            "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
-      echo "<li><a href='#' class=' filterEle fa fa-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
+      echo "<li><a href='#' class=' filterEle ti ti-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
            "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
       echo "</ul>";
       echo "</div>";
@@ -1428,7 +1046,7 @@ class ReleaseTemplate extends CommonDropdown {
 
          echo "<div class='h_info'>";
 
-         echo "<div class='h_date'><i class='far fa-clock'></i>&nbsp;" . Html::convDateTime($date) . "</div>";
+         echo "<div class='h_date'><i class='ti ti-clock'></i>&nbsp;" . Html::convDateTime($date) . "</div>";
          if ($item_i['users_id'] !== false) {
             echo "<div class='h_user'>";
             if (isset($item_i['users_id']) && ($item_i['users_id'] != 0)) {
@@ -1486,9 +1104,16 @@ class ReleaseTemplate extends CommonDropdown {
          ) {
             // merge/split icon
 
-            // edit item
-            echo "<span class='far fa-edit control_item' title='" . __('Edit') . "'";
-            echo "onclick='javascript:viewEditSubitem" . $this->fields['id'] . "$rand(event, \"" . $item['type'] . "\", " . $item_i['id'] . ", this, \"$randdomid\")'";
+            // edit item — wired by public/scripts/releasetemplate_timeline.js (delegated)
+            echo "<span class='ti ti-edit control_item pointer' title='" . __('Edit') . "'";
+            echo " data-releases-edit";
+            echo " data-itemtype='" . $item['type'] . "'";
+            echo " data-items-id='" . $item_i['id'] . "'";
+            echo " data-parenttype='" . static::class . "'";
+            echo " data-fkey='" . static::getForeignKeyField() . "'";
+            echo " data-parentid='" . $this->fields['id'] . "'";
+            echo " data-uid='" . $randdomid . "'";
+            echo " data-url='" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/viewsubitemtemplate.php'";
             echo "></span>";
          }
 
@@ -1501,7 +1126,7 @@ class ReleaseTemplate extends CommonDropdown {
             }
 
 
-            $content = autolink($content, false);
+//            $content = autolink($content, false);
 
             $long_text = "";
             if ((substr_count($content, "<br") > 30) || (strlen($content) > 2000)) {
@@ -1678,8 +1303,28 @@ class ReleaseTemplate extends CommonDropdown {
     * @return void
     **/
    function showActorsPartForm($ID, array $options) {
-      global $CFG_GLPI;
+      [$options, $can_admin, $can_assign, $can_assigntome] = $this->prepareActorsData($ID, $options);
 
+      // Manage actors
+      echo "<div class='tab_actors tab_cadre_fixe' id='mainformtable5'>";
+      echo "<div class='responsive_hidden actor_title'>" . __('Actor') . "</div>";
+
+      $this->showRequesterActorForm($options, $can_admin);
+      $this->showObserverActorForm($options, $can_admin);
+      $this->showAssignActorForm($options, $can_assign, $can_assigntome);
+
+      echo "</div>"; // tab_actors
+   }
+
+   /**
+    * Prepare shared data (resolved actor values + rights) for the actor blocs.
+    *
+    * @param int   $ID
+    * @param array $options
+    *
+    * @return array{0: array, 1: bool, 2: bool, 3: bool} [$options, $can_admin, $can_assign, $can_assigntome]
+    */
+   protected function prepareActorsData($ID, array $options) {
       $options['_default_use_notification'] = 0;
 
       if (isset($options['entities_id'])) {
@@ -1703,12 +1348,8 @@ class ReleaseTemplate extends CommonDropdown {
          }
       }
 
-
-      $can_admin = $this->canAdminActors();
       // on creation can select actor
-
       $can_admin = true;
-
 
       $can_assign     = $this->canAssign();
       $can_assigntome = $this->canAssignToMe();
@@ -1719,13 +1360,13 @@ class ReleaseTemplate extends CommonDropdown {
          $can_assigntome = false;
       }
 
-      // Manage actors
-      echo "<div class='tab_actors tab_cadre_fixe' id='mainformtable5'>";
-      echo "<div class='responsive_hidden actor_title'>" . __('Actor') . "</div>";
+      return [$options, $can_admin, $can_assign, $can_assigntome];
+   }
 
-      // ====== Requesters BLOC ======
-      //
-      //
+   /**
+    * Requester actor bloc (user + group). Also carries the entities_id hidden input.
+    */
+   protected function showRequesterActorForm(array $options, $can_admin) {
       echo "<span class='actor-bloc'>";
       echo "<div class='actor-head'>";
       echo __('Requester');
@@ -1797,12 +1438,15 @@ class ReleaseTemplate extends CommonDropdown {
 
       echo "</div>"; // end .actor-content
       echo "</span>"; // end .actor-bloc
+   }
 
-      // ====== Observers BLOC ======
-
+   /**
+    * Observer actor bloc (user + group).
+    */
+   protected function showObserverActorForm(array $options, $can_admin) {
       echo "<span class='actor-bloc'>";
       echo "<div class='actor-head'>";
-      echo __('Watcher');
+      echo _n('Observer', 'Observers', 1);
 
       echo "</div>"; // end .actor-head
       echo "<div class='actor-content'>";
@@ -1845,9 +1489,12 @@ class ReleaseTemplate extends CommonDropdown {
 
       echo "</div>"; // end .actor-content
       echo "</span>"; // end .actor-bloc
+   }
 
-      // ====== Assign BLOC ======
-
+   /**
+    * Assigned actor bloc (user + group + supplier).
+    */
+   protected function showAssignActorForm(array $options, $can_assign, $can_assigntome) {
       echo "<span class='actor-bloc'>";
       echo "<div class='actor-head'>";
 
@@ -1938,8 +1585,6 @@ class ReleaseTemplate extends CommonDropdown {
 
       echo "</div>"; // end .actor-content
       echo "</span>"; // end .actor-bloc
-
-      echo "</div>"; // tab_actors
    }
 
    /**
@@ -2194,7 +1839,7 @@ class ReleaseTemplate extends CommonDropdown {
                   $icontitle = __s('Technician');
                   break;
             }
-            return "<i class='fas fa-user' title='$icontitle'></i><span class='sr-only'>$icontitle</span>";
+            return "<i class='ti ti-user' title='$icontitle'></i><span class='sr-only'>$icontitle</span>";
 
          case 'group' :
             $icontitle = __('Group');
@@ -2212,12 +1857,12 @@ class ReleaseTemplate extends CommonDropdown {
                   break;
             }
 
-            return "<i class='fas fa-users' title='$icontitle'></i>" .
+            return "<i class='ti ti-users' title='$icontitle'></i>" .
                    "<span class='sr-only'>$icontitle</span>";
 
          case 'supplier' :
             $icontitle = __('Supplier');
-            return "<i class='fas fa-dolly' title='$icontitle'></i>" .
+            return "<i class='ti ti-truck' title='$icontitle'></i>" .
                    "<span class='sr-only'>$icontitle</span>";
 
       }

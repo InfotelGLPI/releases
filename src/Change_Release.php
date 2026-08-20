@@ -32,6 +32,7 @@ namespace GlpiPlugin\Releases;
 use Change;
 use CommonDBRelation;
 use CommonGLPI;
+use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
 use Html;
 use Search;
@@ -159,33 +160,36 @@ class Change_Release extends CommonDBRelation
             $changes[$data['id']] = $data;
             $used[$data['id']]    = $data['id'];
         }
-        $statues = Change::getNotSolvedStatusArray();
         if ($canedit) {
-            echo "<div class='firstbloc'>";
-            echo "<form name='changeticket_form$rand' id='changeticket_form$rand' method='post'
-               action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
-
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a change') . "</th></tr>";
-            echo "<tr class='tab_bg_2'><td>";
-            echo Html::hidden('plugin_releases_releases_id', ['value' => $ID]);
+            // Capture the change dropdown (echoes internally) and render the add
+            // mini-form through Twig instead of echoing raw HTML.
+            ob_start();
             Change::dropdown([
-                'used'   => $used,
-                'entity' => $release->getEntityID(), 'condition' => ['status' => Change::getNotSolvedStatusArray()]]);
-            echo "</td><td class='center'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-            echo "</td><td>";
+                'used'      => $used,
+                'entity'    => $release->getEntityID(),
+                'condition' => ['status' => Change::getNotSolvedStatusArray()],
+            ]);
+            $change_dropdown = ob_get_clean();
 
-            echo "</td></tr></table>";
-            Html::closeForm();
-            echo "</div>";
+            TemplateRenderer::getInstance()->display('@releases/form_change_release_add.html.twig', [
+                'action_url'    => Toolbox::getItemTypeFormURL(self::class),
+                'title'         => __('Add a change'),
+                'hidden_name'   => 'plugin_releases_releases_id',
+                'hidden_value'  => $ID,
+                'dropdown_html' => $change_dropdown,
+            ]);
         }
 
+        // The change list relies on core rendering helpers (commonListHeader /
+        // showShort) and the legacy massive-actions form, all of which echo
+        // internally. Capture the whole region and hand it to Twig as a single
+        // raw block so the controller no longer echoes HTML directly.
+        ob_start();
         echo "<div class='spaced'>";
         if ($canedit && $numrows) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+            Html::openMassiveActionsForm('mass' . self::class . $rand);
             $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-                'container'     => 'mass' . __CLASS__ . $rand];
+                'container'     => 'mass' . self::class . $rand];
             Html::showMassiveActions($massiveactionparams);
         }
 
@@ -193,7 +197,7 @@ class Change_Release extends CommonDBRelation
         echo "<tr class='noHover'><th colspan='12'>" . Change::getTypeName($numrows) . "</th>";
         echo "</tr>";
         if ($numrows) {
-            Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . __CLASS__ . $rand);
+            Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . self::class . $rand);
             Session::initNavigateListItems(
                 'Change',
                 //TRANS : %1$s is the itemtype name,
@@ -211,11 +215,11 @@ class Change_Release extends CommonDBRelation
                 Change::showShort($data['id'], [
                     'output_type' => Search::HTML_OUTPUT,
                     'row_num'                => $i,
-                    'type_for_massiveaction' => __CLASS__,
+                    'type_for_massiveaction' => self::class,
                     'id_for_massiveaction'   => $data['linkid']]);
                 $i++;
             }
-            Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . __CLASS__ . $rand);
+            Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . self::class . $rand);
         }
         echo "</table>";
 
@@ -225,6 +229,11 @@ class Change_Release extends CommonDBRelation
             Html::closeForm();
         }
         echo "</div>";
+        $list_html = ob_get_clean();
+
+        TemplateRenderer::getInstance()->display('@releases/tab_raw.html.twig', [
+            'content' => $list_html,
+        ]);
     }
 
     public function post_addItem()
@@ -254,7 +263,7 @@ class Change_Release extends CommonDBRelation
         global $CFG_GLPI, $DB;
 
         Release::showCreateRelease($item);
-        echo "<br/><br/>";
+
         $ID      = $item->getID();
         $canedit = Release::canUpdate();
         $rand    = mt_rand();
@@ -283,120 +292,105 @@ class Change_Release extends CommonDBRelation
         ]);
 
         $changes = [];
-        $used    = [];
         $numrows = count($iterator);
         foreach ($iterator as $data) {
             $changes[$data['id']] = $data;
         }
 
         if ($canedit) {
-            echo "<div class='firstbloc'>";
-            echo "<form name='changeticket_form$rand' id='changeticket_form$rand' method='post'
-           action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
-
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_2'><th colspan='3'>" . __('Add a release', 'releases') . "</th></tr>";
-            echo "<tr class='tab_bg_2'><td>";
-            echo Html::hidden('changes_id', ['value' => $ID]);
+            // Capture the release dropdown (echoes internally) and render the add
+            // mini-form through Twig instead of echoing raw HTML.
+            ob_start();
             Release::dropdown([
-                'used'   => [],
-                'entity' => $item->getEntityID(),
+                'used'      => [],
+                'entity'    => $item->getEntityID(),
                 'condition' => [
-                    'NOT'    => [
+                    'NOT' => [
                         'status' => Release::getClosedStatusArray(),
                     ],
                 ],
             ]);
-            echo "</td><td class='center'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-            echo "</td><td>";
+            $release_dropdown = ob_get_clean();
 
-            echo "</td></tr></table>";
-            Html::closeForm();
-            echo "</div>";
+            TemplateRenderer::getInstance()->display('@releases/form_change_release_add.html.twig', [
+                'action_url'    => Toolbox::getItemTypeFormURL(self::class),
+                'title'         => __('Add a release', 'releases'),
+                'hidden_name'   => 'changes_id',
+                'hidden_value'  => $ID,
+                'dropdown_html' => $release_dropdown,
+            ]);
         }
 
-        $i       = 0;
-        $row_num = 1;
-        if ($canedit && $numrows) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-                'container'     => 'mass' . __CLASS__ . $rand];
-            Html::showMassiveActions($massiveactionparams);
-        }
         if ($numrows) {
-            echo "<table class='tab_cadre_fixehov'>";
-            echo "<tr class='noHover'><th colspan='8'>" . Release::getTypeName($numrows) . "</th>";
-            echo "</tr>";
-
-            echo "<tr  class='tab_bg_1'>";
-            if ($canedit && $numrows) {
-                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
-            }
-
-            echo "<th>" . __('Name') . "</th>";
-            echo "<th>" . __('Status') . "</th>";
-            echo "<th>" . __('Release area', 'releases') . "</th>";
-            echo "<th>" . __('Pre-production planned date', 'releases') . "</th>";
-            echo "<th>" . __('Production planned date', 'releases') . "</th>";
-            echo "<th>" . __('Real production run date', 'releases') . "</th>";
-            echo "<th>" . __('Service shutdown', 'releases') . "</th>";
-            echo "</tr>";
+            $entries = [];
             foreach ($changes as $idc => $d) {
                 Session::addToNavigateListItems(self::getType(), $d["linkid"]);
-                $i++;
-                $row_num++;
-                echo "<tr class='tab_bg_1 center'>";
-                echo "<td width='10'>";
-                if ($canedit) {
-                    Html::showMassiveActionCheckBox(__CLASS__, $d["linkid"]);
-                }
-                echo "</td>";
 
-                echo "<td class='center'>";
-                echo "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/releases/front/release.form.php?id=" . $idc . "'>";
-                // Escape user-supplied release name (stored raw since GLPI 10+) to prevent stored XSS
-                echo htmlspecialchars($d["name"]);
-                if ($_SESSION["glpiis_ids_visible"] || empty($d["name"])) {
-                    echo " (" . $idc . ")";
-                }
-                echo "</a></td>";
-                echo "<td >";
-                $var = "<span class='status'>";
-                $var .= Release::getStatusIcon($d["status"]);
-                $var .= Release::getStatus($d["status"]);
-                $var .= "</span>";
-                echo $var;
-                echo "</td >";
-                echo "<td >";
-                echo Html::resume_text(RichText::getTextFromHtml($d["content"]));
-                echo "</td >";
-                echo "<td >";
-                echo Html::convDateTime($d["date_preproduction"]);
-                echo "</td >";
-                echo "<td >";
-                echo Html::convDateTime($d["date_production"]);
-                echo "</td >";
-                echo "<td >";
-                $review = new Review();
+                $review    = new Review();
+                $real_date = '';
                 if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $d['id']])) {
-                    echo Html::convDateTime($review->fields["real_date_release"]);
+                    $real_date = $review->fields["real_date_release"];
                 }
 
-                echo "</td >";
-                echo "<td >";
-                $tab = [1 => __("Yes"), 0 => __("No")];
-                echo $tab[$d["service_shutdown"]];
-                echo "</td >";
-                echo "</tr>";
+                // Escape user-supplied release name (stored raw since GLPI 10+) to prevent stored XSS.
+                $name = htmlspecialchars($d["name"]);
+                if ($_SESSION["glpiis_ids_visible"] || empty($d["name"])) {
+                    $name .= " (" . $idc . ")";
+                }
+                $link = $CFG_GLPI['root_doc'] . "/plugins/releases/front/release.form.php?id=" . $idc;
+
+                $entries[] = [
+                    'itemtype'           => self::class,
+                    'id'                 => $d["linkid"],
+                    'name'               => "<a href='" . htmlspecialchars($link) . "'>" . $name . "</a>",
+                    'status'             => "<span class='status'>" . Release::getStatusIcon($d["status"]) . Release::getStatus($d["status"]) . "</span>",
+                    'content'            => RichText::getTextFromHtml($d["content"]),
+                    'date_preproduction' => $d["date_preproduction"],
+                    'date_production'    => $d["date_production"],
+                    'real_date_release'  => $real_date,
+                    'service_shutdown'   => (bool) $d["service_shutdown"],
+                ];
             }
 
-            echo "</table>";
-            if ($canedit && $numrows) {
-                $massiveactionparams['ontop'] = false;
-                Html::showMassiveActions($massiveactionparams);
-                Html::closeForm();
-            }
+            $columns = [
+                'name'               => __('Name'),
+                'status'             => __('Status'),
+                'content'            => __('Release area', 'releases'),
+                'date_preproduction' => __('Pre-production planned date', 'releases'),
+                'date_production'    => __('Production planned date', 'releases'),
+                'real_date_release'  => __('Real production run date', 'releases'),
+                'service_shutdown'   => __('Service shutdown', 'releases'),
+            ];
+
+            $formatters = [
+                'name'               => 'raw_html',
+                'status'             => 'raw_html',
+                // getTextFromHtml already returns escaped plain text; raw_html avoids
+                // the double-encoding that the default formatter would introduce.
+                'content'            => 'raw_html',
+                'date_preproduction' => 'datetime',
+                'date_production'    => 'datetime',
+                'real_date_release'  => 'datetime',
+                'service_shutdown'   => 'yesno',
+            ];
+
+            TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+                'super_header'        => Release::getTypeName($numrows),
+                'columns'             => $columns,
+                'formatters'          => $formatters,
+                'entries'             => $entries,
+                'total_number'        => $numrows,
+                'filtered_number'     => $numrows,
+                'nofilter'            => true,
+                'nosort'              => true,
+                'showmassiveactions'  => $canedit,
+                'massiveactionparams' => [
+                    'num_displayed' => $numrows,
+                    // Strip namespace backslashes: the container id becomes a DOM id
+                    // and a JS selector, both of which break with backslashes.
+                    'container'     => 'mass' . str_replace('\\', '', self::class) . $rand,
+                ],
+            ]);
         }
     }
 }
