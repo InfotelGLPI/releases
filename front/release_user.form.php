@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Event;
@@ -37,7 +37,6 @@ global $CFG_GLPI;
 $link = new Release_User();
 $item = new Release();
 
-Session::checkLoginUser();
 Html::popHeader(__('Email followup'), $_SERVER['PHP_SELF']);
 
 if (isset($_POST["update"])) {
@@ -56,9 +55,8 @@ if (isset($_POST["update"])) {
         "plugin_releases",
         4,
         "maintain",
-        sprintf(__('%s deletes an actor'), $_SESSION["glpiname"])
+        sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]),
     );
-
 
     if ($item->can($link->fields["plugin_releases_releases_id"], READ)) {
         Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releases_id']));
@@ -66,7 +64,7 @@ if (isset($_POST["update"])) {
     Session::addMessageAfterRedirect(
         __('You have been redirected because you no longer have access to this item'),
         true,
-        ERROR
+        ERROR,
     );
 
     Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/release.php");

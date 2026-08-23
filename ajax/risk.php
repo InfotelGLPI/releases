@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\BadRequestHttpException;
@@ -35,7 +35,6 @@ use GlpiPlugin\Releases\Risktemplate;
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkLoginUser();
 Session::checkRight('plugin_releases_releases', UPDATE);
 
 $_POST['itemtype'] = Release::class;
@@ -44,10 +43,10 @@ $_POST['itemtype'] = Release::class;
 $risktemplates_id = $_POST['risktemplates_id'] ?? null;
 if ($risktemplates_id === null) {
     throw new BadRequestHttpException("Missing or invalid parameter: 'risktemplates_id'");
-} else if ($risktemplates_id == 0) {
-   // Reset form
+} elseif ($risktemplates_id == 0) {
+    // Reset form
     echo json_encode([
-      'content' => ""
+        'content' => "",
     ]);
     die;
 }

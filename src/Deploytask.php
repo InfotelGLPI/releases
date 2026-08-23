@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Releases;
@@ -49,8 +49,6 @@ use User;
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
 }
-
-
 
 /**
  * Class Deploytask
@@ -103,7 +101,7 @@ class Deploytask extends CommonDBTM
         $table = CommonDBTM::getTable(self::class);
         return $dbu->countElementsInTable(
             $table,
-            ["plugin_releases_releases_id" => $item->getID()]
+            ["plugin_releases_releases_id" => $item->getID()],
         );
     }
 
@@ -119,7 +117,7 @@ class Deploytask extends CommonDBTM
         return $dbu->countElementsInTable(
             $table,
             ["plugin_releases_releases_id" => $item->getID(),
-                "state"                       => self::DONE]
+                "state"                       => self::DONE],
         );
     }
 
@@ -135,7 +133,7 @@ class Deploytask extends CommonDBTM
         return $dbu->countElementsInTable(
             $table,
             ["plugin_releases_releases_id" => $item->getID(),
-                "state"                       => self::FAIL]
+                "state"                       => self::FAIL],
         );
     }
 
@@ -166,7 +164,7 @@ class Deploytask extends CommonDBTM
                 Session::addMessageAfterRedirect(
                     __('Error in entering dates. The starting date is later than the ending date'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 return false;
             }
@@ -250,7 +248,6 @@ class Deploytask extends CommonDBTM
             $input["users_id_editor"] = $uid;
         }
 
-
         //      $input["_job"] = new Release();
         //
         //      if (isset($input[$input["_job"]->getForeignKeyField()])
@@ -272,7 +269,7 @@ class Deploytask extends CommonDBTM
                 Session::addMessageAfterRedirect(
                     __('Error in entering dates. The starting date is later than the ending date'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 return false;
             }
@@ -280,7 +277,7 @@ class Deploytask extends CommonDBTM
                 $input["users_id_tech"],
                 $input["begin"],
                 $input["end"],
-                [$this->getType() => [$input["id"]]]
+                [$this->getType() => [$input["id"]]],
             );
 
             $calendars_id = Entity::getUsedConfig('calendars_strategy', $this->fields['entities_id'], 'calendars_id', 0);
@@ -293,14 +290,14 @@ class Deploytask extends CommonDBTM
                     Session::addMessageAfterRedirect(
                         __('Start of the selected timeframe is not a working hour.'),
                         false,
-                        ERROR
+                        ERROR,
                     );
                 }
                 if (!$calendar->isAWorkingHour(strtotime($input["end"]))) {
                     Session::addMessageAfterRedirect(
                         __('End of the selected timeframe is not a working hour.'),
                         false,
-                        ERROR
+                        ERROR,
                     );
                 }
             }
@@ -310,7 +307,6 @@ class Deploytask extends CommonDBTM
 
         return $input;
     }
-
 
     /**
      * Current dates are valid ? begin before end
@@ -327,10 +323,8 @@ class Deploytask extends CommonDBTM
               && (strtotime($input["begin"]) < strtotime($input["end"])));
     }
 
-
     //TODO
     //   Post_update for change release status ? deploytask_state to be created ?
-
 
     /**
      * Dropdown of deploytask & tests state
@@ -359,7 +353,6 @@ class Deploytask extends CommonDBTM
      */
     public function showForm($ID, $options = [])
     {
-
 
         if ($this->isNewItem()) {
             $this->getEmpty();
@@ -394,7 +387,6 @@ class Deploytask extends CommonDBTM
             'subitem' => $this,
             'tasks'   => $alltasks]);
     }
-
 
     /**
      * @param $parm
@@ -442,8 +434,8 @@ class Deploytask extends CommonDBTM
                     'SELECT'          => 'users_id',
                     'FROM'            => 'glpi_groups_users',
                     'WHERE'           => [
-                            'groups_id'  => '$who_group',
-                        ],
+                        'groups_id'  => '$who_group',
+                    ],
                 ]),
             ];
         }
@@ -464,16 +456,15 @@ class Deploytask extends CommonDBTM
                         ],
                     ],
                     'WHERE'           => [
-                            'glpi_profiles.interface'  => 'central',
-                        ] + getEntitiesRestrictCriteria('glpi_profiles_users', '', $_SESSION['glpiactive_entity'], true),
+                        'glpi_profiles.interface'  => 'central',
+                    ] + getEntitiesRestrictCriteria('glpi_profiles_users', '', $_SESSION['glpiactive_entity'], true),
                 ]),
             ];
         }
 
-
         $WHERE = [
             "'$begin' < `end`",
-            "'$end' > `begin`"
+            "'$end' > `begin`",
         ];
 
         if (count($ASSIGN) > 0) {
@@ -487,9 +478,9 @@ class Deploytask extends CommonDBTM
                 'glpi_plugin_releases_typedeploytasks' => [
                     'ON' => [
                         'glpi_plugin_releases_typedeploytasks' => 'id',
-                        'glpi_plugin_releases_deploytasks'          => 'plugin_releases_typedeploytasks_id'
-                    ]
-                ]
+                        'glpi_plugin_releases_deploytasks'          => 'plugin_releases_typedeploytasks_id',
+                    ],
+                ],
             ],
             'WHERE'  => $WHERE,
             'ORDERBY' => 'begin',
@@ -621,7 +612,7 @@ class Deploytask extends CommonDBTM
             PlanningRecall::managePlanningUpdates(
                 $this->getType(),
                 $this->getID(),
-                $this->fields["begin"]
+                $this->fields["begin"],
             );
         }
 
@@ -671,11 +662,10 @@ class Deploytask extends CommonDBTM
                 $itemtype,
                 $changes,
                 $this->getType(),
-                Log::HISTORY_UPDATE_SUBITEM
+                Log::HISTORY_UPDATE_SUBITEM,
             );
         }
     }
-
 
     /**
      * Get deploytask state name
@@ -725,7 +715,7 @@ class Deploytask extends CommonDBTM
             $this->getItilObjectItemType(),
             $changes,
             $this->getType(),
-            Log::HISTORY_DELETE_SUBITEM
+            Log::HISTORY_DELETE_SUBITEM,
         );
 
         if (!isset($this->input['_disablenotif']) && $CFG_GLPI["use_notifications"]) {
@@ -740,7 +730,6 @@ class Deploytask extends CommonDBTM
         }
     }
 
-
     public static function leveling_task($id, $previous_task)
     {
 
@@ -754,7 +743,6 @@ class Deploytask extends CommonDBTM
         } else {
             $input["level"] = 0;
         }
-
 
         $task->update($input);
         $tasks = $task->find(["plugin_releases_deploytasks_id" => $id]);

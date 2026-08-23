@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Releases;
@@ -49,66 +49,62 @@ if (!defined('GLPI_ROOT')) {
  **/
 class Deploytasktemplate extends CommonDropdown
 {
-
     // From CommonDBTM
     public $dohistory = true;
     public $can_be_translated = true;
 
-    static $rightname = 'plugin_releases_tasks';
+    public static $rightname = 'plugin_releases_tasks';
 
-
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Deploy Task template', 'Deploy Task templates', $nb, 'releases');
     }
 
-
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
                 'name' => 'content',
                 'label' => __('Content'),
                 'type' => 'textarea',
-                'rows' => 10
+                'rows' => 10,
             ],
 
             [
                 'name' => 'plugin_releases_typedeploytasks_id',
                 'label' => __('Deploy Task type', 'releases'),
                 'type' => 'dropdownValue',
-                'list' => true
+                'list' => true,
             ],
             [
                 'name' => 'state',
                 'label' => __('Status'),
-                'type' => 'state'
+                'type' => 'state',
             ],
             [
                 'name' => 'is_private',
                 'label' => __('Private'),
-                'type' => 'bool'
+                'type' => 'bool',
             ],
             [
                 'name' => 'actiontime',
                 'label' => __('Duration'),
-                'type' => 'actiontime'
+                'type' => 'actiontime',
             ],
             [
                 'name' => 'users_id_tech',
                 'label' => __('By'),
-                'type' => 'users_id_tech'
+                'type' => 'users_id_tech',
             ],
             [
                 'name' => 'groups_id_tech',
                 'label' => __('Group'),
-                'type' => 'groups_id_tech'
+                'type' => 'groups_id_tech',
             ],
         ];
     }
 
-
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -118,7 +114,7 @@ class Deploytasktemplate extends CommonDropdown
             'field' => 'content',
             'table' => $this->getTable(),
             'datatype' => 'text',
-            'htmltext' => true
+            'htmltext' => true,
         ];
 
         $tab[] = [
@@ -126,7 +122,7 @@ class Deploytasktemplate extends CommonDropdown
             'name' => TypeDeployTask::getTypeName(),
             'field' => 'name',
             'table' => getTableForItemType(TypeDeployTask::class),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         $tab[] = [
@@ -134,23 +130,22 @@ class Deploytasktemplate extends CommonDropdown
             'name' => ReleaseTemplate::getTypeName(),
             'field' => 'name',
             'table' => getTableForItemType(ReleaseTemplate::class),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         return $tab;
     }
 
-
     /**
      * @see CommonDropdown::displaySpecificTypeField()
      **/
-    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    public function displaySpecificTypeField($ID, $field = [], array $options = [])
     {
         switch ($field['type']) {
-            case 'state' :
+            case 'state':
                 Deploytask::dropdownStateTask("state", $this->fields["state"]);
                 break;
-            case 'users_id_tech' :
+            case 'users_id_tech':
                 User::dropdown([
                     'name' => "users_id_tech",
                     'right' => "own_ticket",
@@ -158,7 +153,7 @@ class Deploytasktemplate extends CommonDropdown
                     'entity' => $this->fields["entities_id"],
                 ]);
                 break;
-            case 'groups_id_tech' :
+            case 'groups_id_tech':
                 Group::dropdown([
                     'name' => "groups_id_tech",
                     'condition' => ['is_task' => 1],
@@ -166,26 +161,27 @@ class Deploytasktemplate extends CommonDropdown
                     'entity' => $this->fields["entities_id"],
                 ]);
                 break;
-            case 'actiontime' :
+            case 'actiontime':
                 $toadd = [];
                 for ($i = 9; $i <= 100; $i++) {
                     $toadd[] = $i * HOUR_TIMESTAMP;
                 }
                 Dropdown::showTimeStamp(
-                    "actiontime", [
+                    "actiontime",
+                    [
                         'min' => 0,
                         'max' => 8 * HOUR_TIMESTAMP,
                         'value' => $this->fields["actiontime"],
                         'addfirstminutes' => true,
                         'inhours' => true,
-                        'toadd' => $toadd
-                    ]
+                        'toadd' => $toadd,
+                    ],
                 );
                 break;
         }
     }
 
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
     }
@@ -199,13 +195,12 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @return booleen
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(static::$rightname, READ);
     }
 
-
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         $this->initForm($ID, $options);
 
@@ -264,13 +259,13 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @return int
      */
-    static function countForItem(CommonDBTM $item)
+    public static function countForItem(CommonDBTM $item)
     {
         $dbu = new DbUtils();
         $table = CommonDBTM::getTable(self::class);
         return $dbu->countElementsInTable(
             $table,
-            ["plugin_releases_releasetemplates_id" => $item->getID()]
+            ["plugin_releases_releasetemplates_id" => $item->getID()],
         );
     }
 
@@ -278,7 +273,7 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @return css class
      */
-    static function getCssClass()
+    public static function getCssClass()
     {
         return "task";
     }
@@ -290,7 +285,7 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @return array the modified $input array
      **/
-    function prepareInputForAdd($input)
+    public function prepareInputForAdd($input)
     {
         $input = parent::prepareInputForAdd($input);
 
@@ -304,7 +299,6 @@ class Deploytasktemplate extends CommonDropdown
             $input["level"] = $task->getField("level") + 1;
         }
 
-
         return $input;
     }
 
@@ -315,7 +309,7 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @return array the modified $input array
      **/
-    function prepareInputForUpdate($input)
+    public function prepareInputForUpdate($input)
     {
         Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
@@ -333,12 +327,12 @@ class Deploytasktemplate extends CommonDropdown
         return $input;
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         $_SESSION['releases']["template"][Session::getLoginUserID()] = 'task';
     }
 
-    function post_updateItem($history = 1)
+    public function post_updateItem($history = 1)
     {
         parent::post_updateItem($history); // TODO: Change the autogenerated stub
         $task = new self();
@@ -360,7 +354,7 @@ class Deploytasktemplate extends CommonDropdown
             $input = [];
             $input['id'] = $t["id"];
             $input['plugin_releases_deploytasktemplates_id'] = $this->getField(
-                'plugin_releases_deploytasktemplates_id'
+                'plugin_releases_deploytasktemplates_id',
             );
             $input['_disablenotif'] = true;
             $task->update($input);
@@ -373,7 +367,7 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @return ID|int|the
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 
@@ -391,7 +385,7 @@ class Deploytasktemplate extends CommonDropdown
         return 0;
     }
 
-    static function leveling_task($id, $previous_task)
+    public static function leveling_task($id, $previous_task)
     {
         $task = new Deploytask();
         $input = [];
@@ -404,7 +398,6 @@ class Deploytasktemplate extends CommonDropdown
             $input["level"] = 0;
         }
 
-
         $task->update($input);
         $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
         $task->getFromDB($id);
@@ -413,7 +406,7 @@ class Deploytasktemplate extends CommonDropdown
         }
     }
 
-    static function getAllDescendant($id)
+    public static function getAllDescendant($id)
     {
         $childrens = [];
         $task = new Deploytasktemplate();

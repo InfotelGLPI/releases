@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
@@ -36,12 +36,11 @@ use GlpiPlugin\Releases\Rollbacktemplate;
 use GlpiPlugin\Releases\Testtemplate;
 
 if (strpos($_SERVER['PHP_SELF'], "viewsubitemtemplate.php")) {
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkRight('plugin_releases_releases', UPDATE);
 
-Session::checkCentralAccess();
 global $CFG_GLPI;
 Html::header_nocache();
 
@@ -73,15 +72,15 @@ if (isset($_REQUEST[$foreignKey])
     && isset($_REQUEST["id"])
     && $parent->can((int) $_REQUEST[$foreignKey], READ)) {
 
-   $id = (int) $_REQUEST['id'] > 0 ? (int) $_REQUEST['id'] : null;
-   if ($id) {
-      $item->getFromDB($id);
-   } else {
-      // New subitem: inject the parent id so the form keeps the relationship.
-      $item->getEmpty();
-      $item->fields[$foreignKey] = $parent->getID();
-   }
-   $item->showForm($id ?? -1);
+    $id = (int) $_REQUEST['id'] > 0 ? (int) $_REQUEST['id'] : null;
+    if ($id) {
+        $item->getFromDB($id);
+    } else {
+        // New subitem: inject the parent id so the form keeps the relationship.
+        $item->getEmpty();
+        $item->fields[$foreignKey] = $parent->getID();
+    }
+    $item->showForm($id ?? -1);
 
 } else {
     throw new AccessDeniedHttpException();

@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 global $CFG_GLPI;
@@ -52,7 +52,7 @@ function plugin_init_releases()
     $PLUGIN_HOOKS[Hooks::ASSIGN_TO_TICKET]['releases'] = true;
     if (isset($_SESSION['glpiactiveprofile']['interface'])
        && $_SESSION['glpiactiveprofile']['interface'] == 'central') {
-//      $PLUGIN_HOOKS["javascript"]['releases'] = ["plugins/releases/js/releases.js"];
+        //      $PLUGIN_HOOKS["javascript"]['releases'] = ["plugins/releases/js/releases.js"];
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "js/releases.js";
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/releasetemplate_form.js";
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/releasetemplate_timeline.js";
@@ -69,19 +69,19 @@ function plugin_init_releases()
 
         Plugin::registerClass(
             Profile::class,
-            ['addtabon' => 'Profile']
+            ['addtabon' => 'Profile'],
         );
         Plugin::registerClass(
             Release::class,
             ['addtabon'                    => ['Change'],
-            'notificationtemplates_types' => true]
+                'notificationtemplates_types' => true],
         );
         Plugin::registerClass(
             Release_Item::class,
-            ['addtabon' => ['User', 'Group', 'Supplier']]
+            ['addtabon' => ['User', 'Group', 'Supplier']],
         );
         Plugin::registerClass(Deploytask::class, [
-         'planning_types' => true
+            'planning_types' => true,
         ]);
 
         if (Session::haveRight("plugin_releases_releases", READ)) {
@@ -95,11 +95,11 @@ function plugin_init_releases()
     if (Plugin::isPluginActive("mydashboard")) {
         Plugin::registerClass(
             Alert::class,
-            ['addtabon' => [Release::class]]
+            ['addtabon' => [Release::class]],
         );
     }
 
-   // End init, when all types are registered
+    // End init, when all types are registered
     $PLUGIN_HOOKS[Hooks::POST_INIT]['releases'] = 'plugin_releases_postinit';
 }
 
@@ -111,17 +111,17 @@ function plugin_version_releases()
 {
 
     return [
-      'name'           => _n('Release', 'Releases', 2, 'releases'),
-      'version'      => PLUGIN_RELEASES_VERSION,
-      'license'        => 'GPLv3+',
-      'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD, Alban LESELLIER",
-      'homepage'       => 'https://github.com/InfotelGLPI/releases',
-      'minGlpiVersion' => '11.0',// For compatibility / no install
-      'requirements'   => [
-         'glpi' => [
-            'min' => '11.0',
-            'max' => '12.0'
-         ]
-      ]
+        'name'           => _n('Release', 'Releases', 2, 'releases'),
+        'version'      => PLUGIN_RELEASES_VERSION,
+        'license'        => 'GPLv3+',
+        'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD, Alban LESELLIER",
+        'homepage'       => 'https://github.com/InfotelGLPI/releases',
+        'minGlpiVersion' => '11.0',// For compatibility / no install
+        'requirements'   => [
+            'glpi' => [
+                'min' => '11.0',
+                'max' => '12.0',
+            ],
+        ],
     ];
 }

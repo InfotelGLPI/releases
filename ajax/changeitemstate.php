@@ -1,72 +1,71 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Releases\Release;
 
 if (strpos($_SERVER['PHP_SELF'], "changeitemstate.php")) {
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 
-Session::checkCentralAccess();
 Session::checkRight('plugin_releases_releases', UPDATE);
 
 
 if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && isset($_POST["field"]) && isset($_POST["status"])) {
-   $item = new Release();
-   // Enforce right + entity + item access, never trust the raw id from the POST
-   $item->check((int) $_POST["plugin_releases_releases_id"], UPDATE);
+    $item = new Release();
+    // Enforce right + entity + item access, never trust the raw id from the POST
+    $item->check((int) $_POST["plugin_releases_releases_id"], UPDATE);
 
-   // Only allow inline edition of a fixed set of columns, never security/scope columns
-   $allowed_fields = [
-      'name', 'content', 'date', 'date_preproduction', 'date_production',
-      'begin_waiting_date', 'service_shutdown', 'service_shutdown_details',
-      'hour_type', 'communication', 'communication_type', 'target',
-      'locations_id', 'date_end',
-   ];
-   if (!in_array($_POST["field"], $allowed_fields, true)) {
-      throw new \Glpi\Exception\Http\AccessDeniedHttpException();
-   }
+    // Only allow inline edition of a fixed set of columns, never security/scope columns
+    $allowed_fields = [
+        'name', 'content', 'date', 'date_preproduction', 'date_production',
+        'begin_waiting_date', 'service_shutdown', 'service_shutdown_details',
+        'hour_type', 'communication', 'communication_type', 'target',
+        'locations_id', 'date_end',
+    ];
+    if (!in_array($_POST["field"], $allowed_fields, true)) {
+        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+    }
 
-   // Forbid any state change once the release reached a terminal status
-   if (in_array($item->getField('status'), Release::getClosedStatusArray(), true)) {
-      exit;
-   }
-   // Only accept a known status value, never a raw/out-of-range integer from the POST
-   $new_status = (int) $_POST["status"];
-   if (
-      array_key_exists($new_status, Release::getAllStatusArray())
-      && $new_status > (int) $item->getField('status')
-   ) {
-      $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID(), 'status' => $new_status];
-   } else {
-      $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID()];
-   }
-   $item->update($update);
+    // Forbid any state change once the release reached a terminal status
+    if (in_array($item->getField('status'), Release::getClosedStatusArray(), true)) {
+        exit;
+    }
+    // Only accept a known status value, never a raw/out-of-range integer from the POST
+    $new_status = (int) $_POST["status"];
+    if (
+        array_key_exists($new_status, Release::getAllStatusArray())
+        && $new_status > (int) $item->getField('status')
+    ) {
+        $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID(), 'status' => $new_status];
+    } else {
+        $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID()];
+    }
+    $item->update($update);
 }

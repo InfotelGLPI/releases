@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Releases;
@@ -62,11 +62,10 @@ class Change_Release extends CommonDBRelation
         return _n('Link Release/Change', 'Links Release/Change', $nb, 'releases');
     }
 
-    static function getIcon()
+    public static function getIcon()
     {
         return "ti ti-clipboard-check";
     }
-
 
     /**
      * @since 0.85
@@ -83,7 +82,7 @@ class Change_Release extends CommonDBRelation
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = countElementsInTable(
                             'glpi_plugin_releases_changes_releases',
-                            ['plugin_releases_releases_id' => $item->getID()]
+                            ['plugin_releases_releases_id' => $item->getID()],
                         );
                     }
                     return self::createTabEntry(Change::getTypeName(Session::getPluralNumber()), $nb);
@@ -155,7 +154,6 @@ class Change_Release extends CommonDBRelation
         //         $used[$one['changes_id']] = $one['changes_id'];
         //      }
 
-
         foreach ($iterator as $data) {
             $changes[$data['id']] = $data;
             $used[$data['id']]    = $data['id'];
@@ -205,8 +203,8 @@ class Change_Release extends CommonDBRelation
                 sprintf(
                     __('%1$s = %2$s'),
                     Change::getTypeName(1),
-                    $release->fields["name"]
-                )
+                    $release->fields["name"],
+                ),
             );
 
             $i = 0;

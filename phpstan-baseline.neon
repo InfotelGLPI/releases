@@ -127,18 +127,6 @@ parameters:
 			path: front/release.form.php
 
 		-
-			message: '#^Call to an undefined method GlpiPlugin\\Releases\\ReleaseTemplate_Supplier\:\:showSupplierNotificationForm\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: front/releasetemplate_supplier.form.php
-
-		-
-			message: '#^Call to an undefined method GlpiPlugin\\Releases\\ReleaseTemplate_User\:\:showUserNotificationForm\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: front/releasetemplate_user.form.php
-
-		-
 			message: '#^Parameter \#2 \$force of method CommonDBTM\:\:delete\(\) expects bool, int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -190,12 +178,6 @@ parameters:
 			message: '#^Parameter \#1 \$release of static method GlpiPlugin\\Releases\\Change_Release\:\:showForRelease\(\) expects GlpiPlugin\\Releases\\Release, CommonGLPI given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/Change_Release.php
-
-		-
-			message: '#^Right side of && is always true\.$#'
-			identifier: booleanAnd.rightAlwaysTrue
-			count: 2
 			path: src/Change_Release.php
 
 		-
@@ -331,32 +313,14 @@ parameters:
 			path: src/Finalization.php
 
 		-
-			message: '#^Method GlpiPlugin\\Releases\\Finalization\:\:getStateItem\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
+			message: '#^Method GlpiPlugin\\Releases\\Finalization\:\:showForm\(\) should return bool but empty return statement found\.$#'
+			identifier: return.empty
+			count: 2
 			path: src/Finalization.php
 
 		-
 			message: '#^Method GlpiPlugin\\Releases\\Finalization\:\:showForm\(\) should return bool but return statement is missing\.$#'
 			identifier: return.missing
-			count: 1
-			path: src/Finalization.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 3
-			path: src/Finalization.php
-
-		-
-			message: '#^Variable \$pourcentageTask might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/Finalization.php
-
-		-
-			message: '#^Variable \$pourcentageTest might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: src/Finalization.php
 
@@ -403,38 +367,8 @@ parameters:
 			path: src/Profile.php
 
 		-
-			message: '#^Call to an undefined method CommonGLPI\:\:getID\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Profile.php
-
-		-
 			message: '#^Method GlpiPlugin\\Releases\\Profile\:\:getTabNameForItem\(\) has invalid return type GlpiPlugin\\Releases\\translated\.$#'
 			identifier: class.notFound
-			count: 1
-			path: src/Profile.php
-
-		-
-			message: '#^Method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) has invalid return type GlpiPlugin\\Releases\\nothing\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Profile.php
-
-		-
-			message: '#^Method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) should return GlpiPlugin\\Releases\\nothing but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Profile.php
-
-		-
-			message: '#^Parameter \#2 \$openform \(bool\) of method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) should be compatible with parameter \$options \(array\<string, mixed\>\) of method Profile\:\:showForm\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: src/Profile.php
-
-		-
-			message: '#^Return type \(GlpiPlugin\\Releases\\nothing\) of method GlpiPlugin\\Releases\\Profile\:\:showForm\(\) should be compatible with return type \(bool\) of method Profile\:\:showForm\(\)$#'
-			identifier: method.childReturnType
 			count: 1
 			path: src/Profile.php
 
@@ -595,14 +529,14 @@ parameters:
 			path: src/Release.php
 
 		-
-			message: '#^Property CommonDBTM\:\:\$updates \(list\<string\>\) does not accept array\{\}\.$#'
-			identifier: assign.propertyType
+			message: '#^Result of method DBmysqlIterator\:\:next\(\) \(void\) is used\.$#'
+			identifier: method.void
 			count: 1
 			path: src/Release.php
 
 		-
-			message: '#^Result of method DBmysqlIterator\:\:next\(\) \(void\) is used\.$#'
-			identifier: method.void
+			message: '#^Result of static method Html\:\:showSimpleForm\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
 			count: 1
 			path: src/Release.php
 
@@ -691,15 +625,9 @@ parameters:
 			path: src/ReleaseTemplate.php
 
 		-
-			message: '#^Function autolink not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: src/ReleaseTemplate.php
-
-		-
 			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
 			identifier: glpi.forbidDynamicInstantiation
-			count: 20
+			count: 19
 			path: src/ReleaseTemplate.php
 
 		-
@@ -770,12 +698,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$withcomment of static method Dropdown\:\:getDropdownName\(\) expects bool, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/ReleaseTemplate.php
-
-		-
-			message: '#^Parameter \#4 \$toobserve of static method Ajax\:\:updateItem\(\) expects string, true given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ReleaseTemplate.php
@@ -865,10 +787,34 @@ parameters:
 			path: src/ReleaseTemplate_Item.php
 
 		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/ReleaseTemplate_Supplier.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate_Supplier\:\:showSupplierNotificationForm\(\) should return false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ReleaseTemplate_Supplier.php
+
+		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1
 			path: src/ReleaseTemplate_Supplier.php
+
+		-
+			message: '#^Instantiating an object from an unrestricted dynamic string is forbidden \(see https\://github\.com/glpi\-project/phpstan\-glpi\?tab\=readme\-ov\-file\#forbiddynamicinstantiationrule\)\.$#'
+			identifier: glpi.forbidDynamicInstantiation
+			count: 1
+			path: src/ReleaseTemplate_User.php
+
+		-
+			message: '#^Method GlpiPlugin\\Releases\\ReleaseTemplate_User\:\:showUserNotificationForm\(\) should return false but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/ReleaseTemplate_User.php
 
 		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
@@ -994,12 +940,6 @@ parameters:
 			message: '#^Method GlpiPlugin\\Releases\\Review\:\:displayTabContentForItem\(\) should return bool but return statement is missing\.$#'
 			identifier: return.missing
 			count: 2
-			path: src/Review.php
-
-		-
-			message: '#^Variable \$filename in empty\(\) always exists and is not falsy\.$#'
-			identifier: empty.variable
-			count: 1
 			path: src/Review.php
 
 		-
@@ -1285,12 +1225,6 @@ parameters:
 			path: src/TypeDeployTask.php
 
 		-
-			message: '#^Parameter \#1 \$query of method DBmysql\:\:doQuery\(\) expects string, array\<string, array\<string, mixed\>\|string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TypeDeployTask.php
-
-		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1
@@ -1321,12 +1255,6 @@ parameters:
 			path: src/TypeRisk.php
 
 		-
-			message: '#^Parameter \#1 \$query of method DBmysql\:\:doQuery\(\) expects string, array\<string, array\<string, mixed\>\|string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TypeRisk.php
-
-		-
 			message: '#^You should not use the `die` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1
@@ -1353,12 +1281,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @return with type GlpiPlugin\\Releases\\booleen is incompatible with native type bool\.$#'
 			identifier: return.phpDocType
-			count: 1
-			path: src/TypeTest.php
-
-		-
-			message: '#^Parameter \#1 \$query of method DBmysql\:\:doQuery\(\) expects string, array\<string, array\<string, mixed\>\|string\> given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/TypeTest.php
 

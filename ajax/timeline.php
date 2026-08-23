@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
@@ -36,7 +36,6 @@ use GlpiPlugin\Releases\Risk;
 use GlpiPlugin\Releases\Rollback;
 use GlpiPlugin\Releases\Test;
 
-Session::checkLoginUser();
 Session::checkRight('plugin_releases_releases', UPDATE);
 
 if ($_POST['action'] == 'done_fail') {
@@ -77,28 +76,28 @@ if ($_POST['action'] == 'done_fail') {
 
     $new_label = Planning::getState($new_state);
     echo json_encode([
-                       'state' => $new_state,
-                       'label' => $new_label
-                    ]);
+        'state' => $new_state,
+        'label' => $new_label,
+    ]);
 
     $foreignKey = $parent->getForeignKeyField();
     $task->update([
-                    'id'        => intval($_POST['items_id']),
-                    $foreignKey => intval($_POST[$foreignKey]),
-                    'state'     => $new_state
-                 ]);
+        'id'        => intval($_POST['items_id']),
+        $foreignKey => intval($_POST[$foreignKey]),
+        'state'     => $new_state,
+    ]);
     if (Test::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
-                        'status' => Release::TESTDEFINITION]);
+            'status' => Release::TESTDEFINITION]);
     } elseif (Deploytask::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
-                        'status' => Release::TASKDEFINITION]);
+            'status' => Release::TASKDEFINITION]);
     } elseif (Rollback::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
-                        'status' => Release::ROLLBACKDEFINITION]);
+            'status' => Release::ROLLBACKDEFINITION]);
     } else {
         $release->update(['id' => $release->getID(),
-                        'status' => Release::RISKDEFINITION]);
+            'status' => Release::RISKDEFINITION]);
     }
 } elseif (($_POST['action'] ?? null) === 'change_release_subitem_state') {
     header("Content-Type: application/json; charset=UTF-8");
@@ -128,34 +127,34 @@ if ($_POST['action'] == 'done_fail') {
         throw new NotFoundHttpException();
     }
 
-      $new_state = ($task->fields['state'] == Planning::DONE)
-         ? Planning::TODO
-         : Planning::DONE;
-      $new_label = Planning::getState($new_state);
-      echo json_encode([
-                          'state' => $new_state,
-                          'label' => $new_label
-                       ]);
+    $new_state = ($task->fields['state'] == Planning::DONE)
+       ? Planning::TODO
+       : Planning::DONE;
+    $new_label = Planning::getState($new_state);
+    echo json_encode([
+        'state' => $new_state,
+        'label' => $new_label,
+    ]);
 
-      $foreignKey = $parent->getForeignKeyField();
-      $task->update([
-                       'id'        => intval($_POST['items_id']),
-                       $foreignKey => intval($_POST[$foreignKey]),
-                       'state'     => $new_state
-                    ]);
+    $foreignKey = $parent->getForeignKeyField();
+    $task->update([
+        'id'        => intval($_POST['items_id']),
+        $foreignKey => intval($_POST[$foreignKey]),
+        'state'     => $new_state,
+    ]);
 
     if (Test::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
-                         'status' => Release::TESTDEFINITION]);
+            'status' => Release::TESTDEFINITION]);
     } elseif (Deploytask::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
-                         'status' => Release::TASKDEFINITION]);
+            'status' => Release::TASKDEFINITION]);
     } elseif (Rollback::countDoneForItem($release) != 0) {
         $release->update(['id' => $release->getID(),
-                         'status' => Release::ROLLBACKDEFINITION]);
+            'status' => Release::ROLLBACKDEFINITION]);
     } else {
         $release->update(['id' => $release->getID(),
-                         'status' => Release::RISKDEFINITION]);
+            'status' => Release::RISKDEFINITION]);
     }
 } else {
     if (!isset($_REQUEST['action'])) {
@@ -167,7 +166,6 @@ if ($_POST['action'] == 'done_fail') {
 
     $objType    = $_REQUEST['parenttype']::getType();
     $foreignKey = $_REQUEST['parenttype']::getForeignKeyField();
-
 
     switch ($_REQUEST['action']) {
         case "change_task_state":
@@ -183,7 +181,7 @@ if ($_POST['action'] == 'done_fail') {
             }
             if ($_REQUEST['itemtype'] == 'Rollback') {
                 $_REQUEST['itemtype'] = Rollback::class;
-            } else if ($_REQUEST['itemtype'] == 'Risk') {
+            } elseif ($_REQUEST['itemtype'] == 'Risk') {
                 $_REQUEST['itemtype'] = Risk::class;
             }
             $allowed_task_classes = [Deploytask::class, Risk::class, Rollback::class, Test::class];
@@ -212,14 +210,14 @@ if ($_POST['action'] == 'done_fail') {
                 : Planning::DONE;
                 $new_label = Planning::getState($new_state);
                 echo json_encode([
-                                'state' => $new_state,
-                                'label' => $new_label
-                             ]);
+                    'state' => $new_state,
+                    'label' => $new_label,
+                ]);
                 $obj->update([
-                            'id'        => intval($_REQUEST['items_id']),
-                            $foreignKey => intval($_REQUEST[$foreignKey]),
-                            'state'     => $new_state
-                         ]);
+                    'id'        => intval($_REQUEST['items_id']),
+                    $foreignKey => intval($_REQUEST[$foreignKey]),
+                    'state'     => $new_state,
+                ]);
             }
             break;
 
@@ -255,13 +253,12 @@ if ($_POST['action'] == 'done_fail') {
                 }
 
                 $parent::showSubForm($item, $_REQUEST["id"], ['parent'    => $parent,
-                                                          "itemtype"  => $parent->getType(),
-                                                          "items_id"  => $parent->getID(),
-                                                          $foreignKey => $_REQUEST[$foreignKey]]);
+                    "itemtype"  => $parent->getType(),
+                    "items_id"  => $parent->getID(),
+                    $foreignKey => $_REQUEST[$foreignKey]]);
             } else {
                 throw new AccessDeniedHttpException();
             }
-
 
             break;
     }

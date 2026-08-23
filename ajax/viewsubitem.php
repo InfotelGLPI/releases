@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
@@ -36,12 +36,11 @@ use GlpiPlugin\Releases\Rollback;
 use GlpiPlugin\Releases\Test;
 
 if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkRight('plugin_releases_releases', UPDATE);
 
-Session::checkCentralAccess();
 global $CFG_GLPI;
 Html::header_nocache();
 if (!isset($_REQUEST['type'])) {
@@ -72,20 +71,17 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
     && isset($_REQUEST["id"])
     && $parent->can((int) $_REQUEST[$parent->getForeignKeyField()], READ)) {
 
-   $ol = ObjectLock::isLocked($_REQUEST['parenttype'], $parent->getID());
-   if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
-      ObjectLock::setReadOnlyProfile();
-   }
-   $id = isset($_REQUEST['id']) && (int)$_REQUEST['id'] > 0 ? $_REQUEST['id'] : null;
-   if ($id) {
-      $item->getFromDB($id);
-   }
-   $url = $_REQUEST['type']::getFormURL();
-   $item->showForm($id);
+    $ol = ObjectLock::isLocked($_REQUEST['parenttype'], $parent->getID());
+    if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
+        ObjectLock::setReadOnlyProfile();
+    }
+    $id = isset($_REQUEST['id']) && (int) $_REQUEST['id'] > 0 ? $_REQUEST['id'] : null;
+    if ($id) {
+        $item->getFromDB($id);
+    }
+    $url = $_REQUEST['type']::getFormURL();
+    $item->showForm($id);
 
 } else {
     throw new AccessDeniedHttpException();
 }
-
-
-

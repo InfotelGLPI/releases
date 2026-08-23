@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Releases;
@@ -34,7 +34,7 @@ use Glpi\Application\View\TemplateRenderer;
 use Supplier;
 
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access this file directly");
+    die("Sorry. You can't access this file directly");
 }
 
 /**
@@ -44,13 +44,13 @@ if (!defined('GLPI_ROOT')) {
  *
  * @since 0.84
  **/
-class ReleaseTemplate_Supplier extends CommonITILActor {
-
-   // From CommonDBRelation
-   static public $itemtype_1 = ReleaseTemplate::class;
-   static public $items_id_1 = 'plugin_releases_releasetemplates_id';
-   static public $itemtype_2 = 'Supplier';
-   static public $items_id_2 = 'suppliers_id';
+class ReleaseTemplate_Supplier extends CommonITILActor
+{
+    // From CommonDBRelation
+    public static $itemtype_1 = ReleaseTemplate::class;
+    public static $items_id_1 = 'plugin_releases_releasetemplates_id';
+    public static $itemtype_2 = 'Supplier';
+    public static $items_id_2 = 'suppliers_id';
 
     /**
      * Print the object supplier form for notification

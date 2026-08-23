@@ -1,33 +1,31 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
-
-Session::checkLoginUser();
 
 use Glpi\Event;
 use GlpiPlugin\Releases\Change_Release;
@@ -120,7 +118,7 @@ if (isset($_POST["add"])) {
         4,
         "maintain",
         //TRANS: %s is the user login
-        sprintf(__('%s adds an actor'), $_SESSION["glpiname"])
+        sprintf(__('%s adds an actor'), $_SESSION["glpiname"]),
     );
     Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
@@ -141,7 +139,7 @@ if (isset($_POST["add"])) {
         4,
         "maintain",
         //TRANS: %s is the user login
-        sprintf(__('%s adds an actor'), $_SESSION["glpiname"])
+        sprintf(__('%s adds an actor'), $_SESSION["glpiname"]),
     );
     Html::redirect(Release::getFormURLWithID($_POST['plugin_releases_releases_id']));
 
@@ -150,19 +148,23 @@ if (isset($_POST["add"])) {
     // Detaching a document mutates state: read it from POST only so the
     // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
     // only). A GET-triggered detach would otherwise be forgeable.
-    $doc = new Document();
-    $doc->getFromDB((int) ($_POST['documents_id'] ?? 0));
-    if ($doc->can($doc->getID(), UPDATE)) {
-        $document_item        = new Document_Item();
-        $found_document_items = $document_item->find([
-            'itemtype'     => Release::class,
-            'items_id'     => (int) ($_POST[Release::class] ?? 0),
-            'documents_id' => $doc->getID(),
-        ]);
-        foreach ($found_document_items as $item) {
-            $document_item->delete($item, true);
-        }
-    }
+    $document_item = new Document_Item();
+    $document_item->getFromDBByCrit([
+        'itemtype'     => Release::class,
+        'items_id'     => (int) ($_POST[Release::class] ?? 0),
+        'documents_id' => (int) ($_POST['documents_id'] ?? 0),
+    ]);
+    // check() on the linkage carries the DELETE right, the entity and the
+    // access to the target Release, so a document cannot be detached from a
+    // release the user has no access to (aligned with review.form.php). The
+    // Document right alone was not enough: it left the release access unchecked.
+    $document_item->check($document_item->getID(), DELETE);
+    $document_item->delete([
+        'id'           => $document_item->getID(),
+        'itemtype'     => Release::class,
+        'items_id'     => (int) ($_POST[Release::class] ?? 0),
+        'documents_id' => (int) ($_POST['documents_id'] ?? 0),
+    ]);
     Html::back();
 
 } else {

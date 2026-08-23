@@ -1,106 +1,105 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Review;
 
-Session::checkLoginUser();
 if (!isset($_GET["id"])) {
-   $_GET["id"] = "";
+    $_GET["id"] = "";
 }
 if (!isset($_GET["withtemplate"])) {
-   $_GET["withtemplate"] = "";
+    $_GET["withtemplate"] = "";
 }
 
 $release = new Review();
 
 if (isset($_POST["add"])) {
-   $release->check(-1, CREATE, $_POST);
+    $release->check(-1, CREATE, $_POST);
 
-   $newID = $release->add($_POST);
-   if ($_SESSION['glpibackcreated']) {
-      Html::redirect($release->getFormURL() . "?id=" . $newID);
-   }
-   Html::back();
-} else if (isset($_POST["delete"])) {
-   $release->check($_POST['id'], DELETE);
-   $release->delete($_POST);
-   Html::back();
+    $newID = $release->add($_POST);
+    if ($_SESSION['glpibackcreated']) {
+        Html::redirect($release->getFormURL() . "?id=" . $newID);
+    }
+    Html::back();
+} elseif (isset($_POST["delete"])) {
+    $release->check($_POST['id'], DELETE);
+    $release->delete($_POST);
+    Html::back();
 
-} else if (isset($_POST["restore"])) {
-   $release->check($_POST['id'], PURGE);
-   $release->restore($_POST);
-   $release->redirectToList();
+} elseif (isset($_POST["restore"])) {
+    $release->check($_POST['id'], PURGE);
+    $release->restore($_POST);
+    $release->redirectToList();
 
-} else if (isset($_POST["purge"])) {
-   $release->check($_POST['id'], PURGE);
-   $release->delete($_POST, 1);
-   Html::back();
+} elseif (isset($_POST["purge"])) {
+    $release->check($_POST['id'], PURGE);
+    $release->delete($_POST, 1);
+    Html::back();
 
-} else if (isset($_POST["update"])) {
-   $release->check($_POST['id'], UPDATE);
-   $release->update($_POST);
-   Html::back();
+} elseif (isset($_POST["update"])) {
+    $release->check($_POST['id'], UPDATE);
+    $release->update($_POST);
+    Html::back();
 
-} else if (isset($_POST["delete_document"])) {
-   // Detaching a document mutates state: read it from POST only so the
-   // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
-   // only). A GET-triggered detach would otherwise be forgeable.
-   $d = new Document_Item();
-   $d->getFromDBByCrit(["documents_id" => (int) $_POST["documents_id"],
-                        "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
-                        "itemtype"     => Review::getType()]);
-   $d->check($d->getID(), DELETE);
-   $d->delete(["id"           => $d->getID(),
-               "documents_id" => (int) $_POST["documents_id"],
-               "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
-               "itemtype"     => Review::getType()]);
-   Html::back();
-} else if (isset($_POST["conclude"])) {
-   global $CFG_GLPI;
-   $r               = new Release();
-   $r->check((int)$_POST["plugin_releases_releases_id"], UPDATE);
-   $input["id"]     = (int)$_POST["plugin_releases_releases_id"];
-   $input["status"] = Release::CLOSED;
-   $r->update($input);
-   $r->getFromDBByCrit(["id" => $_POST["plugin_releases_releases_id"]]);
-   if ($CFG_GLPI['use_notifications']) {
-      NotificationEvent::raiseEvent('closeRelease', $r);
-   }
-   Html::back();
+} elseif (isset($_POST["delete_document"])) {
+    // Detaching a document mutates state: read it from POST only so the
+    // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
+    // only). A GET-triggered detach would otherwise be forgeable.
+    $d = new Document_Item();
+    $d->getFromDBByCrit(["documents_id" => (int) $_POST["documents_id"],
+        "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
+        "itemtype"     => Review::getType()]);
+    $d->check($d->getID(), DELETE);
+    $d->delete(["id"           => $d->getID(),
+        "documents_id" => (int) $_POST["documents_id"],
+        "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
+        "itemtype"     => Review::getType()]);
+    Html::back();
+} elseif (isset($_POST["conclude"])) {
+    global $CFG_GLPI;
+    $r               = new Release();
+    $r->check((int) $_POST["plugin_releases_releases_id"], UPDATE);
+    $input["id"]     = (int) $_POST["plugin_releases_releases_id"];
+    $input["status"] = Release::CLOSED;
+    $r->update($input);
+    $r->getFromDBByCrit(["id" => $_POST["plugin_releases_releases_id"]]);
+    if ($CFG_GLPI['use_notifications']) {
+        NotificationEvent::raiseEvent('closeRelease', $r);
+    }
+    Html::back();
 } else {
 
-   $release->checkGlobal(READ);
+    $release->checkGlobal(READ);
 
-   Html::header(Release::getTypeName(2), '', "help", Release::class);
+    Html::header(Release::getTypeName(2), '', "help", Release::class);
 
-   $release->display($_GET);
+    $release->display($_GET);
 
-   Html::footer();
+    Html::footer();
 }

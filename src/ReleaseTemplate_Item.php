@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Releases;
@@ -57,7 +57,6 @@ class ReleaseTemplate_Item extends CommonDBRelation
     public static $items_id_2         = 'items_id';
     public static $checkItem_2_Rights = self::DONT_CHECK_ITEM_RIGHTS;
 
-
     public static function getIcon()
     {
         return "ti ti-package";
@@ -74,7 +73,6 @@ class ReleaseTemplate_Item extends CommonDBRelation
         return $forbidden;
     }
 
-
     /**
      * @see CommonDBTM::prepareInputForAdd()
      **/
@@ -89,7 +87,6 @@ class ReleaseTemplate_Item extends CommonDBRelation
         }
         return parent::prepareInputForAdd($input);
     }
-
 
     /**
      * Print the HTML array for Items linked to a problem
@@ -132,7 +129,7 @@ class ReleaseTemplate_Item extends CommonDBRelation
                 => ($release->fields['is_recursive']
                    ? getSonsOf(
                        'glpi_entities',
-                       $release->fields['entities_id']
+                       $release->fields['entities_id'],
                    )
                    : $release->fields['entities_id'])]);
             echo "</td><td class='center' width='30%'>";
@@ -239,7 +236,7 @@ class ReleaseTemplate_Item extends CommonDBRelation
         $table = CommonDBTM::getTable(ReleaseTemplate_Item::class);
         return $dbu->countElementsInTable(
             $table,
-            ["plugin_releases_releasetemplates_id" => $item->getID()]
+            ["plugin_releases_releasetemplates_id" => $item->getID()],
         );
     }
 
@@ -249,10 +246,9 @@ class ReleaseTemplate_Item extends CommonDBRelation
         $table = CommonDBTM::getTable(Release_Item::class);
         return $dbu->countElementsInTable(
             $table,
-            ["plugin_releases_releasetemplates_id" => $item->getID()]
+            ["plugin_releases_releasetemplates_id" => $item->getID()],
         );
     }
-
 
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
@@ -298,7 +294,6 @@ class ReleaseTemplate_Item extends CommonDBRelation
         }
         return '';
     }
-
 
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {

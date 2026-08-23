@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 namespace GlpiPlugin\Releases;
@@ -45,20 +45,18 @@ if (!defined('GLPI_ROOT')) {
  **/
 class Testtemplate extends CommonDropdown
 {
-
     // From CommonDBTM
     public $dohistory = true;
     public $can_be_translated = true;
 
-    static $rightname = 'plugin_releases_tests';
+    public static $rightname = 'plugin_releases_tests';
 
-    static function getTypeName($nb = 0)
+    public static function getTypeName($nb = 0)
     {
         return _n('Test template', 'Test templates', $nb, 'releases');
     }
 
-
-    function getAdditionalFields()
+    public function getAdditionalFields()
     {
         return [
             [
@@ -75,14 +73,13 @@ class Testtemplate extends CommonDropdown
                 'name' => 'content',
                 'label' => __('Description'),
                 'type' => 'textarea',
-                'rows' => 10
+                'rows' => 10,
             ],
 
         ];
     }
 
-
-    function rawSearchOptions()
+    public function rawSearchOptions()
     {
         $tab = parent::rawSearchOptions();
 
@@ -92,7 +89,7 @@ class Testtemplate extends CommonDropdown
             'field' => 'content',
             'table' => $this->getTable(),
             'datatype' => 'text',
-            'htmltext' => true
+            'htmltext' => true,
         ];
 
         $tab[] = [
@@ -100,30 +97,28 @@ class Testtemplate extends CommonDropdown
             'name' => __('Deploy Task type'),
             'field' => 'name',
             'table' => getTableForItemType(TypeDeployTask::class),
-            'datatype' => 'dropdown'
+            'datatype' => 'dropdown',
         ];
 
         return $tab;
     }
 
-
     /**
      * @see CommonDropdown::displaySpecificTypeField()
      **/
-    function displaySpecificTypeField($ID, $field = [], array $options = [])
+    public function displaySpecificTypeField($ID, $field = [], array $options = [])
     {
         switch ($field['type']) {
-            case 'dropdownTests' :
+            case 'dropdownTests':
                 TypeTest::dropdown(["name" => "plugin_releases_typetests_id"]);
                 break;
-            case 'dropdownRisks' :
+            case 'dropdownRisks':
                 Risktemplate::dropdown(["name" => "plugin_releases_risks_id"]);
                 break;
         }
     }
 
-
-    static function canCreate(): bool
+    public static function canCreate(): bool
     {
         return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
     }
@@ -137,7 +132,7 @@ class Testtemplate extends CommonDropdown
      *
      * @return booleen
      **/
-    static function canView(): bool
+    public static function canView(): bool
     {
         return Session::haveRight(static::$rightname, READ);
     }
@@ -148,7 +143,7 @@ class Testtemplate extends CommonDropdown
      *
      * @return bool|void
      */
-    function showForm($ID, $options = [])
+    public function showForm($ID, $options = [])
     {
         $this->initForm($ID, $options);
 
@@ -166,13 +161,13 @@ class Testtemplate extends CommonDropdown
      *
      * @return int
      */
-    static function countForItem(CommonDBTM $item)
+    public static function countForItem(CommonDBTM $item)
     {
         $dbu = new DbUtils();
         $table = CommonDBTM::getTable(self::class);
         return $dbu->countElementsInTable(
             $table,
-            ["plugin_releases_releasetemplates_id" => $item->getID()]
+            ["plugin_releases_releasetemplates_id" => $item->getID()],
         );
     }
 
@@ -180,12 +175,13 @@ class Testtemplate extends CommonDropdown
      *
      * @return css class
      */
-    static function getCssClass()
+    public static function getCssClass()
     {
         return "test";
     }
 
-    function prepareInputForAdd($input) {
+    public function prepareInputForAdd($input)
+    {
 
         if (empty($input["plugin_releases_releasetemplates_id"])) {
             $input["plugin_releases_releasetemplates_id"] = 0;
@@ -193,7 +189,7 @@ class Testtemplate extends CommonDropdown
         return $input;
     }
 
-    function post_addItem()
+    public function post_addItem()
     {
         $_SESSION['releases']["template"][Session::getLoginUserID()] = 'test';
     }
@@ -204,7 +200,7 @@ class Testtemplate extends CommonDropdown
      *
      * @return ID|int|the
      */
-    static function transfer($ID, $entity)
+    public static function transfer($ID, $entity)
     {
         global $DB;
 

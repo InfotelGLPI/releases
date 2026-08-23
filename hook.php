@@ -1,30 +1,30 @@
 <?php
 
-/*
- -------------------------------------------------------------------------
- releases plugin for GLPI
- Copyright (C) 2020-2026 by the releases Development Team.
-
- https://github.com/InfotelGLPI/releases
- -------------------------------------------------------------------------
-
- LICENSE
-
- This file is part of releases.
-
- releases is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
-
- releases is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with releases. If not, see <http://www.gnu.org/licenses/>.
- --------------------------------------------------------------------------
+/**
+ * -------------------------------------------------------------------------
+ * releases plugin for GLPI
+ * Copyright (C) 2020-2026 by the releases Development Team.
+ *
+ * https://github.com/InfotelGLPI/releases
+ * -------------------------------------------------------------------------
+ *
+ * LICENSE
+ *
+ * This file is part of releases.
+ *
+ * releases is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * releases is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with releases. If not, see <http://www.gnu.org/licenses/>.
+ * --------------------------------------------------------------------------
  */
 
 use GlpiPlugin\Releases\Change_Release;
@@ -51,6 +51,7 @@ use GlpiPlugin\Releases\Testtemplate;
 use GlpiPlugin\Releases\TypeDeployTask;
 use GlpiPlugin\Releases\TypeRisk;
 use GlpiPlugin\Releases\TypeTest;
+
 use function Safe\mkdir;
 
 /**
@@ -75,7 +76,7 @@ function plugin_releases_install()
     foreach ($classes as $old => $new) {
         $displayusers = $DB->request([
             'SELECT' => [
-                'users_id'
+                'users_id',
             ],
             'DISTINCT' => true,
             'FROM' => 'glpi_displaypreferences',
@@ -89,13 +90,13 @@ function plugin_releases_install()
                 $iterator = $DB->request([
                     'SELECT' => [
                         'num',
-                        'id'
+                        'id',
                     ],
                     'FROM' => 'glpi_displaypreferences',
                     'WHERE' => [
                         'itemtype' => $old,
                         'users_id' => $displayuser['users_id'],
-                        'interface' => 'central'
+                        'interface' => 'central',
                     ],
                 ]);
 
@@ -103,14 +104,14 @@ function plugin_releases_install()
                     foreach ($iterator as $data) {
                         $iterator2 = $DB->request([
                             'SELECT' => [
-                                'id'
+                                'id',
                             ],
                             'FROM' => 'glpi_displaypreferences',
                             'WHERE' => [
                                 'itemtype' => $new,
                                 'users_id' => $displayuser['users_id'],
                                 'num' => $data['num'],
-                                'interface' => 'central'
+                                'interface' => 'central',
                             ],
                         ]);
                         if (count($iterator2) > 0) {
@@ -119,7 +120,7 @@ function plugin_releases_install()
                                     'glpi_displaypreferences',
                                     [
                                         'id' => $dataid['id'],
-                                    ]
+                                    ],
                                 );
                                 $DB->doQuery($query);
                             }
@@ -131,7 +132,7 @@ function plugin_releases_install()
                                 ],
                                 [
                                     'id' => $data['id'],
-                                ]
+                                ],
                             );
                             $DB->doQuery($query);
                         }
@@ -156,7 +157,6 @@ function plugin_releases_install()
     return true;
 }
 
-
 /**
  * @return bool
  */
@@ -164,31 +164,30 @@ function plugin_releases_uninstall()
 {
     global $DB;
 
-
     $tables = [
-      Release::getTable(),
-      Review::getTable(),
-      Change_Release::getTable(),
-      TypeDeployTask::getTable(),
-      TypeRisk::getTable(),
-      TypeTest::getTable(),
-      Deploytask::getTable(),
-      Test::getTable(),
-      Risk::getTable(),
-      Rollback::getTable(),
-      Deploytasktemplate::getTable(),
-      Group_Release::getTable(),
-      Group_ReleaseTemplate::getTable(),
-      Release_Item::getTable(),
-      ReleaseTemplate_Supplier::getTable(),
-      Release_Supplier::getTable(),
-      Release_User::getTable(),
-      ReleaseTemplate_Item::getTable(),
-      Risktemplate::getTable(),
-      Rollbacktemplate::getTable(),
-      ReleaseTemplate_User::getTable(),
-      Testtemplate::getTable(),
-      ReleaseTemplate::getTable()
+        Release::getTable(),
+        Review::getTable(),
+        Change_Release::getTable(),
+        TypeDeployTask::getTable(),
+        TypeRisk::getTable(),
+        TypeTest::getTable(),
+        Deploytask::getTable(),
+        Test::getTable(),
+        Risk::getTable(),
+        Rollback::getTable(),
+        Deploytasktemplate::getTable(),
+        Group_Release::getTable(),
+        Group_ReleaseTemplate::getTable(),
+        Release_Item::getTable(),
+        ReleaseTemplate_Supplier::getTable(),
+        Release_Supplier::getTable(),
+        Release_User::getTable(),
+        ReleaseTemplate_Item::getTable(),
+        Risktemplate::getTable(),
+        Rollbacktemplate::getTable(),
+        ReleaseTemplate_User::getTable(),
+        Testtemplate::getTable(),
+        ReleaseTemplate::getTable(),
     ];
 
     foreach ($tables as $table) {
@@ -209,10 +208,10 @@ function plugin_releases_uninstall()
         'NotificationTemplate',
         'Notification'];
     foreach ($itemtypes as $itemtype) {
-        $item = new $itemtype;
+        $item = new $itemtype();
         $item->deleteByCriteria(['itemtype' => Release::class]);
 
-        $item = new $itemtype;
+        $item = new $itemtype();
         $item->deleteByCriteria(['itemtype' => ReleaseTemplate::class]);
     }
 
@@ -227,12 +226,12 @@ function plugin_releases_uninstall()
     $notif = new Notification();
     foreach ($DB->request([
         'FROM'  => 'glpi_notifications',
-        'WHERE' => $options
+        'WHERE' => $options,
     ]) as $data) {
         $notif->delete($data);
     }
 
-   //templates
+    //templates
     $template       = new NotificationTemplate();
     $translation    = new NotificationTemplateTranslation();
     $notif_template = new Notification_NotificationTemplate();
@@ -241,12 +240,12 @@ function plugin_releases_uninstall()
 
     foreach ($DB->request([
         'FROM'  => 'glpi_notificationtemplates',
-        'WHERE' => $options
+        'WHERE' => $options,
     ]) as $data) {
         $options_template = ['notificationtemplates_id' => $data['id']];
         foreach ($DB->request([
             'FROM'  => 'glpi_notificationtemplatetranslations',
-            'WHERE' => $options_template
+            'WHERE' => $options_template,
         ]) as $data_template) {
             $translation->delete($data_template);
         }
@@ -254,12 +253,11 @@ function plugin_releases_uninstall()
 
         foreach ($DB->request([
             'FROM'  => 'glpi_notifications_notificationtemplates',
-            'WHERE' => $options_template
+            'WHERE' => $options_template,
         ]) as $data_template) {
             $notif_template->delete($data_template);
         }
     }
-
 
     return true;
 }
@@ -371,13 +369,13 @@ function plugin_releases_getDropdown()
 
     if (Plugin::isPluginActive("releases")) {
         return [Deploytasktemplate::getType() => Deploytasktemplate::getTypeName(2),
-              Testtemplate::getType()       => Testtemplate::getTypeName(2),
-              Risktemplate::getType()       => Risktemplate::getTypeName(2),
-              Rollbacktemplate::getType()   => Rollbacktemplate::getTypeName(2),
-              ReleaseTemplate::getType()    => ReleaseTemplate::getTypeName(2),
-              TypeDeployTask::getType()     => TypeDeployTask::getTypeName(2),
-              TypeTest::getType()           => TypeTest::getTypeName(2),
-              TypeRisk::getType()           => TypeRisk::getTypeName(2)
+            Testtemplate::getType()       => Testtemplate::getTypeName(2),
+            Risktemplate::getType()       => Risktemplate::getTypeName(2),
+            Rollbacktemplate::getType()   => Rollbacktemplate::getTypeName(2),
+            ReleaseTemplate::getType()    => ReleaseTemplate::getTypeName(2),
+            TypeDeployTask::getType()     => TypeDeployTask::getTypeName(2),
+            TypeTest::getType()           => TypeTest::getTypeName(2),
+            TypeRisk::getType()           => TypeRisk::getTypeName(2),
 
         ];
     } else {
@@ -400,7 +398,6 @@ function plugin_releases_AssignToTicket($types)
     return $types;
 }
 
-
 /**
  * install_notifications
  *
@@ -413,13 +410,13 @@ function install_notifications()
 
     $migration = new Migration(1.0);
 
-   // Notification
-   // Request
+    // Notification
+    // Request
     $options_notif        = ['itemtype' => Release::class,
         'name' => 'New release'];
     $DB->insert(
         "glpi_notificationtemplates",
-        $options_notif
+        $options_notif,
     );
 
     foreach ($DB->request([
@@ -457,7 +454,6 @@ function install_notifications()
 
                                     ##lang.pluginreleasesrelease.numberofrollbacks## : ##pluginreleasesrelease.numberofrollbacks##
 
-
                                     ##lang.pluginreleasesrelease.tasks##
                                     ##FOREACHtasks##
 
@@ -480,7 +476,7 @@ function install_notifications()
                                     ##lang.test.type## ##test.type##
                                     ##lang.test.status## : ##test.status##
                                     ##ENDFOREACHtests##',
-                                                        'content_html' => '##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
+                    'content_html' => '##lang.pluginreleasesrelease.title## : ##pluginreleasesrelease.title##
                                     ##lang.pluginreleasesrelease.url## : ##pluginreleasesrelease.url##
                                     ##lang.pluginreleasesrelease.status## : ##pluginreleasesrelease.status##
 
@@ -504,7 +500,6 @@ function install_notifications()
 
                                     ##lang.pluginreleasesrelease.numberofrollbacks## : ##pluginreleasesrelease.numberofrollbacks##
 
-
                                     ##lang.pluginreleasesrelease.tasks##
                                     ##FOREACHtasks##
 
@@ -527,7 +522,7 @@ function install_notifications()
                                     ##lang.test.type## ##test.type##
                                     ##lang.test.status## : ##test.status##
                                     ##ENDFOREACHtests##',
-                ]
+                ],
             );
 
             $DB->insert(
@@ -538,7 +533,7 @@ function install_notifications()
                     'itemtype' => Release::class,
                     'event' => 'newRelease',
                     'is_recursive' => 1,
-                ]
+                ],
             );
 
             $options_notif        = ['itemtype' => Release::class,
@@ -556,7 +551,7 @@ function install_notifications()
                             'notifications_id' => $notification,
                             'mode' => 'mailing',
                             'notificationtemplates_id' => $templates_id,
-                        ]
+                        ],
                     );
                 }
             }
