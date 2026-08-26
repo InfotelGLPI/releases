@@ -43,7 +43,7 @@ if (!defined("PLUGIN_RELEASES_DIR")) {
     define("PLUGIN_RELEASES_DIR", Plugin::getPhpDir("releases"));
 }
 
-// Init the hooks of the plugins -Needed
+// Init the hooks of the plugins -Needed.
 function plugin_init_releases()
 {
     global $PLUGIN_HOOKS, $CFG_GLPI;
