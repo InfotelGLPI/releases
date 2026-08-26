@@ -2395,7 +2395,7 @@ class Release extends CommonITILObject
                             echo "'/>&nbsp;";
 
                             echo "<a href='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i_['id']
-                                . "&$foreignKey=" . $this->getID() . "' target='_blank'>$filename";
+                                . "&$foreignKey=" . $this->getID() . "' target='_blank'>" . htmlspecialchars($filename);
                             if (Document::isImage(GLPI_DOC_DIR . '/' . $item_i_['filepath'])) {
                                 echo "<div class='timeline_img_preview2'>";
                                 echo "<img src='" . $CFG_GLPI['root_doc'] . "/front/document.send.php?docid=" . $item_i_['id']
@@ -2405,7 +2405,9 @@ class Release extends CommonITILObject
                             echo "</a>";
                         }
                         if ($item_i_['link']) {
-                            echo "<a href='{$item_i_['link']}' target='_blank'><i class='fa fa-external-link'></i>{$item_i['name']}</a>";
+                            // DB-sourced free-text fields (stored raw since GLPI 10+): escape the
+                            // link URL (sits inside an href) and the parent name to prevent stored XSS.
+                            echo "<a href='" . htmlspecialchars($item_i_['link']) . "' target='_blank'><i class='fa fa-external-link'></i>" . htmlspecialchars($item_i['name']) . "</a>";
                         }
                         if (!empty($item_i_['mime'])) {
                             echo "&nbsp;(" . $item_i_['mime'] . ")";
