@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\RichText\RichText;
 use GlpiPlugin\Releases\Release;
@@ -68,6 +69,13 @@ if (empty($parents_itemtype) || !is_subclass_of($parents_itemtype, CommonITILObj
 $template = new Rollbacktemplate();
 if (!$template->getFromDB($rollbacktemplates_id)) {
     throw new BadRequestHttpException("Unable to load template: $rollbacktemplates_id");
+}
+
+// Templates are entity-scoped (they carry entities_id, not recursive): the global right check
+// above does not confine the entity, so enforce entity access before disclosing the template
+// content, otherwise a user could read another entity's template by posting its id.
+if (!Session::haveAccessToEntity($template->fields['entities_id'])) {
+    throw new AccessDeniedHttpException();
 }
 
 // Load parent item

@@ -71,7 +71,11 @@ if ($_POST['action'] == 'done_fail') {
     if ($_POST["newStatus"] == $task->fields['state']) {
         $new_state = Test::TODO;
     } else {
-        $new_state = $_POST["newStatus"];
+        // Only accept a known task state (TODO/DONE/FAIL are shared by all task classes),
+        // never a raw out-of-range value from the POST, so the state column stays in domain.
+        $new_state = in_array((int) $_POST["newStatus"], [Test::TODO, Test::DONE, Test::FAIL], true)
+            ? (int) $_POST["newStatus"]
+            : Test::TODO;
     }
 
     $new_label = Planning::getState($new_state);
