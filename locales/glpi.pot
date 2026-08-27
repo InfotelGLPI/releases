@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 10:19+0000\n"
+"POT-Creation-Date: 2026-08-27 14:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgctxt "button"
 msgid "Add a followup"
 msgstr ""
 
-#: src/Change_Release.php:315
+#: src/Change_Release.php:318
 msgid "Add a release"
 msgstr ""
 
@@ -406,7 +406,7 @@ msgstr ""
 msgid "Plan this task"
 msgstr ""
 
-#: src/Change_Release.php:357 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:360 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr ""
 
@@ -430,7 +430,7 @@ msgstr ""
 msgid "Production deployment details"
 msgstr ""
 
-#: src/Change_Release.php:358 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:361 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr ""
 
@@ -444,7 +444,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr ""
 
-#: src/Change_Release.php:359 src/NotificationTargetRelease.php:759
+#: src/Change_Release.php:362 src/NotificationTargetRelease.php:759
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr ""
@@ -461,7 +461,7 @@ msgstr[1] ""
 msgid "Release actions details"
 msgstr ""
 
-#: src/Change_Release.php:356 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:359 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr ""
 
@@ -562,7 +562,7 @@ msgctxt "button"
 msgid "Save"
 msgstr ""
 
-#: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:360
+#: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:363
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:240 templates/fields_panel.html.twig:252
