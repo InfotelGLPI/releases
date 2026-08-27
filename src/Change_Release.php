@@ -121,6 +121,9 @@ class Change_Release extends CommonDBRelation
 
         $canedit = $release->canEdit($ID);
         $rand    = mt_rand();
+        // Strip namespace backslashes: the container id becomes a DOM id and a JS
+        // selector, both of which break with backslashes (cf. showReleaseFromChange).
+        $mass_id = 'mass' . str_replace('\\', '', self::class) . $rand;
 
         $iterator = $DB->request([
             'SELECT'    => [
@@ -185,9 +188,9 @@ class Change_Release extends CommonDBRelation
         ob_start();
         echo "<div class='spaced'>";
         if ($canedit && $numrows) {
-            Html::openMassiveActionsForm('mass' . self::class . $rand);
+            Html::openMassiveActionsForm($mass_id);
             $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-                'container'     => 'mass' . self::class . $rand];
+                'container'     => $mass_id];
             Html::showMassiveActions($massiveactionparams);
         }
 
@@ -195,7 +198,7 @@ class Change_Release extends CommonDBRelation
         echo "<tr class='noHover'><th colspan='12'>" . Change::getTypeName($numrows) . "</th>";
         echo "</tr>";
         if ($numrows) {
-            Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . self::class . $rand);
+            Change::commonListHeader(Search::HTML_OUTPUT, $mass_id);
             Session::initNavigateListItems(
                 'Change',
                 //TRANS : %1$s is the itemtype name,
@@ -217,7 +220,7 @@ class Change_Release extends CommonDBRelation
                     'id_for_massiveaction'   => $data['linkid']]);
                 $i++;
             }
-            Change::commonListHeader(Search::HTML_OUTPUT, 'mass' . self::class . $rand);
+            Change::commonListHeader(Search::HTML_OUTPUT, $mass_id);
         }
         echo "</table>";
 
