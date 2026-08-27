@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Releases\Release;
 
 if (strpos($_SERVER['PHP_SELF'], "changeitemstate.php")) {
@@ -50,7 +51,7 @@ if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && is
         'locations_id', 'date_end',
     ];
     if (!in_array($_POST["field"], $allowed_fields, true)) {
-        throw new \Glpi\Exception\Http\AccessDeniedHttpException();
+        throw new AccessDeniedHttpException();
     }
 
     // Forbid any state change once the release reached a terminal status
