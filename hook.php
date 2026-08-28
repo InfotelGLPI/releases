@@ -190,12 +190,11 @@ function plugin_releases_uninstall()
         ReleaseTemplate::getTable(),
     ];
 
-    foreach ($tables as $table) {
-        if ($DB->tableExists($table)) {
-            $DB->dropTable($table, true);
-        }
-    }
-
+    // The plugin tables are dropped LAST (see the end of this function). The
+    // core-itemtype cleanup below deletes CommonDBRelation rows that reference
+    // Release/ReleaseTemplate, and their post_deleteFromDB() reloads the connected
+    // plugin item; dropping the tables up front makes that reload fatal with a
+    // 1146 "table doesn't exist" error.
     $itemtypes = ['Alert',
         'DisplayPreference',
         'Document_Item',
@@ -256,6 +255,15 @@ function plugin_releases_uninstall()
             'WHERE' => $options_template,
         ]) as $data_template) {
             $notif_template->delete($data_template);
+        }
+    }
+
+    // Drop the plugin tables only now that every relation and notification
+    // referencing Release/ReleaseTemplate has been cleaned up above, so the
+    // CommonDBRelation post-delete hooks could still reload their connected items.
+    foreach ($tables as $table) {
+        if ($DB->tableExists($table)) {
+            $DB->dropTable($table, true);
         }
     }
 
