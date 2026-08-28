@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Releases;
 
+use CommonDBRelation;
 use CommonITILActor;
 use Glpi\Application\View\TemplateRenderer;
 use Supplier;
@@ -51,6 +52,23 @@ class ReleaseTemplate_Supplier extends CommonITILActor
     public static $items_id_1 = 'plugin_releases_releasetemplates_id';
     public static $itemtype_2 = 'Supplier';
     public static $items_id_2 = 'suppliers_id';
+
+    public function post_addItem()
+    {
+
+        // Suppliers can only be assigned, not request or observe
+        if ($this->input['type'] == CommonITILActor::ASSIGN) { // Value from CommonITILObject::getSearchOptionsActors()
+            $this->_force_log_option = 6;
+        }
+        // A ReleaseTemplate is a CommonDropdown, not a CommonITILObject, so
+        // CommonITILActor::post_addItem() cannot run here: it would update the
+        // "take into account" delay, the status and raise an actor notification on an
+        // ITIL object, and it now throws outright when the connected item is not one.
+        // Only the relation history logging is relevant for a template, which is also
+        // what CommonITILActor::post_deleteFromDB() falls back to in the same case.
+        CommonDBRelation::post_addItem();
+        $this->_force_log_option = 0;
+    }
 
     /**
      * Print the object supplier form for notification

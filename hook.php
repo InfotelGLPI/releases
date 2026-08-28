@@ -190,28 +190,38 @@ function plugin_releases_uninstall()
         ReleaseTemplate::getTable(),
     ];
 
-    // The plugin tables are dropped LAST (see the end of this function). The
-    // core-itemtype cleanup below deletes CommonDBRelation rows that reference
-    // Release/ReleaseTemplate, and their post_deleteFromDB() reloads the connected
-    // plugin item; dropping the tables up front makes that reload fatal with a
-    // 1146 "table doesn't exist" error.
+    $plugin_itemtypes = [Release::class, ReleaseTemplate::class];
+
+    // These relations/children point at the plugin item through their own "itemtype"
+    // column, so their delete hooks reload it from the plugin table. Delete the rows
+    // directly: the reload would be fatal (error 1146) on an installation whose plugin
+    // tables were already dropped by an earlier failed uninstall, and those rows are
+    // plain links carrying no cascade of their own.
+    $linked_itemtypes = ['Document_Item',
+        'Item_Ticket',
+        'Notepad',
+        'DropdownTranslation'];
+    foreach ($linked_itemtypes as $itemtype) {
+        $table = $itemtype::getTable();
+        if ($DB->tableExists($table)) {
+            $DB->delete($table, ['itemtype' => $plugin_itemtypes]);
+        }
+    }
+
+    // The plugin tables are dropped LAST (see the end of this function): the cleanup
+    // below still needs them, so they must outlive it.
     $itemtypes = ['Alert',
         'DisplayPreference',
-        'Document_Item',
         'ImpactItem',
-        'Item_Ticket',
         'Link_Itemtype',
-        'Notepad',
         'SavedSearch',
-        'DropdownTranslation',
         'NotificationTemplate',
         'Notification'];
     foreach ($itemtypes as $itemtype) {
-        $item = new $itemtype();
-        $item->deleteByCriteria(['itemtype' => Release::class]);
-
-        $item = new $itemtype();
-        $item->deleteByCriteria(['itemtype' => ReleaseTemplate::class]);
+        foreach ($plugin_itemtypes as $plugin_itemtype) {
+            $item = new $itemtype();
+            $item->deleteByCriteria(['itemtype' => $plugin_itemtype]);
+        }
     }
 
     // Delete rights associated with the plugin

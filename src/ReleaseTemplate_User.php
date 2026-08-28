@@ -29,6 +29,7 @@
 
 namespace GlpiPlugin\Releases;
 
+use CommonDBRelation;
 use CommonITILActor;
 use Glpi\Application\View\TemplateRenderer;
 use NotificationMailing;
@@ -61,8 +62,14 @@ class ReleaseTemplate_User extends CommonITILActor
                 $this->_force_log_option = 5;
                 break;
         }
-        parent::post_addItem();
-        unset($this->_force_log_option);
+        // A ReleaseTemplate is a CommonDropdown, not a CommonITILObject, so
+        // CommonITILActor::post_addItem() cannot run here: it would update the
+        // "take into account" delay, the status and raise an actor notification on an
+        // ITIL object, and it now throws outright when the connected item is not one.
+        // Only the relation history logging is relevant for a template, which is also
+        // what CommonITILActor::post_deleteFromDB() falls back to in the same case.
+        CommonDBRelation::post_addItem();
+        $this->_force_log_option = 0;
     }
 
     /**
