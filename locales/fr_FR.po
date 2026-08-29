@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 18:17+0000\n"
+"POT-Creation-Date: 2026-08-29 10:48+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12376/fr_FR/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3044
+#: src/Release.php:3046
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -99,7 +99,7 @@ msgctxt "button"
 msgid "Add a followup"
 msgstr "Ajouter un suivi"
 
-#: src/Change_Release.php:315
+#: src/Change_Release.php:318
 msgid "Add a release"
 msgstr "Créer une mise en production"
 
@@ -130,7 +130,7 @@ msgstr[2] "Changements associés"
 msgid "Associated risk"
 msgstr "Risque associé"
 
-#: src/Release.php:2469 src/ReleaseTemplate.php:1183
+#: src/Release.php:2471 src/ReleaseTemplate.php:1183
 msgid "Associated with"
 msgstr "Associé avec"
 
@@ -240,7 +240,7 @@ msgstr[2] "Gabarits de tâche de déploiement"
 msgid "Deploy Task type"
 msgstr "Type de tâche de déploiement"
 
-#: src/Release.php:2021 src/ReleaseTemplate.php:203
+#: src/Release.php:2021 src/Release.php:2023 src/ReleaseTemplate.php:203
 #: src/ReleaseTemplate.php:986 src/ReleaseTemplate.php:987
 #: src/Deploytask.php:71 src/NotificationTargetRelease.php:933
 #: src/NotificationTargetRelease.php:953 templates/timeline.html.twig:120
@@ -337,7 +337,7 @@ msgstr "Finaliser"
 msgid "Followup"
 msgstr "Suivi"
 
-#: src/Release.php:2676 templates/fields_panel.html.twig:104
+#: src/Release.php:2678 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Pour ce changement"
 
@@ -382,11 +382,11 @@ msgstr "Nom"
 msgid "New release"
 msgstr "Nouvelle mise en production"
 
-#: src/Release.php:2515 src/ReleaseTemplate.php:1231
+#: src/Release.php:2517 src/ReleaseTemplate.php:1231
 msgid "No data available"
 msgstr "Pas d'informations trouvées"
 
-#: src/Release.php:3048 src/Release.php:3095
+#: src/Release.php:3050 src/Release.php:3097
 msgid "No release found."
 msgstr "Pas de mise en production trouvé."
 
@@ -427,7 +427,7 @@ msgstr "Date d'ouverture"
 msgid "Plan this task"
 msgstr "Planifier cette tâche"
 
-#: src/Change_Release.php:357 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:360 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Date planifiée de mise en pré production"
 
@@ -452,7 +452,7 @@ msgstr "Traitement de la mise en production"
 msgid "Production deployment details"
 msgstr "Détails du de la mise en production"
 
-#: src/Change_Release.php:358 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:361 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Date planifiée de mise en production"
 
@@ -466,7 +466,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Mettre à la corbeille"
 
-#: src/Change_Release.php:359 src/NotificationTargetRelease.php:759
+#: src/Change_Release.php:362 src/NotificationTargetRelease.php:759
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Date de mise en production réelle"
@@ -480,11 +480,11 @@ msgstr[0] "Mise en production"
 msgstr[1] "Mises en production"
 msgstr[2] "Mises en production"
 
-#: src/Release.php:2898 src/ReleaseTemplate.php:1269
+#: src/Release.php:2900 src/ReleaseTemplate.php:1269
 msgid "Release actions details"
 msgstr "Détails des actions de la mise en production"
 
-#: src/Change_Release.php:356 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:359 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Périmètre de la mise en production"
 
@@ -503,7 +503,7 @@ msgstr[0] "Gabarit de mise en production"
 msgstr[1] "Gabarits de mise en production"
 msgstr[2] "Gabarits de mise en production"
 
-#: src/Release.php:3083
+#: src/Release.php:3085
 msgid "Releases on linked items"
 msgstr "Mise en production sur les objets liés"
 
@@ -593,7 +593,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Sauver"
 
-#: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:360
+#: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:363
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:240 templates/fields_panel.html.twig:252
@@ -702,6 +702,10 @@ msgstr "A finaliser"
 #: templates/footer.html.twig:107
 msgid "Toggle panels width"
 msgstr "Basculer la largeur du panel"
+
+#: src/Risktemplate.php:66
+msgid "Type risk"
+msgstr "Type de risque"
 
 #: src/NotificationTargetRelease.php:70
 msgid "Update of a release"
