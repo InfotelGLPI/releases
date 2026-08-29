@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 15:54+0000\n"
+"POT-Creation-Date: 2026-08-29 10:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -231,10 +231,11 @@ msgstr[1] ""
 msgid "Deploy Task type"
 msgstr ""
 
-#: src/Release.php:2021 src/ReleaseTemplate.php:203 src/ReleaseTemplate.php:986
-#: src/ReleaseTemplate.php:987 src/Deploytask.php:71
-#: src/NotificationTargetRelease.php:933 src/NotificationTargetRelease.php:953
-#: templates/timeline.html.twig:120 templates/form_finalization.html.twig:64
+#: src/Release.php:2021 src/Release.php:2023 src/ReleaseTemplate.php:203
+#: src/ReleaseTemplate.php:986 src/ReleaseTemplate.php:987
+#: src/Deploytask.php:71 src/NotificationTargetRelease.php:933
+#: src/NotificationTargetRelease.php:953 templates/timeline.html.twig:120
+#: templates/form_finalization.html.twig:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] ""
@@ -663,6 +664,10 @@ msgstr ""
 
 #: templates/footer.html.twig:107
 msgid "Toggle panels width"
+msgstr ""
+
+#: src/Risktemplate.php:66
+msgid "Type risk"
 msgstr ""
 
 #: src/NotificationTargetRelease.php:70
