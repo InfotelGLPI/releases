@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-23 18:17+0000\n"
+"POT-Creation-Date: 2026-08-29 10:48+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12376/tr_TR/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3044
+#: src/Release.php:3046
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -96,7 +96,7 @@ msgctxt "button"
 msgid "Add a followup"
 msgstr "Bir izleme ekle"
 
-#: src/Change_Release.php:315
+#: src/Change_Release.php:318
 msgid "Add a release"
 msgstr "Bir sürüm ekle"
 
@@ -126,7 +126,7 @@ msgstr[1] "İlişkili değişiklikler"
 msgid "Associated risk"
 msgstr "İlişkili risk"
 
-#: src/Release.php:2469 src/ReleaseTemplate.php:1183
+#: src/Release.php:2471 src/ReleaseTemplate.php:1183
 msgid "Associated with"
 msgstr "Şununla ilişkili"
 
@@ -234,7 +234,7 @@ msgstr[1] "Dağıtma görevi kalıpları"
 msgid "Deploy Task type"
 msgstr "Dağıtma görevi türü"
 
-#: src/Release.php:2021 src/ReleaseTemplate.php:203
+#: src/Release.php:2021 src/Release.php:2023 src/ReleaseTemplate.php:203
 #: src/ReleaseTemplate.php:986 src/ReleaseTemplate.php:987
 #: src/Deploytask.php:71 src/NotificationTargetRelease.php:933
 #: src/NotificationTargetRelease.php:953 templates/timeline.html.twig:120
@@ -327,7 +327,7 @@ msgstr "Sonuçlandır"
 msgid "Followup"
 msgstr "İzle"
 
-#: src/Release.php:2676 templates/fields_panel.html.twig:104
+#: src/Release.php:2678 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Bu değişikliği"
 
@@ -371,11 +371,11 @@ msgstr "Ad"
 msgid "New release"
 msgstr "Yeni sürüm"
 
-#: src/Release.php:2515 src/ReleaseTemplate.php:1231
+#: src/Release.php:2517 src/ReleaseTemplate.php:1231
 msgid "No data available"
 msgstr "Kullanılabilecek bir veri yok"
 
-#: src/Release.php:3048 src/Release.php:3095
+#: src/Release.php:3050 src/Release.php:3097
 msgid "No release found."
 msgstr "Herhangi bir sürüm bulunamadı."
 
@@ -416,7 +416,7 @@ msgstr "Açılış tarihi"
 msgid "Plan this task"
 msgstr "Bu görevi planla"
 
-#: src/Change_Release.php:357 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:360 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Planlanan üretim öncesi tarihi"
 
@@ -441,7 +441,7 @@ msgstr "Sürüm işleniyor"
 msgid "Production deployment details"
 msgstr "Üretim dağıtımı bilgileri"
 
-#: src/Change_Release.php:358 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:361 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Planlanan üretim zamanı"
 
@@ -455,7 +455,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Çöpe at"
 
-#: src/Change_Release.php:359 src/NotificationTargetRelease.php:759
+#: src/Change_Release.php:362 src/NotificationTargetRelease.php:759
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Gerçek üretim çalışma tarihi"
@@ -468,11 +468,11 @@ msgid_plural "Releases"
 msgstr[0] "Sürüm"
 msgstr[1] "Sürümler"
 
-#: src/Release.php:2898 src/ReleaseTemplate.php:1269
+#: src/Release.php:2900 src/ReleaseTemplate.php:1269
 msgid "Release actions details"
 msgstr "Sürüm işlemleri bilgileri"
 
-#: src/Change_Release.php:356 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:359 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Sürüm bölgesi"
 
@@ -490,7 +490,7 @@ msgid_plural "Release templates"
 msgstr[0] "Sürüm kalıbı"
 msgstr[1] "Sürüm kalıpları"
 
-#: src/Release.php:3083
+#: src/Release.php:3085
 msgid "Releases on linked items"
 msgstr "İlgili ögelerdeki sürümler"
 
@@ -573,7 +573,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:360
+#: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:363
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:240 templates/fields_panel.html.twig:252
@@ -676,6 +676,10 @@ msgstr "Sonuçlandırılacak"
 #: templates/footer.html.twig:107
 msgid "Toggle panels width"
 msgstr "Pano genişliğini değiştir"
+
+#: src/Risktemplate.php:66
+msgid "Type risk"
+msgstr "Riski yazın"
 
 #: src/NotificationTargetRelease.php:70
 msgid "Update of a release"
