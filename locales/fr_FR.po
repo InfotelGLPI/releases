@@ -2,27 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Alban Lesellier <alban.lesellier@infotel.com>, 2020
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2026
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 14:54+0000\n"
+"POT-Creation-Date: 2026-09-01 11:55+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
-"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
-"teams/12376/fr_FR/)\n"
-"Language: fr_FR\n"
+"Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12376/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. TRANS : %d is the number of problems
 #: src/Release.php:3046
@@ -169,7 +167,8 @@ msgstr "Clôture d'une mise en production"
 
 #: src/Release.php:376 templates/form_releasetemplate.html.twig:149
 #: templates/form_releasetemplate.html.twig:157
-#: templates/fields_panel.html.twig:319 templates/fields_panel.html.twig:331
+#: templates/fields_panel.html.twig:304 templates/fields_panel.html.twig:319
+#: templates/fields_panel.html.twig:331
 msgid "Communication"
 msgstr "Communication"
 
@@ -245,7 +244,8 @@ msgstr "Type de tâche de déploiement"
 #: src/Release.php:2021 src/Release.php:2023 src/ReleaseTemplate.php:203
 #: src/ReleaseTemplate.php:986 src/ReleaseTemplate.php:987
 #: src/Deploytask.php:71 src/NotificationTargetRelease.php:933
-#: src/NotificationTargetRelease.php:953 templates/timeline.html.twig:120
+#: src/NotificationTargetRelease.php:953
+#: templates/filter_timeline.html.twig:54 templates/timeline.html.twig:120
 #: templates/form_finalization.html.twig:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
@@ -265,10 +265,18 @@ msgid "Deployment tasks in progress"
 msgstr "Tâche de déploiement en cours"
 
 #: src/ReleaseTemplate.php:171 templates/form_testtemplate.html.twig:75
+#: templates/filter_timeline.html.twig:30
 #: templates/form_rollbacktemplate.html.twig:56
 #: templates/form_review.html.twig:77 templates/form_risktemplate.html.twig:63
 msgid "Description"
 msgstr "Description"
+
+#: templates/filter_timeline.html.twig:66
+msgid "Document"
+msgid_plural "Documents"
+msgstr[0] "Document"
+msgstr[1] "Documents"
+msgstr[2] "Documents"
 
 #: templates/form_test.html.twig:48 templates/form_test.html.twig:51
 #: templates/form_test.html.twig:54 templates/form_test.html.twig:216
@@ -335,9 +343,13 @@ msgstr "Finalisation"
 msgid "Finalize"
 msgstr "Finaliser"
 
-#: src/Release.php:2133 templates/timeline.html.twig:122
+#: src/Release.php:2133 templates/filter_timeline.html.twig:36
+#: templates/timeline.html.twig:122
 msgid "Followup"
-msgstr "Suivi"
+msgid_plural "Followups"
+msgstr[0] "Suivi"
+msgstr[1] "Suivis"
+msgstr[2] "Suivis"
 
 #: src/Release.php:2678 templates/fields_panel.html.twig:104
 msgid "For this change"
@@ -350,6 +362,10 @@ msgstr "Groupe"
 #: src/ReleaseTemplate.php:1891
 msgid "Group in charge of the release"
 msgstr "Groupe en charge de la mise en production"
+
+#: templates/filter_timeline.html.twig:76
+msgid "Historical"
+msgstr "Historique"
 
 #: src/NotificationTargetRelease.php:762 templates/form_review.html.twig:71
 msgid "Incidents during process"
@@ -538,7 +554,8 @@ msgstr "Revue"
 
 #: src/Testtemplate.php:69 src/NotificationTargetRelease.php:777
 #: src/NotificationTargetRelease.php:935 src/NotificationTargetRelease.php:955
-#: src/Risk.php:57 templates/timeline.html.twig:116
+#: src/Risk.php:57 templates/filter_timeline.html.twig:42
+#: templates/timeline.html.twig:116
 #: templates/form_deploytasktemplate.html.twig:75
 #: templates/form_finalization.html.twig:46
 msgid "Risk"
@@ -569,7 +586,8 @@ msgstr "Risques définis"
 #: src/ReleaseTemplate.php:199 src/Rollback.php:58
 #: src/NotificationTargetRelease.php:778 src/NotificationTargetRelease.php:779
 #: src/NotificationTargetRelease.php:936 src/NotificationTargetRelease.php:956
-#: templates/timeline.html.twig:118 templates/form_finalization.html.twig:55
+#: templates/filter_timeline.html.twig:48 templates/timeline.html.twig:118
+#: templates/form_finalization.html.twig:55
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] "Retour en arrière"
@@ -598,7 +616,8 @@ msgstr "Sauver"
 #: src/Release.php:359 src/ReleaseTemplate.php:183 src/Change_Release.php:363
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
-#: templates/fields_panel.html.twig:240 templates/fields_panel.html.twig:252
+#: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
+#: templates/fields_panel.html.twig:252
 msgid "Service shutdown"
 msgstr "Arrêt du service"
 
@@ -650,7 +669,8 @@ msgstr "Document d'Architecture Technique"
 
 #: src/ReleaseTemplate.php:195 src/Test.php:60
 #: src/NotificationTargetRelease.php:934 src/NotificationTargetRelease.php:954
-#: templates/timeline.html.twig:114 templates/form_finalization.html.twig:75
+#: templates/filter_timeline.html.twig:60 templates/timeline.html.twig:114
+#: templates/form_finalization.html.twig:75
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Test"
