@@ -445,30 +445,6 @@ parameters:
 			path: src/Release.php
 
 		-
-			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) has invalid return type GlpiPlugin\\Releases\\datas\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) should return GlpiPlugin\\Releases\\datas but returns array\<string, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) has invalid return type GlpiPlugin\\Releases\\datas\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) should return GlpiPlugin\\Releases\\datas but returns array\<string, mixed\>\|false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Release.php
-
-		-
 			message: '#^Method GlpiPlugin\\Releases\\Release\:\:showTimelineForm\(\) with return type void returns false but should not return anything\.$#'
 			identifier: return.void
 			count: 1
@@ -487,44 +463,8 @@ parameters:
 			path: src/Release.php
 
 		-
-			message: '#^Parameter \#1 \$input \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) should be compatible with parameter \$input \(array\<string, mixed\>\) of method CommonITILObject\:\:prepareInputForAdd\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Parameter \#1 \$input \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) should be compatible with parameter \$input \(array\<string, mixed\>\) of method CommonITILObject\:\:prepareInputForUpdate\(\)$#'
-			identifier: method.childParameterType
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Parameter \#1 \$input of method CommonITILObject\:\:prepareInputForAdd\(\) expects array\<string, mixed\>, GlpiPlugin\\Releases\\datas given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Parameter \#1 \$input of method CommonITILObject\:\:transformActorsInput\(\) expects array, GlpiPlugin\\Releases\\datas given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Release.php
-
-		-
 			message: '#^Parameter \#2 \$odd of static method Search\:\:showNewLine\(\) expects bool, int\<\-1, 1\> given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Parameter \$input of method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) has invalid type GlpiPlugin\\Releases\\datas\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Parameter \$input of method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) has invalid type GlpiPlugin\\Releases\\datas\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Release.php
 
@@ -537,18 +477,6 @@ parameters:
 		-
 			message: '#^Result of static method Html\:\:showSimpleForm\(\) \(void\) is used\.$#'
 			identifier: staticMethod.void
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Return type \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForAdd\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonITILObject\:\:prepareInputForAdd\(\)$#'
-			identifier: method.childReturnType
-			count: 1
-			path: src/Release.php
-
-		-
-			message: '#^Return type \(GlpiPlugin\\Releases\\datas\) of method GlpiPlugin\\Releases\\Release\:\:prepareInputForUpdate\(\) should be compatible with return type \(array\<string, mixed\>\|false\) of method CommonITILObject\:\:prepareInputForUpdate\(\)$#'
-			identifier: method.childReturnType
 			count: 1
 			path: src/Release.php
 

@@ -35,6 +35,7 @@ use DbUtils;
 use Document;
 use Document_Item;
 use Glpi\Application\View\TemplateRenderer;
+use Toolbox;
 
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access directly to this file");
@@ -182,6 +183,12 @@ class Review extends CommonDBTM
                     'is_image'    => Document::isImage(GLPI_DOC_DIR . '/' . $fields['filepath']),
                     'preview_url' => $send_url . "&context=timeline",
                     'link'        => $fields['link'],
+                    // htmlspecialchars()/Twig auto-escaping neutralize the quotes but not the
+                    // URL scheme, so a "javascript:..." value would survive intact in the href.
+                    // Validate it with the very helper the core applies on write
+                    // (Document::prepareInputForAdd() -> Toolbox::isValidWebUrl(), http/https only);
+                    // the template renders the label as plain text when it does not pass.
+                    'link_is_valid' => Toolbox::isValidWebUrl((string) $fields['link']),
                     'link_name'   => $fields['name'],
                     'mime'        => $fields['mime'],
                     'show_url'    => Document::getFormURLWithID($fields['id']),

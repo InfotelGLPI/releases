@@ -109,9 +109,14 @@
                         </a>
                     {% endif %}
                     {% if doc.link %}
-                        <a href="{{ doc.link }}" target="_blank" rel="noopener">
-                            <i class="ti ti-external-link"></i>{{ doc.link_name }}
-                        </a>
+                        {% if doc.link_is_valid %}
+                            <a href="{{ doc.link }}" target="_blank" rel="noopener">
+                                <i class="ti ti-external-link"></i>{{ doc.link_name }}
+                            </a>
+                        {% else %}
+                            {# Scheme rejected by Toolbox::isValidWebUrl(): show the label without href. #}
+                            <span><i class="ti ti-external-link"></i>{{ doc.link_name }}</span>
+                        {% endif %}
                     {% endif %}
                     {% if doc.mime %}
                         &nbsp;({{ doc.mime }})

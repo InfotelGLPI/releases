@@ -2430,10 +2430,25 @@ class Release extends CommonITILObject
                         if ($item_i_['link']) {
                             // DB-sourced free-text fields (stored raw since GLPI 10+): escape the
                             // link URL (sits inside an href) and the parent name to prevent stored XSS.
-                            echo "<a href='" . htmlspecialchars($item_i_['link']) . "' target='_blank'><i class='fa fa-external-link'></i>" . htmlspecialchars($item_i['name']) . "</a>";
+                            // htmlspecialchars() neutralizes quotes and angle brackets but not the URL
+                            // scheme, so a "javascript:..." value would survive intact in the href.
+                            // Validate the scheme with the very helper the core applies on write
+                            // (Document::prepareInputForAdd() -> Toolbox::isValidWebUrl(), http/https
+                            // only): a link that does not pass is rendered as plain text instead of a
+                            // clickable anchor. Legacy rows and direct/API inserts bypass the write-side
+                            // check, hence this defense at the rendering sink.
+                            $link_label = "<i class='fa fa-external-link'></i>" . htmlspecialchars($item_i['name']);
+                            if (Toolbox::isValidWebUrl($item_i_['link'])) {
+                                echo "<a href='" . htmlspecialchars($item_i_['link'])
+                                    . "' target='_blank' rel='noopener noreferrer'>" . $link_label . "</a>";
+                            } else {
+                                echo $link_label;
+                            }
                         }
                         if (!empty($item_i_['mime'])) {
-                            echo "&nbsp;(" . $item_i_['mime'] . ")";
+                            // Like every neighbouring value of this block, the MIME type comes from
+                            // the database and must never be echoed raw.
+                            echo "&nbsp;(" . htmlspecialchars((string) $item_i_['mime']) . ")";
                         }
                         echo "<span class='buttons'>";
                         echo "<a href='" . Document::getFormURLWithID(
