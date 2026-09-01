@@ -440,6 +440,31 @@ class Release extends CommonITILObject
     }
 
     /**
+     * Itemtypes a communication can be targeted at, indexed by the value stored in the
+     * `communication_type` column.
+     *
+     * The column is filled by a dropdown restricted to these five itemtypes (see
+     * templates/fields_panel.html.twig) and may also hold the two pseudo values "0"
+     * (no communication) and "ALL" (everybody), which target no itemtype at all.
+     * Resolving the column through this map instead of using it directly as a class
+     * name keeps a value that reached the database by another route -- the inline
+     * edition endpoint ajax/changeitemstate.php writes it as-is -- from being turned
+     * into an arbitrary static call.
+     *
+     * @return array<string, class-string<CommonDBTM>>
+     */
+    public static function getCommunicationTypes()
+    {
+        return [
+            'User'     => User::class,
+            'Profile'  => \Profile::class,
+            'Group'    => Group::class,
+            'Entity'   => Entity::class,
+            'Location' => Location::class,
+        ];
+    }
+
+    /**
      * display a value according to a field
      *
      * @param $field     String         name of the field
@@ -484,95 +509,90 @@ class Release extends CommonITILObject
                 //            return Test::countDoneForItem($self) . " / ".Test::countForItem($self);
                 //            break;
             case 'communication_type':
-                if ($values["communication_type"] == "0" || $values["communication_type"] == "ALL") {
+                $target_class = self::getCommunicationTypes()[$values["communication_type"]] ?? null;
+                if ($target_class === null) {
+                    // "0" (none) and "ALL" (everybody) target no itemtype, and so does any
+                    // value that would have been stored outside of the dropdown domain.
                     return " ";
                 }
-                return $values["communication_type"]::getTypeName();
-                break;
+                return $target_class::getTypeName();
             case 'target':
                 $self = new self();
                 if (isset($options["raw_data"]["id"])) {
                     $self->getFromDB($options["raw_data"]["id"]);
                 } else {
-                    $self->getFromDB($_REQUEST["id"]);
+                    $self->getFromDB($_REQUEST["id"] ?? 0);
                 }
 
-                if ($self->fields["communication_type"] == "0" || $values["target"] == "[]") {
+                $target_class = self::getCommunicationTypes()[$self->fields["communication_type"] ?? ''] ?? null;
+                if ($target_class === null || $values["target"] == "[]") {
                     return " ";
                 }
-                if ($self->fields["communication_type"] == "User") {
-                    $text = "";
-                    $user = new User();
-                    $items = json_decode($values["target"]);
-                    if (is_array($items)) {
-                        foreach ($items as $item) {
-                            $user->getFromDB($item);
-                            $text .= $user->getFriendlyName() . "<br />";
+
+                $text   = "";
+                $target = getItemForItemtype($target_class);
+                $items  = json_decode($values["target"]);
+                if ($target !== false && is_array($items)) {
+                    foreach ($items as $item) {
+                        // getFromDB() keeps the previously loaded row when the id no longer
+                        // exists, which repeated the name of the previous target: skip it.
+                        if ($target->getFromDB($item)) {
+                            // The search engine prints this return value as raw HTML, and
+                            // getFriendlyName() hands back the stored name verbatim.
+                            $text .= htmlspecialchars($target->getFriendlyName()) . "<br />";
                         }
                     }
-                    return $text;
                 }
-                if ($self->fields["communication_type"] == "Profile") {
-                    $text = "";
-                    $profile = new \Profile();
-                    $items = json_decode($values["target"]);
-                    if (is_array($items)) {
-                        foreach ($items as $item) {
-                            $profile->getFromDB($item);
-                            $text .= $profile->getFriendlyName() . "<br />";
-                        }
-                    }
-                    return $text;
-                }
-                if ($self->fields["communication_type"] == "Group") {
-                    $text = "";
-                    $group = new Group();
-                    $items = json_decode($values["target"]);
-                    if (is_array($items)) {
-                        foreach ($items as $item) {
-                            $group->getFromDB($item);
-                            $text .= $group->getFriendlyName() . "<br />";
-                        }
-                    }
-                    return $text;
-                }
-                if ($self->fields["communication_type"] == "Entity") {
-                    $text = "";
-                    $entity = new Entity();
-                    $items = json_decode($values["target"]);
-                    if (is_array($items)) {
-                        foreach ($items as $item) {
-                            $entity->getFromDB($item);
-                            $text .= $entity->getFriendlyName() . "<br />";
-                        }
-                    }
-                    return $text;
-                }
-                if ($self->fields["communication_type"] == "Location") {
-                    $text = "";
-                    $location = new Location();
-                    $items = json_decode($values["target"]);
-                    if (is_array($items)) {
-                        foreach ($items as $item) {
-                            $location->getFromDB($item);
-                            $text .= $location->getFriendlyName() . "<br />";
-                        }
-                    }
-                    return $text;
-                }
-                break;
+                return $text;
         }
         return parent::getSpecificValueToDisplay($field, $values, $options);
     }
 
     /**
-     * @param datas $input
+     * Reject a `communication_type` that is not offered by the dropdown.
      *
-     * @return datas
+     * The column selects the itemtype the targets are read from (see
+     * getSpecificValueToDisplay()), and ajax/changeitemstate.php lets it be written
+     * inline: that endpoint whitelists the column name, not the posted value. Values
+     * are checked here rather than in the front controller so the form, the inline
+     * edition and ReleaseTemplate all go through the same check.
+     *
+     * @param array $input
+     *
+     * @return bool
+     */
+    public static function checkCommunicationTypeInput($input)
+    {
+        if (!isset($input['communication_type'])) {
+            return true;
+        }
+
+        // "0" is "no communication" and "ALL" is "everybody": neither targets an itemtype.
+        $allowed = array_merge(['0', 'ALL'], array_keys(self::getCommunicationTypes()));
+        if (!in_array((string) $input['communication_type'], $allowed, true)) {
+            Session::addMessageAfterRedirect(
+                __('Invalid communication type', 'releases'),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $input
+     *
+     * @return array|false
      */
     public function prepareInputForAdd($input)
     {
         $input = parent::prepareInputForAdd($input);
+
+        if (!self::checkCommunicationTypeInput($input)) {
+            return false;
+        }
 
         if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
             $input['target'] = [];
@@ -968,13 +988,16 @@ class Release extends CommonITILObject
     }
 
     /**
+     * @param array $input
      *
-     * @param datas $input
-     *
-     * @return datas
+     * @return array|false
      */
     public function prepareInputForUpdate($input)
     {
+
+        if (!self::checkCommunicationTypeInput($input)) {
+            return false;
+        }
 
         $input = $this->transformActorsInput($input);
 

@@ -603,11 +603,20 @@ class NotificationTargetRelease extends NotificationTargetCommonITILObject
         if ($item->getField("communication")) {
             $data["##$objettype.communicationtype##"] = $item->getField("communication_type");
             $targets                                  = [];
-            $ie                                       = $item->getField("communication_type");
-            $obj                                      = new $ie();
-            $t                                        = json_decode($item->getField("target"));
-            foreach ($t as $target => $val) {
-                $targets[] = $obj->getName($val);
+            // The column also holds "0" (no communication) and "ALL" (everybody), which are
+            // not itemtypes, and it can be written inline through ajax/changeitemstate.php:
+            // resolve it through the fixed map instead of instantiating it directly.
+            $target_class = Release::getCommunicationTypes()[$item->getField("communication_type")] ?? null;
+            $t            = json_decode($item->getField("target"));
+            if ($target_class !== null && is_array($t)) {
+                $obj = new $target_class();
+                foreach ($t as $val) {
+                    // getName() reads the loaded row: without getFromDB() it used to return
+                    // the name of an empty object for every single target.
+                    if ($obj->getFromDB($val)) {
+                        $targets[] = $obj->getName();
+                    }
+                }
             }
             $data["##$objettype.target##"] = implode(', ', $targets);
         }

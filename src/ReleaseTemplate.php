@@ -338,6 +338,12 @@ class ReleaseTemplate extends CommonDropdown
     {
         $input = parent::prepareInputForAdd($input);
         //      $input = parent::prepareInputForUpdate($input);
+
+        // Same domain as a release: the value is copied into the release fields when a
+        // release is created from this template (Release::showForm()).
+        if (!Release::checkCommunicationTypeInput($input)) {
+            return false;
+        }
         if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
             $input['target'] = [];
         }
@@ -365,6 +371,10 @@ class ReleaseTemplate extends CommonDropdown
     {
         $input = parent::prepareInputForUpdate($input);
         //      $input = parent::prepareInputForUpdate($input);
+
+        if (!Release::checkCommunicationTypeInput($input)) {
+            return false;
+        }
         if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
             $input['target'] = [];
         }
