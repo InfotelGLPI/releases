@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:18+0000\n"
+"POT-Creation-Date: 2026-09-01 15:12+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Michael Schieferer, 2022\n"
 "Language-Team: German (Germany) (https://www.transifex.com/infotelGLPI/"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3069
+#: src/Release.php:3084
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -127,7 +127,7 @@ msgstr[1] "Verknüpfte Änderungen"
 msgid "Associated risk"
 msgstr "Verknüpftes Risiko"
 
-#: src/Release.php:2494 src/ReleaseTemplate.php:1193
+#: src/Release.php:2509 src/ReleaseTemplate.php:1193
 msgid "Associated with"
 msgstr "Verknüpfen mit"
 
@@ -173,13 +173,13 @@ msgstr "Kommunikation"
 msgid "Communication type"
 msgstr "Kommunikationstyp"
 
-#: templates/form_review.html.twig:149
+#: templates/form_review.html.twig:154
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "Überprüfung beenden"
 
 #: templates/form_test.html.twig:248 templates/form_rollback.html.twig:176
-#: templates/footer.html.twig:136 templates/form_review.html.twig:131
+#: templates/footer.html.twig:136 templates/form_review.html.twig:136
 #: templates/form_risk.html.twig:206 templates/form_deploytask.html.twig:406
 msgid "Confirm the final deletion?"
 msgstr "Endgültiges löschen bestätigen?"
@@ -215,7 +215,7 @@ msgstr "Definierte Daten"
 
 #: templates/form_test.html.twig:250 templates/form_rollback.html.twig:178
 #: templates/footer.html.twig:135 templates/footer.html.twig:138
-#: templates/form_review.html.twig:130 templates/form_risk.html.twig:208
+#: templates/form_review.html.twig:135 templates/form_risk.html.twig:208
 #: templates/form_deploytask.html.twig:408
 msgctxt "button"
 msgid "Delete permanently"
@@ -340,7 +340,7 @@ msgid_plural "Followups"
 msgstr[0] "Nachverfolgen"
 msgstr[1] "Nachverfolgen"
 
-#: src/Release.php:2701 templates/fields_panel.html.twig:104
+#: src/Release.php:2716 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Für diese Änderung"
 
@@ -392,11 +392,11 @@ msgstr ""
 msgid "New release"
 msgstr "Neues Release"
 
-#: src/Release.php:2540 src/ReleaseTemplate.php:1241
+#: src/Release.php:2555 src/ReleaseTemplate.php:1241
 msgid "No data available"
 msgstr "Keine Daten"
 
-#: src/Release.php:3073 src/Release.php:3120
+#: src/Release.php:3088 src/Release.php:3135
 msgid "No release found."
 msgstr "Kein Release gefunden."
 
@@ -489,7 +489,7 @@ msgid_plural "Releases"
 msgstr[0] "Release"
 msgstr[1] "Releases"
 
-#: src/Release.php:2923 src/ReleaseTemplate.php:1279
+#: src/Release.php:2938 src/ReleaseTemplate.php:1279
 msgid "Release actions details"
 msgstr "Details der Release-Aktionen"
 
@@ -511,7 +511,7 @@ msgid_plural "Release templates"
 msgstr[0] "Release-Vorlage"
 msgstr[1] "Release-Vorlagen"
 
-#: src/Release.php:3108
+#: src/Release.php:3123
 msgid "Releases on linked items"
 msgstr "Releases für verknüpfte Dinge"
 
@@ -530,7 +530,7 @@ msgctxt "button"
 msgid "Restore"
 msgstr "Wiederherstellen"
 
-#: src/Review.php:62
+#: src/Review.php:63
 msgid "Review"
 msgid_plural "Reviews"
 msgstr[0] "Prüfung"
@@ -615,7 +615,7 @@ msgstr "Details der Dienstabschaltung"
 msgid "Set the status to pending"
 msgstr "Status auf Warten setzen"
 
-#: templates/form_review.html.twig:121 templates/form_review.html.twig:122
+#: templates/form_review.html.twig:126 templates/form_review.html.twig:127
 msgctxt "button"
 msgid "Show"
 msgstr ""

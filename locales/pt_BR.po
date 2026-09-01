@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:18+0000\n"
+"POT-Creation-Date: 2026-09-01 15:12+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Maykon Henrique Facincani <facincani.maykon@gmail.com>, "
 "2022\n"
@@ -25,7 +25,7 @@ msgstr ""
 "1000000 == 0 ? 1 : 2;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3069
+#: src/Release.php:3084
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -132,7 +132,7 @@ msgstr[2] "Mudanças associadas"
 msgid "Associated risk"
 msgstr "Risco associado"
 
-#: src/Release.php:2494 src/ReleaseTemplate.php:1193
+#: src/Release.php:2509 src/ReleaseTemplate.php:1193
 msgid "Associated with"
 msgstr "Associado com"
 
@@ -179,13 +179,13 @@ msgstr "Comunicação"
 msgid "Communication type"
 msgstr "Tipo de comunicação"
 
-#: templates/form_review.html.twig:149
+#: templates/form_review.html.twig:154
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "Conclusão da revisão"
 
 #: templates/form_test.html.twig:248 templates/form_rollback.html.twig:176
-#: templates/footer.html.twig:136 templates/form_review.html.twig:131
+#: templates/footer.html.twig:136 templates/form_review.html.twig:136
 #: templates/form_risk.html.twig:206 templates/form_deploytask.html.twig:406
 msgid "Confirm the final deletion?"
 msgstr "Confirma a exclusão final?"
@@ -221,7 +221,7 @@ msgstr "Datas definidas"
 
 #: templates/form_test.html.twig:250 templates/form_rollback.html.twig:178
 #: templates/footer.html.twig:135 templates/footer.html.twig:138
-#: templates/form_review.html.twig:130 templates/form_risk.html.twig:208
+#: templates/form_review.html.twig:135 templates/form_risk.html.twig:208
 #: templates/form_deploytask.html.twig:408
 msgctxt "button"
 msgid "Delete permanently"
@@ -353,7 +353,7 @@ msgstr[0] "Acompanhamento"
 msgstr[1] "Acompanhamento"
 msgstr[2] "Acompanhamento"
 
-#: src/Release.php:2701 templates/fields_panel.html.twig:104
+#: src/Release.php:2716 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Para essa mudança"
 
@@ -406,11 +406,11 @@ msgstr ""
 msgid "New release"
 msgstr "Nova liberação"
 
-#: src/Release.php:2540 src/ReleaseTemplate.php:1241
+#: src/Release.php:2555 src/ReleaseTemplate.php:1241
 msgid "No data available"
 msgstr "Sem dados disponíveis"
 
-#: src/Release.php:3073 src/Release.php:3120
+#: src/Release.php:3088 src/Release.php:3135
 msgid "No release found."
 msgstr "Nenhuma liberação encontrada"
 
@@ -504,7 +504,7 @@ msgstr[0] "Liberação"
 msgstr[1] "Liberações"
 msgstr[2] "Liberações"
 
-#: src/Release.php:2923 src/ReleaseTemplate.php:1279
+#: src/Release.php:2938 src/ReleaseTemplate.php:1279
 msgid "Release actions details"
 msgstr "Detalhes das ações da liberação"
 
@@ -527,7 +527,7 @@ msgstr[0] "Modelo de Liberação"
 msgstr[1] "Modelos de Liberação"
 msgstr[2] "Modelos de Liberação"
 
-#: src/Release.php:3108
+#: src/Release.php:3123
 msgid "Releases on linked items"
 msgstr "Liberações nos items vinculados"
 
@@ -547,7 +547,7 @@ msgctxt "button"
 msgid "Restore"
 msgstr "Restaurar"
 
-#: src/Review.php:62
+#: src/Review.php:63
 msgid "Review"
 msgid_plural "Reviews"
 msgstr[0] "Revisão"
@@ -638,7 +638,7 @@ msgstr "Detalhes do desligamento de serviço"
 msgid "Set the status to pending"
 msgstr "Colocar o status para pendente"
 
-#: templates/form_review.html.twig:121 templates/form_review.html.twig:122
+#: templates/form_review.html.twig:126 templates/form_review.html.twig:127
 msgctxt "button"
 msgid "Show"
 msgstr ""

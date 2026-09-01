@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 13:18+0000\n"
+"POT-Creation-Date: 2026-09-01 15:12+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2026\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -24,7 +24,7 @@ msgstr ""
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3069
+#: src/Release.php:3084
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -134,7 +134,7 @@ msgstr[3] "Přiřazené změny"
 msgid "Associated risk"
 msgstr "Přiřazené riziko"
 
-#: src/Release.php:2494 src/ReleaseTemplate.php:1193
+#: src/Release.php:2509 src/ReleaseTemplate.php:1193
 msgid "Associated with"
 msgstr "Přiřazeno k"
 
@@ -182,13 +182,13 @@ msgstr "Komunikace"
 msgid "Communication type"
 msgstr "Typ komunikace"
 
-#: templates/form_review.html.twig:149
+#: templates/form_review.html.twig:154
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "Uzavřít recenzi"
 
 #: templates/form_test.html.twig:248 templates/form_rollback.html.twig:176
-#: templates/footer.html.twig:136 templates/form_review.html.twig:131
+#: templates/footer.html.twig:136 templates/form_review.html.twig:136
 #: templates/form_risk.html.twig:206 templates/form_deploytask.html.twig:406
 msgid "Confirm the final deletion?"
 msgstr "Potvrdit konečné smazání?"
@@ -224,7 +224,7 @@ msgstr "Termíny jsou definovány"
 
 #: templates/form_test.html.twig:250 templates/form_rollback.html.twig:178
 #: templates/footer.html.twig:135 templates/footer.html.twig:138
-#: templates/form_review.html.twig:130 templates/form_risk.html.twig:208
+#: templates/form_review.html.twig:135 templates/form_risk.html.twig:208
 #: templates/form_deploytask.html.twig:408
 msgctxt "button"
 msgid "Delete permanently"
@@ -363,7 +363,7 @@ msgstr[1] "Doplňující zpráva"
 msgstr[2] "Doplňující zpráva"
 msgstr[3] "Doplňující zpráva"
 
-#: src/Release.php:2701 templates/fields_panel.html.twig:104
+#: src/Release.php:2716 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Pro tuto změnu"
 
@@ -417,11 +417,11 @@ msgstr "Název"
 msgid "New release"
 msgstr "Nové vydání"
 
-#: src/Release.php:2540 src/ReleaseTemplate.php:1241
+#: src/Release.php:2555 src/ReleaseTemplate.php:1241
 msgid "No data available"
 msgstr "Data nejsou k dispozici"
 
-#: src/Release.php:3073 src/Release.php:3120
+#: src/Release.php:3088 src/Release.php:3135
 msgid "No release found."
 msgstr "Nebylo nalezeno žádné vydání."
 
@@ -516,7 +516,7 @@ msgstr[1] "Vydání"
 msgstr[2] "Vydání"
 msgstr[3] "Vydání"
 
-#: src/Release.php:2923 src/ReleaseTemplate.php:1279
+#: src/Release.php:2938 src/ReleaseTemplate.php:1279
 msgid "Release actions details"
 msgstr "Podrobnosti o akcích uvolnění"
 
@@ -540,7 +540,7 @@ msgstr[1] "Šablon vydání"
 msgstr[2] "Šablon vydání"
 msgstr[3] "Šablony vydání"
 
-#: src/Release.php:3108
+#: src/Release.php:3123
 msgid "Releases on linked items"
 msgstr "Vydání u propojených položek"
 
@@ -561,7 +561,7 @@ msgctxt "button"
 msgid "Restore"
 msgstr "Obnovit"
 
-#: src/Review.php:62
+#: src/Review.php:63
 msgid "Review"
 msgid_plural "Reviews"
 msgstr[0] "Recenze"
@@ -657,7 +657,7 @@ msgstr "Podrobnosti o vypnutí služby"
 msgid "Set the status to pending"
 msgstr "Nastavit stav na nevyřízeno"
 
-#: templates/form_review.html.twig:121 templates/form_review.html.twig:122
+#: templates/form_review.html.twig:126 templates/form_review.html.twig:127
 msgctxt "button"
 msgid "Show"
 msgstr ""
