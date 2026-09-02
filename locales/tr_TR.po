@@ -2,24 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 15:12+0000\n"
+"POT-Creation-Date: 2026-09-01 15:16+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
-"teams/12376/tr_TR/)\n"
-"Language: tr_TR\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12376/tr_TR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. TRANS : %d is the number of problems
@@ -239,8 +238,9 @@ msgstr "Dağıtma görevi türü"
 #: src/Release.php:2044 src/Release.php:2046 src/ReleaseTemplate.php:203
 #: src/ReleaseTemplate.php:996 src/ReleaseTemplate.php:997
 #: src/Deploytask.php:71 src/NotificationTargetRelease.php:942
-#: src/NotificationTargetRelease.php:962 templates/filter_timeline.html.twig:54
-#: templates/timeline.html.twig:120 templates/form_finalization.html.twig:64
+#: src/NotificationTargetRelease.php:962
+#: templates/filter_timeline.html.twig:54 templates/timeline.html.twig:120
+#: templates/form_finalization.html.twig:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Dağıtma görevi"
@@ -266,8 +266,8 @@ msgstr "Açıklama"
 #: templates/filter_timeline.html.twig:66
 msgid "Document"
 msgid_plural "Documents"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Belge"
+msgstr[1] "Belgeler"
 
 #: templates/form_test.html.twig:48 templates/form_test.html.twig:51
 #: templates/form_test.html.twig:54 templates/form_test.html.twig:216
@@ -334,11 +334,10 @@ msgstr "Sonuçlandır"
 
 #: src/Release.php:2156 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
-#, fuzzy
 msgid "Followup"
 msgid_plural "Followups"
-msgstr[0] "İzle"
-msgstr[1] "İzle"
+msgstr[0] "İzleme"
+msgstr[1] "İzlemeler"
 
 #: src/Release.php:2716 templates/fields_panel.html.twig:104
 msgid "For this change"
@@ -354,7 +353,7 @@ msgstr "Bu sürümden sorumlu grup"
 
 #: templates/filter_timeline.html.twig:76
 msgid "Historical"
-msgstr ""
+msgstr "Geçmiş"
 
 #: src/NotificationTargetRelease.php:771 templates/form_review.html.twig:71
 msgid "Incidents during process"
@@ -362,7 +361,7 @@ msgstr "İşlenirken çıkan sorunlar"
 
 #: src/Release.php:574
 msgid "Invalid communication type"
-msgstr ""
+msgstr "İletişim türü geçersiz"
 
 #: src/Change_Release.php:62
 msgid "Link Release/Change"
