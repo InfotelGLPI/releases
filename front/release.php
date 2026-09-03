@@ -30,17 +30,14 @@
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Releases\Release;
 
-Html::header(Release::getTypeName(2), '', "helpdesk", Release::class);
-
 $release = new Release();
 
-if ($release->canView()) {
-    //   Html::compileScss(["file"=>"../css/style.scss"]);
-    //     echo Html::Scss("../css/style.scss");
-    Search::show(Release::class);
-
-} else {
+if (!$release->canView()) {
     throw new AccessDeniedHttpException();
 }
+
+Html::header(Release::getTypeName(2), '', "helpdesk", Release::class);
+
+Search::show(Release::class);
 
 Html::footer();
