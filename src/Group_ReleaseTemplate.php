@@ -32,10 +32,6 @@ namespace GlpiPlugin\Releases;
 use CommonDBRelation;
 use CommonITILActor;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * Group_ReleaseTemplate Class
  *

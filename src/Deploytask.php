@@ -46,10 +46,6 @@ use Session;
 use Toolbox;
 use User;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Deploytask
  */
@@ -175,10 +171,24 @@ class Deploytask extends CommonDBTM
             $input["users_id"] = $uid;
         }
 
-        $input["plugin_releases_releases_id"] = $input["items_id"];
-        $release                              = new Release();
-        $release->getFromDB($input["items_id"]);
-        $input["entities_id"] = $release->getField("entities_id");
+        // The parent release decides both the entity and the ownership of this
+        // sub-item, so the posted id has to be resolved and checked before being
+        // trusted: a crafted items_id would otherwise drop the sub-item into
+        // another entity's release. Fail closed here rather than in the front
+        // controller only, so every entry point (form, AJAX, massive actions,
+        // template instantiation) shares the very same guard.
+        $release = new Release();
+        if (!$release->getFromDB((int) ($input["items_id"] ?? 0))
+            || !Session::haveAccessToEntity($release->fields["entities_id"], $release->isRecursive())) {
+            Session::addMessageAfterRedirect(
+                __('The action you have requested is not allowed.'),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+        $input["plugin_releases_releases_id"] = $release->getID();
+        $input["entities_id"]                 = $release->fields["entities_id"];
 
         if (isset($input["plugin_releases_deploytasks_id"])
             && $input["plugin_releases_deploytasks_id"] != 0) {
@@ -229,6 +239,13 @@ class Deploytask extends CommonDBTM
      **/
     public function prepareInputForUpdate($input)
     {
+
+        // Never let an update re-parent the sub-item: entities_id and the parent keys
+        // are settled at creation time, from a release that was checked back then.
+        // Dropping them from the update payload closes the cross-entity move through a
+        // crafted POST and costs nothing to the legitimate callers, none of which ever
+        // changes them (ajax/timeline.php only re-sends the row's own release id).
+        unset($input["entities_id"], $input["plugin_releases_releases_id"], $input["items_id"]);
 
         Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
@@ -561,7 +578,9 @@ class Deploytask extends CommonDBTM
 
         if ($val["users_id_tech"] && $who == 0) {
             $dbu  = new DbUtils();
-            $html .= " - " . __('User') . " " . $dbu->getUserName($val["users_id_tech"]);
+            // getUserName() returns the stored name verbatim: escape it before it
+            // lands in the planning tooltip markup.
+            $html .= " - " . __('User') . " " . htmlescape($dbu->getUserName($val["users_id_tech"]));
         }
         $html .= "</a><br>";
 
@@ -570,7 +589,7 @@ class Deploytask extends CommonDBTM
                . $val["users_id_tech"] . "'";
         $user = new User();
         $user->getFromDB($val["users_id_tech"]);
-        $html .= ">" . $user->getFriendlyName() . "</a>";
+        $html .= ">" . htmlescape($user->getFriendlyName()) . "</a>";
 
         $html .= "<div class='over_link' id='content_task_" . $val["id"] . $rand . "'>";
         if ($val["end"]) {
@@ -581,7 +600,9 @@ class Deploytask extends CommonDBTM
         //            $val["type"] . "<br>";
         //      }
         if ($val["content"]) {
-            $html .= "<strong>" . __('Description') . "</strong> : " . RichText::getTextFromHtml($val["content"]);
+            // getTextFromHtml() defaults to $encode_output = false, so the plain text it
+            // extracts still carries whatever the author typed: escape before concatenating.
+            $html .= "<strong>" . __('Description') . "</strong> : " . htmlescape(RichText::getTextFromHtml($val["content"]));
         }
         $html .= "</div>";
 

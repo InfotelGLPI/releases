@@ -63,10 +63,6 @@ use Session;
 use Toolbox;
 use User;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Release
  */
@@ -531,7 +527,9 @@ class Release extends CommonITILObject
 
                 $text   = "";
                 $target = getItemForItemtype($target_class);
-                $items  = json_decode($values["target"]);
+                // Rows stored before the sink check was added may still hold out-of-scope ids:
+                // replay the list criteria here too, so nothing leaks on the display path.
+                $items  = self::filterAllowedTargets($values["target"], $self->fields["communication_type"] ?? '');
                 if ($target !== false && is_array($items)) {
                     foreach ($items as $item) {
                         // getFromDB() keeps the previously loaded row when the id no longer
@@ -561,6 +559,75 @@ class Release extends CommonITILObject
      *
      * @return bool
      */
+    /**
+     * Criteria restricting the actor list offered as a communication target.
+     *
+     * ajax/changeTarget.php builds the dropdown with them and filterAllowedTargets()
+     * replays them at the sink, so the rule lives in one place only.
+     *
+     * @param CommonDBTM $target the itemtype the targets are read from
+     *
+     * @return array
+     */
+    public static function getTargetListCriteria(CommonDBTM $target)
+    {
+        $dbu = new DbUtils();
+        return $dbu->getEntitiesRestrictCriteria($target->getTable());
+    }
+
+    /**
+     * Keep only the target ids the current session was actually offered.
+     *
+     * The column stores a JSON array of actor ids picked from an entity-restricted
+     * dropdown, but nothing revalidated what came back: a crafted POST — the release
+     * form or the inline edition endpoint ajax/changeitemstate.php — could store the
+     * id of an actor belonging to another entity, which getSpecificValueToDisplay()
+     * would then resolve and print. Replay the list criteria here so the check
+     * protects the posted value and not only the release row.
+     *
+     * @param mixed  $target             raw value, either the posted array or the stored JSON
+     * @param string $communication_type communication type the targets belong to
+     *
+     * @return array the ids that passed the check
+     */
+    public static function filterAllowedTargets($target, $communication_type)
+    {
+        if (is_string($target)) {
+            // Cloning and massive actions hand back the stored JSON string rather than
+            // the array posted by the form.
+            $decoded = json_decode($target, true);
+            $target  = is_array($decoded) ? $decoded : [];
+        }
+        if (!is_array($target) || $target === []) {
+            return [];
+        }
+
+        // "0" (no communication) and "ALL" (everybody) target no itemtype at all.
+        $target_class = self::getCommunicationTypes()[(string) $communication_type] ?? null;
+        if ($target_class === null) {
+            return [];
+        }
+        $item = getItemForItemtype($target_class);
+        if ($item === false) {
+            return [];
+        }
+
+        $ids = [];
+        foreach ($target as $id) {
+            if ((int) $id > 0) {
+                $ids[] = (int) $id;
+            }
+        }
+        if ($ids === []) {
+            return [];
+        }
+
+        $criteria                             = self::getTargetListCriteria($item);
+        $criteria[$item->getTable() . '.id'] = $ids;
+
+        return array_values(array_map('intval', array_keys($item->find($criteria))));
+    }
+
     public static function checkCommunicationTypeInput($input)
     {
         if (!isset($input['communication_type'])) {
@@ -597,6 +664,12 @@ class Release extends CommonITILObject
         if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
             $input['target'] = [];
         }
+        // Revalidate the posted ids against the very criteria that built the dropdown:
+        // the release right protects the row, never the values submitted with it.
+        $input['target'] = self::filterAllowedTargets(
+            $input['target'],
+            $input['communication_type'] ?? '',
+        );
         $input['target'] = json_encode($input['target']);
         if (!empty($input["date_preproduction"])
             && $input["date_preproduction"] != null
@@ -1005,7 +1078,14 @@ class Release extends CommonITILObject
             || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
             $input['target'] = [];
         }
-        if (isset($input["communication_type"]) && isset($input['target'])) {
+        if (isset($input['target'])) {
+            // Same sink check as on creation. The communication type may not be part of
+            // the payload (inline edition posts a single column), so fall back on the one
+            // already stored for this release.
+            $input['target'] = self::filterAllowedTargets(
+                $input['target'],
+                $input["communication_type"] ?? ($this->fields["communication_type"] ?? ''),
+            );
             $input['target'] = json_encode($input['target']);
         }
 
@@ -2468,8 +2548,12 @@ class Release extends CommonITILObject
                                 'delete_document',
                                 _sx('button', 'Delete permanently'),
                                 [
-                                    'documents_id' => $item_i_['id'],
-                                    $foreignKey    => $this->getID(),
+                                    // The document hangs on the timeline subitem, and the release id
+                                    // is what the handler checks the UPDATE right against
+                                    'documents_id'                => $item_i_['id'],
+                                    'itemtype'                    => $type,
+                                    'items_id'                    => $item_i['id'],
+                                    'plugin_releases_releases_id' => $this->getID(),
                                 ],
                                 'fa-trash-alt',
                             );
@@ -2485,32 +2569,32 @@ class Release extends CommonITILObject
 
             if (isset($item_i['plugin_releases_typedeploytasks_id'])
                 && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
-                echo Dropdown::getDropdownName(
+                echo htmlescape(Dropdown::getDropdownName(
                     "glpi_plugin_releases_typedeploytasks",
                     $item_i['plugin_releases_typedeploytasks_id'],
-                ) . "<br>";
+                )) . "<br>";
             }
             if (isset($item_i['plugin_releases_typerisks_id'])
                 && !empty($item_i['plugin_releases_typerisks_id'])) {
-                echo Dropdown::getDropdownName(
+                echo htmlescape(Dropdown::getDropdownName(
                     "glpi_plugin_releases_typerisks",
                     $item_i['plugin_releases_typerisks_id'],
-                ) . "<br>";
+                )) . "<br>";
             }
             if (isset($item_i['plugin_releases_typetests_id'])
                 && !empty($item_i['plugin_releases_typetests_id'])) {
-                echo Dropdown::getDropdownName(
+                echo htmlescape(Dropdown::getDropdownName(
                     "glpi_plugin_releases_typetests",
                     $item_i['plugin_releases_typetests_id'],
-                ) . "<br>";
+                )) . "<br>";
             }
             if (isset($item_i['plugin_releases_risks_id'])
                 && !empty($item_i['plugin_releases_risks_id'])) {
                 echo __("Associated with", 'releases') . " ";
-                echo Dropdown::getDropdownName(
+                echo htmlescape(Dropdown::getDropdownName(
                     "glpi_plugin_releases_risks",
                     $item_i['plugin_releases_risks_id'],
-                ) . "<br>";
+                )) . "<br>";
             }
 
             if (isset($item_i['actiontime'])
@@ -3363,7 +3447,7 @@ class Release extends CommonITILObject
 
             // Second TER column
             if (count($_SESSION["glpiactiveentities"]) > 1) {
-                $second_col = Dropdown::getDropdownName('glpi_entities', $item->fields['entities_id']);
+                $second_col = htmlescape(Dropdown::getDropdownName('glpi_entities', $item->fields['entities_id']));
                 echo Search::showItem(
                     $p['output_type'],
                     $second_col,
@@ -3383,12 +3467,14 @@ class Release extends CommonITILObject
             $fourth_col = "";
 
             foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
-                $fourth_col .= "<span class='b'>" . getUserName($d["users_id"]) . "</span>";
+                // Actor names and dropdown labels are stored raw: Search::showItem() forwards
+                // the column verbatim on the HTML output, so escape at the source.
+                $fourth_col .= "<span class='b'>" . htmlescape(getUserName($d["users_id"])) . "</span>";
                 $fourth_col .= "<br>";
             }
 
             foreach ($item->getGroups(CommonITILActor::REQUESTER) as $d) {
-                $fourth_col .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
+                $fourth_col .= htmlescape(Dropdown::getDropdownName("glpi_groups", $d["groups_id"]));
                 $fourth_col .= "<br>";
             }
 
@@ -3405,7 +3491,7 @@ class Release extends CommonITILObject
                 if ($anonymize_helpdesk) {
                     $fifth_col .= __("Helpdesk");
                 } else {
-                    $fifth_col .= "<span class='b'>" . getUserName($d["users_id"]) . "</span>";
+                    $fifth_col .= "<span class='b'>" . htmlescape(getUserName($d["users_id"])) . "</span>";
                 }
 
                 $fifth_col .= "<br>";
@@ -3415,13 +3501,13 @@ class Release extends CommonITILObject
                 if ($anonymize_helpdesk) {
                     $fifth_col .= __("Helpdesk group");
                 } else {
-                    $fifth_col .= Dropdown::getDropdownName("glpi_groups", $d["groups_id"]);
+                    $fifth_col .= htmlescape(Dropdown::getDropdownName("glpi_groups", $d["groups_id"]));
                 }
                 $fifth_col .= "<br>";
             }
 
             foreach ($item->getSuppliers(CommonITILActor::ASSIGN) as $d) {
-                $fifth_col .= Dropdown::getDropdownName("glpi_suppliers", $d["suppliers_id"]);
+                $fifth_col .= htmlescape(Dropdown::getDropdownName("glpi_suppliers", $d["suppliers_id"]));
                 $fifth_col .= "<br>";
             }
 
@@ -3476,7 +3562,7 @@ class Release extends CommonITILObject
             //                               $item_num, $p['row_num'], $align);
 
             // Eigth column
-            $eigth_column = "<span class='b'>" . $item->getName() . "</span>&nbsp;";
+            $eigth_column = "<span class='b'>" . htmlescape($item->getName()) . "</span>&nbsp;";
 
             // Add link
             if ($item->canViewItem()) {
@@ -3564,7 +3650,7 @@ class Release extends CommonITILObject
                         $planned_infos .= sprintf(
                             __('By %s')
                             . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
-                            getUserName($plan['users_id_tech']),
+                            htmlescape(getUserName($plan['users_id_tech'])),
                         );
                     }
                     $planned_infos .= "<br>";

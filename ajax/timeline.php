@@ -38,13 +38,13 @@ use GlpiPlugin\Releases\Test;
 
 Session::checkRight('plugin_releases_releases', UPDATE);
 
-if ($_POST['action'] == 'done_fail') {
+if (($_POST['action'] ?? null) === 'done_fail') {
     header("Content-Type: application/json; charset=UTF-8");
 
     $_POST['parenttype'] = Release::class;
 
     if (!isset($_POST['items_id'])
-      || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
+      || ($parent = getItemForItemtype($_POST['parenttype'])) === false
     ) {
         throw new NotFoundHttpException();
     }
@@ -55,7 +55,9 @@ if ($_POST['action'] == 'done_fail') {
     }
     $taskClass = $_POST['itemtype'];
     $task      = new $taskClass();
-    $task->getFromDB(intval($_POST['items_id']));
+    if (!$task->getFromDB(intval($_POST['items_id']))) {
+        throw new NotFoundHttpException();
+    }
 
     // Forbid any state change once the parent release reached a terminal status
     $release = new Release();
@@ -66,6 +68,11 @@ if ($_POST['action'] == 'done_fail') {
     }
     if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
         throw new NotFoundHttpException();
+    }
+
+    // Each subitem class declares its own rightname: the release right alone must not grant the write
+    if (!$task->can($task->getID(), UPDATE)) {
+        throw new AccessDeniedHttpException();
     }
 
     if ($_POST["newStatus"] == $task->fields['state']) {
@@ -87,7 +94,8 @@ if ($_POST['action'] == 'done_fail') {
     $foreignKey = $parent->getForeignKeyField();
     $task->update([
         'id'        => intval($_POST['items_id']),
-        $foreignKey => intval($_POST[$foreignKey]),
+        // Keep the parent resolved from the row itself: a posted id would re-parent the subitem
+        $foreignKey => $release->getID(),
         'state'     => $new_state,
     ]);
     if (Test::countDoneForItem($release) != 0) {
@@ -105,9 +113,11 @@ if ($_POST['action'] == 'done_fail') {
     }
 } elseif (($_POST['action'] ?? null) === 'change_release_subitem_state') {
     header("Content-Type: application/json; charset=UTF-8");
+    // Release is the only legitimate parent here: never derive the written foreign key from the POST
+    $_POST['parenttype'] = Release::class;
 
     if (!isset($_POST['items_id'])
-      || !isset($_POST['parenttype']) || ($parent = getItemForItemtype($_POST['parenttype'])) === false
+      || ($parent = getItemForItemtype($_POST['parenttype'])) === false
     ) {
         throw new NotFoundHttpException();
     }
@@ -118,7 +128,9 @@ if ($_POST['action'] == 'done_fail') {
     }
     $taskClass = $_POST['itemtype'];
     $task      = new $taskClass();
-    $task->getFromDB(intval($_POST['items_id']));
+    if (!$task->getFromDB(intval($_POST['items_id']))) {
+        throw new NotFoundHttpException();
+    }
 
     // Forbid any state change once the parent release reached a terminal status
     $release = new Release();
@@ -129,6 +141,11 @@ if ($_POST['action'] == 'done_fail') {
     }
     if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
         throw new NotFoundHttpException();
+    }
+
+    // Each subitem class declares its own rightname: the release right alone must not grant the write
+    if (!$task->can($task->getID(), UPDATE)) {
+        throw new AccessDeniedHttpException();
     }
 
     $new_state = ($task->fields['state'] == Planning::DONE)
@@ -143,7 +160,8 @@ if ($_POST['action'] == 'done_fail') {
     $foreignKey = $parent->getForeignKeyField();
     $task->update([
         'id'        => intval($_POST['items_id']),
-        $foreignKey => intval($_POST[$foreignKey]),
+        // Keep the parent resolved from the row itself: a posted id would re-parent the subitem
+        $foreignKey => $release->getID(),
         'state'     => $new_state,
     ]);
 
@@ -195,7 +213,9 @@ if ($_POST['action'] == 'done_fail') {
             $objClass = $_REQUEST['itemtype'];
 
             $obj      = new $objClass();
-            $obj->getFromDB(intval($_REQUEST['items_id']));
+            if (!$obj->getFromDB(intval($_REQUEST['items_id']))) {
+                throw new NotFoundHttpException();
+            }
 
             // Forbid any state change once the parent release reached a terminal status
             $release = new Release();
@@ -206,6 +226,11 @@ if ($_POST['action'] == 'done_fail') {
             }
             if (in_array($release->getField('status'), Release::getClosedStatusArray(), true)) {
                 throw new NotFoundHttpException();
+            }
+
+            // Each subitem class declares its own rightname: the release right alone must not grant the write
+            if (!$obj->can($obj->getID(), UPDATE)) {
+                throw new AccessDeniedHttpException();
             }
 
             if (!in_array($obj->fields['state'], [0, Planning::INFO])) {
@@ -219,7 +244,8 @@ if ($_POST['action'] == 'done_fail') {
                 ]);
                 $obj->update([
                     'id'        => intval($_REQUEST['items_id']),
-                    $foreignKey => intval($_REQUEST[$foreignKey]),
+                    // Keep the parent resolved from the row itself: a posted id would re-parent the subitem
+                    $foreignKey => $release->getID(),
                     'state'     => $new_state,
                 ]);
             }
@@ -228,9 +254,6 @@ if ($_POST['action'] == 'done_fail') {
         case "viewsubitem":
             Html::header_nocache();
             if (!isset($_REQUEST['type'])) {
-                throw new NotFoundHttpException();
-            }
-            if (!isset($_REQUEST['parenttype'])) {
                 throw new NotFoundHttpException();
             }
 
@@ -254,6 +277,16 @@ if ($_POST['action'] == 'done_fail') {
                 }
                 if ($item->getType() == "ITILFollowup") {
                     $item->getFromDB($_REQUEST["id"]);
+                }
+
+                // Each subitem class declares its own rightname: the release right alone must not expose it
+                $subitem_id = (int) ($_REQUEST["id"] ?? 0);
+                if ($subitem_id > 0) {
+                    if (!$item->can($subitem_id, READ)) {
+                        throw new AccessDeniedHttpException();
+                    }
+                } elseif (!$item::canCreate()) {
+                    throw new AccessDeniedHttpException();
                 }
 
                 $parent::showSubForm($item, $_REQUEST["id"], ['parent'    => $parent,

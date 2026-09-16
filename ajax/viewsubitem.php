@@ -79,6 +79,15 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
     if ($id) {
         $item->getFromDB($id);
     }
+
+    // Each subitem class declares its own rightname: the release right alone must not expose it
+    if ($id !== null) {
+        if (!$item->can((int) $id, READ)) {
+            throw new AccessDeniedHttpException();
+        }
+    } elseif (!$item::canCreate()) {
+        throw new AccessDeniedHttpException();
+    }
     $url = $_REQUEST['type']::getFormURL();
     $item->showForm($id);
 

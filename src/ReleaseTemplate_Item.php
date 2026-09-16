@@ -38,10 +38,6 @@ use Html;
 use Session;
 use Toolbox;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * ReleaseTemplate_Item Class
  *
@@ -203,7 +199,7 @@ class ReleaseTemplate_Item extends CommonDBRelation
                         $prem = false;
                     }
                     echo "<td class='center'>";
-                    echo Dropdown::getDropdownName("glpi_entities", $data['entity']) . "</td>";
+                    echo htmlescape(Dropdown::getDropdownName("glpi_entities", $data['entity'])) . "</td>";
                     echo "<td class='center"
                          . (isset($data['is_deleted']) && $data['is_deleted'] ? " tab_bg_2_2'" : "'");
                     echo ">" . $namelink . "</td>";

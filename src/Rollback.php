@@ -34,10 +34,6 @@ use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class Rollback
  */
@@ -111,10 +107,25 @@ class Rollback extends CommonDBTM
         $input = parent::prepareInputForAdd($input);
 
         $input["users_id"] = Session::getLoginUserID();
-        $input["plugin_releases_releases_id"] = $input["items_id"];
-        $release           = new Release();
-        $release->getFromDB($input["items_id"]);
-        $input["entities_id"] = $release->getField("entities_id");
+
+        // The parent release decides both the entity and the ownership of this
+        // sub-item, so the posted id has to be resolved and checked before being
+        // trusted: a crafted items_id would otherwise drop the sub-item into
+        // another entity's release. Fail closed here rather than in the front
+        // controller only, so every entry point (form, AJAX, massive actions,
+        // template instantiation) shares the very same guard.
+        $release = new Release();
+        if (!$release->getFromDB((int) ($input["items_id"] ?? 0))
+            || !Session::haveAccessToEntity($release->fields["entities_id"], $release->isRecursive())) {
+            Session::addMessageAfterRedirect(
+                __('The action you have requested is not allowed.'),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+        $input["plugin_releases_releases_id"] = $release->getID();
+        $input["entities_id"]                 = $release->fields["entities_id"];
 
         return $input;
     }
@@ -134,6 +145,13 @@ class Rollback extends CommonDBTM
      **/
     public function prepareInputForUpdate($input)
     {
+        // Never let an update re-parent the sub-item: entities_id and the parent keys
+        // are settled at creation time, from a release that was checked back then.
+        // Dropping them from the update payload closes the cross-entity move through a
+        // crafted POST and costs nothing to the legitimate callers, none of which ever
+        // changes them (ajax/timeline.php only re-sends the row's own release id).
+        unset($input["entities_id"], $input["plugin_releases_releases_id"], $input["items_id"]);
+
         // update last editor if content change
         $input['users_id_editor'] = Session::getLoginUserID();
         if (isset($input['update'])

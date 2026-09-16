@@ -41,6 +41,11 @@ $release = new Rollback();
 
 if (isset($_POST["add"])) {
     $release->check(-1, CREATE, $_POST);
+    // The sub-item inherits the parent release's entity: control that release
+    // first. check(-1, CREATE, $_POST) only runs canCreate() plus a checkEntity()
+    // on the attacker-controlled input, so it never looks at the posted parent.
+    $parent_release = new Release();
+    $parent_release->check((int) ($_POST["items_id"] ?? 0), UPDATE);
 
     $newID                                           = $release->add($_POST);
     $_SESSION['releases'][Session::getLoginUserID()] = 'rollback';

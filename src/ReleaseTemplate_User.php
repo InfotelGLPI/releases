@@ -35,10 +35,6 @@ use Glpi\Application\View\TemplateRenderer;
 use NotificationMailing;
 use User;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /// Class ReleaseTemplate_User
 class ReleaseTemplate_User extends CommonITILActor
 {

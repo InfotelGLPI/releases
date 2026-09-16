@@ -27,6 +27,8 @@
  * --------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Releases\Release;
+
 if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
@@ -41,22 +43,22 @@ if (isset($_POST["type"]) && isset($_POST["current_type"])) {
         if ($_POST['type'] == $_POST['current_type'] && isset($_POST["values"])) {
             $values = $_POST['values'];
         }
-        $dbu = new DbUtils();
-
         // Whitelist the itemtype before instantiating it: $_POST["type"] is
         // user-controlled and getItemForItemtype() would otherwise let a caller
         // enumerate any DB-backed itemtype (object injection / information
-        // disclosure). Only actor targets are legitimate here.
-        $allowed_types = [User::class, Group::class, Supplier::class];
-        if (!in_array($_POST["type"], $allowed_types, true)) {
+        // disclosure). The communication types are the only legitimate targets, and
+        // taking the list from Release keeps this endpoint and the sink check in
+        // Release::filterAllowedTargets() in agreement.
+        $target_class = Release::getCommunicationTypes()[(string) $_POST["type"]] ?? null;
+        if ($target_class === null) {
             return;
         }
 
-        $item = getItemForItemtype($_POST["type"]);
+        $item = getItemForItemtype($target_class);
         if ($item === false) {
             return;
         }
-        $condition = $dbu->getEntitiesRestrictCriteria($item->getTable());
+        $condition = Release::getTargetListCriteria($item);
         $items     = $item->find($condition);
 
         foreach ($items as $vals) {

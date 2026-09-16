@@ -103,12 +103,6 @@ parameters:
 			path: ajax/test.php
 
 		-
-			message: '#^Offset ''parenttype'' on non\-empty\-array\<mixed\> in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.offset
-			count: 2
-			path: ajax/timeline.php
-
-		-
 			message: '#^You should not use the `exit` function\. It prevents the execution of post\-request/post\-command routines\.$#'
 			identifier: glpi.forbidExit
 			count: 1

@@ -28,9 +28,15 @@
  */
 
 use Glpi\Event;
+use Glpi\Exception\Http\BadRequestHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Releases\Change_Release;
+use GlpiPlugin\Releases\Deploytask;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Release_User;
+use GlpiPlugin\Releases\Risk;
+use GlpiPlugin\Releases\Rollback;
+use GlpiPlugin\Releases\Test;
 
 if (!isset($_GET["id"])) {
     $_GET["id"] = 0;
@@ -148,23 +154,54 @@ if (isset($_POST["add"])) {
     // Detaching a document mutates state: read it from POST only so the
     // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
     // only). A GET-triggered detach would otherwise be forgeable.
+    // The timeline attaches its documents to the subitems, not to the release itself,
+    // so the posted itemtype must be whitelisted before it reaches the query.
+    $allowed_itemtypes = [Release::class, Deploytask::class, Risk::class, Rollback::class, Test::class, ITILFollowup::class];
+    $itemtype          = (string) ($_POST['itemtype'] ?? Release::class);
+    if (!in_array($itemtype, $allowed_itemtypes, true)) {
+        throw new BadRequestHttpException();
+    }
+
+    // check() on the release carries the UPDATE right, the entity and the access to the object
+    $releases_id = (int) ($_POST['plugin_releases_releases_id'] ?? 0);
+    $release->check($releases_id, UPDATE);
+    // The targeted item must belong to the release the right has just been checked against,
+    // otherwise the guard would apply to another release than the one being written
+    $items_id = (int) ($_POST['items_id'] ?? 0);
+    if ($itemtype === Release::class) {
+        if ($items_id !== $releases_id) {
+            throw new NotFoundHttpException();
+        }
+    } else {
+        $subitem = new $itemtype();
+        if (!$subitem->getFromDB($items_id)) {
+            throw new NotFoundHttpException();
+        }
+        if ($itemtype === ITILFollowup::class) {
+            // A followup carries a polymorphic parent, the plugin subitems a plain foreign key
+            if ($subitem->fields['itemtype'] !== Release::class
+                || (int) $subitem->fields['items_id'] !== $releases_id) {
+                throw new NotFoundHttpException();
+            }
+        } elseif ((int) $subitem->fields['plugin_releases_releases_id'] !== $releases_id) {
+            throw new NotFoundHttpException();
+        }
+    }
+
     $document_item = new Document_Item();
-    $document_item->getFromDBByCrit([
-        'itemtype'     => Release::class,
-        'items_id'     => (int) ($_POST[Release::class] ?? 0),
+    if (!$document_item->getFromDBByCrit([
+        'itemtype'     => $itemtype,
+        'items_id'     => $items_id,
         'documents_id' => (int) ($_POST['documents_id'] ?? 0),
-    ]);
+    ])) {
+        throw new NotFoundHttpException();
+    }
     // check() on the linkage carries the DELETE right, the entity and the
-    // access to the target Release, so a document cannot be detached from a
+    // access to the target item, so a document cannot be detached from a
     // release the user has no access to (aligned with review.form.php). The
     // Document right alone was not enough: it left the release access unchecked.
     $document_item->check($document_item->getID(), DELETE);
-    $document_item->delete([
-        'id'           => $document_item->getID(),
-        'itemtype'     => Release::class,
-        'items_id'     => (int) ($_POST[Release::class] ?? 0),
-        'documents_id' => (int) ($_POST['documents_id'] ?? 0),
-    ]);
+    $document_item->delete(['id' => $document_item->getID()]);
     Html::back();
 
 } else {

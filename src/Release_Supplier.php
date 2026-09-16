@@ -33,10 +33,6 @@ use CommonITILActor;
 use Glpi\Application\View\TemplateRenderer;
 use Supplier;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * Release_Supplier Class
  *

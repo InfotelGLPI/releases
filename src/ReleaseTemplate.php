@@ -49,10 +49,6 @@ use Supplier;
 use Toolbox;
 use User;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * Template for Release
  * @since 9.1
@@ -1178,20 +1174,20 @@ class ReleaseTemplate extends CommonDropdown
 
             if (isset($item_i['plugin_releases_typedeploytasks_id'])
                 && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
-                echo Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id']) . "<br>";
+                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id'])) . "<br>";
             }
             if (isset($item_i['plugin_releases_typerisks_id'])
                 && !empty($item_i['plugin_releases_typerisks_id'])) {
-                echo Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id']) . "<br>";
+                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id'])) . "<br>";
             }
             if (isset($item_i['plugin_releases_typetests_id'])
                 && !empty($item_i['plugin_releases_typetests_id'])) {
-                echo Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id']) . "<br>";
+                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id'])) . "<br>";
             }
             if (isset($item_i['plugin_releases_risks_id'])
                 && !empty($item_i['plugin_releases_risks_id'])) {
                 echo __("Associated with", 'releases') . " ";
-                echo Dropdown::getDropdownName("glpi_plugin_releases_risktemplates", $item_i['plugin_releases_risks_id']) . "<br>";
+                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_risktemplates", $item_i['plugin_releases_risks_id'])) . "<br>";
             }
 
             if (isset($item_i['actiontime'])
@@ -1429,7 +1425,7 @@ class ReleaseTemplate extends CommonDropdown
             } else { // predefined value
                 if (isset($options["_users_id_requester"]) && $options["_users_id_requester"]) {
                     echo static::getActorIcon('user', CommonITILActor::REQUESTER) . "&nbsp;";
-                    echo Dropdown::getDropdownName("glpi_users", $options["_users_id_requester"]);
+                    echo htmlescape(Dropdown::getDropdownName("glpi_users", $options["_users_id_requester"]));
                     echo Html::hidden('_users_id_requester', ['value' => $options["_users_id_requester"]]);
                     echo '<br>';
                     $reqdisplay = true;
@@ -1466,7 +1462,7 @@ class ReleaseTemplate extends CommonDropdown
         } else { // predefined value
             if (isset($options["_groups_id_requester"]) && $options["_groups_id_requester"]) {
                 echo static::getActorIcon('group', CommonITILActor::REQUESTER) . "&nbsp;";
-                echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_requester"]);
+                echo htmlescape(Dropdown::getDropdownName("glpi_groups", $options["_groups_id_requester"]));
                 echo Html::hidden('_groups_id_requester', ['value' => $options["_groups_id_requester"]]);
                 echo '<br>';
             }
@@ -1496,7 +1492,7 @@ class ReleaseTemplate extends CommonDropdown
         } else { // predefined value
             if (isset($options["_users_id_observer"][0]) && $options["_users_id_observer"][0]) {
                 echo static::getActorIcon('user', CommonITILActor::OBSERVER) . "&nbsp;";
-                echo Dropdown::getDropdownName("glpi_users", $options["_users_id_observer"][0]);
+                echo htmlescape(Dropdown::getDropdownName("glpi_users", $options["_users_id_observer"][0]));
                 echo Html::hidden('_users_id_observer', ['value' => $options["_users_id_observer"][0]]);
                 echo '<hr>';
             }
@@ -1516,7 +1512,7 @@ class ReleaseTemplate extends CommonDropdown
         } else { // predefined value
             if (isset($options["_groups_id_observer"]) && $options["_groups_id_observer"]) {
                 echo static::getActorIcon('group', CommonITILActor::OBSERVER) . "&nbsp;";
-                echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_observer"]);
+                echo htmlescape(Dropdown::getDropdownName("glpi_groups", $options["_groups_id_observer"]));
                 echo Html::hidden('_groups_id_observer', ['value' => $options["_groups_id_observer"]]);
                 echo '<br>';
             }
@@ -1560,7 +1556,7 @@ class ReleaseTemplate extends CommonDropdown
             if (isset($options["_users_id_assign"]) && $options["_users_id_assign"]
                 && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
                 echo static::getActorIcon('user', CommonITILActor::ASSIGN) . "&nbsp;";
-                echo Dropdown::getDropdownName("glpi_users", $options["_users_id_assign"]);
+                echo htmlescape(Dropdown::getDropdownName("glpi_users", $options["_users_id_assign"]));
                 echo Html::hidden('_users_id_assign', ['value' => $options["_users_id_assign"]]);
                 echo '<hr>';
             }
@@ -1589,7 +1585,7 @@ class ReleaseTemplate extends CommonDropdown
                 && $options["_groups_id_assign"]
                 && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
                 echo static::getActorIcon('group', CommonITILActor::ASSIGN) . "&nbsp;";
-                echo Dropdown::getDropdownName("glpi_groups", $options["_groups_id_assign"]);
+                echo htmlescape(Dropdown::getDropdownName("glpi_groups", $options["_groups_id_assign"]));
                 echo Html::hidden('_groups_id_assign', ['value' => $options["_groups_id_assign"]]);
                 echo '<hr>';
             }
@@ -1605,7 +1601,7 @@ class ReleaseTemplate extends CommonDropdown
                 && $options["_suppliers_id_assign"]
                 && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
                 echo static::getActorIcon('supplier', CommonITILActor::ASSIGN) . "&nbsp;";
-                echo Dropdown::getDropdownName("glpi_suppliers", $options["_suppliers_id_assign"]);
+                echo htmlescape(Dropdown::getDropdownName("glpi_suppliers", $options["_suppliers_id_assign"]));
                 echo Html::hidden('_suppliers_id_assign', ['value' => $options["_suppliers_id_assign"]]);
                 echo '<hr>';
             }
@@ -2816,19 +2812,34 @@ class ReleaseTemplate extends CommonDropdown
             case "transfer":
                 $input = $ma->getInput();
                 if ($item->getType() == ReleaseTemplate::getType()) {
-                    foreach ($ids as $key) {
-                        $item->getFromDB($key);
+                    // The posted target entity must be revalidated: a right check protects the row, not the posted value
+                    $entities_id = (int) ($input['entities_id'] ?? -1);
+                    if ($entities_id < 0 || !Session::haveAccessToEntity($entities_id)) {
+                        $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                        foreach ($ids as $key) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        }
+                        return;
+                    }
 
-                        unset($values);
+                    foreach ($ids as $key) {
+                        // The core forwards the posted ids as is: the right has to be rechecked on each row
+                        if (!$item->can($key, UPDATE)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            $ma->addMessage($item->getErrorMessage(ERROR_RIGHT));
+                            continue;
+                        }
+
+                        $values                = [];
                         $values["id"]          = $key;
-                        $values["entities_id"] = $input['entities_id'];
+                        $values["entities_id"] = $entities_id;
 
                         if ($item->update($values)) {
-                            Deploytasktemplate::transfer($key, $input["entities_id"]);
-                            Testtemplate::transfer($key, $input["entities_id"]);
-                            Risktemplate::transfer($key, $input["entities_id"]);
-                            Rollbacktemplate::transfer($key, $input["entities_id"]);
-                            self::transferDocument($key, $input["entities_id"]);
+                            Deploytasktemplate::transfer($key, $entities_id);
+                            Testtemplate::transfer($key, $entities_id);
+                            Risktemplate::transfer($key, $entities_id);
+                            Rollbacktemplate::transfer($key, $entities_id);
+                            self::transferDocument($key, $entities_id);
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);

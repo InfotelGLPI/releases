@@ -37,10 +37,6 @@ use Glpi\Application\View\TemplateRenderer;
 use Glpi\ContentTemplates\TemplateManager;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
 /**
  * Template for risk
  * @since 9.1
