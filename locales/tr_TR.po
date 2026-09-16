@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 13:56+0000\n"
+"POT-Creation-Date: 2026-09-16 15:00+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3168
+#: src/Release.php:3221
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -87,12 +87,12 @@ msgctxt "button"
 msgid "Add"
 msgstr "Ekle"
 
-#: src/Release.php:1396
+#: src/Release.php:1442
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Bir dağıtım görevi ekle"
 
-#: src/Release.php:1339
+#: src/Release.php:1385
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Bir izleme ekle"
@@ -101,17 +101,17 @@ msgstr "Bir izleme ekle"
 msgid "Add a release"
 msgstr "Bir sürüm ekle"
 
-#: src/Release.php:1358
+#: src/Release.php:1404
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Bir risk ekle"
 
-#: src/Release.php:1377
+#: src/Release.php:1423
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Bir geri alma ekle"
 
-#: src/Release.php:1415
+#: src/Release.php:1461
 msgctxt "button"
 msgid "Add a test"
 msgstr "Bir deneme ekle"
@@ -127,7 +127,7 @@ msgstr[1] "İlişkili değişiklikler"
 msgid "Associated risk"
 msgstr "İlişkili risk"
 
-#: src/Release.php:2593 src/ReleaseTemplate.php:1189
+#: src/Release.php:2646 src/ReleaseTemplate.php:1188
 msgid "Associated with"
 msgstr "Şununla ilişkili"
 
@@ -145,7 +145,7 @@ msgid_plural "Categories"
 msgstr[0] "Kategori"
 msgstr[1] "Kategoriler"
 
-#: src/Release.php:933
+#: src/Release.php:979
 msgid "Changes defined"
 msgstr "Tanımlanmış değişiklikler"
 
@@ -161,14 +161,14 @@ msgstr "Kapat"
 msgid "Closure of a releases"
 msgstr "Bir sürümün kapatılması"
 
-#: src/Release.php:372 templates/form_releasetemplate.html.twig:149
+#: src/Release.php:374 templates/form_releasetemplate.html.twig:149
 #: templates/form_releasetemplate.html.twig:157
 #: templates/fields_panel.html.twig:304 templates/fields_panel.html.twig:319
 #: templates/fields_panel.html.twig:331
 msgid "Communication"
 msgstr "İletişim"
 
-#: src/Release.php:387 templates/form_releasetemplate.html.twig:163
+#: src/Release.php:389 templates/form_releasetemplate.html.twig:163
 #: templates/fields_panel.html.twig:347
 msgid "Communication type"
 msgstr "İletişim türü"
@@ -209,7 +209,7 @@ msgstr "Oluşturulma tarihi"
 msgid "Date"
 msgstr "Tarih"
 
-#: src/Release.php:932
+#: src/Release.php:978
 msgid "Dates defined"
 msgstr "Tanımlanmış tarihler"
 
@@ -237,8 +237,8 @@ msgid "Deploy Task type"
 msgstr "Dağıtma görevi türü"
 
 #: src/NotificationTargetRelease.php:938 src/NotificationTargetRelease.php:958
-#: src/Release.php:2124 src/Release.php:2126 src/ReleaseTemplate.php:199
-#: src/ReleaseTemplate.php:992 src/ReleaseTemplate.php:993
+#: src/Release.php:2175 src/Release.php:2177 src/ReleaseTemplate.php:199
+#: src/ReleaseTemplate.php:987 src/ReleaseTemplate.php:988
 #: src/Deploytask.php:67 templates/timeline.html.twig:120
 #: templates/form_finalization.html.twig:64
 #: templates/filter_timeline.html.twig:54
@@ -253,7 +253,7 @@ msgid_plural "Deploy task types"
 msgstr[0] "Dağıtma görevi türü"
 msgstr[1] "Dağıtma görevi türleri"
 
-#: src/Release.php:936
+#: src/Release.php:982
 msgid "Deployment tasks in progress"
 msgstr "İşlenen dağıtma görevleri"
 
@@ -297,7 +297,7 @@ msgstr[1] "E-postalar"
 msgid "Email Followup"
 msgstr "E-posta izleme"
 
-#: src/Release.php:940
+#: src/Release.php:986
 msgctxt "status"
 msgid "End"
 msgstr "Bitiş"
@@ -312,8 +312,8 @@ msgid_plural "Entities"
 msgstr[0] "Birim"
 msgstr[1] "Birimler"
 
-#: src/Test.php:231 src/Test.php:247 src/Deploytasktemplate.php:241
-#: src/Release.php:941 src/Deploytask.php:359 src/Deploytask.php:701
+#: src/Test.php:231 src/Test.php:247 src/Deploytasktemplate.php:236
+#: src/Release.php:987 src/Deploytask.php:359 src/Deploytask.php:714
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -333,14 +333,14 @@ msgstr "Sonuçlandırma"
 msgid "Finalize"
 msgstr "Sonuçlandır"
 
-#: src/Release.php:2236 templates/timeline.html.twig:122
+#: src/Release.php:2287 templates/timeline.html.twig:122
 #: templates/filter_timeline.html.twig:36
 msgid "Followup"
 msgid_plural "Followups"
 msgstr[0] "İzleme"
 msgstr[1] "İzlemeler"
 
-#: src/Release.php:2800 templates/fields_panel.html.twig:104
+#: src/Release.php:2853 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Bu değişikliği"
 
@@ -348,7 +348,7 @@ msgstr "Bu değişikliği"
 msgid "Group"
 msgstr "Grup"
 
-#: src/ReleaseTemplate.php:1897
+#: src/ReleaseTemplate.php:1896
 msgid "Group in charge of the release"
 msgstr "Bu sürümden sorumlu grup"
 
@@ -360,7 +360,7 @@ msgstr "Geçmiş"
 msgid "Incidents during process"
 msgstr "İşlenirken çıkan sorunlar"
 
-#: src/Release.php:641
+#: src/Release.php:672
 msgid "Invalid communication type"
 msgstr "İletişim türü geçersiz"
 
@@ -391,11 +391,11 @@ msgstr "Ad"
 msgid "New release"
 msgstr "Yeni sürüm"
 
-#: src/Release.php:2639 src/ReleaseTemplate.php:1237
+#: src/Release.php:2692 src/ReleaseTemplate.php:1236
 msgid "No data available"
 msgstr "Kullanılabilecek bir veri yok"
 
-#: src/Release.php:3172 src/Release.php:3219
+#: src/Release.php:3225 src/Release.php:3272
 msgid "No release found."
 msgstr "Herhangi bir sürüm bulunamadı."
 
@@ -408,22 +408,22 @@ msgstr "Çalışılmayan saatler"
 msgid "Not yet completed"
 msgstr "Henüz tamamlanmamış"
 
-#: src/NotificationTargetRelease.php:750 src/Release.php:285
+#: src/NotificationTargetRelease.php:750 src/Release.php:287
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Risk sayısı"
 
-#: src/NotificationTargetRelease.php:756 src/Release.php:298
+#: src/NotificationTargetRelease.php:756 src/Release.php:300
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Geri alma sayısı"
 
-#: src/NotificationTargetRelease.php:880 src/Release.php:325
+#: src/NotificationTargetRelease.php:880 src/Release.php:327
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Görev sayısı"
 
-#: src/NotificationTargetRelease.php:763 src/Release.php:311
+#: src/NotificationTargetRelease.php:763 src/Release.php:313
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Deneme sayısı"
@@ -440,7 +440,7 @@ msgstr "Bu görevi planla"
 msgid "Pre-production planned date"
 msgstr "Planlanan üretim öncesi tarihi"
 
-#: src/Release.php:277 src/ReleaseTemplate.php:171
+#: src/Release.php:279 src/ReleaseTemplate.php:171
 msgid "Pre-production run date"
 msgstr "Üretim öncesi çalışma tarihi"
 
@@ -465,7 +465,7 @@ msgstr "Üretim dağıtımı bilgileri"
 msgid "Production planned date"
 msgstr "Planlanan üretim zamanı"
 
-#: src/Release.php:347 src/ReleaseTemplate.php:175
+#: src/Release.php:349 src/ReleaseTemplate.php:175
 #: templates/form_finalization_confirm.html.twig:40
 msgid "Production run date"
 msgstr "Üretim çalışma tarihi"
@@ -481,14 +481,14 @@ msgid "Real production run date"
 msgstr "Gerçek üretim çalışma tarihi"
 
 #: setup.php:114 front/change_release.form.php:46
-#: src/NotificationTargetRelease.php:962 src/Release.php:101 src/Profile.php:58
+#: src/NotificationTargetRelease.php:962 src/Release.php:102 src/Profile.php:58
 #: templates/form_releasetemplate_menu.html.twig:32
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Sürüm"
 msgstr[1] "Sürümler"
 
-#: src/Release.php:3022 src/ReleaseTemplate.php:1275
+#: src/Release.php:3075 src/ReleaseTemplate.php:1274
 msgid "Release actions details"
 msgstr "Sürüm işlemleri bilgileri"
 
@@ -496,7 +496,7 @@ msgstr "Sürüm işlemleri bilgileri"
 msgid "Release area"
 msgstr "Sürüm bölgesi"
 
-#: src/Release.php:931
+#: src/Release.php:977
 msgid "Release area defined"
 msgstr "Tanımlanmış sürüm bölgeleri"
 
@@ -510,7 +510,7 @@ msgid_plural "Release templates"
 msgstr[0] "Sürüm kalıbı"
 msgstr[1] "Sürüm kalıpları"
 
-#: src/Release.php:3207
+#: src/Release.php:3260
 msgid "Releases on linked items"
 msgstr "İlgili ögelerdeki sürümler"
 
@@ -520,7 +520,7 @@ msgid_plural "Requester groups"
 msgstr[0] "İstekte bulunan grup"
 msgstr[1] "İstekte bulunan grupları"
 
-#: src/Release.php:2240
+#: src/Release.php:2291
 msgid "Reset display options"
 msgstr "Görüntüleme seçeneklerini sıfırla"
 
@@ -535,7 +535,7 @@ msgid_plural "Reviews"
 msgstr[0] "Değerlendirme"
 msgstr[1] "Değerlendirmeler"
 
-#: src/Release.php:939
+#: src/Release.php:985
 msgid "Reviewed"
 msgstr "Onaylanmış"
 
@@ -563,7 +563,7 @@ msgid_plural "Risk types"
 msgstr[0] "Risk türü"
 msgstr[1] "Risk türleri"
 
-#: src/Release.php:934
+#: src/Release.php:980
 msgid "Risks defined"
 msgstr "Tanımlanmış riskler"
 
@@ -583,7 +583,7 @@ msgid_plural "Rollback templates"
 msgstr[0] "Geri alma kalıbı"
 msgstr[1] "Geri alma kalıpları"
 
-#: src/Release.php:935
+#: src/Release.php:981
 msgid "Rollbacks defined"
 msgstr "Tanımlanmış geri almalar"
 
@@ -595,7 +595,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/Release.php:355 src/ReleaseTemplate.php:179 src/Change_Release.php:359
+#: src/Release.php:357 src/ReleaseTemplate.php:179 src/Change_Release.php:359
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
@@ -603,7 +603,7 @@ msgstr "Kaydet"
 msgid "Service shutdown"
 msgstr "Hizmet durdurma"
 
-#: src/Release.php:363 src/ReleaseTemplate.php:183
+#: src/Release.php:365 src/ReleaseTemplate.php:183
 #: templates/form_releasetemplate.html.twig:132
 #: templates/fields_panel.html.twig:284
 msgid "Service shutdown details"
@@ -669,7 +669,7 @@ msgid_plural "Test types"
 msgstr[0] "Sınama türü"
 msgstr[1] "Sınama türleri"
 
-#: src/Release.php:937
+#: src/Release.php:983
 msgid "Tests in progress"
 msgstr "İşlenen sınamalar"
 
@@ -694,7 +694,7 @@ msgstr "Başlık"
 msgid "To do"
 msgstr "Yapılacak iş"
 
-#: src/Release.php:938
+#: src/Release.php:984
 msgid "To finalized"
 msgstr "Sonuçlandırılacak"
 

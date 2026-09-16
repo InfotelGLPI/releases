@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 13:56+0000\n"
+"POT-Creation-Date: 2026-09-16 15:00+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Maykon Henrique Facincani <facincani.maykon@gmail.com>, "
 "2022\n"
@@ -25,7 +25,7 @@ msgstr ""
 "1000000 == 0 ? 1 : 2;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3168
+#: src/Release.php:3221
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -91,12 +91,12 @@ msgctxt "button"
 msgid "Add"
 msgstr "Adicionar"
 
-#: src/Release.php:1396
+#: src/Release.php:1442
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Adicionar uma tarefa de implantação"
 
-#: src/Release.php:1339
+#: src/Release.php:1385
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Adicionar um acompanhamento"
@@ -105,17 +105,17 @@ msgstr "Adicionar um acompanhamento"
 msgid "Add a release"
 msgstr "Adicionar uma liberação"
 
-#: src/Release.php:1358
+#: src/Release.php:1404
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Adicionar um risco"
 
-#: src/Release.php:1377
+#: src/Release.php:1423
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Adicionar uma reversão"
 
-#: src/Release.php:1415
+#: src/Release.php:1461
 msgctxt "button"
 msgid "Add a test"
 msgstr "Adicionar um teste"
@@ -132,7 +132,7 @@ msgstr[2] "Mudanças associadas"
 msgid "Associated risk"
 msgstr "Risco associado"
 
-#: src/Release.php:2593 src/ReleaseTemplate.php:1189
+#: src/Release.php:2646 src/ReleaseTemplate.php:1188
 msgid "Associated with"
 msgstr "Associado com"
 
@@ -151,7 +151,7 @@ msgstr[0] "Categoria"
 msgstr[1] "Categorias"
 msgstr[2] "Categorias"
 
-#: src/Release.php:933
+#: src/Release.php:979
 msgid "Changes defined"
 msgstr "Mudanças definidas"
 
@@ -167,14 +167,14 @@ msgstr ""
 msgid "Closure of a releases"
 msgstr "Encerramento de uma liberação"
 
-#: src/Release.php:372 templates/form_releasetemplate.html.twig:149
+#: src/Release.php:374 templates/form_releasetemplate.html.twig:149
 #: templates/form_releasetemplate.html.twig:157
 #: templates/fields_panel.html.twig:304 templates/fields_panel.html.twig:319
 #: templates/fields_panel.html.twig:331
 msgid "Communication"
 msgstr "Comunicação"
 
-#: src/Release.php:387 templates/form_releasetemplate.html.twig:163
+#: src/Release.php:389 templates/form_releasetemplate.html.twig:163
 #: templates/fields_panel.html.twig:347
 msgid "Communication type"
 msgstr "Tipo de comunicação"
@@ -215,7 +215,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/Release.php:932
+#: src/Release.php:978
 msgid "Dates defined"
 msgstr "Datas definidas"
 
@@ -244,8 +244,8 @@ msgid "Deploy Task type"
 msgstr "Tipo de Tarefa de Implantação"
 
 #: src/NotificationTargetRelease.php:938 src/NotificationTargetRelease.php:958
-#: src/Release.php:2124 src/Release.php:2126 src/ReleaseTemplate.php:199
-#: src/ReleaseTemplate.php:992 src/ReleaseTemplate.php:993
+#: src/Release.php:2175 src/Release.php:2177 src/ReleaseTemplate.php:199
+#: src/ReleaseTemplate.php:987 src/ReleaseTemplate.php:988
 #: src/Deploytask.php:67 templates/timeline.html.twig:120
 #: templates/form_finalization.html.twig:64
 #: templates/filter_timeline.html.twig:54
@@ -262,7 +262,7 @@ msgstr[0] "Tipo de Tarefa de implantação"
 msgstr[1] "Tipos de Tarefas de implantação"
 msgstr[2] "Tipos de Tarefas de implantação"
 
-#: src/Release.php:936
+#: src/Release.php:982
 msgid "Deployment tasks in progress"
 msgstr "Tarefas de implantação em andamento"
 
@@ -308,7 +308,7 @@ msgstr[2] ""
 msgid "Email Followup"
 msgstr ""
 
-#: src/Release.php:940
+#: src/Release.php:986
 msgctxt "status"
 msgid "End"
 msgstr "Fim"
@@ -324,8 +324,8 @@ msgstr[0] "Entidade"
 msgstr[1] "Entidades"
 msgstr[2] "Entidades"
 
-#: src/Test.php:231 src/Test.php:247 src/Deploytasktemplate.php:241
-#: src/Release.php:941 src/Deploytask.php:359 src/Deploytask.php:701
+#: src/Test.php:231 src/Test.php:247 src/Deploytasktemplate.php:236
+#: src/Release.php:987 src/Deploytask.php:359 src/Deploytask.php:714
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -345,7 +345,7 @@ msgstr "Finalização"
 msgid "Finalize"
 msgstr "Finalizar"
 
-#: src/Release.php:2236 templates/timeline.html.twig:122
+#: src/Release.php:2287 templates/timeline.html.twig:122
 #: templates/filter_timeline.html.twig:36
 #, fuzzy
 msgid "Followup"
@@ -354,7 +354,7 @@ msgstr[0] "Acompanhamento"
 msgstr[1] "Acompanhamento"
 msgstr[2] "Acompanhamento"
 
-#: src/Release.php:2800 templates/fields_panel.html.twig:104
+#: src/Release.php:2853 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Para essa mudança"
 
@@ -362,7 +362,7 @@ msgstr "Para essa mudança"
 msgid "Group"
 msgstr ""
 
-#: src/ReleaseTemplate.php:1897
+#: src/ReleaseTemplate.php:1896
 msgid "Group in charge of the release"
 msgstr "Grupo encarregado da liberação"
 
@@ -374,7 +374,7 @@ msgstr ""
 msgid "Incidents during process"
 msgstr "Incidentes durante o processo"
 
-#: src/Release.php:641
+#: src/Release.php:672
 msgid "Invalid communication type"
 msgstr ""
 
@@ -406,11 +406,11 @@ msgstr ""
 msgid "New release"
 msgstr "Nova liberação"
 
-#: src/Release.php:2639 src/ReleaseTemplate.php:1237
+#: src/Release.php:2692 src/ReleaseTemplate.php:1236
 msgid "No data available"
 msgstr "Sem dados disponíveis"
 
-#: src/Release.php:3172 src/Release.php:3219
+#: src/Release.php:3225 src/Release.php:3272
 msgid "No release found."
 msgstr "Nenhuma liberação encontrada"
 
@@ -423,22 +423,22 @@ msgstr "Horas não trabalhadas"
 msgid "Not yet completed"
 msgstr "Não completados ainda"
 
-#: src/NotificationTargetRelease.php:750 src/Release.php:285
+#: src/NotificationTargetRelease.php:750 src/Release.php:287
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Número de riscos"
 
-#: src/NotificationTargetRelease.php:756 src/Release.php:298
+#: src/NotificationTargetRelease.php:756 src/Release.php:300
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Número de reversões"
 
-#: src/NotificationTargetRelease.php:880 src/Release.php:325
+#: src/NotificationTargetRelease.php:880 src/Release.php:327
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Número de tarefas"
 
-#: src/NotificationTargetRelease.php:763 src/Release.php:311
+#: src/NotificationTargetRelease.php:763 src/Release.php:313
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Número de testes"
@@ -455,7 +455,7 @@ msgstr "Planejar essa tarefa"
 msgid "Pre-production planned date"
 msgstr "Data planejada para Pré-produção"
 
-#: src/Release.php:277 src/ReleaseTemplate.php:171
+#: src/Release.php:279 src/ReleaseTemplate.php:171
 msgid "Pre-production run date"
 msgstr "Data de execução da pré-produção"
 
@@ -480,7 +480,7 @@ msgstr ""
 msgid "Production planned date"
 msgstr "Data planejada de produção"
 
-#: src/Release.php:347 src/ReleaseTemplate.php:175
+#: src/Release.php:349 src/ReleaseTemplate.php:175
 #: templates/form_finalization_confirm.html.twig:40
 msgid "Production run date"
 msgstr "Data de execução da produção"
@@ -496,7 +496,7 @@ msgid "Real production run date"
 msgstr "Data real de execução em produção"
 
 #: setup.php:114 front/change_release.form.php:46
-#: src/NotificationTargetRelease.php:962 src/Release.php:101 src/Profile.php:58
+#: src/NotificationTargetRelease.php:962 src/Release.php:102 src/Profile.php:58
 #: templates/form_releasetemplate_menu.html.twig:32
 msgid "Release"
 msgid_plural "Releases"
@@ -504,7 +504,7 @@ msgstr[0] "Liberação"
 msgstr[1] "Liberações"
 msgstr[2] "Liberações"
 
-#: src/Release.php:3022 src/ReleaseTemplate.php:1275
+#: src/Release.php:3075 src/ReleaseTemplate.php:1274
 msgid "Release actions details"
 msgstr "Detalhes das ações da liberação"
 
@@ -512,7 +512,7 @@ msgstr "Detalhes das ações da liberação"
 msgid "Release area"
 msgstr "Área da liberação"
 
-#: src/Release.php:931
+#: src/Release.php:977
 msgid "Release area defined"
 msgstr "Área da liberação definida"
 
@@ -527,7 +527,7 @@ msgstr[0] "Modelo de Liberação"
 msgstr[1] "Modelos de Liberação"
 msgstr[2] "Modelos de Liberação"
 
-#: src/Release.php:3207
+#: src/Release.php:3260
 msgid "Releases on linked items"
 msgstr "Liberações nos items vinculados"
 
@@ -538,7 +538,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/Release.php:2240
+#: src/Release.php:2291
 msgid "Reset display options"
 msgstr ""
 
@@ -554,7 +554,7 @@ msgstr[0] "Revisão"
 msgstr[1] "Revisões"
 msgstr[2] "Revisões"
 
-#: src/Release.php:939
+#: src/Release.php:985
 msgid "Reviewed"
 msgstr "Revisto"
 
@@ -586,7 +586,7 @@ msgstr[0] "Tipo de Risco"
 msgstr[1] "Tipos de Risco"
 msgstr[2] "Tipos de Risco"
 
-#: src/Release.php:934
+#: src/Release.php:980
 msgid "Risks defined"
 msgstr "Riscos definidos"
 
@@ -608,7 +608,7 @@ msgstr[0] "Modelo de Reversão"
 msgstr[1] "Modelos de Reversão"
 msgstr[2] "Modelos de Reversão"
 
-#: src/Release.php:935
+#: src/Release.php:981
 msgid "Rollbacks defined"
 msgstr "Reversões definidas"
 
@@ -620,7 +620,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Salvar"
 
-#: src/Release.php:355 src/ReleaseTemplate.php:179 src/Change_Release.php:359
+#: src/Release.php:357 src/ReleaseTemplate.php:179 src/Change_Release.php:359
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
@@ -628,7 +628,7 @@ msgstr "Salvar"
 msgid "Service shutdown"
 msgstr "Desligamento do serviço"
 
-#: src/Release.php:363 src/ReleaseTemplate.php:183
+#: src/Release.php:365 src/ReleaseTemplate.php:183
 #: templates/form_releasetemplate.html.twig:132
 #: templates/fields_panel.html.twig:284
 msgid "Service shutdown details"
@@ -700,7 +700,7 @@ msgstr[0] "Tipo de Teste"
 msgstr[1] "Tipos de Teste"
 msgstr[2] "Tipos de Teste"
 
-#: src/Release.php:937
+#: src/Release.php:983
 msgid "Tests in progress"
 msgstr "Teste em progresso"
 
@@ -725,7 +725,7 @@ msgstr "Título"
 msgid "To do"
 msgstr "A fazer"
 
-#: src/Release.php:938
+#: src/Release.php:984
 msgid "To finalized"
 msgstr "Para finalizar"
 
