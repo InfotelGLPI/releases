@@ -35,6 +35,7 @@ use CommonGLPI;
 use DbUtils;
 use Dropdown;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\DBAL\QuerySubQuery;
 use Html;
 use Session;
 use Toolbox;
@@ -88,10 +89,62 @@ class Release_Item extends CommonDBRelation
     }
 
     /**
+     * Itemtypes that may be linked to a release.
+     *
+     * showForRelease() builds its dropdown with them and prepareInputForAdd() replays
+     * them at the sink, so the rule is written once only.
+     *
+     * @return array<int, string>
+     */
+    public static function getLinkableItemtypes()
+    {
+        $release = new Release();
+        return array_keys($release->getAllTypesForHelpdesk());
+    }
+
+    /**
+     * Entity restriction applied to the item dropdown of a release.
+     *
+     * @param Release $release
+     *
+     * @return int|array<int, int>
+     */
+    public static function getEntityRestrict(Release $release)
+    {
+        return $release->fields['is_recursive']
+            ? getSonsOf('glpi_entities', $release->fields['entities_id'])
+            : $release->fields['entities_id'];
+    }
+
+    /**
      * @see CommonDBTM::prepareInputForAdd()
      **/
     public function prepareInputForAdd($input)
     {
+        // Mirror of ReleaseTemplate_Item::prepareInputForAdd(): the dropdown restricts
+        // both the itemtype and the entity, and the core only covers the rights and the
+        // entity coherency, never the set of allowed itemtypes. Replay the very criteria
+        // showForRelease() builds the dropdown with.
+        $release = new Release();
+        if (!$release->getFromDB((int) ($input['plugin_releases_releases_id'] ?? 0))
+            || !$release->can($release->getID(), UPDATE)) {
+            return false;
+        }
+        if (!in_array($input['itemtype'] ?? '', self::getLinkableItemtypes(), true)) {
+            return false;
+        }
+        $item = getItemForItemtype($input['itemtype']);
+        if ($item === false || !$item->getFromDB((int) ($input['items_id'] ?? 0))) {
+            return false;
+        }
+        if ($item->isEntityAssign()) {
+            $item_entity = (int) $item->fields['entities_id'];
+            $allowed     = array_map('intval', (array) self::getEntityRestrict($release));
+            if (!in_array($item_entity, $allowed, true)
+                || !Session::haveAccessToEntity($item_entity, $item->isRecursive())) {
+                return false;
+            }
+        }
 
         // Avoid duplicate entry
         if (countElementsInTable($this->getTable(), ['plugin_releases_releases_id' => $input['plugin_releases_releases_id'],
@@ -122,18 +175,12 @@ class Release_Item extends CommonDBRelation
         $types_iterator = self::getDistinctTypes($instID);
 
         if ($canedit) {
-            $types = [];
-            foreach ($release->getAllTypesForHelpdesk() as $key => $val) {
-                $types[] = $key;
-            }
             // Capture the itemtype selector (echoes internally) and render the add
             // mini-form through Twig instead of echoing raw HTML.
             ob_start();
             Dropdown::showSelectItemFromItemtypes([
-                'itemtypes'       => $types,
-                'entity_restrict' => ($release->fields['is_recursive']
-                   ? getSonsOf('glpi_entities', $release->fields['entities_id'])
-                   : $release->fields['entities_id']),
+                'itemtypes'       => self::getLinkableItemtypes(),
+                'entity_restrict' => self::getEntityRestrict($release),
             ]);
             $dropdown_html = ob_get_clean();
 
@@ -219,31 +266,53 @@ class Release_Item extends CommonDBRelation
         ]);
     }
 
+    /**
+     * Restrict a count to the releases the current session may actually see.
+     *
+     * The actor and item link tables carry no entities_id of their own, so the
+     * boundary has to be borrowed from the release they point at — otherwise the tab
+     * counter aggregates every entity, which is a disclosure of its own.
+     *
+     * @return array<string, mixed> criteria on plugin_releases_releases_id
+     */
+    private static function getVisibleReleasesCriteria()
+    {
+        $dbu           = new DbUtils();
+        $release_table = getTableForItemType(Release::class);
+
+        return ['plugin_releases_releases_id' => new QuerySubQuery([
+            'SELECT' => 'id',
+            'FROM'   => $release_table,
+            'WHERE'  => $dbu->getEntitiesRestrictCriteria($release_table, '', '', true),
+        ])];
+    }
+
     public static function countForItem(CommonDBTM $item)
     {
-        $dbu = new DbUtils();
+        $dbu       = new DbUtils();
+        $visible   = self::getVisibleReleasesCriteria();
 
         if ($item->getType() == 'User') {
             return $dbu->countElementsInTable(
                 getTableForItemType(Release_User::class),
-                ["users_id" => $item->getID()],
+                ["users_id" => $item->getID()] + $visible,
             );
         } elseif ($item->getType() == 'Group') {
             return $dbu->countElementsInTable(
                 getTableForItemType(Group_Release::class),
-                ["groups_id" => $item->getID()],
+                ["groups_id" => $item->getID()] + $visible,
             );
         } elseif ($item->getType() == 'Supplier') {
             return $dbu->countElementsInTable(
                 getTableForItemType(Release_Supplier::class),
-                ["suppliers_id" => $item->getID()],
+                ["suppliers_id" => $item->getID()] + $visible,
             );
         } else {
             $table = getTableForItemType(Release_Item::class);
             return $dbu->countElementsInTable(
                 $table,
                 ["items_id" => $item->getID(),
-                    "itemtype" => $item->getType()],
+                    "itemtype" => $item->getType()] + $visible,
             );
         }
     }
@@ -273,6 +342,12 @@ class Release_Item extends CommonDBRelation
                 case 'User':
                 case 'Group':
                 case 'Supplier':
+                    // The default branch below already gates on the plugin right; these
+                    // three did not, so the tab and its counter appeared — and disclosed
+                    // release activity — to sessions holding no right on the plugin.
+                    if (!Session::haveRight("plugin_releases_releases", READ)) {
+                        return '';
+                    }
                     if ($_SESSION['glpishow_count_on_tabs']) {
                         $nb = self::countForItem($item);
                     }

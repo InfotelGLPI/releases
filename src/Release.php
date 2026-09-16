@@ -45,6 +45,7 @@ use Entity;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\ContentTemplates\Parameters\CommonITILObjectParameters;
 use Glpi\DBAL\QuerySubQuery;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\RichText\RichText;
 use Group;
 use Html;
@@ -125,9 +126,10 @@ class Release extends CommonITILObject
             return $tt;
         }
 
-        // Les colonnes releasetemplates_strategy/releasetemplates_id n'existent pas
-        // dans glpi_entities — on retourne le template vide pour éviter l'erreur SQL
-        // causée par CommonITILObject qui utilise strtolower(getType()) avec namespace
+        // The releasetemplates_strategy/releasetemplates_id columns do not exist in
+        // glpi_entities: return the empty template to avoid the SQL error raised by
+        // CommonITILObject, which builds the column name with strtolower(getType())
+        // and therefore keeps the namespace.
         return $tt;
     }
 
@@ -569,6 +571,35 @@ class Release extends CommonITILObject
      *
      * @return array
      */
+    /**
+     * Resolve a release template the current session is actually allowed to use.
+     *
+     * showForm() pre-fills the creation form from a template and post_addItem() clones
+     * its risks, tests, rollbacks, tasks, linked items, notes, knowledge base entries
+     * and documents. Both used to trust the posted id and called getFromDB() bare,
+     * which handed out — and then copied over — the content of templates belonging to
+     * other entities. Resolving through this single helper keeps the display path and
+     * the write path from ever diverging.
+     *
+     * @param int|string|null $templates_id the posted template id
+     *
+     * @return ReleaseTemplate|null the template, or null when out of reach
+     */
+    public static function getCheckedTemplate($templates_id)
+    {
+        $templates_id = (int) $templates_id;
+        if ($templates_id <= 0) {
+            return null;
+        }
+        $template = new ReleaseTemplate();
+        // can() applies the plugin right and, through canViewItem(), the entity
+        // boundary of glpi_plugin_releases_releasetemplates (entities_id/is_recursive).
+        if (!$template->getFromDB($templates_id) || !$template->can($templates_id, READ)) {
+            return null;
+        }
+        return $template;
+    }
+
     public static function getTargetListCriteria(CommonDBTM $target)
     {
         $dbu = new DbUtils();
@@ -658,6 +689,19 @@ class Release extends CommonITILObject
         $input = parent::prepareInputForAdd($input);
 
         if (!self::checkCommunicationTypeInput($input)) {
+            return false;
+        }
+
+        // post_addItem() clones the whole template into the new release: settle the
+        // access question here, so nothing is ever created from a template the session
+        // cannot read.
+        if (isset($input["releasetemplates_id"]) && (int) $input["releasetemplates_id"] > 0
+            && self::getCheckedTemplate($input["releasetemplates_id"]) === null) {
+            Session::addMessageAfterRedirect(
+                __('The action you have requested is not allowed.'),
+                false,
+                ERROR,
+            );
             return false;
         }
 
@@ -751,9 +795,11 @@ class Release extends CommonITILObject
     {
         global $DB, $CFG_GLPI;
 
-        if (isset($this->input["releasetemplates_id"])) {
-            $template = new ReleaseTemplate();
-            $template->getFromDB($this->input["releasetemplates_id"]);
+        // Defence in depth: prepareInputForAdd() already refused an unreachable template,
+        // but post_addItem() is also reached from clone() and from massive actions, so
+        // resolve it through the same checked helper here too.
+        $template = self::getCheckedTemplate($this->input["releasetemplates_id"] ?? 0);
+        if ($template !== null) {
             $risks = [];
             $releaseTest = new Test();
             $testTemplate = new Testtemplate();
@@ -871,7 +917,7 @@ class Release extends CommonITILObject
 
         $override_input['items_id'] = $this->getID();
         $override_input['itemtype'] = $this->getType();
-        if (isset($this->input["releasetemplates_id"])) {
+        if ($template !== null) {
             foreach ($relations_classes as $classname) {
                 if (!is_a($classname, CommonDBConnexity::class, true)) {
                     Toolbox::logInfo(
@@ -1449,8 +1495,13 @@ class Release extends CommonITILObject
             }
 
             if (isset($options["template_id"]) && $options["template_id"] > 0) {
-                $template = new ReleaseTemplate();
-                $template->getFromDB($options["template_id"]);
+                // The whole template — name, content, delays and above all its actors — is
+                // copied into the form below, long before the check() a few lines further
+                // down. Refuse an unreachable template rather than rendering it.
+                $template = self::getCheckedTemplate($options["template_id"]);
+                if ($template === null) {
+                    throw new AccessDeniedHttpException();
+                }
 
                 foreach ($this->fields as $key => $field) {
                     if ($key != "id"
@@ -1489,7 +1540,7 @@ class Release extends CommonITILObject
                 $select_changes = [$options["changes_id"]];
                 $c = new Change();
                 if ($c->getFromDB($options["changes_id"])) {
-                    if ((isset($options["template_id"]) && $options["template_id"] = 0) || !isset($options["template_id"])) {
+                    if ((int) ($options["template_id"] ?? 0) === 0) {
                         $this->fields["name"] = $c->getField("name");
                         $options["name"] = $c->getField("name");
                         $this->fields["content"] = $c->getField("content");
@@ -2389,7 +2440,9 @@ class Release extends CommonITILObject
             echo "</div>";
             if (isset($item_i['content'])) {
                 if (isset($item_i["name"])) {
-                    $content = "<h2>" . $item_i['name'] . "  </h2>" . $item_i['content'];
+                    // The sub-item name is stored raw: escape it rather than relying on the
+                    // downstream purifier as the only rampart.
+                    $content = "<h2>" . htmlescape($item_i['name']) . "  </h2>" . $item_i['content'];
                 } else {
                     $content = $item_i['content'];
                 }

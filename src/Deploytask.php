@@ -134,11 +134,11 @@ class Deploytask extends CommonDBTM
     }
 
     /**
-     * Prepare input datas for adding the item
+     * Prepare input datas for adding the item. If false, add is canceled.
      *
      * @param array $input datas used to add the item
      *
-     * @return array the modified $input array
+     * @return false|array the modified $input array
      **/
     public function prepareInputForAdd($input)
     {
@@ -425,8 +425,17 @@ class Deploytask extends CommonDBTM
 
         $who       = $parm['who'];
         $who_group = $parm['whogroup'];
-        $begin     = $parm['begin'];
-        $end       = $parm['end'];
+        // populatePlanning() is public and static: the core hook happens to normalise
+        // both bounds with date(), but nothing inside this plugin guarantees it. Pin the
+        // format here so the criteria below can never be built from an arbitrary string,
+        // and fail closed on anything strtotime() cannot read.
+        $begin_time = strtotime((string) $parm['begin']);
+        $end_time   = strtotime((string) $parm['end']);
+        if ($begin_time === false || $end_time === false) {
+            return $parm;
+        }
+        $begin = date('Y-m-d H:i:s', $begin_time);
+        $end   = date('Y-m-d H:i:s', $end_time);
         // Get items to print
         $ASSIGN = [];
 
@@ -451,7 +460,9 @@ class Deploytask extends CommonDBTM
                     'SELECT'          => 'users_id',
                     'FROM'            => 'glpi_groups_users',
                     'WHERE'           => [
-                        'groups_id'  => '$who_group',
+                        // Single quotes do not interpolate: the literal string was compared
+                        // to an integer column, so the group filter never matched anything.
+                        'groups_id'  => (int) $who_group,
                     ],
                 ]),
             ];
@@ -479,9 +490,11 @@ class Deploytask extends CommonDBTM
             ];
         }
 
+        // Raw SQL fragments bypass the query builder entirely; express the overlap test
+        // with criteria so both bounds go through the builder's own quoting.
         $WHERE = [
-            "'$begin' < `end`",
-            "'$end' > `begin`",
+            ['end'   => ['>', $begin]],
+            ['begin' => ['<', $end]],
         ];
 
         if (count($ASSIGN) > 0) {

@@ -109,11 +109,6 @@ class Risktemplate extends CommonDropdown
         }
     }
 
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
-    }
-
     /**
      * Have I the global right to "view" the Object
      *

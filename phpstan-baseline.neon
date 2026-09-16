@@ -217,12 +217,6 @@ parameters:
 			path: src/Deploytask.php
 
 		-
-			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:prepareInputForAdd\(\) should return array but returns false\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Deploytask.php
-
-		-
 			message: '#^Method GlpiPlugin\\Releases\\Deploytask\:\:prepareInputForUpdate\(\) should return array but returns false\.$#'
 			identifier: return.type
 			count: 1

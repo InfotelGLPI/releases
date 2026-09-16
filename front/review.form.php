@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Review;
 
@@ -77,9 +78,13 @@ if (isset($_POST["add"])) {
     // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
     // only). A GET-triggered detach would otherwise be forgeable.
     $d = new Document_Item();
-    $d->getFromDBByCrit(["documents_id" => (int) $_POST["documents_id"],
+    // Fail closed when no such link exists: without this guard the object stays empty
+    // and check(0, DELETE) would be asked about a row that was never resolved.
+    if (!$d->getFromDBByCrit(["documents_id" => (int) $_POST["documents_id"],
         "items_id"     => (int) $_POST["plugin_releases_reviews_id"],
-        "itemtype"     => Review::getType()]);
+        "itemtype"     => Review::getType()])) {
+        throw new NotFoundHttpException();
+    }
     $d->check($d->getID(), DELETE);
     $d->delete(["id"           => $d->getID(),
         "documents_id" => (int) $_POST["documents_id"],

@@ -311,11 +311,6 @@ class ReleaseTemplate extends CommonDropdown
         }
     }
 
-    public static function canCreate(): bool
-    {
-        return Session::haveRightsOr(static::$rightname, [UPDATE, CREATE]);
-    }
-
     /**
      * Have I the global right to "view" the Object
      *
@@ -1145,7 +1140,11 @@ class ReleaseTemplate extends CommonDropdown
             echo "</div>";
             if (isset($item_i['content'])) {
                 if (isset($item_i["name"])) {
-                    $content = RichText::getEnhancedHtml("<h2>" . $item_i['name'] . "  </h2>" . $item_i['content']);
+                    // Same as Release.php: the sub-item name is stored raw, escape it rather
+                    // than relying on the downstream purifier as the only rampart.
+                    $content = RichText::getEnhancedHtml(
+                        "<h2>" . htmlescape($item_i['name']) . "  </h2>" . $item_i['content'],
+                    );
                 } else {
                     $content = RichText::getEnhancedHtml($item_i['content']);
                 }

@@ -51,7 +51,10 @@ class ReleaseTemplate_Item extends CommonDBRelation
 
     public static $itemtype_2         = 'itemtype';
     public static $items_id_2         = 'items_id';
-    public static $checkItem_2_Rights = self::DONT_CHECK_ITEM_RIGHTS;
+    // Same contract as Release_Item: CommonDBRelation must apply the view right and
+    // checkEntity() on the linked asset, which is an itemtype/items_id pair coming
+    // straight from the client.
+    public static $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
     public static function getIcon()
     {
@@ -70,10 +73,62 @@ class ReleaseTemplate_Item extends CommonDBRelation
     }
 
     /**
+     * Itemtypes that may be linked to a release template.
+     *
+     * showForRelease() builds its dropdown with them and prepareInputForAdd() replays
+     * them at the sink, so the rule is written once only.
+     *
+     * @return array<int, string>
+     */
+    public static function getLinkableItemtypes()
+    {
+        $release = new Release();
+        return array_keys($release->getAllTypesForHelpdesk());
+    }
+
+    /**
+     * Entity restriction applied to the item dropdown of a release template.
+     *
+     * @param ReleaseTemplate $release
+     *
+     * @return int|array<int, int>
+     */
+    public static function getEntityRestrict(ReleaseTemplate $release)
+    {
+        return $release->fields['is_recursive']
+            ? getSonsOf('glpi_entities', $release->fields['entities_id'])
+            : $release->fields['entities_id'];
+    }
+
+    /**
      * @see CommonDBTM::prepareInputForAdd()
      **/
     public function prepareInputForAdd($input)
     {
+        // The dropdown restricts both the itemtype and the entity, but nothing replayed
+        // that restriction server-side: a crafted POST could attach — and then read back
+        // through the "Items" tab — any asset of any entity. Replay here the very
+        // criteria showForRelease() builds the dropdown with.
+        $template = new ReleaseTemplate();
+        if (!$template->getFromDB((int) ($input['plugin_releases_releasetemplates_id'] ?? 0))
+            || !$template->can($template->getID(), UPDATE)) {
+            return false;
+        }
+        if (!in_array($input['itemtype'] ?? '', self::getLinkableItemtypes(), true)) {
+            return false;
+        }
+        $item = getItemForItemtype($input['itemtype']);
+        if ($item === false || !$item->getFromDB((int) ($input['items_id'] ?? 0))) {
+            return false;
+        }
+        if ($item->isEntityAssign()) {
+            $item_entity = (int) $item->fields['entities_id'];
+            $allowed     = array_map('intval', (array) self::getEntityRestrict($template));
+            if (!in_array($item_entity, $allowed, true)
+                || !Session::haveAccessToEntity($item_entity, $item->isRecursive())) {
+                return false;
+            }
+        }
 
         // Avoid duplicate entry
         if (countElementsInTable($this->getTable(), ['plugin_releases_releasetemplates_id' => $input['plugin_releases_releasetemplates_id'],
@@ -113,21 +168,10 @@ class ReleaseTemplate_Item extends CommonDBRelation
             echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Add an item') . "</th></tr>";
 
             echo "<tr class='tab_bg_1'><td>";
-            $types    = [];
-            $releaseR = new Release();
-            //         foreach (Release::$typeslinkable as $key => $val) {
-            foreach ($releaseR->getAllTypesForHelpdesk() as $key => $val) {
-                $types[] = $key;
-            }
-            Dropdown::showSelectItemFromItemtypes(['itemtypes'
-                                                   => $types,
-                'entity_restrict'
-                => ($release->fields['is_recursive']
-                   ? getSonsOf(
-                       'glpi_entities',
-                       $release->fields['entities_id'],
-                   )
-                   : $release->fields['entities_id'])]);
+            Dropdown::showSelectItemFromItemtypes([
+                'itemtypes'       => self::getLinkableItemtypes(),
+                'entity_restrict' => self::getEntityRestrict($release),
+            ]);
             echo "</td><td class='center' width='30%'>";
             echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
             echo Html::hidden('plugin_releases_releasetemplates_id', ['value' => $instID]);
@@ -170,11 +214,26 @@ class ReleaseTemplate_Item extends CommonDBRelation
             }
 
             if ($item->canView()) {
-                $iterator = self::getTypeItems($instID, $itemtype);
-                $nb       = count($iterator);
+                // CommonDBRelation::getTypeItems() applies no entity restriction at all,
+                // and canView() above is a global right per itemtype, not a per-row check.
+                // Replay the dropdown criteria so a link created before the sink check was
+                // added cannot display an asset from another entity.
+                $allowed  = array_map('intval', (array) self::getEntityRestrict($release));
+                $rows     = [];
+                foreach (self::getTypeItems($instID, $itemtype) as $row_data) {
+                    $row_entity = (int) ($row_data['entity'] ?? 0);
+                    if (in_array($row_entity, $allowed, true)
+                        && Session::haveAccessToEntity($row_entity)) {
+                        $rows[] = $row_data;
+                    }
+                }
+                $nb = count($rows);
+                if ($nb === 0) {
+                    continue;
+                }
 
                 $prem = true;
-                foreach ($iterator as $data) {
+                foreach ($rows as $data) {
                     $name = $data["name"];
                     if ($_SESSION["glpiis_ids_visible"]
                         || empty($data["name"])) {

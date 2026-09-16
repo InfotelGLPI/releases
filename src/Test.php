@@ -113,11 +113,11 @@ class Test extends CommonDBTM
     }
 
     /**
-     * Prepare input datas for adding the item
+     * Prepare input datas for adding the item. If false, add is canceled.
      *
      * @param array $input datas used to add the item
      *
-     * @return array the modified $input array
+     * @return false|array the modified $input array
      **/
     public function prepareInputForAdd($input)
     {
