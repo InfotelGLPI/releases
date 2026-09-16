@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 15:00+0000\n"
+"POT-Creation-Date: 2026-09-16 16:01+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -127,7 +127,7 @@ msgstr[1] "İlişkili değişiklikler"
 msgid "Associated risk"
 msgstr "İlişkili risk"
 
-#: src/Release.php:2646 src/ReleaseTemplate.php:1188
+#: src/Release.php:2646 src/ReleaseTemplate.php:1208
 msgid "Associated with"
 msgstr "Şununla ilişkili"
 
@@ -238,7 +238,7 @@ msgstr "Dağıtma görevi türü"
 
 #: src/NotificationTargetRelease.php:938 src/NotificationTargetRelease.php:958
 #: src/Release.php:2175 src/Release.php:2177 src/ReleaseTemplate.php:199
-#: src/ReleaseTemplate.php:987 src/ReleaseTemplate.php:988
+#: src/ReleaseTemplate.php:1007 src/ReleaseTemplate.php:1008
 #: src/Deploytask.php:67 templates/timeline.html.twig:120
 #: templates/form_finalization.html.twig:64
 #: templates/filter_timeline.html.twig:54
@@ -313,7 +313,7 @@ msgstr[0] "Birim"
 msgstr[1] "Birimler"
 
 #: src/Test.php:231 src/Test.php:247 src/Deploytasktemplate.php:236
-#: src/Release.php:987 src/Deploytask.php:359 src/Deploytask.php:714
+#: src/Release.php:987 src/Deploytask.php:359 src/Deploytask.php:742
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -348,7 +348,7 @@ msgstr "Bu değişikliği"
 msgid "Group"
 msgstr "Grup"
 
-#: src/ReleaseTemplate.php:1896
+#: src/ReleaseTemplate.php:1846
 msgid "Group in charge of the release"
 msgstr "Bu sürümden sorumlu grup"
 
@@ -391,7 +391,7 @@ msgstr "Ad"
 msgid "New release"
 msgstr "Yeni sürüm"
 
-#: src/Release.php:2692 src/ReleaseTemplate.php:1236
+#: src/Release.php:2692 src/ReleaseTemplate.php:1258
 msgid "No data available"
 msgstr "Kullanılabilecek bir veri yok"
 
@@ -480,7 +480,7 @@ msgstr "Çöpe at"
 msgid "Real production run date"
 msgstr "Gerçek üretim çalışma tarihi"
 
-#: setup.php:114 front/change_release.form.php:46
+#: setup.php:112 front/change_release.form.php:46
 #: src/NotificationTargetRelease.php:962 src/Release.php:102 src/Profile.php:58
 #: templates/form_releasetemplate_menu.html.twig:32
 msgid "Release"
@@ -488,7 +488,7 @@ msgid_plural "Releases"
 msgstr[0] "Sürüm"
 msgstr[1] "Sürümler"
 
-#: src/Release.php:3075 src/ReleaseTemplate.php:1274
+#: src/Release.php:3075 src/ReleaseTemplate.php:1296
 msgid "Release actions details"
 msgstr "Sürüm işlemleri bilgileri"
 
