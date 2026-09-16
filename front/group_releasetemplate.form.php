@@ -30,7 +30,6 @@
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Releases\Group_ReleaseTemplate;
-use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\ReleaseTemplate;
 
 global $CFG_GLPI;
@@ -51,7 +50,7 @@ if (isset($_POST['delete'])) {
     );
 
     if ($item->can($link->fields["plugin_releases_releasetemplates_id"], READ)) {
-        Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
+        Html::redirect(ReleaseTemplate::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
     }
     Session::addMessageAfterRedirect(
         __('You have been redirected because you no longer have access to this item'),

@@ -298,7 +298,7 @@ class ReleaseTemplate_Item extends CommonDBRelation
     public static function countReleaseForItem(CommonDBTM $item)
     {
         $dbu   = new DbUtils();
-        $table = CommonDBTM::getTable(Release_Item::class);
+        $table = CommonDBTM::getTable(ReleaseTemplate_Item::class);
         return $dbu->countElementsInTable(
             $table,
             ["plugin_releases_releasetemplates_id" => $item->getID()],
@@ -326,7 +326,7 @@ class ReleaseTemplate_Item extends CommonDBRelation
                     return self::createTabEntry(ReleaseTemplate::getTypeName(Session::getPluralNumber()), $nb);
 
                 default:
-                    if (Session::haveRight("release", READ)) {
+                    if (Session::haveRight("plugin_releases_releases", READ)) {
                         if ($_SESSION['glpishow_count_on_tabs']) {
                             // Direct one
                             $nb = self::countForItem($item);

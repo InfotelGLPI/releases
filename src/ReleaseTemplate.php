@@ -777,10 +777,15 @@ class ReleaseTemplate extends CommonDropdown
         //checks rights
 
         //add risks to timeline
-        if ($risk_obj->canview()) {
+        if ($risk_obj->canView()) {
             $risks = $risk_obj->find([$foreignKey => $this->getID()] + $restrict_risk, ['date_mod DESC', 'id DESC']);
             foreach ($risks as $risks_id => $risk) {
                 $risk_obj->getFromDB($risks_id);
+                // Rows created before the parent check existed may sit outside the
+                // template's entity; find() has no entity criteria of its own.
+                if (!$risk_obj->canViewItem()) {
+                    continue;
+                }
                 $risk['can_edit']                                   = $risk_obj->canUpdateItem();
                 $timeline[$risk['date_mod'] . "_risk_" . $risks_id] = ['type'     => $riskClass,
                     'item'     => $risk,
@@ -788,10 +793,15 @@ class ReleaseTemplate extends CommonDropdown
             }
         }
 
-        if ($rollback_obj->canview()) {
+        if ($rollback_obj->canView()) {
             $rollbacks = $rollback_obj->find([$foreignKey => $this->getID()] + $restrict_rollback, ['date_mod DESC', 'id DESC']);
             foreach ($rollbacks as $rollbacks_id => $rollback) {
                 $rollback_obj->getFromDB($rollbacks_id);
+                // Rows created before the parent check existed may sit outside the
+                // template's entity; find() has no entity criteria of its own.
+                if (!$rollback_obj->canViewItem()) {
+                    continue;
+                }
                 $rollback['can_edit']                                       = $rollback_obj->canUpdateItem();
                 $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = ['type'     => $rollbackClass,
                     'item'     => $rollback,
@@ -799,11 +809,16 @@ class ReleaseTemplate extends CommonDropdown
             }
         }
 
-        if ($task_obj->canview()) {
+        if ($task_obj->canView()) {
             //         $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task);
             $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level ASC']);
             foreach ($tasks as $tasks_id => $task) {
                 $task_obj->getFromDB($tasks_id);
+                // Rows created before the parent check existed may sit outside the
+                // template's entity; find() has no entity criteria of its own.
+                if (!$task_obj->canViewItem()) {
+                    continue;
+                }
                 $task['can_edit']                                                      = $task_obj->canUpdateItem();
                 $rand                                                                  = mt_rand();
                 $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = ['type'     => $taskClass,
@@ -812,10 +827,15 @@ class ReleaseTemplate extends CommonDropdown
             }
         }
 
-        if ($test_obj->canview()) {
+        if ($test_obj->canView()) {
             $tests = $test_obj->find([$foreignKey => $this->getID()] + $restrict_test, ['date_mod DESC', 'id DESC']);
             foreach ($tests as $tests_id => $test) {
                 $test_obj->getFromDB($tests_id);
+                // Rows created before the parent check existed may sit outside the
+                // template's entity; find() has no entity criteria of its own.
+                if (!$test_obj->canViewItem()) {
+                    continue;
+                }
                 $test['can_edit']                                   = $test_obj->canUpdateItem();
                 $timeline[$test['date_mod'] . "_test_" . $tests_id] = ['type'     => $testClass,
                     'item'     => $test,
@@ -1207,7 +1227,9 @@ class ReleaseTemplate extends CommonDropdown
                 && $item_i['users_id_editor'] > 0) {
                 echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
                 $user->getFromDB($item_i['users_id_editor']);
-                $userdata = getUserName($item_i['users_id_editor']);
+                // Without the second argument getUserName() returns a plain string, so
+                // the two accesses below were silently indexing a string.
+                $userdata = getUserName($item_i['users_id_editor'], 2);
                 if (isset($item_i['date_mod'])) {
                     echo sprintf(
                         __('Last edited on %1$s by %2$s'),
@@ -1781,78 +1803,6 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * show tooltip for user notification information
-     *
-     * @param $type      integer  user type
-     * @param $canedit   boolean  can edit ?
-     * @param $options   array    options for default values ($options of showForm)
-     *
-     * @return void
-     **/
-    public function showUsersAssociated($type, $canedit, array $options = [])
-    {
-        global $CFG_GLPI;
-
-        $showuserlink = 0;
-        if (User::canView()) {
-            $showuserlink = 2;
-        }
-        $usericon = static::getActorIcon('user', $type);
-        $user     = new User();
-        $linkuser = new $this->userlinkclass();
-
-        $typename = static::getActorFieldNameType($type);
-
-        $candelete = true;
-        $mandatory = '';
-
-        if (isset($this->users[$type]) && count($this->users[$type])) {
-            foreach ($this->users[$type] as $d) {
-                echo "<div class='actor_row'>";
-                $k = $d['users_id'];
-
-                echo "$mandatory$usericon&nbsp;";
-
-                if ($k) {
-                    $userdata = getUserName($k);
-                } else {
-                    $email    = $d['alternative_email'];
-                    $userdata = "<a href='mailto:$email'>$email</a>";
-                }
-
-                if (Entity::getUsedConfig('anonymize_support_agents')
-                    && Session::getCurrentInterface() == 'helpdesk'
-                    && $type == CommonITILActor::ASSIGN
-                ) {
-                    echo __("Helpdesk");
-                } else {
-                    if ($k) {
-                        $param = ['display' => false];
-                        if ($showuserlink) {
-                            $param['link'] = $userdata["link"];
-                        }
-                        // Escape user-supplied display name (stored raw since GLPI 10+) to prevent stored XSS
-                        echo htmlspecialchars($userdata['name']) . "&nbsp;" . Html::showToolTip($userdata["comment"], $param);
-                    } else {
-                        echo $userdata;
-                    }
-                }
-
-                if ($canedit && $candelete) {
-                    Html::showSimpleForm(
-                        $linkuser->getFormURL(),
-                        'delete',
-                        _x('button', 'Delete permanently'),
-                        ['id' => $d['id']],
-                        'fa-times-circle',
-                    );
-                }
-                echo "</div>";
-            }
-        }
-    }
-
-    /**
      * Get Icon for Actor
      *
      * @param $user_group   string   'user or 'group'
@@ -1911,56 +1861,6 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * show groups asociated
-     *
-     * @param $type      integer : user type
-     * @param $canedit   boolean : can edit ?
-     * @param $options   array    options for default values ($options of showForm)
-     *
-     * @return void
-     **/
-    public function showGroupsAssociated($type, $canedit, array $options = [])
-    {
-
-        $groupicon = static::getActorIcon('group', $type);
-        $group     = new Group();
-        $linkclass = new $this->grouplinkclass();
-
-        $typename = static::getActorFieldNameType($type);
-
-        $candelete = true;
-        $mandatory = '';
-
-        if (isset($this->groups[$type]) && count($this->groups[$type])) {
-            foreach ($this->groups[$type] as $d) {
-                echo "<div class='actor_row'>";
-                $k = $d['groups_id'];
-                echo "$mandatory$groupicon&nbsp;";
-                if ($group->getFromDB($k)) {
-                    if (Entity::getUsedConfig('anonymize_support_agents')
-                        && Session::getCurrentInterface() == 'helpdesk'
-                        && $type == CommonITILActor::ASSIGN
-                    ) {
-                        echo __("Helpdesk group");
-                    } else {
-                        echo $group->getLink(['comments' => true]);
-                    }
-                }
-                if ($canedit && $candelete) {
-                    Html::showSimpleForm(
-                        $linkclass->getFormURL(),
-                        'delete',
-                        _x('button', 'Delete permanently'),
-                        ['id' => $d['id']],
-                        'fa-times-circle',
-                    );
-                }
-                echo "</div>";
-            }
-        }
-    }
-
-    /**
      * Is a user linked to the object ?
      *
      * @param integer $type type to search (see constants)
@@ -1983,71 +1883,60 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * show suppliers associated
+     * Resolve and check the template a sub-item is being attached to.
      *
-     * @param $type      integer : user type
-     * @param $canedit   boolean : can edit ?
-     * @param $options   array    options for default values ($options of showForm)
+     * The *template sub-items are CommonDropdown: the core's check(-1, CREATE, $_POST)
+     * only validates the posted entities_id, never the foreign key pointing at the
+     * template. Without this, a crafted key drops the sub-item into another entity's
+     * template — and from there into every release cloned from it. This is the mirror
+     * of what Risk/Test/Rollback/Deploytask already do with their parent release.
      *
-     * @return void
-     **@since 0.84
+     * @param array<string, mixed> $input
      *
+     * @return array<string, mixed>|false
      */
-    public function showSuppliersAssociated($type, $canedit, array $options = [])
+    public static function checkParentTemplateInput(array $input)
     {
-        global $CFG_GLPI;
+        $templates_id = (int) ($input['plugin_releases_releasetemplates_id'] ?? 0);
 
-        $showsupplierlink = 0;
-        if (Session::haveRight('contact_enterprise', READ)) {
-            $showsupplierlink = 2;
+        // A sub-item with no parent carries no entity to borrow. The listings all filter
+        // on the foreign key, so such a row is inert; leave that case as it was.
+        if ($templates_id === 0) {
+            $input['plugin_releases_releasetemplates_id'] = 0;
+            return $input;
         }
 
-        $suppliericon = static::getActorIcon('supplier', $type);
-        $supplier     = new Supplier();
-        $linksupplier = new $this->supplierlinkclass();
-
-        $typename = static::getActorFieldNameType($type);
-
-        $candelete = true;
-        $mandatory = '';
-
-        if (isset($this->suppliers[$type]) && count($this->suppliers[$type])) {
-            foreach ($this->suppliers[$type] as $d) {
-                echo "<div class='actor_row'>";
-                $suppliers_id = $d['suppliers_id'];
-
-                echo "$mandatory$suppliericon&nbsp;";
-
-                $email = $d['alternative_email'];
-                if ($suppliers_id) {
-                    if ($supplier->getFromDB($suppliers_id)) {
-                        echo $supplier->getLink(['comments' => $showsupplierlink]);
-                        echo "&nbsp;";
-
-                        $tmpname = Dropdown::getDropdownName($supplier->getTable(), $suppliers_id, 1);
-                        Html::showToolTip($tmpname['comment']);
-
-                        if (empty($email)) {
-                            $email = $supplier->fields['email'];
-                        }
-                    }
-                } else {
-                    echo "<a href='mailto:$email'>$email</a>";
-                }
-
-                if ($canedit && $candelete) {
-                    Html::showSimpleForm(
-                        $linksupplier->getFormURL(),
-                        'delete',
-                        _x('button', 'Delete permanently'),
-                        ['id' => $d['id']],
-                        'fa-times-circle',
-                    );
-                }
-
-                echo '</div>';
-            }
+        $template = new self();
+        if (!$template->getFromDB($templates_id)
+            || !Session::haveAccessToEntity($template->fields['entities_id'], $template->isRecursive())) {
+            Session::addMessageAfterRedirect(
+                __('The action you have requested is not allowed.'),
+                false,
+                ERROR,
+            );
+            return false;
         }
+
+        $input['entities_id'] = $template->fields['entities_id'];
+
+        return $input;
+    }
+
+    /**
+     * Drop the keys that settle the ownership of a template sub-item.
+     *
+     * They are fixed at creation time, from a template that was checked back then;
+     * re-sending them in an update is the cross-entity move this closes.
+     *
+     * @param array<string, mixed> $input
+     *
+     * @return array<string, mixed>
+     */
+    public static function stripParentTemplateInput(array $input)
+    {
+        unset($input['entities_id'], $input['plugin_releases_releasetemplates_id']);
+
+        return $input;
     }
 
     public function post_addItem()

@@ -417,10 +417,20 @@ class Deploytask extends CommonDBTM
 
         $output = [];
 
+        // Registered through planning_types, this static method is reached from the
+        // planning screen, its CSV export (Glpi\Csv\PlanningCsv) and the CalDAV backend
+        // — none of which gate on the plugin right. Without this check a session holding
+        // no right at all on the plugin still gets the deploy tasks handed to it.
+        if (!Session::haveRight(self::$rightname, READ)) {
+            return $output;
+        }
+
         $parm = $options;
 
+        // The contract of this hook is a map of events; returning the options array made
+        // the caller merge its own parameters into the planning as if they were events.
         if (!isset($parm['begin']) || $parm['begin'] == 'NULL' || !isset($parm['end']) || $parm['end'] == 'NULL') {
-            return $parm;
+            return $output;
         }
 
         $who       = $parm['who'];
@@ -432,7 +442,7 @@ class Deploytask extends CommonDBTM
         $begin_time = strtotime((string) $parm['begin']);
         $end_time   = strtotime((string) $parm['end']);
         if ($begin_time === false || $end_time === false) {
-            return $parm;
+            return $output;
         }
         $begin = date('Y-m-d H:i:s', $begin_time);
         $end   = date('Y-m-d H:i:s', $end_time);
@@ -497,6 +507,14 @@ class Deploytask extends CommonDBTM
             ['begin' => ['<', $end]],
         ];
 
+        // The table carries its own entities_id, and the consumer never re-filters:
+        // Planning::constructEventsArray() merges whatever this returns as is. The
+        // entity boundary therefore has to be applied right here.
+        $entity_restrict = getEntitiesRestrictCriteria('glpi_plugin_releases_deploytasks');
+        if (count($entity_restrict)) {
+            $WHERE[] = $entity_restrict;
+        }
+
         if (count($ASSIGN) > 0) {
             $WHERE[] = ['AND' => $ASSIGN];
         }
@@ -517,8 +535,18 @@ class Deploytask extends CommonDBTM
         ];
         $iterator = $DB->request($query);
 
+        $task = new self();
+
         if (count($iterator) > 0) {
             foreach ($iterator as $data) {
+                // Mirror of CommonITILTask::populatePlanning(): the criteria above narrow
+                // the query, this replays the per-row check the core applies before
+                // pushing an event.
+                $task->getFromResultSet($data);
+                if (!$task->canViewItem()) {
+                    continue;
+                }
+
                 $key                              = $parm["begin"] . $data["id"] . "$$$" . "plugin_releases";
                 $output[$key]['color']            = $parm['color'] ?? null;
                 $output[$key]['event_type_color'] = $parm['event_type_color'] ?? null;

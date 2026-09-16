@@ -162,10 +162,14 @@ class Risktemplate extends CommonDropdown
 
     public function prepareInputForAdd($input)
     {
-        if (empty($input["plugin_releases_releasetemplates_id"])) {
-            $input["plugin_releases_releasetemplates_id"] = 0;
-        }
-        return $input;
+        // The parent template settles the entity of this sub-item: resolve and check the
+        // posted foreign key instead of merely normalising it.
+        return ReleaseTemplate::checkParentTemplateInput($input);
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        return ReleaseTemplate::stripParentTemplateInput($input);
     }
 
     public function post_addItem()

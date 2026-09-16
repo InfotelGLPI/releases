@@ -157,7 +157,7 @@ class TypeRisk extends CommonTreeDropdown
         $menu['options'][$itemtype]['page']            = $plugin_page;
         $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
-        if (Session::haveright(self::$rightname, UPDATE)) {
+        if (Session::haveRight(self::$rightname, UPDATE)) {
             $menu['options'][$itemtype]['links']['add'] = $plugin_page = "/plugins/releases/front/typerisk.form.php\';";
         }
 

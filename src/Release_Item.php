@@ -193,6 +193,13 @@ class Release_Item extends CommonDBRelation
             ]);
         }
 
+        // CommonDBRelation::getTypeItems() applies no entity restriction at all, and the
+        // canView() below is a global right per itemtype, not a per-row check. Replay the
+        // dropdown criteria — exactly as ReleaseTemplate_Item::showForRelease() does — so
+        // a link created before the sink check was added, or an asset transferred to
+        // another entity afterwards, cannot be displayed here.
+        $allowed = array_map('intval', (array) self::getEntityRestrict($release));
+
         // Flatten the itemtype-grouped rows into a single datatable feed. Each entry
         // carries its own itemtype+id so components/datatable.html.twig can render the
         // massive-action checkbox (name="item[Release_Item][linkid]").
@@ -207,6 +214,12 @@ class Release_Item extends CommonDBRelation
             }
 
             foreach (self::getTypeItems($instID, $itemtype) as $data) {
+                $row_entity = (int) ($data['entity'] ?? 0);
+                if (!in_array($row_entity, $allowed, true)
+                    || !Session::haveAccessToEntity($row_entity)) {
+                    continue;
+                }
+
                 $name = $data["name"];
                 if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
                     $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);

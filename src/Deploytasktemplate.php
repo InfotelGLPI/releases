@@ -274,17 +274,19 @@ class Deploytasktemplate extends CommonDropdown
      *
      * @param array $input datas used to add the item
      *
-     * @return array the modified $input array
+     * @return array|false the modified $input array, or false to refuse the creation
      **/
     public function prepareInputForAdd($input)
     {
         $input = parent::prepareInputForAdd($input);
 
-        if (empty($input["plugin_releases_releasetemplates_id"])) {
-            $input["plugin_releases_releasetemplates_id"] = 0;
+        // The parent template settles the entity of this sub-item: resolve and check the
+        // posted foreign key instead of merely normalising it.
+        if (($input = ReleaseTemplate::checkParentTemplateInput($input)) === false) {
+            return false;
         }
 
-        if ($input["plugin_releases_deploytasktemplates_id"] != 0) {
+        if (!empty($input["plugin_releases_deploytasktemplates_id"])) {
             $task = new self();
             $task->getFromDB($input["plugin_releases_deploytasktemplates_id"]);
             $input["level"] = $task->getField("level") + 1;
@@ -302,9 +304,11 @@ class Deploytasktemplate extends CommonDropdown
      **/
     public function prepareInputForUpdate($input)
     {
+        $input = ReleaseTemplate::stripParentTemplateInput($input);
+
         Toolbox::manageBeginAndEndPlanDates($input['plan']);
 
-        if (isset($input["plugin_releases_deploytasktemplates_id"]) && $input["plugin_releases_deploytasktemplates_id"] != 0) {
+        if (!empty($input["plugin_releases_deploytasktemplates_id"])) {
             $task = new self();
             $task->getFromDB($input["plugin_releases_deploytasktemplates_id"]);
             $input["level"] = $task->getField("level") + 1;

@@ -159,7 +159,7 @@ class TypeTest extends CommonTreeDropdown
         $menu['options'][$itemtype]['page']            = $plugin_page;
         $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
-        if (Session::haveright(self::$rightname, UPDATE)) {
+        if (Session::haveRight(self::$rightname, UPDATE)) {
             $menu['options'][$itemtype]['links']['add'] = $plugin_page = $CFG_GLPI['root_doc'] . "/plugins/releases/front/typetest.form.php\';";
         }
 

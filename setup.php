@@ -89,8 +89,6 @@ function plugin_init_releases()
         }
     }
 
-    $PLUGIN_HOOKS['planning_populate']['releases'] = [Deploytask::class, 'populatePlanning'];
-    $PLUGIN_HOOKS['display_planning']['releases']  = [Deploytask::class, 'displayPlanningItem'];
 
     if (Plugin::isPluginActive("mydashboard")) {
         Plugin::registerClass(
