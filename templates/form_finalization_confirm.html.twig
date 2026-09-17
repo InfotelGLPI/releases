@@ -41,11 +41,9 @@
         {'maybeempty': false}
     ) }}
 
+    {# The failure counts are recomputed server-side in front/finalization.php: the review
+       is the audit trail of the production run and must not record client-sent figures. #}
     <input type="hidden" name="id" value="{{ id }}"/>
-    {% if is_failed %}
-        <input type="hidden" name="failedtasks" value="{{ failed_tasks }}"/>
-        <input type="hidden" name="failedtests" value="{{ failed_tests }}"/>
-    {% endif %}
 
     <div class="d-flex justify-content-center mt-2">
         {% if is_failed %}

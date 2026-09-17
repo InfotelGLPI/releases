@@ -602,6 +602,11 @@ class NotificationTargetRelease extends NotificationTargetCommonITILObject
             // The column also holds "0" (no communication) and "ALL" (everybody), which are
             // not itemtypes, and it can be written inline through ajax/changeitemstate.php:
             // resolve it through the fixed map instead of instantiating it directly.
+            // Release::filterAllowedTargets() is deliberately not replayed here: its criteria
+            // are session-scoped (getEntitiesRestrictCriteria reads the active entities), and
+            // notifications are rendered from the queue by the cron, where that session does
+            // not exist — every target would silently resolve to an empty list. The column is
+            // filtered on every write instead, which is where the session actually is.
             $target_class = Release::getCommunicationTypes()[$item->getField("communication_type")] ?? null;
             $t            = json_decode($item->getField("target"));
             if ($target_class !== null && is_array($t)) {

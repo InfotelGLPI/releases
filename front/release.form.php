@@ -87,10 +87,14 @@ if (isset($_POST["add"])) {
 
 } elseif (isset($_POST["createRelease"])) {
 
-    // Enforce creation right and access to the source change (global right + entity + item access)
-    $release->check(-1, CREATE);
+    // Resolve the source change first: the release is created in the change's entity, not in
+    // the session's active one, and CommonDBTM::add() revalidates nothing. Checking CREATE
+    // before that resolution evaluated the right against the wrong entity, so passing the
+    // destination entity to check() is what actually ties the right to what gets written.
     $change = new Change();
     $change->check($_POST["changes_id"], READ);
+    $create_input = ['entities_id' => $change->getField("entities_id")];
+    $release->check(-1, CREATE, $create_input);
     $input                = [];
     $input["name"]        = $change->getField("name");
     $input["content"]     = $change->getField("content");

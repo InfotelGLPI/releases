@@ -32,8 +32,8 @@ namespace GlpiPlugin\Releases;
 use CommonDBTM;
 use CommonGLPI;
 use Glpi\Application\View\TemplateRenderer;
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use Html;
-use Session;
 
 /**
  * Class Finalization
@@ -103,16 +103,38 @@ class Finalization extends CommonDBTM
         return '';
     }
 
+    /**
+     * May the finalization still be run on this release?
+     *
+     * The display only offers the confirmation link when this holds, but the two mutating
+     * branches of front/finalization.php took nothing but check($id, UPDATE): a replayed
+     * form re-opened an already closed release and overwrote its Review, erasing the trace
+     * of a failed production run. Expressing the rule once keeps form and write path in
+     * agreement.
+     */
+    public static function canFinalize(Release $release): bool
+    {
+        // Mirror of ajax/changeitemstate.php and ajax/timeline.php, which refuse every
+        // mutation on a terminal status.
+        if (in_array((int) $release->fields["status"], Release::getClosedStatusArray(), true)) {
+            return false;
+        }
+
+        return empty($release->fields["date_end"])
+            || (int) $release->fields["status"] < Release::REVIEW;
+    }
+
     public function showForm($ID, $options = [])
     {
         global $CFG_GLPI;
 
-        if (!Session::haveRight(self::$rightname, READ)) {
-            return;
-        }
-
+        // The tab dispatcher checks the release before reaching this method, but the method
+        // is what discloses its progress: a global right followed by a bare getFromDB() left
+        // both the entity boundary and the profile's item-level restrictions unchecked, so
+        // any other caller — an export, a report, another tab — would have inherited nothing.
+        // can() replays the three at the point of disclosure.
         $release = new Release();
-        if (!$release->getFromDB($ID)) {
+        if (!$release->can($ID, READ)) {
             return;
         }
 
@@ -167,9 +189,7 @@ class Finalization extends CommonDBTM
             ? Html::convDateTime($release->fields["date_end"])
             : __("Not yet completed", 'releases');
 
-        $can_finalize = (empty($release->fields["date_end"])
-                || $release->fields["status"] < Release::REVIEW)
-            && $this->canUpdate();
+        $can_finalize = self::canFinalize($release) && $this->canUpdate();
         $is_failed = ($deployTaskFail != 0 || $testFail != 0);
 
         $confirm_url = '';
@@ -210,14 +230,17 @@ class Finalization extends CommonDBTM
 
         global $CFG_GLPI;
         $release = new Release();
-        $ID      = $params["release_id"];
-        $release->getFromDB($ID);
+        $ID      = (int) ($params["release_id"] ?? 0);
+        // Same reason as showForm(): front/finalization.php checks the release before calling,
+        // yet this form opens a mutation of it. Replay right, entity and item access here
+        // rather than trusting the caller to have done it.
+        if (!$release->can($ID, UPDATE)) {
+            throw new AccessDeniedHttpException();
+        }
         $deployTaskDone  = Release::countForItem($ID, Deploytask::class, Deploytask::DONE);
         $deployTaskTotal = Release::countForItem($ID, Deploytask::class);
         $testDone        = Release::countForItem($ID, Test::class, Test::DONE);
         $testTotal       = Release::countForItem($ID, Test::class);
-        $testFail        = Test::countFailForItem($release);
-        $deployTaskFail  = Deploytask::countFailForItem($release);
 
         $allfinish = (Risk::countForItem($release) == Risk::countDoneForItem($release))
                    && ($deployTaskTotal == $deployTaskDone)
@@ -229,8 +252,6 @@ class Finalization extends CommonDBTM
             'action_url'   => $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php",
             'id'           => $ID,
             'is_failed'    => isset($params["failed"]),
-            'failed_tasks' => $deployTaskFail,
-            'failed_tests' => $testFail,
         ]);
     }
 }

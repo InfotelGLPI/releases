@@ -75,7 +75,24 @@ if (isset($_REQUEST[$foreignKey])
     $id = (int) $_REQUEST['id'] > 0 ? (int) $_REQUEST['id'] : null;
     if ($id) {
         $item->getFromDB($id);
+
+        // Each subitem class declares its own rightname (plugin_releases_tasks, _risks,
+        // _rollbacks, _tests) and its own entities_id: the release right checked at the
+        // top of this file must not expose them. Same guard as ajax/viewsubitem.php.
+        if (!$item->can((int) $id, READ)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        // The parent was checked and the subitem was checked, but nothing tied the two
+        // together: an id valid on its own but attached to another template would still
+        // be rendered under the controlled parent.
+        if ((int) $item->fields[$foreignKey] !== $parent->getID()) {
+            throw new AccessDeniedHttpException();
+        }
     } else {
+        if (!$item::canCreate()) {
+            throw new AccessDeniedHttpException();
+        }
         // New subitem: inject the parent id so the form keeps the relationship.
         $item->getEmpty();
         $item->fields[$foreignKey] = $parent->getID();

@@ -335,9 +335,21 @@ class ReleaseTemplate extends CommonDropdown
         if (!Release::checkCommunicationTypeInput($input)) {
             return false;
         }
+
+        if (!Release::checkLocationInput($input)) {
+            return false;
+        }
         if ((isset($input['target']) && empty($input['target'])) || !isset($input['target'])) {
             $input['target'] = [];
         }
+        // Same sink check as Release::prepareInputForAdd(): this column holds the same
+        // actor ids, picked from the same entity-restricted dropdown, and is copied into
+        // the release created from the template. Filtering on Release alone left this
+        // class as the one way to persist a target the session was never offered.
+        $input['target'] = Release::filterAllowedTargets(
+            $input['target'],
+            $input['communication_type'] ?? '',
+        );
         $input['target'] = json_encode($input['target']);
         if (!isset($input['_auto_import'])) {
             if (!isset($input["_users_id_requester"])) {
@@ -363,19 +375,47 @@ class ReleaseTemplate extends CommonDropdown
         $input = parent::prepareInputForUpdate($input);
         //      $input = parent::prepareInputForUpdate($input);
 
+        // Release::prepareInputForUpdate() simply drops this key, a template cannot: the
+        // massive "transfer" action moves one between entities on purpose
+        // (processMassiveActionsForOneItemtype() validates the destination entity and the
+        // row right, then calls update() with entities_id). Revalidate the value instead —
+        // check($id, UPDATE) covers the entity the row sits in today, never the one a
+        // forged POST asks to move it to. The transfer action has already passed this very
+        // check, so it is unaffected; the form exposes no entity field after creation.
+        if (isset($input['entities_id'])
+            && !Session::haveAccessToEntity((int) $input['entities_id'])) {
+            Session::addMessageAfterRedirect(
+                __('The action you have requested is not allowed.'),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+
         if (!Release::checkCommunicationTypeInput($input)) {
+            return false;
+        }
+
+        if (!Release::checkLocationInput($input)) {
             return false;
         }
         if ((isset($input['target']) && empty($input['target'])) || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
             $input['target'] = [];
         }
-        if (isset($input["communication_type"])) {
-            if (isset($input['target'])) {
-                $input['target'] = json_encode($input['target']);
-            } else {
-                $input['target'] = json_encode([]);
-            }
-
+        if (isset($input['target'])) {
+            // Same sink check as on creation and as Release::prepareInputForUpdate(). The
+            // communication type may be absent from the payload, so fall back on the one
+            // already stored for this template. Filtering inside the former
+            // "communication_type is posted" branch would have left the bypass open: a
+            // target posted on its own never reached the encoding at all and was written
+            // to the column as a raw array.
+            $input['target'] = Release::filterAllowedTargets(
+                $input['target'],
+                $input["communication_type"] ?? ($this->fields["communication_type"] ?? ''),
+            );
+            $input['target'] = json_encode($input['target']);
+        } elseif (isset($input["communication_type"])) {
+            $input['target'] = json_encode([]);
         }
 
         $release_user     = new ReleaseTemplate_User();

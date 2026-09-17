@@ -257,11 +257,24 @@ if (($_POST['action'] ?? null) === 'done_fail') {
                 throw new NotFoundHttpException();
             }
 
-            // Restrict the rendered itemtype to the plugin's own subitem classes
-            $allowed_subitem_classes = [Deploytask::class, Risk::class, Rollback::class, Test::class];
-            if (!in_array($_REQUEST['type'], $allowed_subitem_classes, true)) {
+            // The timeline addresses its subitems by short name — viewAddSubitem("Risk"),
+            // viewEditSubitem(..., "Risk", ...) — because a fully qualified name cannot
+            // survive a JS string literal: the backslashes of GlpiPlugin\Releases\Risk are
+            // consumed as escape sequences. Resolving the short name against a fixed map
+            // keeps the allow-list closed while accepting what the UI actually sends.
+            // ITILFollowup belongs here too: showTimelineForm() offers an add button for it
+            // and getTimelineItems() lists the existing ones.
+            $allowed_subitem_classes = [
+                'Deploytask'   => Deploytask::class,
+                'Risk'         => Risk::class,
+                'Rollback'     => Rollback::class,
+                'Test'         => Test::class,
+                'ITILFollowup' => ITILFollowup::class,
+            ];
+            if (!is_string($_REQUEST['type']) || !isset($allowed_subitem_classes[$_REQUEST['type']])) {
                 throw new NotFoundHttpException();
             }
+            $_REQUEST['type'] = $allowed_subitem_classes[$_REQUEST['type']];
 
             $item   = getItemForItemtype($_REQUEST['type']);
             $parent = getItemForItemtype($_REQUEST['parenttype']);
@@ -275,14 +288,24 @@ if (($_POST['action'] ?? null) === 'done_fail') {
                 if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
                     ObjectLock::setReadOnlyProfile();
                 }
-                if ($item->getType() == "ITILFollowup") {
-                    $item->getFromDB($_REQUEST["id"]);
-                }
-
                 // Each subitem class declares its own rightname: the release right alone must not expose it
                 $subitem_id = (int) ($_REQUEST["id"] ?? 0);
                 if ($subitem_id > 0) {
                     if (!$item->can($subitem_id, READ)) {
+                        throw new AccessDeniedHttpException();
+                    }
+
+                    // Same guard as ajax/viewsubitem.php and ajax/viewsubitemtemplate.php:
+                    // both ends were checked, nothing tied them together, so a subitem
+                    // belonging to another release could still be rendered under the
+                    // controlled parent. ITILFollowup is polymorphic: it carries
+                    // itemtype/items_id rather than the release foreign key.
+                    if ($item instanceof ITILFollowup) {
+                        if ($item->fields['itemtype'] !== $parent->getType()
+                            || (int) $item->fields['items_id'] !== $parent->getID()) {
+                            throw new AccessDeniedHttpException();
+                        }
+                    } elseif ((int) $item->fields[$foreignKey] !== $parent->getID()) {
                         throw new AccessDeniedHttpException();
                     }
                 } elseif (!$item::canCreate()) {

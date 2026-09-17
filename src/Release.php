@@ -600,10 +600,50 @@ class Release extends CommonITILObject
         return $template;
     }
 
+    /**
+     * Criteria narrowing a communication target list to what the session may be offered.
+     *
+     * Built once and replayed at the sink by filterAllowedTargets(), so the list and the
+     * check can never disagree. The caller adds its own "<table>.id" clause on top, which
+     * is why the sub-query below sits in a nested (numeric) entry rather than under that
+     * very key.
+     *
+     * @return array<mixed>
+     */
     public static function getTargetListCriteria(CommonDBTM $target)
     {
-        $dbu = new DbUtils();
-        return $dbu->getEntitiesRestrictCriteria($target->getTable());
+        $dbu   = new DbUtils();
+        $table = $target->getTable();
+
+        if ($target instanceof User) {
+            // A user is attached to an entity through its profile assignments;
+            // glpi_users.entities_id only holds the account's default entity, so filtering
+            // on it hides users legitimately active in the current entity. Replay the scope
+            // the core uses (User::dropdown() and getSqlSearchResult() join on
+            // glpi_profiles_users). Deleted and disabled accounts are no valid recipients.
+            return [
+                $table . '.is_deleted' => 0,
+                $table . '.is_active'  => 1,
+                [
+                    $table . '.id' => new QuerySubQuery([
+                        'SELECT' => 'users_id',
+                        'FROM'   => 'glpi_profiles_users',
+                        'WHERE'  => $dbu->getEntitiesRestrictCriteria('glpi_profiles_users', '', '', true),
+                    ]),
+                ],
+            ];
+        }
+
+        // getEntitiesRestrictCriteria() builds "<table>.entities_id" without ever checking
+        // that the column exists (src/DbUtils.php). Profile is the one communication type
+        // that is not entity-assigned: the criterion is then an unknown column, the query
+        // fails, the dropdown comes back empty and the sink drops every posted id in
+        // silence — the whole communication type is unusable end to end.
+        if (!$target->isEntityAssign()) {
+            return [];
+        }
+
+        return $dbu->getEntitiesRestrictCriteria($table);
     }
 
     /**
@@ -680,6 +720,42 @@ class Release extends CommonITILObject
     }
 
     /**
+     * Replay the entity restriction of the Location dropdown on the posted value.
+     *
+     * The list is entity-restricted where it is rendered (fields_panel.html.twig,
+     * form_releasetemplate.html.twig) and locations_id is inline-editable through
+     * ajax/changeitemstate.php, but nothing revalidated the value at the sink: check($id,
+     * UPDATE) protects the row, never what is posted with it. The stored id is resolved
+     * back onto the form and expanded into the ##release.location## notification tag
+     * (NotificationTargetRelease), which closes the read loop over the location tree of the
+     * entities the session has no access to.
+     *
+     * @param array $input
+     *
+     * @return bool
+     */
+    public static function checkLocationInput($input)
+    {
+        // The field is optional: an empty value detaches the location and stays valid.
+        if (!isset($input['locations_id']) || (int) $input['locations_id'] === 0) {
+            return true;
+        }
+
+        $location = new Location();
+        if (!$location->getFromDB((int) $input['locations_id'])
+            || !Session::haveAccessToEntity($location->fields['entities_id'], $location->isRecursive())) {
+            Session::addMessageAfterRedirect(
+                __('The action you have requested is not allowed.'),
+                false,
+                ERROR,
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param array $input
      *
      * @return array|false
@@ -689,6 +765,10 @@ class Release extends CommonITILObject
         $input = parent::prepareInputForAdd($input);
 
         if (!self::checkCommunicationTypeInput($input)) {
+            return false;
+        }
+
+        if (!self::checkLocationInput($input)) {
             return false;
         }
 
@@ -715,13 +795,15 @@ class Release extends CommonITILObject
             $input['communication_type'] ?? '',
         );
         $input['target'] = json_encode($input['target']);
+        // The status may be missing from the payload; read it once with a fallback rather
+        // than letting null compare as lower than every constant.
+        $current_status = (int) ($input["status"] ?? self::NEWRELEASE);
+
         if (!empty($input["date_preproduction"])
-            && $input["date_preproduction"] != null
             && !empty($input["date_production"])
-            && $input["date_production"] != null
-            && $input["status"] < self::DATEDEFINITION) {
+            && $current_status < self::DATEDEFINITION) {
             $input['status'] = self::DATEDEFINITION;
-        } elseif (!empty($input["content"]) && $input["status"] < self::RELEASEDEFINITION) {
+        } elseif (!empty($input["content"]) && $current_status < self::RELEASEDEFINITION) {
             $input['status'] = self::RELEASEDEFINITION;
         }
         if (empty($input["date_preproduction"])) {
@@ -1113,8 +1195,23 @@ class Release extends CommonITILObject
      */
     public function prepareInputForUpdate($input)
     {
+        // Same guard as every sub-item of the plugin (Deploytask, Risk, Rollback, Test,
+        // Review): front/release.form.php checks UPDATE against the entity the row sits in
+        // today and CommonDBTM::update() revalidates nothing, so a forged POST carrying
+        // entities_id moved the release out of its own entity — for its legitimate owners
+        // an erasure obtained with UPDATE alone, and a durable desynchronisation since the
+        // sub-items keep the entity they were created with. The form exposes no entity
+        // field after creation (fields_panel.html.twig renders a read-only badge) and the
+        // massive transfer action is dead commented code here, so no legitimate caller
+        // sets the key: dropping it is enough. Moving a release between entities belongs
+        // to the core transfer mechanism.
+        unset($input['entities_id']);
 
         if (!self::checkCommunicationTypeInput($input)) {
+            return false;
+        }
+
+        if (!self::checkLocationInput($input)) {
             return false;
         }
 
@@ -1135,12 +1232,20 @@ class Release extends CommonITILObject
             $input['target'] = json_encode($input['target']);
         }
 
+        // ajax/changeitemstate.php only puts 'status' in the payload when the posted value
+        // is strictly greater than the stored one, precisely to keep the workflow moving
+        // forward. Reading the key unguarded made an inline edition at unchanged status
+        // evaluate "null < RELEASEDEFINITION": the release was sent back to step 2 from
+        // anywhere in the workflow, undoing the very rule that endpoint enforces. Fall back
+        // on the status carried by the loaded row, which never rewrites it downwards.
+        $current_status = (int) ($input["status"] ?? $this->fields["status"]);
+
         if (!empty($input["date_preproduction"])
             && !empty($input["date_production"])
-            && $input["status"] < self::DATEDEFINITION) {
+            && $current_status < self::DATEDEFINITION) {
             $input['status'] = self::DATEDEFINITION;
         } elseif (!empty($input["content"])
-            && $input["status"] < self::RELEASEDEFINITION) {
+            && $current_status < self::RELEASEDEFINITION) {
             $input['status'] = self::RELEASEDEFINITION;
         }
         $do_not_compute_takeintoaccount = $this->isTakeIntoAccountComputationBlocked($input);
@@ -1539,16 +1644,22 @@ class Release extends CommonITILObject
             if (isset($options["changes_id"])) {
                 $select_changes = [$options["changes_id"]];
                 $c = new Change();
-                if ($c->getFromDB($options["changes_id"])) {
-                    if ((int) ($options["template_id"] ?? 0) === 0) {
-                        $this->fields["name"] = $c->getField("name");
-                        $options["name"] = $c->getField("name");
-                        $this->fields["content"] = $c->getField("content");
-                        $options["content"] = $c->getField("content");
-                    }
-                    $options['entities_id'] = $c->getField("entities_id");
-                    $this->fields["entities_id"] = $c->getField("entities_id");
+                // The change's name, its content and above all its entity are copied into the
+                // form below, and that entity is then what the check(-1, CREATE) a few lines
+                // further down is evaluated against. Reading an unreachable change back
+                // disclosed it wholesale, so require READ on it — exactly what the write path
+                // of front/release.form.php already does with check($_POST["changes_id"], READ).
+                if (!$c->getFromDB((int) $options["changes_id"]) || !$c->can($c->getID(), READ)) {
+                    throw new AccessDeniedHttpException();
                 }
+                if ((int) ($options["template_id"] ?? 0) === 0) {
+                    $this->fields["name"] = $c->getField("name");
+                    $options["name"] = $c->getField("name");
+                    $this->fields["content"] = $c->getField("content");
+                    $options["content"] = $c->getField("content");
+                }
+                $options['entities_id'] = $c->getField("entities_id");
+                $this->fields["entities_id"] = $c->getField("entities_id");
             }
         }
 
@@ -2028,6 +2139,23 @@ class Release extends CommonITILObject
             $this->getSolvedStatusArray(),
         );
 
+        // The timeline also hosts core followups, and its add button was gated on the test
+        // right. ITILFollowup::canCreateItem() resolves the parent out of these two fields,
+        // exactly as the plugin subitems above do.
+        $followup = new ITILFollowup();
+        $followup->getEmpty();
+        $followup->fields['itemtype'] = $objType;
+        $followup->fields['items_id'] = $this->getID();
+        $fup_input = [
+            'itemtype' => $objType,
+            'items_id' => $this->getID(),
+        ];
+
+        $canadd_followup = $followup->can(-1, CREATE, $fup_input) && !in_array(
+            $this->fields["status"],
+            array_merge($this->getSolvedStatusArray(), $this->getClosedStatusArray()),
+        );
+
         // javascript function for add and edit items
         $objType = self::getType();
         $foreignKey = self::getForeignKeyField();
@@ -2099,7 +2227,7 @@ class Release extends CommonITILObject
       };
       </script>";
 
-        if (!$canadd_risk && !$canadd_rollback && !$canadd_task && !$canadd_test && !$this->canReopen()) {
+        if (!$canadd_risk && !$canadd_rollback && !$canadd_task && !$canadd_test && !$canadd_followup && !$this->canReopen()) {
             return false;
         }
 
@@ -2220,7 +2348,7 @@ class Release extends CommonITILObject
             . "<i class='far fa-comment'></i>" . __("Followup") . " (" . self::countFollowupForItem(
                 $release,
             ) . ")</a></li>";
-        if ($canadd_test) {
+        if ($canadd_followup) {
             echo "<i class='fas fa-plus-circle pointer' onclick='" . "javascript:viewAddSubitem" . $this->fields['id'] . "$rand(\"ITILFollowup\");' style='margin-right: 10px;margin-left: -5px;'></i>";
         }
         echo "</ul>"; // timeline_choices
@@ -2433,7 +2561,11 @@ class Release extends CommonITILObject
 
                 // edit item
                 echo "<span class='far fa-edit control_item' title='" . __('Edit') . "'";
-                echo "onclick='javascript:viewEditSubitem" . $this->fields['id'] . "$rand(event, \"" . $item['type'] . "\", " . $item_i['id'] . ", this, \"$randdomid\")'";
+                // Address the subitem by its short name: a fully qualified class name cannot
+                // survive a JS string literal, "GlpiPlugin\Releases\Risk" being read as
+                // "GlpiPluginReleasesRisk" once \R and \r are consumed as escape sequences.
+                // ajax/timeline.php resolves the short name back to the class.
+                echo "onclick='javascript:viewEditSubitem" . $this->fields['id'] . "$rand(event, \"" . $item['itiltype'] . "\", " . $item_i['id'] . ", this, \"$randdomid\")'";
                 echo "></span>";
             }
 
@@ -2763,8 +2895,12 @@ class Release extends CommonITILObject
             $followups = $followup_obj->find(['items_id' => $this->getID()] + $restrict_fup, ['date DESC', 'id DESC']);
             foreach ($followups as $followups_id => $followup) {
                 $followup_obj->getFromDB($followups_id);
+                // canview() above is the global right and find() carries no entity criteria:
+                // replay the per-row check, as ReleaseTemplate::getTimelineItems() does.
+                if (!$followup_obj->canViewItem()) {
+                    continue;
+                }
                 $followup['can_edit'] = $followup_obj->canUpdateItem();
-                ;
                 $timeline[$followup['date'] . "_followup_" . $followups_id] = [
                     'type' => $fupClass,
                     'item' => $followup,
@@ -2777,7 +2913,12 @@ class Release extends CommonITILObject
             $risks = $risk_obj->find([$foreignKey => $this->getID()] + $restrict_risk, ['date_mod DESC', 'id DESC']);
             foreach ($risks as $risks_id => $risk) {
                 $risk_obj->getFromDB($risks_id);
-                $risk['can_edit'] = $risk_obj->canUpdate();
+                // canview() above is the global right and find() carries no entity criteria:
+                // replay the per-row check, as ReleaseTemplate::getTimelineItems() does.
+                if (!$risk_obj->canViewItem()) {
+                    continue;
+                }
+                $risk['can_edit'] = $risk_obj->canUpdateItem();
                 $timeline[$risk['date_mod'] . "_risk_" . $risks_id] = [
                     'type' => $riskClass,
                     'item' => $risk,
@@ -2793,7 +2934,12 @@ class Release extends CommonITILObject
             );
             foreach ($rollbacks as $rollbacks_id => $rollback) {
                 $rollback_obj->getFromDB($rollbacks_id);
-                $rollback['can_edit'] = $rollback_obj->canUpdate();
+                // canview() above is the global right and find() carries no entity criteria:
+                // replay the per-row check, as ReleaseTemplate::getTimelineItems() does.
+                if (!$rollback_obj->canViewItem()) {
+                    continue;
+                }
+                $rollback['can_edit'] = $rollback_obj->canUpdateItem();
                 $timeline[$rollback['date_mod'] . "_rollback_" . $rollbacks_id] = [
                     'type' => $rollbackClass,
                     'item' => $rollback,
@@ -2809,7 +2955,12 @@ class Release extends CommonITILObject
             $tasks = $task_obj->find([$foreignKey => $this->getID()] + $restrict_task, ['level ASC']);
             foreach ($tasks as $tasks_id => $task) {
                 $task_obj->getFromDB($tasks_id);
-                $task['can_edit'] = $task_obj->canUpdate();
+                // canview() above is the global right and find() carries no entity criteria:
+                // replay the per-row check, as ReleaseTemplate::getTimelineItems() does.
+                if (!$task_obj->canViewItem()) {
+                    continue;
+                }
+                $task['can_edit'] = $task_obj->canUpdateItem();
                 $rand = mt_rand();
                 $timeline["task" . $task_obj->getField('level') . "$tasks_id" . $rand] = [
                     'type' => $taskClass,
@@ -2823,7 +2974,12 @@ class Release extends CommonITILObject
             $tests = $test_obj->find([$foreignKey => $this->getID()] + $restrict_test, ['date_mod DESC', 'id DESC']);
             foreach ($tests as $tests_id => $test) {
                 $test_obj->getFromDB($tests_id);
-                $test['can_edit'] = $test_obj->canUpdate();
+                // canview() above is the global right and find() carries no entity criteria:
+                // replay the per-row check, as ReleaseTemplate::getTimelineItems() does.
+                if (!$test_obj->canViewItem()) {
+                    continue;
+                }
+                $test['can_edit'] = $test_obj->canUpdateItem();
                 $timeline[$test['date_mod'] . "_test_" . $tests_id] = [
                     'type' => $testClass,
                     'item' => $test,

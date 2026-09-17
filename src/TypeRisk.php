@@ -157,7 +157,7 @@ class TypeRisk extends CommonTreeDropdown
         $menu['options'][$itemtype]['page']            = $plugin_page;
         $menu['options'][$itemtype]['links']['search'] = $plugin_page;
 
-        if (Session::haveRight(self::$rightname, UPDATE)) {
+        if (Session::haveRight(self::$rightname, CREATE)) {
             $menu['options'][$itemtype]['links']['add'] = $plugin_page = "/plugins/releases/front/typerisk.form.php\';";
         }
 
@@ -166,7 +166,9 @@ class TypeRisk extends CommonTreeDropdown
 
     public static function canCreate(): bool
     {
-        return Session::haveRight(static::$rightname, UPDATE);
+        // CREATE and UPDATE are independent bits of the same right: a profile granted
+        // UPDATE alone must not be able to add entries to the referential.
+        return Session::haveRight(static::$rightname, CREATE);
     }
 
     /**

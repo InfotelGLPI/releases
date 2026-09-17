@@ -63,7 +63,10 @@ class Review extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
 
-        if ($item->getType() == Release::getType()) {
+        // The tab entry used to be offered to everyone while its content was rendered on
+        // canCreate(): a profile without the review right got a tab that stayed empty.
+        // Gate both on the read right, like Finalization does.
+        if (static::canView() && $item->getType() == Release::getType()) {
             return self::createTabEntry(self::getTypeName(1));
         }
 
@@ -84,18 +87,22 @@ class Review extends CommonDBTM
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
         global $CFG_GLPI;
-        if ($item->getType() == Release::getType()) {
-            $self = new self();
-            if (self::canCreate()) {
-                $review = new Review();
-                if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
-                    $ID = $review->getID();
-                } else {
-                    $ID = 0;
-                }
-                $self->showForm($ID, ['plugin_releases_releases_id' => $item->getField('id'),
-                    'target'                      => $CFG_GLPI['root_doc'] . "/plugins/releases/front/review.form.php"]);
+        if (static::canView() && $item->getType() == Release::getType()) {
+            $self   = new self();
+            $review = new Review();
+            if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $item->getField('id')])) {
+                $ID = $review->getID();
+            } else {
+                $ID = 0;
             }
+            // showForm() goes through initForm(), which runs check($ID, READ) on an existing
+            // row but check(-1, CREATE) on a new one: an existing review is therefore shown to
+            // anyone who may read it, while only a profile able to create gets the empty form.
+            if ($ID === 0 && !self::canCreate()) {
+                return true;
+            }
+            $self->showForm($ID, ['plugin_releases_releases_id' => $item->getField('id'),
+                'target'                      => $CFG_GLPI['root_doc'] . "/plugins/releases/front/review.form.php"]);
         }
     }
 
@@ -196,7 +203,10 @@ class Review extends CommonDBTM
 
         $release = new Release();
         $release->getFromDB($plugin_releases_releases_id);
-        $can_conclude = ($release->getField("status") == Release::REVIEW);
+        // front/review.form.php gates the conclusion on UPDATE over the release; mirror that
+        // right here so the button is not offered to a profile that may only read the tab.
+        $can_conclude = ($release->getField("status") == Release::REVIEW)
+           && $release->can($release->getID(), UPDATE);
 
         TemplateRenderer::getInstance()->display('@releases/form_review.html.twig', [
             'item'                        => $this,

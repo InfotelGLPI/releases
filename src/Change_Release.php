@@ -32,6 +32,7 @@ namespace GlpiPlugin\Releases;
 use Change;
 use CommonDBRelation;
 use CommonGLPI;
+use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
 use Html;
@@ -121,6 +122,20 @@ class Change_Release extends CommonDBRelation
         // selector, both of which break with backslashes (cf. showReleaseFromChange).
         $mass_id = 'mass' . str_replace('\\', '', self::class) . $rand;
 
+        // The link table carries no entity of its own and Change::showShort() performs no
+        // right check, so the global Change_Release::canView() was the only gate on this
+        // list: a change linked here and later transferred to another entity stayed
+        // readable from the release. Restrict the join the way the sibling tabs already do
+        // (Release_Item::showForRelease, ReleaseTemplate_Item::showForRelease).
+        $dbu   = new DbUtils();
+        $where = [
+            'glpi_plugin_releases_changes_releases.plugin_releases_releases_id' => $ID,
+        ];
+        $entity_criteria = $dbu->getEntitiesRestrictCriteria('glpi_changes', '', '', true);
+        if (count($entity_criteria) > 0) {
+            $where[] = $entity_criteria;
+        }
+
         $iterator = $DB->request([
             'SELECT'    => [
                 'glpi_plugin_releases_changes_releases.id AS linkid',
@@ -136,9 +151,7 @@ class Change_Release extends CommonDBRelation
                     ],
                 ],
             ],
-            'WHERE'     => [
-                'glpi_plugin_releases_changes_releases.plugin_releases_releases_id' => $ID,
-            ],
+            'WHERE'     => $where,
             'ORDERBY'   => [
                 'glpi_changes.name',
             ],
@@ -146,17 +159,19 @@ class Change_Release extends CommonDBRelation
 
         $changes = [];
         $used    = [];
-        $numrows = count($iterator);
-        //      $change_release = new self();
-        //      $all = $change_release->find();
-        //      foreach ($all as $one){
-        //         $used[$one['changes_id']] = $one['changes_id'];
-        //      }
+        $change  = new Change();
 
         foreach ($iterator as $data) {
+            // Replay the object-level right on every row: the entity criterion above does
+            // not cover a change hidden by the profile itself, and the LEFT JOIN yields a
+            // null id when the change no longer exists.
+            if (!$change->can($data['id'], READ)) {
+                continue;
+            }
             $changes[$data['id']] = $data;
             $used[$data['id']]    = $data['id'];
         }
+        $numrows = count($changes);
         if ($canedit) {
             // Capture the change dropdown (echoes internally) and render the add
             // mini-form through Twig instead of echoing raw HTML.
@@ -265,6 +280,17 @@ class Change_Release extends CommonDBRelation
         $canedit = Release::canUpdate();
         $rand    = mt_rand();
 
+        // Mirror of showForRelease(): the reverse tab listed every release linked to the
+        // change without any entity or object check either.
+        $dbu   = new DbUtils();
+        $where = [
+            'glpi_plugin_releases_changes_releases.changes_id' => $ID,
+        ];
+        $entity_criteria = $dbu->getEntitiesRestrictCriteria('glpi_plugin_releases_releases', '', '', true);
+        if (count($entity_criteria) > 0) {
+            $where[] = $entity_criteria;
+        }
+
         $iterator = $DB->request([
             'SELECT'    => [
                 'glpi_plugin_releases_changes_releases.id AS linkid',
@@ -280,19 +306,21 @@ class Change_Release extends CommonDBRelation
                     ],
                 ],
             ],
-            'WHERE'     => [
-                'glpi_plugin_releases_changes_releases.changes_id' => $ID,
-            ],
+            'WHERE'     => $where,
             'ORDERBY'   => [
                 'glpi_plugin_releases_releases.name',
             ],
         ]);
 
         $changes = [];
-        $numrows = count($iterator);
+        $release = new Release();
         foreach ($iterator as $data) {
+            if (!$release->can($data['id'], READ)) {
+                continue;
+            }
             $changes[$data['id']] = $data;
         }
+        $numrows = count($changes);
 
         if ($canedit) {
             // Capture the release dropdown (echoes internally) and render the add

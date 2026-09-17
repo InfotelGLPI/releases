@@ -27,9 +27,12 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Releases\Deploytask;
 use GlpiPlugin\Releases\Finalization;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Review;
+use GlpiPlugin\Releases\Test;
 
 Html::popHeader(__("Release finalization", 'releases'), $_SERVER['PHP_SELF']);
 
@@ -42,6 +45,11 @@ Html::popHeader(__("Release finalization", 'releases'), $_SERVER['PHP_SELF']);
 if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_production"])) {
     $release = new Release();
     $release->check((int) $_POST["id"], UPDATE);
+    // check() covers right, entity and item access but says nothing about the state: a
+    // replayed form used to re-open a closed release and wipe its review.
+    if (!Finalization::canFinalize($release)) {
+        throw new BadRequestHttpException();
+    }
     $val             = [];
     $val['id']       = (int) $_POST["id"];
     $val['status']   = Release::REVIEW;
@@ -77,13 +85,18 @@ if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_produ
     echo '<div class="alert alert-important alert-success d-flex">';
     echo __("The release has been finalized", "releases") . '</div>';
 
-} elseif (isset($_POST["failed"])
-           && isset($_POST["id"])
-           && isset($_POST["failedtasks"])
-           && isset($_POST["failedtests"])) {
+} elseif (isset($_POST["failed"]) && isset($_POST["id"])) {
     $review          = new Review();
     $release         = new Release();
     $release->check((int) $_POST["id"], UPDATE);
+    if (!Finalization::canFinalize($release)) {
+        throw new BadRequestHttpException();
+    }
+
+    // The review is the audit trail of the production run: recompute the failure counts
+    // from the release that was just checked rather than recording what the client sent.
+    $failed_tasks = Deploytask::countFailForItem($release);
+    $failed_tests = Test::countFailForItem($release);
     $val             = [];
     $val['id']       = (int) $_POST["id"];
     $val['status']   = Release::FAIL;
@@ -97,11 +110,11 @@ if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_produ
         $val['conforming_realization'] = 0;
         $val['incident']               = 1;
         $val['incident_description']   = "";
-        if ((int) $_POST["failedtasks"] > 0) {
-            $val['incident_description'] .= sprintf(__("%s deploy tasks failed", "releases"), (int) $_POST["failedtasks"]) . "<br />";
+        if ($failed_tasks > 0) {
+            $val['incident_description'] .= sprintf(__("%s deploy tasks failed", "releases"), $failed_tasks) . "<br />";
         }
-        if ((int) $_POST["failedtests"] > 0) {
-            $val['incident_description'] .= sprintf(__("%s tests failed", "releases"), (int) $_POST["failedtests"]) . "<br />";
+        if ($failed_tests > 0) {
+            $val['incident_description'] .= sprintf(__("%s tests failed", "releases"), $failed_tests) . "<br />";
         }
         $review->update($val);
 
@@ -112,11 +125,11 @@ if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_produ
         $val['conforming_realization']      = 0;
         $val['incident']                    = 1;
         $val['incident_description']        = "";
-        if ((int) $_POST["failedtasks"] > 0) {
-            $val['incident_description'] .= sprintf(__("%s deploy tasks failed", "releases"), (int) $_POST["failedtasks"]) . "<br />";
+        if ($failed_tasks > 0) {
+            $val['incident_description'] .= sprintf(__("%s deploy tasks failed", "releases"), $failed_tasks) . "<br />";
         }
-        if ((int) $_POST["failedtests"] > 0) {
-            $val['incident_description'] .= sprintf(__("%s tests failed", "releases"), (int) $_POST["failedtests"]) . "<br />";
+        if ($failed_tests > 0) {
+            $val['incident_description'] .= sprintf(__("%s tests failed", "releases"), $failed_tests) . "<br />";
         }
         $review->add($val);
     }

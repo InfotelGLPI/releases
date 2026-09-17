@@ -75,21 +75,35 @@ if (isset($_REQUEST[$parent->getForeignKeyField()])
     if ($ol && (Session::getLoginUserID() != $ol->fields['users_id'])) {
         ObjectLock::setReadOnlyProfile();
     }
-    $id = isset($_REQUEST['id']) && (int) $_REQUEST['id'] > 0 ? $_REQUEST['id'] : null;
-    if ($id) {
-        $item->getFromDB($id);
-    }
-
-    // Each subitem class declares its own rightname: the release right alone must not expose it
+    $id = isset($_REQUEST['id']) && (int) $_REQUEST['id'] > 0 ? (int) $_REQUEST['id'] : null;
     if ($id !== null) {
-        if (!$item->can((int) $id, READ)) {
+        $item->getFromDB($id);
+
+        // Each subitem class declares its own rightname: the release right alone must not expose it
+        if (!$item->can($id, READ)) {
+            throw new AccessDeniedHttpException();
+        }
+
+        // The parent was checked and the subitem was checked, but nothing tied the two
+        // together: an id valid on its own but attached to another release would still be
+        // rendered under the controlled parent. Same guard as ajax/viewsubitemtemplate.php.
+        if ((int) $item->fields[$foreignKey] !== $parent->getID()) {
             throw new AccessDeniedHttpException();
         }
     } elseif (!$item::canCreate()) {
         throw new AccessDeniedHttpException();
     }
-    $url = $_REQUEST['type']::getFormURL();
-    $item->showForm($id);
+
+    // The subitem forms read their parent out of the options — showForm() hands it to the
+    // Twig template and to check(-1, CREATE), which cannot resolve a CommonDBChild parent
+    // without it. Pass the parent that was just checked rather than the posted id, as
+    // ajax/timeline.php does on the same subitems.
+    $item->showForm($id, [
+        'parent'    => $parent,
+        'itemtype'  => $parent->getType(),
+        'items_id'  => $parent->getID(),
+        $foreignKey => $parent->getID(),
+    ]);
 
 } else {
     throw new AccessDeniedHttpException();
