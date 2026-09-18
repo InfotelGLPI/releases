@@ -1217,6 +1217,18 @@ class Release extends CommonITILObject
 
         $input = $this->transformActorsInput($input);
 
+        // front/release.form.php inherits the array_merge($item->fields, ...) idiom from
+        // front/change.form.php, so every persisted column is replayed into the payload of
+        // actions that never meant to touch them — addme_observer above all, which only
+        // requires READ. The recipient list then went through filterAllowedTargets() with
+        // the rights and the entity scope of that session, and every recipient it could not
+        // see was silently dropped from the release, killing their notifications. There is
+        // nothing to validate when the value is not being changed: leave it alone.
+        if (isset($input['target']) && is_string($input['target'])
+            && $input['target'] === ($this->fields['target'] ?? null)) {
+            unset($input['target']);
+        }
+
         if ((isset($input['target']) && empty($input['target']))
             || (!isset($input['target']) && isset($input["communication_type"]) && $input["communication_type"] != $this->fields["communication_type"])) {
             $input['target'] = [];
@@ -2996,6 +3008,17 @@ class Release extends CommonITILObject
 
     public static function showCreateRelease($item)
     {
+        // The "Releases" tab of a change opens on READ, so this creation affordance was
+        // offered to profiles that front/release.form.php then rejects: the user filled the
+        // form in and landed on an access denied page instead of simply not seeing a button.
+        // Evaluate here exactly what that controller replays a few lines further down —
+        // check(-1, CREATE, ['entities_id' => the entity of the change]) — so the display
+        // condition and the write condition cannot drift apart. Guarding the method rather
+        // than the call site of Change_Release::showReleaseFromChange() covers every caller.
+        if (!self::canCreate() || !Session::haveAccessToEntity($item->getField('entities_id'))) {
+            return;
+        }
+
         $item_t    = new ReleaseTemplate();
         $dbu       = new DbUtils();
         $condition = $dbu->getEntitiesRestrictCriteria($item_t->getTable());

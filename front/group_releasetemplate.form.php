@@ -32,8 +32,6 @@ use Glpi\Exception\Http\BadRequestHttpException;
 use GlpiPlugin\Releases\Group_ReleaseTemplate;
 use GlpiPlugin\Releases\ReleaseTemplate;
 
-global $CFG_GLPI;
-
 $link = new Group_ReleaseTemplate();
 $item = new ReleaseTemplate();
 
@@ -49,16 +47,20 @@ if (isset($_POST['delete'])) {
         sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]),
     );
 
-    if ($item->can($link->fields["plugin_releases_releasetemplates_id"], READ)) {
-        Html::redirect(ReleaseTemplate::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
+    // Both targets were dead: ReleaseTemplate has no front controller — neither
+    // front/releasetemplate.php nor front/releasetemplate.form.php exists, and its showForm()
+    // posts to Release::getFormURL() — so getFormURLWithID() resolves to a 404 just like the
+    // list below. Go back to the opener, keeping the message when the template is no longer
+    // readable.
+    if (!$item->can($link->fields["plugin_releases_releasetemplates_id"], READ)) {
+        Session::addMessageAfterRedirect(
+            __('You have been redirected because you no longer have access to this item'),
+            true,
+            ERROR,
+        );
     }
-    Session::addMessageAfterRedirect(
-        __('You have been redirected because you no longer have access to this item'),
-        true,
-        ERROR,
-    );
 
-    Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/releasetemplate.php");
+    Html::back();
 }
 
 throw new BadRequestHttpException('Lost');

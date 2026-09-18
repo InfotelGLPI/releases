@@ -36,6 +36,7 @@ use CommonGLPI;
 use CommonITILActor;
 use CommonITILObject;
 use DbUtils;
+use Document;
 use Document_Item;
 use Dropdown;
 use Entity;
@@ -2779,24 +2780,47 @@ class ReleaseTemplate extends CommonDropdown
         parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
     }
 
+    /**
+     * Follow a transferred template with the documents attached to it.
+     *
+     * Only the Document_Item link used to be moved, never the Document: the link then claimed
+     * an entity the document does not belong to, and the attachment showed on a template whose
+     * readers cannot read the file. Moving the document with it is only correct when this
+     * template is its sole holder and it is not recursive — a shared or recursive document
+     * answers to more than one caller and must stay where it is, link included, so the two
+     * entities_id never diverge.
+     *
+     * @param int $ID     template id
+     * @param int $entity target entity
+     *
+     * @return bool
+     */
     public static function transferDocument($ID, $entity)
     {
-        global $DB;
-
-        if ($ID > 0) {
-            $self      = new self();
-            $documents = new Document_Item();
-            $items     = $documents->find(["items_id" => $ID, "itemtype" => self::getType()]);
-            foreach ($items as $id => $vals) {
-                $input                = [];
-                $input["id"]          = $id;
-                $input["entities_id"] = $entity;
-                $documents->update($input);
-            }
-            return true;
-
+        if ($ID <= 0) {
+            return false;
         }
-        return 0;
+
+        $document_item = new Document_Item();
+        $document      = new Document();
+        $links         = $document_item->find(["items_id" => $ID, "itemtype" => self::getType()]);
+
+        foreach ($links as $id => $values) {
+            $others = $document_item->find([
+                'documents_id' => $values['documents_id'],
+                'NOT'          => ['id' => $id],
+            ]);
+            if (count($others) > 0
+                || !$document->getFromDB($values['documents_id'])
+                || $document->fields['is_recursive']) {
+                continue;
+            }
+
+            $document_item->update(['id' => $id, 'entities_id' => $entity]);
+            $document->update(['id' => $document->getID(), 'entities_id' => $entity]);
+        }
+
+        return true;
     }
 
     /**

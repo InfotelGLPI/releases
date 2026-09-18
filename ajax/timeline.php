@@ -75,15 +75,17 @@ if (($_POST['action'] ?? null) === 'done_fail') {
         throw new AccessDeniedHttpException();
     }
 
-    if ($_POST["newStatus"] == $task->fields['state']) {
-        $new_state = Test::TODO;
-    } else {
-        // Only accept a known task state (TODO/DONE/FAIL are shared by all task classes),
-        // never a raw out-of-range value from the POST, so the state column stays in domain.
-        $new_state = in_array((int) $_POST["newStatus"], [Test::TODO, Test::DONE, Test::FAIL], true)
-            ? (int) $_POST["newStatus"]
-            : Test::TODO;
+    // newStatus drives the state column. It was read without isset() and compared loosely with
+    // the stored state, so an absent or out-of-domain value silently took the "toggle back to
+    // TODO" branch and wrote a state the caller never asked for. Normalise once, then refuse
+    // anything outside the domain shared by every task class (TODO/DONE/FAIL).
+    $new_status = (int) ($_POST["newStatus"] ?? -1);
+    if (!in_array($new_status, [Test::TODO, Test::DONE, Test::FAIL], true)) {
+        throw new BadRequestHttpException();
     }
+
+    // Clicking the state the task already holds toggles it back to "to do"
+    $new_state = ($new_status === (int) $task->fields['state']) ? Test::TODO : $new_status;
 
     $new_label = Planning::getState($new_state);
     echo json_encode([

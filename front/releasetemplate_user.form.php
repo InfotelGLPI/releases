@@ -29,11 +29,8 @@
 
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
-use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\ReleaseTemplate;
 use GlpiPlugin\Releases\ReleaseTemplate_User;
-
-global $CFG_GLPI;
 
 $link = new ReleaseTemplate_User();
 $item = new ReleaseTemplate();
@@ -60,16 +57,19 @@ if (isset($_POST["update"])) {
         sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]),
     );
 
-    if ($item->can($link->fields["plugin_releases_releasetemplates_id"], READ)) {
-        Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
+    // Both targets were dead: the release form cannot load a template id, and
+    // front/releasetemplate.php does not exist — ReleaseTemplate has no front controller, its
+    // showForm() posts to Release::getFormURL(). Go back to the opener in both cases, keeping
+    // the message when the template is no longer readable.
+    if (!$item->can($link->fields["plugin_releases_releasetemplates_id"], READ)) {
+        Session::addMessageAfterRedirect(
+            __('You have been redirected because you no longer have access to this item'),
+            true,
+            ERROR,
+        );
     }
-    Session::addMessageAfterRedirect(
-        __('You have been redirected because you no longer have access to this item'),
-        true,
-        ERROR,
-    );
 
-    Html::redirect($CFG_GLPI['root_doc'] . "/plugins/releases/front/releasetemplate.php");
+    Html::back();
 
 } elseif (isset($_GET["id"])) {
     $link->showUserNotificationForm($_GET["id"]);

@@ -29,7 +29,6 @@
 
 use Glpi\Event;
 use Glpi\Exception\Http\BadRequestHttpException;
-use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\ReleaseTemplate_Supplier;
 
 $link = new ReleaseTemplate_Supplier();
@@ -55,7 +54,12 @@ if (isset($_POST["update"])) {
         "maintain",
         sprintf(__('%s deletes an actor'), $_SESSION["glpiname"]),
     );
-    Html::redirect(Release::getFormURLWithID($link->fields['plugin_releases_releasetemplates_id']));
+    // Redirecting to Release::getFormURLWithID() sent the popup to the release form carrying a
+    // template id, an id that form cannot load. ReleaseTemplate has no front controller at all
+    // — neither front/releasetemplate.php nor front/releasetemplate.form.php exists, and
+    // ReleaseTemplate::showForm() posts to Release::getFormURL() — so there is no template URL
+    // to redirect to. Go back to the page the popup was opened from.
+    Html::back();
 
 } elseif (isset($_GET["id"])) {
     $link->showSupplierNotificationForm($_GET["id"]);
