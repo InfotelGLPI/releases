@@ -4780,7 +4780,7 @@ section#timeline:before {
    width: 2px;
    height: 90%;
 
-   background: black;
+   background: var(--rel-timeline-axis, black);
 }
 
 section#timeline article {
@@ -4815,10 +4815,10 @@ section#timeline article div.inner span.bulle {
    font-size: 12px;
    font-weight: 900;
    text-transform: uppercase;
-   background: white;
+   background: var(--tblr-bg-surface, #fff);
    /*color: rgba(255,255,255,0.5);*/
    border: 2px solid rgba(255, 255, 255, 0.2);
-   box-shadow: 0 0 0 7px #25303B;
+   box-shadow: 0 0 0 7px var(--rel-bulle-halo, #25303B);
    z-index: 100;
 }
 
@@ -4884,8 +4884,8 @@ section#timeline article div.inner p {
    padding: 15px;
    margin: 0;
    font-size: 14px;
-   background: #fff;
-   color: #656565;
+   background: var(--tblr-bg-surface, #fff);
+   color: var(--rel-card-fg, #656565);
    border-radius: 0 0 6px 6px;
 }
 
@@ -4915,4 +4915,36 @@ section#timeline article div.inner span.date span.year {
 h2.dateColor {
    background-color: #8db8e2;
    color: white !important;
+}
+
+/*
+ * Dark-palette adaptation for the finalization tab.
+ *
+ * Its timeline is the only place in the plugin using #timeline, .bulle and .inner, so
+ * these variables are scoped to that tab in practice. The light values below are the
+ * original ones, so a page rendered without this block looks exactly as it did before.
+ *
+ * Card bodies and step bubbles follow the theme surface: in light palettes
+ * --tblr-bg-surface is #fff, the very colour they hard-coded. The bubble mattered most,
+ * as its white background stayed white while the text inside it followed the theme,
+ * leaving the date at a 1.25:1 contrast ratio in dark palettes.
+ *
+ * The three greys keep the contrast ratio they had against white: 5.8:1 for the card
+ * text, 13.4:1 for the default bubble ring. The timeline axis is the exception, pure
+ * black being 21:1 against white; #808080 gives it 5.3:1, clearly visible for a 2px
+ * rule without the glare a near-white line would produce.
+ *
+ * The coloured heading bands (risk, rollback, deploy task, test, dates) are untouched:
+ * they carry meaning, and their black text stays between 5.9:1 and 14.3:1 either way.
+ */
+:root {
+   --rel-timeline-axis: #000;
+   --rel-bulle-halo: #25303b;
+   --rel-card-fg: #656565;
+}
+
+:root[data-glpi-theme-dark="1"] {
+   --rel-timeline-axis: #808080;
+   --rel-bulle-halo: #cfcfcf;
+   --rel-card-fg: #878787;
 }
