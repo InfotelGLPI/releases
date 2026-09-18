@@ -259,11 +259,18 @@ if (($_POST['action'] ?? null) === 'done_fail') {
                 throw new NotFoundHttpException();
             }
 
-            // The timeline addresses its subitems by short name — viewAddSubitem("Risk"),
+            // The timeline addresses its subitems with two spellings, and both reach here.
+            // The legacy buttons use the short name — viewAddSubitem("Risk"),
             // viewEditSubitem(..., "Risk", ...) — because a fully qualified name cannot
             // survive a JS string literal: the backslashes of GlpiPlugin\Releases\Risk are
-            // consumed as escape sequences. Resolving the short name against a fixed map
-            // keeps the allow-list closed while accepting what the UI actually sends.
+            // consumed as escape sequences. The Twig timeline uses the qualified name:
+            // `data-itemtype="{{ entry['type'] }}"` is fed straight to the edit handler.
+            // Accepting only the short name made every inline edit answer 404, which left
+            // the timeline stuck on its loading spinner.
+            // Release itself belongs to the map: main_description.html.twig renders the
+            // title/description block with data-itemtype = the release, and its edit button
+            // shares the same handler. CommonITILObject::showSubForm() serves that case by
+            // delegating to showEditDescriptionForm().
             // ITILFollowup belongs here too: showTimelineForm() offers an add button for it
             // and getTimelineItems() lists the existing ones.
             $allowed_subitem_classes = [
@@ -272,11 +279,16 @@ if (($_POST['action'] ?? null) === 'done_fail') {
                 'Rollback'     => Rollback::class,
                 'Test'         => Test::class,
                 'ITILFollowup' => ITILFollowup::class,
+                'Release'      => Release::class,
             ];
-            if (!is_string($_REQUEST['type']) || !isset($allowed_subitem_classes[$_REQUEST['type']])) {
+            if (!is_string($_REQUEST['type'])) {
                 throw new NotFoundHttpException();
             }
-            $_REQUEST['type'] = $allowed_subitem_classes[$_REQUEST['type']];
+            if (isset($allowed_subitem_classes[$_REQUEST['type']])) {
+                $_REQUEST['type'] = $allowed_subitem_classes[$_REQUEST['type']];
+            } elseif (!in_array($_REQUEST['type'], $allowed_subitem_classes, true)) {
+                throw new NotFoundHttpException();
+            }
 
             $item   = getItemForItemtype($_REQUEST['type']);
             $parent = getItemForItemtype($_REQUEST['parenttype']);
@@ -292,7 +304,14 @@ if (($_POST['action'] ?? null) === 'done_fail') {
                 }
                 // Each subitem class declares its own rightname: the release right alone must not expose it
                 $subitem_id = (int) ($_REQUEST["id"] ?? 0);
-                if ($subitem_id > 0) {
+                if ($item instanceof Release) {
+                    // Editing the title/description: the "subitem" is the parent itself, so
+                    // the only link to enforce between both ends is their identity. There is
+                    // no creation path here either, which rules out the id <= 0 branch.
+                    if ($subitem_id !== $parent->getID() || !$item->can($subitem_id, READ)) {
+                        throw new AccessDeniedHttpException();
+                    }
+                } elseif ($subitem_id > 0) {
                     if (!$item->can($subitem_id, READ)) {
                         throw new AccessDeniedHttpException();
                     }
