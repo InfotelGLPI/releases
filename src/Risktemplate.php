@@ -169,7 +169,7 @@ class Risktemplate extends CommonDropdown
 
     public function prepareInputForUpdate($input)
     {
-        return ReleaseTemplate::stripParentTemplateInput($input);
+        return ReleaseTemplate::stripParentTemplateInput($input, $this);
     }
 
     public function post_addItem()

@@ -65,7 +65,7 @@
 
         <div class="text-content" data-bs-html="true" data-bs-custom-class="todo-list-tooltip"
              title="{{ entry_i['content']|html_to_text }}" data-bs-toggle="tooltip">
-            {{ entry_i['name']|safe_html }}
+            {{ entry_i['name'] }}
             {{ entry_i['content']|enhanced_html({
                 'user_mentions': true,
                 'images_gallery': true

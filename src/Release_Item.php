@@ -55,6 +55,13 @@ class Release_Item extends CommonDBRelation
     public static $items_id_2         = 'items_id';
     public static $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
+    /**
+     * Release just created from a template by Release::post_addItem(): the items of the
+     * template are linked to it without requiring UPDATE, a right its creator may lack.
+     * Set by code only, never from the request.
+     */
+    public ?int $trusted_new_release_id = null;
+
     public static function getIcon()
     {
         return "ti ti-package";
@@ -127,7 +134,8 @@ class Release_Item extends CommonDBRelation
         // showForRelease() builds the dropdown with.
         $release = new Release();
         if (!$release->getFromDB((int) ($input['plugin_releases_releases_id'] ?? 0))
-            || !$release->can($release->getID(), UPDATE)) {
+            || !($release->can($release->getID(), UPDATE)
+                || $this->trusted_new_release_id === $release->getID())) {
             return false;
         }
         if (!in_array($input['itemtype'] ?? '', self::getLinkableItemtypes(), true)) {

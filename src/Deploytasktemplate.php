@@ -304,7 +304,7 @@ class Deploytasktemplate extends CommonDropdown
      **/
     public function prepareInputForUpdate($input)
     {
-        $input = ReleaseTemplate::stripParentTemplateInput($input);
+        $input = ReleaseTemplate::stripParentTemplateInput($input, $this);
 
         Toolbox::manageBeginAndEndPlanDates($input['plan']);
 

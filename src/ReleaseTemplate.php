@@ -1966,16 +1966,28 @@ class ReleaseTemplate extends CommonDropdown
     /**
      * Drop the keys that settle the ownership of a template sub-item.
      *
-     * They are fixed at creation time, from a template that was checked back then;
-     * re-sending them in an update is the cross-entity move this closes.
+     * The parent template is fixed at creation time, from a template that was checked back
+     * then; re-sending it in an update is the cross-entity move this closes. The entity is
+     * never taken from the input but follows the stored parent template, so that the
+     * transfer of a template (parent updated first) still moves its sub-items.
      *
      * @param array<string, mixed> $input
+     * @param CommonDBTM           $subitem sub-item being updated
      *
      * @return array<string, mixed>
      */
-    public static function stripParentTemplateInput(array $input)
+    public static function stripParentTemplateInput(array $input, CommonDBTM $subitem)
     {
-        unset($input['entities_id'], $input['plugin_releases_releasetemplates_id']);
+        unset($input['plugin_releases_releasetemplates_id']);
+
+        if (array_key_exists('entities_id', $input)) {
+            $template = new self();
+            if ($template->getFromDB((int) ($subitem->fields['plugin_releases_releasetemplates_id'] ?? 0))) {
+                $input['entities_id'] = $template->fields['entities_id'];
+            } else {
+                unset($input['entities_id']);
+            }
+        }
 
         return $input;
     }

@@ -193,7 +193,7 @@
                            {{ include('@releases/form_risk.html.twig', {'form_mode': 'view'}) }}
                      {% else %}
                         <div class="read-only-content">
-                            {{ entry_i['name']|safe_html }}
+                            {{ entry_i['name'] }}
                            {{ entry_i['content']|safe_html }}
                         </div>
                      {% endif %}

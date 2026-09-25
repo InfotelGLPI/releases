@@ -849,6 +849,11 @@ class Release extends CommonITILObject
                 foreach ($items as $input) {
                     unset($input["id"]);
                     $input["plugin_releases_releases_id"] = $this->getID();
+                    // Risk, Test, Rollback and Deploytask resolve their parent release from
+                    // items_id: without it, every cloned sub-item was refused
+                    if (array_key_exists("items_id", $input)) {
+                        $input["items_id"] = $this->getID();
+                    }
                     $item->add($input);
                 }
                 //            Toolbox::logWarning(
@@ -893,6 +898,7 @@ class Release extends CommonITILObject
             $riskTemplate = new Risktemplate();
             $itemLinkTemplate = new ReleaseTemplate_Item();
             $itemLink = new Release_Item();
+            $itemLink->trusted_new_release_id = $this->getID();
             $risks = $riskTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
             $tests = $testTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
             $rollbacks = $rollbackTemplate->find(["plugin_releases_releasetemplates_id" => $template->getID()]);
@@ -1491,8 +1497,11 @@ class Release extends CommonITILObject
         $fup = new ITILFollowup();
         $fup->getEmpty();
         $fup->fields['itemtype'] = $obj_type;
-        //      $fup->fields['items_id'] = $this->getID();
-        $canadd_fup = $fup->can(-1, CREATE, $tmp) && !in_array($this->fields["status"], $solved_closed_statuses, true);
+        $fup->fields['items_id'] = $this->getID();
+        // ITILFollowup resolves its parent from itemtype/items_id: without them the right was
+        // computed on an empty release instead of the displayed one
+        $fup_input  = ['itemtype' => $obj_type, 'items_id' => $this->getID()];
+        $canadd_fup = $fup->can(-1, CREATE, $fup_input) && !in_array($this->fields["status"], $solved_closed_statuses, true);
 
         if ($canadd_fup) {
             $itemtypes['answer'] = [
