@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 10:03+0000\n"
+"POT-Creation-Date: 2026-09-25 10:06+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2026\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -24,7 +24,7 @@ msgstr ""
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3409
+#: src/Release.php:2698
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -133,7 +133,7 @@ msgstr[3] "Přiřazené změny"
 msgid "Associated risk"
 msgstr "Přiřazené riziko"
 
-#: src/Release.php:2799 src/ReleaseTemplate.php:1249
+#: src/ReleaseTemplate.php:1249
 msgid "Associated with"
 msgstr "Přiřazeno k"
 
@@ -246,11 +246,11 @@ msgstr[3] "Nasazení šablon úkolů"
 msgid "Deploy Task type"
 msgstr "Nasazení typu úkolu"
 
-#: src/Deploytask.php:67 src/Release.php:2324 src/Release.php:2326
-#: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
-#: src/ReleaseTemplate.php:200 src/ReleaseTemplate.php:1048
-#: src/ReleaseTemplate.php:1049 templates/filter_timeline.html.twig:54
-#: templates/timeline.html.twig:120 templates/form_finalization.html.twig:64
+#: src/Deploytask.php:67 src/NotificationTargetRelease.php:943
+#: src/NotificationTargetRelease.php:963 src/ReleaseTemplate.php:200
+#: src/ReleaseTemplate.php:1048 src/ReleaseTemplate.php:1049
+#: templates/filter_timeline.html.twig:54 templates/timeline.html.twig:120
+#: templates/form_finalization.html.twig:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Nasazení úkolu"
@@ -352,7 +352,7 @@ msgstr "Dokončení"
 msgid "Finalize"
 msgstr "Dokončit"
 
-#: src/Release.php:2436 templates/filter_timeline.html.twig:36
+#: src/Release.php:2151 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
 #, fuzzy
 msgid "Followup"
@@ -362,7 +362,7 @@ msgstr[1] "Doplňující zpráva"
 msgstr[2] "Doplňující zpráva"
 msgstr[3] "Doplňující zpráva"
 
-#: src/Release.php:3041 templates/fields_panel.html.twig:104
+#: src/Release.php:2330 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Pro tuto změnu"
 
@@ -415,11 +415,11 @@ msgstr "Název"
 msgid "New release"
 msgstr "Nové vydání"
 
-#: src/Release.php:2845 src/ReleaseTemplate.php:1299
+#: src/ReleaseTemplate.php:1299
 msgid "No data available"
 msgstr "Data nejsou k dispozici"
 
-#: src/Release.php:3413 src/Release.php:3460
+#: src/Release.php:2702 src/Release.php:2749
 msgid "No release found."
 msgstr "Nebylo nalezeno žádné vydání."
 
@@ -514,7 +514,7 @@ msgstr[1] "Vydání"
 msgstr[2] "Vydání"
 msgstr[3] "Vydání"
 
-#: src/Release.php:3263 src/ReleaseTemplate.php:1337
+#: src/Release.php:2552 src/ReleaseTemplate.php:1337
 msgid "Release actions details"
 msgstr "Podrobnosti o akcích uvolnění"
 
@@ -538,7 +538,7 @@ msgstr[1] "Šablon vydání"
 msgstr[2] "Šablon vydání"
 msgstr[3] "Šablony vydání"
 
-#: src/Release.php:3448
+#: src/Release.php:2737
 msgid "Releases on linked items"
 msgstr "Vydání u propojených položek"
 
@@ -550,7 +550,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Release.php:2440
+#: src/Release.php:2155
 msgid "Reset display options"
 msgstr ""
 

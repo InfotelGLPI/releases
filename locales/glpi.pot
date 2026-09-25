@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 10:03+0000\n"
+"POT-Creation-Date: 2026-09-25 10:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3409
+#: src/Release.php:2698
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -122,7 +122,7 @@ msgstr[1] ""
 msgid "Associated risk"
 msgstr ""
 
-#: src/Release.php:2799 src/ReleaseTemplate.php:1249
+#: src/ReleaseTemplate.php:1249
 msgid "Associated with"
 msgstr ""
 
@@ -231,11 +231,11 @@ msgstr[1] ""
 msgid "Deploy Task type"
 msgstr ""
 
-#: src/Deploytask.php:67 src/Release.php:2324 src/Release.php:2326
-#: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
-#: src/ReleaseTemplate.php:200 src/ReleaseTemplate.php:1048
-#: src/ReleaseTemplate.php:1049 templates/filter_timeline.html.twig:54
-#: templates/timeline.html.twig:120 templates/form_finalization.html.twig:64
+#: src/Deploytask.php:67 src/NotificationTargetRelease.php:943
+#: src/NotificationTargetRelease.php:963 src/ReleaseTemplate.php:200
+#: src/ReleaseTemplate.php:1048 src/ReleaseTemplate.php:1049
+#: templates/filter_timeline.html.twig:54 templates/timeline.html.twig:120
+#: templates/form_finalization.html.twig:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] ""
@@ -327,14 +327,14 @@ msgstr ""
 msgid "Finalize"
 msgstr ""
 
-#: src/Release.php:2436 templates/filter_timeline.html.twig:36
+#: src/Release.php:2151 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
 msgid "Followup"
 msgid_plural "Followups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3041 templates/fields_panel.html.twig:104
+#: src/Release.php:2330 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr ""
 
@@ -385,11 +385,11 @@ msgstr ""
 msgid "New release"
 msgstr ""
 
-#: src/Release.php:2845 src/ReleaseTemplate.php:1299
+#: src/ReleaseTemplate.php:1299
 msgid "No data available"
 msgstr ""
 
-#: src/Release.php:3413 src/Release.php:3460
+#: src/Release.php:2702 src/Release.php:2749
 msgid "No release found."
 msgstr ""
 
@@ -482,7 +482,7 @@ msgid_plural "Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3263 src/ReleaseTemplate.php:1337
+#: src/Release.php:2552 src/ReleaseTemplate.php:1337
 msgid "Release actions details"
 msgstr ""
 
@@ -504,7 +504,7 @@ msgid_plural "Release templates"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3448
+#: src/Release.php:2737
 msgid "Releases on linked items"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgid_plural "Requester groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:2440
+#: src/Release.php:2155
 msgid "Reset display options"
 msgstr ""
 
