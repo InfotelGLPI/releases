@@ -2812,7 +2812,11 @@ class ReleaseTemplate extends CommonDropdown
             ]);
             if (count($others) > 0
                 || !$document->getFromDB($values['documents_id'])
-                || $document->fields['is_recursive']) {
+                || $document->fields['is_recursive']
+                // The right on the template does not extend to the Document itself: moving it
+                // requires UPDATE on the document in its current entity, otherwise it is left
+                // where it is, like a shared document.
+                || !$document->can($document->getID(), UPDATE)) {
                 continue;
             }
 
