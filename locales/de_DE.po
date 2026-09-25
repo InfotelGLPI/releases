@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 06:46+0000\n"
+"POT-Creation-Date: 2026-09-25 10:03+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Michael Schieferer, 2022\n"
 "Language-Team: German (Germany) (https://www.transifex.com/infotelGLPI/"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3400
+#: src/Release.php:3409
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -86,12 +86,12 @@ msgctxt "button"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: src/Release.php:1559
+#: src/Release.php:1568
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Verteilungsaufgabe hinzufügen"
 
-#: src/Release.php:1502
+#: src/Release.php:1511
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Nachverfolgung hinzufügen"
@@ -100,17 +100,17 @@ msgstr "Nachverfolgung hinzufügen"
 msgid "Add a release"
 msgstr "Release hinzufügen"
 
-#: src/Release.php:1521
+#: src/Release.php:1530
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Risiko hinzufügen"
 
-#: src/Release.php:1540
+#: src/Release.php:1549
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Rollback hinzufügen"
 
-#: src/Release.php:1578
+#: src/Release.php:1587
 msgctxt "button"
 msgid "Add a test"
 msgstr "Test hinzufügen"
@@ -126,7 +126,7 @@ msgstr[1] "Verknüpfte Änderungen"
 msgid "Associated risk"
 msgstr "Verknüpftes Risiko"
 
-#: src/Release.php:2790 src/ReleaseTemplate.php:1249
+#: src/Release.php:2799 src/ReleaseTemplate.php:1249
 msgid "Associated with"
 msgstr "Verknüpfen mit"
 
@@ -144,7 +144,7 @@ msgid_plural "Categories"
 msgstr[0] "Kategorie"
 msgstr[1] "Kategorien"
 
-#: src/Release.php:1061
+#: src/Release.php:1067
 msgid "Changes defined"
 msgstr "Definierte Änderungen"
 
@@ -208,7 +208,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/Release.php:1060
+#: src/Release.php:1066
 msgid "Dates defined"
 msgstr "Definierte Daten"
 
@@ -235,7 +235,7 @@ msgstr[1] "Aufgabenvorlagen verteilen"
 msgid "Deploy Task type"
 msgstr "Aufgabentyp verteilen"
 
-#: src/Deploytask.php:67 src/Release.php:2315 src/Release.php:2317
+#: src/Deploytask.php:67 src/Release.php:2324 src/Release.php:2326
 #: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
 #: src/ReleaseTemplate.php:200 src/ReleaseTemplate.php:1048
 #: src/ReleaseTemplate.php:1049 templates/filter_timeline.html.twig:54
@@ -251,7 +251,7 @@ msgid_plural "Deploy task types"
 msgstr[0] "Aufgabentyp verteilen"
 msgstr[1] "Aufgabentypen verteilen"
 
-#: src/Release.php:1064
+#: src/Release.php:1070
 msgid "Deployment tasks in progress"
 msgstr "Bereitstellungsaufgaben werden ausgeführt"
 
@@ -295,7 +295,7 @@ msgstr[1] ""
 msgid "Email Followup"
 msgstr ""
 
-#: src/Release.php:1068
+#: src/Release.php:1074
 msgctxt "status"
 msgid "End"
 msgstr "nde"
@@ -311,7 +311,7 @@ msgstr[0] "Entität"
 msgstr[1] "Entitäten"
 
 #: src/Deploytask.php:359 src/Deploytask.php:742 src/Test.php:231
-#: src/Test.php:247 src/Release.php:1069 src/Deploytasktemplate.php:236
+#: src/Test.php:247 src/Release.php:1075 src/Deploytasktemplate.php:236
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -331,7 +331,7 @@ msgstr "Abschluss"
 msgid "Finalize"
 msgstr "Abschließen"
 
-#: src/Release.php:2427 templates/filter_timeline.html.twig:36
+#: src/Release.php:2436 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
 #, fuzzy
 msgid "Followup"
@@ -339,7 +339,7 @@ msgid_plural "Followups"
 msgstr[0] "Nachverfolgen"
 msgstr[1] "Nachverfolgen"
 
-#: src/Release.php:3032 templates/fields_panel.html.twig:104
+#: src/Release.php:3041 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Für diese Änderung"
 
@@ -390,11 +390,11 @@ msgstr ""
 msgid "New release"
 msgstr "Neues Release"
 
-#: src/Release.php:2836 src/ReleaseTemplate.php:1299
+#: src/Release.php:2845 src/ReleaseTemplate.php:1299
 msgid "No data available"
 msgstr "Keine Daten"
 
-#: src/Release.php:3404 src/Release.php:3451
+#: src/Release.php:3413 src/Release.php:3460
 msgid "No release found."
 msgstr "Kein Release gefunden."
 
@@ -487,7 +487,7 @@ msgid_plural "Releases"
 msgstr[0] "Release"
 msgstr[1] "Releases"
 
-#: src/Release.php:3254 src/ReleaseTemplate.php:1337
+#: src/Release.php:3263 src/ReleaseTemplate.php:1337
 msgid "Release actions details"
 msgstr "Details der Release-Aktionen"
 
@@ -495,7 +495,7 @@ msgstr "Details der Release-Aktionen"
 msgid "Release area"
 msgstr "Releasebereich"
 
-#: src/Release.php:1059
+#: src/Release.php:1065
 msgid "Release area defined"
 msgstr "Releasebereich definiert"
 
@@ -509,7 +509,7 @@ msgid_plural "Release templates"
 msgstr[0] "Release-Vorlage"
 msgstr[1] "Release-Vorlagen"
 
-#: src/Release.php:3439
+#: src/Release.php:3448
 msgid "Releases on linked items"
 msgstr "Releases für verknüpfte Dinge"
 
@@ -519,7 +519,7 @@ msgid_plural "Requester groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:2431
+#: src/Release.php:2440
 msgid "Reset display options"
 msgstr ""
 
@@ -534,7 +534,7 @@ msgid_plural "Reviews"
 msgstr[0] "Prüfung"
 msgstr[1] "Prüfungen"
 
-#: src/Release.php:1067
+#: src/Release.php:1073
 msgid "Reviewed"
 msgstr "Überprüft"
 
@@ -562,7 +562,7 @@ msgid_plural "Risk types"
 msgstr[0] "Risiko Typ"
 msgstr[1] "Risiko Typen"
 
-#: src/Release.php:1062
+#: src/Release.php:1068
 msgid "Risks defined"
 msgstr "Definierte Risiken"
 
@@ -582,7 +582,7 @@ msgid_plural "Rollback templates"
 msgstr[0] "Rollback Vorlage"
 msgstr[1] "Rollback Vorlagen"
 
-#: src/Release.php:1063
+#: src/Release.php:1069
 msgid "Rollbacks defined"
 msgstr "Definierte Rollbacks"
 
@@ -667,7 +667,7 @@ msgid_plural "Test types"
 msgstr[0] "Testtyp"
 msgstr[1] "Testtypen"
 
-#: src/Release.php:1065
+#: src/Release.php:1071
 msgid "Tests in progress"
 msgstr "Test wird ausgeführt"
 
@@ -692,7 +692,7 @@ msgstr "Titel"
 msgid "To do"
 msgstr "Zu erledigen"
 
-#: src/Release.php:1066
+#: src/Release.php:1072
 msgid "To finalized"
 msgstr "Abzuschließen"
 
