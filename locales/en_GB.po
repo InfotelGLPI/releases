@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 06:46+0000\n"
+"POT-Creation-Date: 2026-09-25 10:03+0000\n"
 "PO-Revision-Date: 2020-07-31 16:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3400
+#: src/Release.php:3409
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -82,12 +82,12 @@ msgctxt "button"
 msgid "Add"
 msgstr ""
 
-#: src/Release.php:1559
+#: src/Release.php:1568
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr ""
 
-#: src/Release.php:1502
+#: src/Release.php:1511
 msgctxt "button"
 msgid "Add a followup"
 msgstr ""
@@ -96,17 +96,17 @@ msgstr ""
 msgid "Add a release"
 msgstr ""
 
-#: src/Release.php:1521
+#: src/Release.php:1530
 msgctxt "button"
 msgid "Add a risk"
 msgstr ""
 
-#: src/Release.php:1540
+#: src/Release.php:1549
 msgctxt "button"
 msgid "Add a rollback"
 msgstr ""
 
-#: src/Release.php:1578
+#: src/Release.php:1587
 msgctxt "button"
 msgid "Add a test"
 msgstr ""
@@ -123,7 +123,7 @@ msgstr[1] "Associated change"
 msgid "Associated risk"
 msgstr "Associated risk"
 
-#: src/Release.php:2790 src/ReleaseTemplate.php:1249
+#: src/Release.php:2799 src/ReleaseTemplate.php:1249
 msgid "Associated with"
 msgstr "Associated with"
 
@@ -141,7 +141,7 @@ msgid_plural "Categories"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:1061
+#: src/Release.php:1067
 msgid "Changes defined"
 msgstr "Changes defined"
 
@@ -205,7 +205,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/Release.php:1060
+#: src/Release.php:1066
 msgid "Dates defined"
 msgstr "Dates defined"
 
@@ -232,7 +232,7 @@ msgstr[1] "Deploy Task templates"
 msgid "Deploy Task type"
 msgstr "Deploy Task type"
 
-#: src/Deploytask.php:67 src/Release.php:2315 src/Release.php:2317
+#: src/Deploytask.php:67 src/Release.php:2324 src/Release.php:2326
 #: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
 #: src/ReleaseTemplate.php:200 src/ReleaseTemplate.php:1048
 #: src/ReleaseTemplate.php:1049 templates/filter_timeline.html.twig:54
@@ -248,7 +248,7 @@ msgid_plural "Deploy task types"
 msgstr[0] "Deploy task type"
 msgstr[1] "Deploy task types"
 
-#: src/Release.php:1064
+#: src/Release.php:1070
 msgid "Deployment tasks in progress"
 msgstr "Deployment tasks in progress"
 
@@ -292,7 +292,7 @@ msgstr[1] ""
 msgid "Email Followup"
 msgstr ""
 
-#: src/Release.php:1068
+#: src/Release.php:1074
 msgctxt "status"
 msgid "End"
 msgstr "End"
@@ -308,7 +308,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/Deploytask.php:359 src/Deploytask.php:742 src/Test.php:231
-#: src/Test.php:247 src/Release.php:1069 src/Deploytasktemplate.php:236
+#: src/Test.php:247 src/Release.php:1075 src/Deploytasktemplate.php:236
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -328,14 +328,14 @@ msgstr "Finalization"
 msgid "Finalize"
 msgstr "Finalize"
 
-#: src/Release.php:2427 templates/filter_timeline.html.twig:36
+#: src/Release.php:2436 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
 msgid "Followup"
 msgid_plural "Followups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:3032 templates/fields_panel.html.twig:104
+#: src/Release.php:3041 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr ""
 
@@ -386,11 +386,11 @@ msgstr ""
 msgid "New release"
 msgstr "New release"
 
-#: src/Release.php:2836 src/ReleaseTemplate.php:1299
+#: src/Release.php:2845 src/ReleaseTemplate.php:1299
 msgid "No data available"
 msgstr "No data available"
 
-#: src/Release.php:3404 src/Release.php:3451
+#: src/Release.php:3413 src/Release.php:3460
 msgid "No release found."
 msgstr "No release found."
 
@@ -483,7 +483,7 @@ msgid_plural "Releases"
 msgstr[0] "Release"
 msgstr[1] "Releases"
 
-#: src/Release.php:3254 src/ReleaseTemplate.php:1337
+#: src/Release.php:3263 src/ReleaseTemplate.php:1337
 msgid "Release actions details"
 msgstr "Release actions details"
 
@@ -491,7 +491,7 @@ msgstr "Release actions details"
 msgid "Release area"
 msgstr "Release area"
 
-#: src/Release.php:1059
+#: src/Release.php:1065
 msgid "Release area defined"
 msgstr "Release area defined"
 
@@ -505,7 +505,7 @@ msgid_plural "Release templates"
 msgstr[0] "Release template"
 msgstr[1] "Release templates"
 
-#: src/Release.php:3439
+#: src/Release.php:3448
 msgid "Releases on linked items"
 msgstr "Releases on linked items"
 
@@ -515,7 +515,7 @@ msgid_plural "Requester groups"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Release.php:2431
+#: src/Release.php:2440
 msgid "Reset display options"
 msgstr ""
 
@@ -530,7 +530,7 @@ msgid_plural "Reviews"
 msgstr[0] "Review"
 msgstr[1] "Reviews"
 
-#: src/Release.php:1067
+#: src/Release.php:1073
 msgid "Reviewed"
 msgstr "Reviewed"
 
@@ -558,7 +558,7 @@ msgid_plural "Risk types"
 msgstr[0] "Risk type"
 msgstr[1] "Risk types"
 
-#: src/Release.php:1062
+#: src/Release.php:1068
 msgid "Risks defined"
 msgstr "Risks defined"
 
@@ -578,7 +578,7 @@ msgid_plural "Rollback templates"
 msgstr[0] "Rollback template"
 msgstr[1] "Rollback templates"
 
-#: src/Release.php:1063
+#: src/Release.php:1069
 msgid "Rollbacks defined"
 msgstr "Rollbacks defined"
 
@@ -663,7 +663,7 @@ msgid_plural "Test types"
 msgstr[0] "Test type"
 msgstr[1] "Test types"
 
-#: src/Release.php:1065
+#: src/Release.php:1071
 msgid "Tests in progress"
 msgstr "Tests in progress"
 
@@ -688,7 +688,7 @@ msgstr ""
 msgid "To do"
 msgstr ""
 
-#: src/Release.php:1066
+#: src/Release.php:1072
 msgid "To finalized"
 msgstr "To finalized"
 

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 06:46+0000\n"
+"POT-Creation-Date: 2026-09-25 10:03+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -24,7 +24,7 @@ msgstr ""
 "1 : 2;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3400
+#: src/Release.php:3409
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -89,12 +89,12 @@ msgctxt "button"
 msgid "Add"
 msgstr "Agregar"
 
-#: src/Release.php:1559
+#: src/Release.php:1568
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Agregar una tarea de despliegue"
 
-#: src/Release.php:1502
+#: src/Release.php:1511
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Agregar un seguimiento"
@@ -103,17 +103,17 @@ msgstr "Agregar un seguimiento"
 msgid "Add a release"
 msgstr "Agregar un comunicado"
 
-#: src/Release.php:1521
+#: src/Release.php:1530
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Agregar un riesgo"
 
-#: src/Release.php:1540
+#: src/Release.php:1549
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Agregar una reversión"
 
-#: src/Release.php:1578
+#: src/Release.php:1587
 msgctxt "button"
 msgid "Add a test"
 msgstr "Agregar una prueba"
@@ -130,7 +130,7 @@ msgstr[2] "Cambios asociados"
 msgid "Associated risk"
 msgstr "Riesgo asociado"
 
-#: src/Release.php:2790 src/ReleaseTemplate.php:1249
+#: src/Release.php:2799 src/ReleaseTemplate.php:1249
 msgid "Associated with"
 msgstr "Asociado a"
 
@@ -149,7 +149,7 @@ msgstr[0] "Categorías"
 msgstr[1] "Categorías"
 msgstr[2] "Categorías"
 
-#: src/Release.php:1061
+#: src/Release.php:1067
 msgid "Changes defined"
 msgstr "Cambios definidos"
 
@@ -213,7 +213,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/Release.php:1060
+#: src/Release.php:1066
 msgid "Dates defined"
 msgstr "Definición de fechas"
 
@@ -241,7 +241,7 @@ msgstr[2] "Desplegar plantillas de tareas"
 msgid "Deploy Task type"
 msgstr "Desplegar Tipo de tarea"
 
-#: src/Deploytask.php:67 src/Release.php:2315 src/Release.php:2317
+#: src/Deploytask.php:67 src/Release.php:2324 src/Release.php:2326
 #: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
 #: src/ReleaseTemplate.php:200 src/ReleaseTemplate.php:1048
 #: src/ReleaseTemplate.php:1049 templates/filter_timeline.html.twig:54
@@ -259,7 +259,7 @@ msgstr[0] "Tipos de tareas de despliegue"
 msgstr[1] "Tipos de tareas de despliegue"
 msgstr[2] "Tipos de tareas de despliegue"
 
-#: src/Release.php:1064
+#: src/Release.php:1070
 msgid "Deployment tasks in progress"
 msgstr "Tareas de implementación en curso"
 
@@ -305,7 +305,7 @@ msgstr[2] ""
 msgid "Email Followup"
 msgstr ""
 
-#: src/Release.php:1068
+#: src/Release.php:1074
 msgctxt "status"
 msgid "End"
 msgstr "fin"
@@ -322,7 +322,7 @@ msgstr[1] "Entidades"
 msgstr[2] "Entidades"
 
 #: src/Deploytask.php:359 src/Deploytask.php:742 src/Test.php:231
-#: src/Test.php:247 src/Release.php:1069 src/Deploytasktemplate.php:236
+#: src/Test.php:247 src/Release.php:1075 src/Deploytasktemplate.php:236
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -342,7 +342,7 @@ msgstr "Finalización"
 msgid "Finalize"
 msgstr "Finalizar"
 
-#: src/Release.php:2427 templates/filter_timeline.html.twig:36
+#: src/Release.php:2436 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
 #, fuzzy
 msgid "Followup"
@@ -351,7 +351,7 @@ msgstr[0] "Seguimiento"
 msgstr[1] "Seguimiento"
 msgstr[2] "Seguimiento"
 
-#: src/Release.php:3032 templates/fields_panel.html.twig:104
+#: src/Release.php:3041 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Para este cambio"
 
@@ -403,11 +403,11 @@ msgstr ""
 msgid "New release"
 msgstr "Nueva versión"
 
-#: src/Release.php:2836 src/ReleaseTemplate.php:1299
+#: src/Release.php:2845 src/ReleaseTemplate.php:1299
 msgid "No data available"
 msgstr "No hay datos disponibles"
 
-#: src/Release.php:3404 src/Release.php:3451
+#: src/Release.php:3413 src/Release.php:3460
 msgid "No release found."
 msgstr "No se ha encontrado ningún comunicado."
 
@@ -501,7 +501,7 @@ msgstr[0] "Comunicados"
 msgstr[1] "Comunicados"
 msgstr[2] "Liberación"
 
-#: src/Release.php:3254 src/ReleaseTemplate.php:1337
+#: src/Release.php:3263 src/ReleaseTemplate.php:1337
 msgid "Release actions details"
 msgstr "Detalles de las acciones de liberación"
 
@@ -509,7 +509,7 @@ msgstr "Detalles de las acciones de liberación"
 msgid "Release area"
 msgstr "Área de liberación"
 
-#: src/Release.php:1059
+#: src/Release.php:1065
 msgid "Release area defined"
 msgstr "Área de liberación definida"
 
@@ -524,7 +524,7 @@ msgstr[0] "Plantillas de publicación"
 msgstr[1] "Plantillas de publicación"
 msgstr[2] "Plantillas de publicación"
 
-#: src/Release.php:3439
+#: src/Release.php:3448
 msgid "Releases on linked items"
 msgstr "Comunicados sobre elementos vinculados"
 
@@ -535,7 +535,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: src/Release.php:2431
+#: src/Release.php:2440
 msgid "Reset display options"
 msgstr ""
 
@@ -551,7 +551,7 @@ msgstr[0] "Comentarios"
 msgstr[1] "Comentarios"
 msgstr[2] "Comentarios"
 
-#: src/Release.php:1067
+#: src/Release.php:1073
 msgid "Reviewed"
 msgstr "Revisado"
 
@@ -582,7 +582,7 @@ msgstr[0] "Tipos de riesgo"
 msgstr[1] "Tipos de riesgo"
 msgstr[2] "Tipos de riesgo"
 
-#: src/Release.php:1062
+#: src/Release.php:1068
 msgid "Risks defined"
 msgstr "Riesgos definidos"
 
@@ -604,7 +604,7 @@ msgstr[0] "Plantillas de reversión"
 msgstr[1] "Plantillas de reversión"
 msgstr[2] "Plantillas de reversión"
 
-#: src/Release.php:1063
+#: src/Release.php:1069
 msgid "Rollbacks defined"
 msgstr "Retrocesos definidos"
 
@@ -695,7 +695,7 @@ msgstr[0] "Tipos de pruebas"
 msgstr[1] "Tipos de pruebas"
 msgstr[2] "Tipos de pruebas"
 
-#: src/Release.php:1065
+#: src/Release.php:1071
 msgid "Tests in progress"
 msgstr "Pruebas en curso"
 
@@ -720,7 +720,7 @@ msgstr "Título"
 msgid "To do"
 msgstr "Para hacer "
 
-#: src/Release.php:1066
+#: src/Release.php:1072
 msgid "To finalized"
 msgstr "Para finalizar"
 

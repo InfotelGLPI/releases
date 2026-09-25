@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 06:46+0000\n"
+"POT-Creation-Date: 2026-09-25 10:03+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2026\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -24,7 +24,7 @@ msgstr ""
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. TRANS : %d is the number of problems
-#: src/Release.php:3400
+#: src/Release.php:3409
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -91,12 +91,12 @@ msgctxt "button"
 msgid "Add"
 msgstr "Přidat"
 
-#: src/Release.php:1559
+#: src/Release.php:1568
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Přidat úkol nasazení"
 
-#: src/Release.php:1502
+#: src/Release.php:1511
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Přidat doplňující zprávu"
@@ -105,17 +105,17 @@ msgstr "Přidat doplňující zprávu"
 msgid "Add a release"
 msgstr "Přidat vydání"
 
-#: src/Release.php:1521
+#: src/Release.php:1530
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Přidat riziko"
 
-#: src/Release.php:1540
+#: src/Release.php:1549
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Přidat vrácení"
 
-#: src/Release.php:1578
+#: src/Release.php:1587
 msgctxt "button"
 msgid "Add a test"
 msgstr "Přidat test"
@@ -133,7 +133,7 @@ msgstr[3] "Přiřazené změny"
 msgid "Associated risk"
 msgstr "Přiřazené riziko"
 
-#: src/Release.php:2790 src/ReleaseTemplate.php:1249
+#: src/Release.php:2799 src/ReleaseTemplate.php:1249
 msgid "Associated with"
 msgstr "Přiřazeno k"
 
@@ -153,7 +153,7 @@ msgstr[1] "Kategorií"
 msgstr[2] "Kategorií"
 msgstr[3] "Kategorie"
 
-#: src/Release.php:1061
+#: src/Release.php:1067
 msgid "Changes defined"
 msgstr "Změny definovány"
 
@@ -217,7 +217,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/Release.php:1060
+#: src/Release.php:1066
 msgid "Dates defined"
 msgstr "Termíny jsou definovány"
 
@@ -246,7 +246,7 @@ msgstr[3] "Nasazení šablon úkolů"
 msgid "Deploy Task type"
 msgstr "Nasazení typu úkolu"
 
-#: src/Deploytask.php:67 src/Release.php:2315 src/Release.php:2317
+#: src/Deploytask.php:67 src/Release.php:2324 src/Release.php:2326
 #: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
 #: src/ReleaseTemplate.php:200 src/ReleaseTemplate.php:1048
 #: src/ReleaseTemplate.php:1049 templates/filter_timeline.html.twig:54
@@ -266,7 +266,7 @@ msgstr[1] "Nasazení typů úkolů"
 msgstr[2] "Nasazení typů úkolů"
 msgstr[3] "Nasazení typů úkolů"
 
-#: src/Release.php:1064
+#: src/Release.php:1070
 msgid "Deployment tasks in progress"
 msgstr "Probíhající úkoly nasazení"
 
@@ -314,7 +314,7 @@ msgstr[3] "E-maily"
 msgid "Email Followup"
 msgstr "Následná komunikace e-mailem"
 
-#: src/Release.php:1068
+#: src/Release.php:1074
 msgctxt "status"
 msgid "End"
 msgstr "Konec"
@@ -332,7 +332,7 @@ msgstr[2] "Entit"
 msgstr[3] "Entity"
 
 #: src/Deploytask.php:359 src/Deploytask.php:742 src/Test.php:231
-#: src/Test.php:247 src/Release.php:1069 src/Deploytasktemplate.php:236
+#: src/Test.php:247 src/Release.php:1075 src/Deploytasktemplate.php:236
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -352,7 +352,7 @@ msgstr "Dokončení"
 msgid "Finalize"
 msgstr "Dokončit"
 
-#: src/Release.php:2427 templates/filter_timeline.html.twig:36
+#: src/Release.php:2436 templates/filter_timeline.html.twig:36
 #: templates/timeline.html.twig:122
 #, fuzzy
 msgid "Followup"
@@ -362,7 +362,7 @@ msgstr[1] "Doplňující zpráva"
 msgstr[2] "Doplňující zpráva"
 msgstr[3] "Doplňující zpráva"
 
-#: src/Release.php:3032 templates/fields_panel.html.twig:104
+#: src/Release.php:3041 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Pro tuto změnu"
 
@@ -415,11 +415,11 @@ msgstr "Název"
 msgid "New release"
 msgstr "Nové vydání"
 
-#: src/Release.php:2836 src/ReleaseTemplate.php:1299
+#: src/Release.php:2845 src/ReleaseTemplate.php:1299
 msgid "No data available"
 msgstr "Data nejsou k dispozici"
 
-#: src/Release.php:3404 src/Release.php:3451
+#: src/Release.php:3413 src/Release.php:3460
 msgid "No release found."
 msgstr "Nebylo nalezeno žádné vydání."
 
@@ -514,7 +514,7 @@ msgstr[1] "Vydání"
 msgstr[2] "Vydání"
 msgstr[3] "Vydání"
 
-#: src/Release.php:3254 src/ReleaseTemplate.php:1337
+#: src/Release.php:3263 src/ReleaseTemplate.php:1337
 msgid "Release actions details"
 msgstr "Podrobnosti o akcích uvolnění"
 
@@ -522,7 +522,7 @@ msgstr "Podrobnosti o akcích uvolnění"
 msgid "Release area"
 msgstr "Oblast uvolnění"
 
-#: src/Release.php:1059
+#: src/Release.php:1065
 msgid "Release area defined"
 msgstr "Definovaná oblast uvolnění"
 
@@ -538,7 +538,7 @@ msgstr[1] "Šablon vydání"
 msgstr[2] "Šablon vydání"
 msgstr[3] "Šablony vydání"
 
-#: src/Release.php:3439
+#: src/Release.php:3448
 msgid "Releases on linked items"
 msgstr "Vydání u propojených položek"
 
@@ -550,7 +550,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: src/Release.php:2431
+#: src/Release.php:2440
 msgid "Reset display options"
 msgstr ""
 
@@ -567,7 +567,7 @@ msgstr[1] "Recenzí"
 msgstr[2] "Recenzí"
 msgstr[3] "Recenze"
 
-#: src/Release.php:1067
+#: src/Release.php:1073
 msgid "Reviewed"
 msgstr "Recenzováno"
 
@@ -600,7 +600,7 @@ msgstr[1] "Typů rizika"
 msgstr[2] "Typů rizika"
 msgstr[3] "Typy rizika"
 
-#: src/Release.php:1062
+#: src/Release.php:1068
 msgid "Risks defined"
 msgstr "Definovaná rizika"
 
@@ -624,7 +624,7 @@ msgstr[1] "Šablon vrácení"
 msgstr[2] "Šablon vrácení"
 msgstr[3] "Šablony vrácení"
 
-#: src/Release.php:1063
+#: src/Release.php:1069
 msgid "Rollbacks defined"
 msgstr "Definovaná vrácení zpět"
 
@@ -721,7 +721,7 @@ msgstr[1] "Typů testu"
 msgstr[2] "Typů testu"
 msgstr[3] "Typy testu"
 
-#: src/Release.php:1065
+#: src/Release.php:1071
 msgid "Tests in progress"
 msgstr "Probíhající testy"
 
@@ -746,7 +746,7 @@ msgstr "Nadpis"
 msgid "To do"
 msgstr "Udělat"
 
-#: src/Release.php:1066
+#: src/Release.php:1072
 msgid "To finalized"
 msgstr "K dokončení"
 
