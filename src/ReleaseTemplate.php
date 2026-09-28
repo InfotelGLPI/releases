@@ -29,7 +29,6 @@
 
 namespace GlpiPlugin\Releases;
 
-use Ajax;
 use CommonDBTM;
 use CommonDropdown;
 use CommonGLPI;
@@ -122,18 +121,11 @@ class ReleaseTemplate extends CommonDropdown
             case __CLASS__:
                 switch ($tabnum) {
                     case 1:
+                        $rand = mt_rand();
                         if (!$withtemplate) {
-                            echo "<div class='timeline_box'>";
-                            $rand = mt_rand();
                             $item->showTimelineForm($rand);
-                            $item->showTimeline($rand);
-                            echo "</div>";
-                        } else {
-                            echo "<div class='timeline_box'>";
-                            $rand = mt_rand();
-                            $item->showTimeline($rand);
-                            echo "</div>";
                         }
+                        $item->showTimeline($rand);
 
                         break;
 
@@ -729,17 +721,9 @@ class ReleaseTemplate extends CommonDropdown
         // also carries the entities_id hidden input.
         [$actor_options, $can_admin, $can_assign, $can_assigntome] = $this->prepareActorsData($ID, $options);
 
-        ob_start();
-        $this->showRequesterActorForm($actor_options, $can_admin);
-        $actors_requester_html = ob_get_clean();
-
-        ob_start();
-        $this->showObserverActorForm($actor_options, $can_admin);
-        $actors_observer_html = ob_get_clean();
-
-        ob_start();
-        $this->showAssignActorForm($actor_options, $can_assign, $can_assigntome);
-        $actors_assign_html = ob_get_clean();
+        $actors_requester_html = $this->getRequesterActorFormHtml($actor_options, $can_admin);
+        $actors_observer_html  = $this->getObserverActorFormHtml($actor_options, $can_admin);
+        $actors_assign_html    = $this->getAssignActorFormHtml($actor_options, $can_assign, $can_assigntome);
 
         $targets = json_decode($this->fields["target"] ?? '') ?: [];
         if (!is_array($targets)) {
@@ -1025,43 +1009,6 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * Displays the timeline filter buttons
-     *
-     * @return void
-     * @since 9.4.0
-     *
-     */
-    public function filterTimeline()
-    {
-
-        echo "<div class='filter_timeline'>";
-        echo "<h3>" . __("Timeline filter") . " : </h3>";
-        echo "<ul>";
-
-        $riskClass = "Risk";
-        echo "<li><a href='#' class='filterEle ti ti-bug pointer' data-type='risk' title='" . $riskClass::getTypeName(2) .
-             "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
-        $rollbackClass = "Rollback";
-        echo "<li><a href='#' class='filterEle ti ti-arrow-back-up pointer' data-type='rollback' title='" . $rollbackClass::getTypeName(2) .
-             "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
-        $taskClass = "Deploytask";
-        echo "<li><a href='#' class=' filterEle ti ti-checkbox pointer' data-type='task' title='" . _n('Deploy task', 'Deploy tasks', 2, 'releases') .
-             "'><span class='sr-only'>" . _n('Deploy task', 'Deploy tasks', 2, 'releases') . "</span></a></li>";
-        $testClass = "Test";
-        echo "<li><a href='#' class=' filterEle ti ti-check pointer' data-type='test' title='" . $testClass::getTypeName(2) .
-             "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
-        echo "<li><a href='#' class=' filterEle ti ti-message pointer' data-type='ITILFollowup' title='" . __('Followup') .
-             "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
-        echo "<li><a href='#' class=' filterEle ti ti-ban pointer' data-type='reset' title=\"" . __s("Reset display options") .
-             "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
-        echo "</ul>";
-        echo "</div>";
-
-        echo "<script type='text/javascript'>$(function() {filter_timeline();});</script>";
-        echo "<script type='text/javascript'>$(function() {filter_timeline_release();});</script>";
-    }
-
-    /**
      * Displays the timeline of items for this ITILObject
      *
      * @param integer $rand random value used by div
@@ -1072,37 +1019,15 @@ class ReleaseTemplate extends CommonDropdown
      */
     public function showTimeLine($rand)
     {
-        global $CFG_GLPI, $autolink_options;
+        global $CFG_GLPI;
 
         $user     = new User();
-        $pics_url = $CFG_GLPI['root_doc'] . "/pics/timeline";
         $timeline = $this->getTimelineItems();
+        $closed   = in_array($this->fields['status'] ?? null, $this->getClosedStatusArray());
 
-        $autolink_options['strip_protocols'] = false;
-
-        $objType    = static::getType();
-        $foreignKey = static::getForeignKeyField();
-
-        //display timeline
-        echo "<div class='timeline_releasehistory'>";
-
-        static::showTimelineHeader();
-
-        $timeline_index = 0;
-
+        $entries = [];
         foreach ($timeline as $item) {
-
-            if ($obj = getItemForItemtype($item['type'])) {
-                $obj->fields = $item['item'];
-            } else {
-                $obj = $item;
-            }
-
-            if (is_array($obj)) {
-                $item_i = $obj['item'];
-            } else {
-                $item_i = $obj->fields;
-            }
+            $item_i = $item['item'];
 
             $date = "";
             if (isset($item_i['date'])) {
@@ -1111,94 +1036,52 @@ class ReleaseTemplate extends CommonDropdown
                 $date = $item_i['date_mod'];
             }
 
-            // set item position depending on field timeline_position
-            if ($item['itiltype'] == "Followup") {
-                $user_position = 'right';
-            } else {
-                $user_position = 'left'; // default position
-            }
-
-            $class = "";
-            if (isset($item['itiltype']) && $item['itiltype'] == "Followup") {
-                $class .= " ITIL{$item['itiltype']}";
-            } else {
-                $class .= " Releases{$item['itiltype']}";
-            }
-
-            echo "<div class='h_item $user_position $class'>";
-
-            echo "<div class='h_info'>";
-
-            echo "<div class='h_date'><i class='ti ti-clock'></i>&nbsp;" . Html::convDateTime($date) . "</div>";
-            if ($item_i['users_id'] !== false) {
-                echo "<div class='h_user'>";
-                if (isset($item_i['users_id']) && ($item_i['users_id'] != 0)) {
-                    $user->getFromDB($item_i['users_id']);
-
-                    //               echo "<div class=''>";//tooltip_picture_border
-                    //               echo "<img class='user_picture' alt=\"" . __s('Picture') . "\" src='" .
-                    //                    User::getThumbnailURLForPicture($user->fields['picture']) . "'>";
-                    //               echo "</div>";
-
-                    echo "<span class='h_user_name'>";
-                    $userdata = getUserName($item_i['users_id']);
-                    echo $user->getLink() . "&nbsp;";
-                    echo Html::showToolTip(
-                        $userdata["comment"],
-                        ['link' => $userdata['link']],
-                    );
-                    echo "</span>";
-                } else {
-                    echo __("Requester");
-                }
-                echo "</div>"; // h_user
-            }
-
-            echo "</div>"; //h_info
-
             $domid     = "viewitem{$item['type']}{$item_i['id']}";
             $randdomid = $domid . $rand;
-            $domid     = Toolbox::slugify($domid);
 
-            $fa    = null;
-            $class = "h_content";
-            //         if (isset($item['itiltype']) && $item['itiltype'] == "Followup") {
-            //            $class .= " ITIL{$item['itiltype']}";
-            //         } else {
-            //            $class .= " Releases{$item['itiltype']}";
-            //         }
+            $entry = [
+                'position'        => $item['itiltype'] == "Followup" ? 'right' : 'left',
+                'class'           => $item['itiltype'] == "Followup"
+                    ? "ITIL{$item['itiltype']}"
+                    : "Releases{$item['itiltype']}",
+                'date'            => Html::convDateTime($date),
+                'show_user'       => ($item_i['users_id'] ?? null) !== false,
+                'user_html'       => null,
+                'domid'           => Toolbox::slugify($domid),
+                'uid'             => $randdomid,
+                'can_edit'        => !empty($item_i['can_edit']),
+                'edit'            => null,
+                'content'         => null,
+                'long_text'       => false,
+                'types'           => [],
+                'associated_risk' => null,
+                'actiontime'      => null,
+                'begin'           => null,
+                'end'             => null,
+                'editor'          => null,
+            ];
 
-            //         $class .= " {$item_i['state']}";
-
-            echo "<div class='$class' id='$domid' data-uid='$randdomid'>";
-            if ($fa !== null) {
-                echo "<i class='solimg fa fa-$fa fa-5x'></i>";
-            }
-            if (isset($item_i['can_edit']) && $item_i['can_edit']) {
-                echo "<div class='edit_item_content'></div>";
-                echo "<span class='cancel_edit_item_content'></span>";
-            }
-            echo "<div class='displayed_content'>";
-            echo "<div class='h_controls'>";
-            if ($item_i['can_edit']
-                && !in_array($this->fields['status'], $this->getClosedStatusArray())
-            ) {
-                // merge/split icon
-
-                // edit item — wired by public/scripts/releasetemplate_timeline.js (delegated)
-                echo "<span class='ti ti-edit control_item pointer' title='" . __('Edit') . "'";
-                echo " data-releases-edit";
-                echo " data-itemtype='" . $item['type'] . "'";
-                echo " data-items-id='" . $item_i['id'] . "'";
-                echo " data-parenttype='" . static::class . "'";
-                echo " data-fkey='" . static::getForeignKeyField() . "'";
-                echo " data-parentid='" . $this->fields['id'] . "'";
-                echo " data-uid='" . $randdomid . "'";
-                echo " data-url='" . $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/viewsubitemtemplate.php'";
-                echo "></span>";
+            if (!empty($item_i['users_id'])) {
+                $user->getFromDB($item_i['users_id']);
+                $userdata           = getUserName($item_i['users_id'], 2);
+                $entry['user_html'] = $user->getLink() . "&nbsp;"
+                    . Html::showToolTip($userdata["comment"], [
+                        'link'    => $userdata['link'],
+                        'display' => false,
+                    ]);
             }
 
-            echo "</div>";
+            if ($entry['can_edit'] && !$closed) {
+                $entry['edit'] = [
+                    'itemtype'   => $item['type'],
+                    'items_id'   => $item_i['id'],
+                    'parenttype' => static::class,
+                    'fkey'       => static::getForeignKeyField(),
+                    'parentid'   => $this->fields['id'],
+                    'url'        => $CFG_GLPI['root_doc'] . "/plugins/releases/ajax/viewsubitemtemplate.php",
+                ];
+            }
+
             if (isset($item_i['content'])) {
                 if (isset($item_i["name"])) {
                     // Same as Release.php: the sub-item name is stored raw, escape it rather
@@ -1209,133 +1092,68 @@ class ReleaseTemplate extends CommonDropdown
                 } else {
                     $content = RichText::getEnhancedHtml($item_i['content']);
                 }
+                $entry['content']   = $content;
+                $entry['long_text'] = (substr_count($content, "<br") > 30) || (strlen($content) > 2000);
+            }
 
-                //            $content = autolink($content, false);
-
-                $long_text = "";
-                if ((substr_count($content, "<br") > 30) || (strlen($content) > 2000)) {
-                    $long_text = "long_text";
+            $type_tables = [
+                'plugin_releases_typedeploytasks_id' => 'glpi_plugin_releases_typedeploytasks',
+                'plugin_releases_typerisks_id'       => 'glpi_plugin_releases_typerisks',
+                'plugin_releases_typetests_id'       => 'glpi_plugin_releases_typetests',
+            ];
+            foreach ($type_tables as $field => $table) {
+                if (!empty($item_i[$field])) {
+                    $entry['types'][] = Dropdown::getDropdownName($table, $item_i[$field]);
                 }
-
-                echo "<div class='item_content $long_text'>";
-                echo "<div class='rich_text_container'>";
-                echo $content;
-                echo "</div>";
-
-                if (!empty($long_text)) {
-                    echo "<p class='read_more'>";
-                    echo "<a class='read_more_button'>.....</a>";
-                    echo "</p>";
-                }
-                echo "</div>";
             }
-
-            echo "<div class='b_right'>";
-
-            if (isset($item_i['plugin_releases_typedeploytasks_id'])
-                && !empty($item_i['plugin_releases_typedeploytasks_id'])) {
-                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_typedeploytasks", $item_i['plugin_releases_typedeploytasks_id'])) . "<br>";
+            if (!empty($item_i['plugin_releases_risks_id'])) {
+                $entry['associated_risk'] = Dropdown::getDropdownName(
+                    "glpi_plugin_releases_risktemplates",
+                    $item_i['plugin_releases_risks_id'],
+                );
             }
-            if (isset($item_i['plugin_releases_typerisks_id'])
-                && !empty($item_i['plugin_releases_typerisks_id'])) {
-                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_typerisks", $item_i['plugin_releases_typerisks_id'])) . "<br>";
-            }
-            if (isset($item_i['plugin_releases_typetests_id'])
-                && !empty($item_i['plugin_releases_typetests_id'])) {
-                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_typetests", $item_i['plugin_releases_typetests_id'])) . "<br>";
-            }
-            if (isset($item_i['plugin_releases_risks_id'])
-                && !empty($item_i['plugin_releases_risks_id'])) {
-                echo __("Associated with", 'releases') . " ";
-                echo htmlescape(Dropdown::getDropdownName("glpi_plugin_releases_risktemplates", $item_i['plugin_releases_risks_id'])) . "<br>";
-            }
-
-            if (isset($item_i['actiontime'])
-                && !empty($item_i['actiontime'])) {
-                echo "<span class='actiontime'>";
-                echo Html::timestampToString($item_i['actiontime'], false);
-                echo "</span>";
+            if (!empty($item_i['actiontime'])) {
+                $entry['actiontime'] = Html::timestampToString($item_i['actiontime'], false);
             }
             if (isset($item_i['begin'])) {
-                echo "<span class='planification'>";
-                echo Html::convDateTime($item_i["begin"]);
-                echo " &rArr; ";
-                echo Html::convDateTime($item_i["end"]);
-                echo "</span>";
+                $entry['begin'] = Html::convDateTime($item_i["begin"]);
+                $entry['end']   = Html::convDateTime($item_i["end"]);
             }
 
-            if (isset($item_i['users_id_editor'])
-                && $item_i['users_id_editor'] > 0) {
-                echo "<div class='users_id_editor' id='users_id_editor_" . $item_i['users_id_editor'] . "'>";
+            if (isset($item_i['users_id_editor']) && $item_i['users_id_editor'] > 0) {
                 $user->getFromDB($item_i['users_id_editor']);
                 // Without the second argument getUserName() returns a plain string, so
                 // the two accesses below were silently indexing a string.
                 $userdata = getUserName($item_i['users_id_editor'], 2);
+                $html     = '';
                 if (isset($item_i['date_mod'])) {
-                    echo sprintf(
-                        __('Last edited on %1$s by %2$s'),
-                        Html::convDateTime($item_i['date_mod']),
+                    $html = sprintf(
+                        htmlescape(__('Last edited on %1$s by %2$s')),
+                        htmlescape(Html::convDateTime($item_i['date_mod'])),
                         $user->getLink(),
                     );
                 }
-                echo Html::showToolTip(
-                    $userdata["comment"],
-                    ['link' => $userdata['link']],
-                );
-                echo "</div>";
+                $entry['editor'] = [
+                    'id'   => (int) $item_i['users_id_editor'],
+                    'html' => $html . Html::showToolTip($userdata["comment"], [
+                        'link'    => $userdata['link'],
+                        'display' => false,
+                    ]),
+                ];
             }
 
-            echo "</div>"; // b_right
-
-            echo "</div>"; // displayed_content
-            echo "</div>"; //end h_content
-
-            echo "</div>"; //end  h_info
-
-            $timeline_index++;
+            $entries[] = $entry;
         }
-        if (count($timeline) == 0) {
-            $display = "<br><br><div class='center'><h3 class='noinfo'>";
-            $display .= __("No data available", 'releases');
-            $display .= "</h3></div>";
-            echo $display;
-        } else {
-            if (isset($_SESSION["releases"]["template"][Session::getLoginUserID()])) {
-                $catToLoad = $_SESSION["releases"]["template"][Session::getLoginUserID()];
-            } else {
-                $catToLoad = 'risk';
-            }
 
-            unset($_SESSION["releases"]["template"][Session::getLoginUserID()]);
-            echo Html::scriptBlock("$(document).ready(function (){
-                                        $('.filter_timeline_release li a').removeClass('h_active');
-                                        $('.h_item').removeClass('h_hidden');
-                                       $('.h_item').addClass('h_hidden');
-                                      $(\"a[data-type='$catToLoad']\").addClass('h_active');
-                                       $('.ajax_box').empty();
-                                       //activate clicked element
-                                       //find active classname
-                                       $(\"a[data-type='$catToLoad'].filterEle\").addClass('h_active');
-                                       $(\".h_content.$catToLoad\").parent().removeClass('h_hidden');
+        // Filter chip to highlight, set by the sub-item that was last saved
+        // (Risktemplate, Rollbacktemplate, Deploytasktemplate, Testtemplate).
+        $active_type = $_SESSION["releases"]["template"][Session::getLoginUserID()] ?? 'risk';
+        unset($_SESSION["releases"]["template"][Session::getLoginUserID()]);
 
-                                    });");
-        }
-        // end timeline
-        echo "</div>"; // h_item $user_position
-    }
-
-    /**
-     * Displays the timeline header (filters)
-     *
-     * @return void
-     * @since 9.4.0
-     *
-     */
-    public function showTimelineHeader()
-    {
-
-        echo "<h2>" . __("Release actions details", 'releases') . " : </h2>";
-        //      $this->filterTimeline();
+        TemplateRenderer::getInstance()->display('@releases/timeline_releasetemplate.html.twig', [
+            'entries'     => $entries,
+            'active_type' => $active_type,
+        ]);
     }
 
     public function canAddFollowups()
@@ -1387,29 +1205,6 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * show actor part in ITIL object form
-     *
-     * @param $ID        integer  ITIL object ID
-     * @param $options   array    options for default values ($options of showForm)
-     *
-     * @return void
-     **/
-    public function showActorsPartForm($ID, array $options)
-    {
-        [$options, $can_admin, $can_assign, $can_assigntome] = $this->prepareActorsData($ID, $options);
-
-        // Manage actors
-        echo "<div class='tab_actors tab_cadre_fixe' id='mainformtable5'>";
-        echo "<div class='responsive_hidden actor_title'>" . __('Actor') . "</div>";
-
-        $this->showRequesterActorForm($options, $can_admin);
-        $this->showObserverActorForm($options, $can_admin);
-        $this->showAssignActorForm($options, $can_assign, $can_assigntome);
-
-        echo "</div>"; // tab_actors
-    }
-
-    /**
      * Prepare shared data (resolved actor values + rights) for the actor blocs.
      *
      * @param int   $ID
@@ -1458,219 +1253,207 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
+     * Render one actor bloc (requester/observer/assign column of the form).
+     *
+     * @param string $title Bloc header
+     * @param array  $rows  Rows as built by the get*ActorRows() helpers
+     *
+     * @return string
+     */
+    private function renderActorBloc(string $title, array $rows): string
+    {
+        return TemplateRenderer::getInstance()->render('@releases/actor_bloc_releasetemplate.html.twig', [
+            'title' => $title,
+            'rows'  => $rows,
+        ]);
+    }
+
+    /**
+     * Read-only row for an actor value predefined by the template.
+     *
+     * @param string $user_group 'user', 'group' or 'supplier'
+     * @param int    $type       CommonITILActor type
+     * @param string $table      Table of the actor
+     * @param string $name       Name of the hidden input
+     * @param mixed  $value      Actor ID
+     * @param string $after      Separator after the row ('hr' or 'br')
+     *
+     * @return array<string, mixed>
+     */
+    private static function getPredefinedActorRow(string $user_group, $type, string $table, string $name, $value, string $after): array
+    {
+        return [
+            'icon'   => static::getActorIconData($user_group, $type),
+            'label'  => Dropdown::getDropdownName($table, $value),
+            'hidden' => ['name' => $name, 'value' => $value],
+            'after'  => $after,
+        ];
+    }
+
+    /**
      * Requester actor bloc (user + group). Also carries the entities_id hidden input.
      */
-    protected function showRequesterActorForm(array $options, $can_admin)
+    protected function getRequesterActorFormHtml(array $options, $can_admin): string
     {
-        echo "<span class='actor-bloc'>";
-        echo "<div class='actor-head'>";
-        echo __('Requester');
-
-        echo "</div>"; // end .actor-head
-
-        echo "<div class='actor-content'>";
+        $rows = [];
 
         // Requester
-
         $reqdisplay = false;
         if ($can_admin) {
-
-            $this->showActorAddFormOnCreate(CommonITILActor::REQUESTER, $options);
+            $rows[]     = $this->getActorAddFormOnCreateRow(CommonITILActor::REQUESTER, $options);
             $reqdisplay = true;
         } else {
             $delegating = User::getDelegateGroupsForUser($options['entities_id']);
             if (count($delegating)) {
-                //$this->getDefaultActor(CommonITILActor::REQUESTER);
                 $options['_right'] = "delegate";
-                $this->showActorAddFormOnCreate(CommonITILActor::REQUESTER, $options);
+                $rows[]            = $this->getActorAddFormOnCreateRow(CommonITILActor::REQUESTER, $options);
+                $reqdisplay        = true;
+            } elseif (isset($options["_users_id_requester"]) && $options["_users_id_requester"]) {
+                // predefined value
+                $rows[]     = self::getPredefinedActorRow('user', CommonITILActor::REQUESTER, "glpi_users", '_users_id_requester', $options["_users_id_requester"], 'br');
                 $reqdisplay = true;
-            } else { // predefined value
-                if (isset($options["_users_id_requester"]) && $options["_users_id_requester"]) {
-                    echo static::getActorIcon('user', CommonITILActor::REQUESTER) . "&nbsp;";
-                    echo htmlescape(Dropdown::getDropdownName("glpi_users", $options["_users_id_requester"]));
-                    echo Html::hidden('_users_id_requester', ['value' => $options["_users_id_requester"]]);
-                    echo '<br>';
-                    $reqdisplay = true;
-                }
             }
         }
 
         if ($this->userentity_oncreate
             && isset($this->countentitiesforuser)
             && ($this->countentitiesforuser > 1)) {
-            echo "<br>";
-            $rand = Entity::dropdown(['value'     => $this->fields["entities_id"],
-                'entity'    => $this->userentities,
-                'on_change' => 'this.form.submit()']);
+            $rows[] = [
+                'widget' => '<br>' . Entity::dropdown([
+                    'value'     => $this->fields["entities_id"],
+                    'entity'    => $this->userentities,
+                    'on_change' => 'this.form.submit()',
+                    'display'   => false,
+                ]),
+            ];
         } else {
-            echo Html::hidden('entities_id', ['value' => $this->fields["entities_id"]]);
+            $rows[] = ['hidden' => ['name' => 'entities_id', 'value' => $this->fields["entities_id"]]];
         }
         if ($reqdisplay) {
-            echo '<hr>';
+            $rows[] = ['after' => 'hr'];
         }
 
         // Requester Group
-
         if ($can_admin) {
-            echo static::getActorIcon('group', CommonITILActor::REQUESTER);
-
-            Group::dropdown([
-                'name'      => '_groups_id_requester',
-                'value'     => $options["_groups_id_requester"],
-                'entity'    => $this->fields["entities_id"],
-                'condition' => ['is_requester' => 1],
-            ]);
-
-        } else { // predefined value
-            if (isset($options["_groups_id_requester"]) && $options["_groups_id_requester"]) {
-                echo static::getActorIcon('group', CommonITILActor::REQUESTER) . "&nbsp;";
-                echo htmlescape(Dropdown::getDropdownName("glpi_groups", $options["_groups_id_requester"]));
-                echo Html::hidden('_groups_id_requester', ['value' => $options["_groups_id_requester"]]);
-                echo '<br>';
-            }
+            $rows[] = [
+                'icon'   => static::getActorIconData('group', CommonITILActor::REQUESTER),
+                'widget' => Group::dropdown([
+                    'name'      => '_groups_id_requester',
+                    'value'     => $options["_groups_id_requester"],
+                    'entity'    => $this->fields["entities_id"],
+                    'condition' => ['is_requester' => 1],
+                    'display'   => false,
+                ]),
+            ];
+        } elseif (isset($options["_groups_id_requester"]) && $options["_groups_id_requester"]) {
+            // predefined value
+            $rows[] = self::getPredefinedActorRow('group', CommonITILActor::REQUESTER, "glpi_groups", '_groups_id_requester', $options["_groups_id_requester"], 'br');
         }
 
-        echo "</div>"; // end .actor-content
-        echo "</span>"; // end .actor-bloc
+        return $this->renderActorBloc(__('Requester'), $rows);
     }
 
     /**
      * Observer actor bloc (user + group).
      */
-    protected function showObserverActorForm(array $options, $can_admin)
+    protected function getObserverActorFormHtml(array $options, $can_admin): string
     {
-        echo "<span class='actor-bloc'>";
-        echo "<div class='actor-head'>";
-        echo _n('Observer', 'Observers', 1);
-
-        echo "</div>"; // end .actor-head
-        echo "<div class='actor-content'>";
+        $rows = [];
 
         // Observer
-
         if ($can_admin) {
-            $this->showActorAddFormOnCreate(CommonITILActor::OBSERVER, $options);
-            echo '<hr>';
-        } else { // predefined value
-            if (isset($options["_users_id_observer"][0]) && $options["_users_id_observer"][0]) {
-                echo static::getActorIcon('user', CommonITILActor::OBSERVER) . "&nbsp;";
-                echo htmlescape(Dropdown::getDropdownName("glpi_users", $options["_users_id_observer"][0]));
-                echo Html::hidden('_users_id_observer', ['value' => $options["_users_id_observer"][0]]);
-                echo '<hr>';
-            }
+            $row          = $this->getActorAddFormOnCreateRow(CommonITILActor::OBSERVER, $options);
+            $row['after'] = 'hr';
+            $rows[]       = $row;
+        } elseif (isset($options["_users_id_observer"][0]) && $options["_users_id_observer"][0]) {
+            // predefined value
+            $rows[] = self::getPredefinedActorRow('user', CommonITILActor::OBSERVER, "glpi_users", '_users_id_observer', $options["_users_id_observer"][0], 'hr');
         }
 
         // Observer Group
-
         if ($can_admin) {
-            echo static::getActorIcon('group', CommonITILActor::OBSERVER);
-
-            Group::dropdown([
-                'name'      => '_groups_id_observer',
-                'value'     => $options["_groups_id_observer"],
-                'entity'    => $this->fields["entities_id"],
-                'condition' => ['is_requester' => 1],
-            ]);
-        } else { // predefined value
-            if (isset($options["_groups_id_observer"]) && $options["_groups_id_observer"]) {
-                echo static::getActorIcon('group', CommonITILActor::OBSERVER) . "&nbsp;";
-                echo htmlescape(Dropdown::getDropdownName("glpi_groups", $options["_groups_id_observer"]));
-                echo Html::hidden('_groups_id_observer', ['value' => $options["_groups_id_observer"]]);
-                echo '<br>';
-            }
+            $rows[] = [
+                'icon'   => static::getActorIconData('group', CommonITILActor::OBSERVER),
+                'widget' => Group::dropdown([
+                    'name'      => '_groups_id_observer',
+                    'value'     => $options["_groups_id_observer"],
+                    'entity'    => $this->fields["entities_id"],
+                    'condition' => ['is_requester' => 1],
+                    'display'   => false,
+                ]),
+            ];
+        } elseif (isset($options["_groups_id_observer"]) && $options["_groups_id_observer"]) {
+            // predefined value
+            $rows[] = self::getPredefinedActorRow('group', CommonITILActor::OBSERVER, "glpi_groups", '_groups_id_observer', $options["_groups_id_observer"], 'br');
         }
 
-        echo "</div>"; // end .actor-content
-        echo "</span>"; // end .actor-bloc
+        return $this->renderActorBloc(_n('Observer', 'Observers', 1), $rows);
     }
 
     /**
      * Assigned actor bloc (user + group + supplier).
      */
-    protected function showAssignActorForm(array $options, $can_assign, $can_assigntome)
+    protected function getAssignActorFormHtml(array $options, $can_assign, $can_assigntome): string
     {
-        echo "<span class='actor-bloc'>";
-        echo "<div class='actor-head'>";
-
-        echo __('Assigned to');
-
-        echo "</div>"; // end .actor-head
-
-        echo "<div class='actor-content'>";
+        $rows    = [];
+        $allowed = $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED);
 
         // Assign User
-
-        if ($can_assign
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            $this->showActorAddFormOnCreate(CommonITILActor::ASSIGN, $options);
-            echo '<hr>';
-
-        } elseif ($can_assigntome
-                   && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            echo static::getActorIcon('user', CommonITILActor::ASSIGN) . "&nbsp;";
-            User::dropdown(['name'        => '_users_id_assign',
-                'value'       => $options["_users_id_assign"],
-                'entity'      => $this->fields["entities_id"],
-                'ldap_import' => true]);
-            echo '<hr>';
-
-        } else { // predefined value
-            if (isset($options["_users_id_assign"]) && $options["_users_id_assign"]
-                && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-                echo static::getActorIcon('user', CommonITILActor::ASSIGN) . "&nbsp;";
-                echo htmlescape(Dropdown::getDropdownName("glpi_users", $options["_users_id_assign"]));
-                echo Html::hidden('_users_id_assign', ['value' => $options["_users_id_assign"]]);
-                echo '<hr>';
-            }
+        if ($can_assign && $allowed) {
+            $row          = $this->getActorAddFormOnCreateRow(CommonITILActor::ASSIGN, $options);
+            $row['after'] = 'hr';
+            $rows[]       = $row;
+        } elseif ($can_assigntome && $allowed) {
+            $rows[] = [
+                'icon'   => static::getActorIconData('user', CommonITILActor::ASSIGN),
+                'widget' => User::dropdown([
+                    'name'        => '_users_id_assign',
+                    'value'       => $options["_users_id_assign"],
+                    'entity'      => $this->fields["entities_id"],
+                    'ldap_import' => true,
+                    'display'     => false,
+                ]),
+                'after'  => 'hr',
+            ];
+        } elseif (isset($options["_users_id_assign"]) && $options["_users_id_assign"] && $allowed) {
+            // predefined value
+            $rows[] = self::getPredefinedActorRow('user', CommonITILActor::ASSIGN, "glpi_users", '_users_id_assign', $options["_users_id_assign"], 'hr');
         }
 
         // Assign Groups
-
-        if ($can_assign
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            echo static::getActorIcon('group', CommonITILActor::ASSIGN);
-
-            $rand   = mt_rand();
-            $params = [
-                'name'      => '_groups_id_assign',
-                'value'     => $options["_groups_id_assign"],
-                'entity'    => $this->fields["entities_id"],
-                'condition' => ['is_assign' => 1],
-                'rand'      => $rand,
+        if ($can_assign && $allowed) {
+            $rows[] = [
+                'icon'   => static::getActorIconData('group', CommonITILActor::ASSIGN),
+                'widget' => Group::dropdown([
+                    'name'      => '_groups_id_assign',
+                    'value'     => $options["_groups_id_assign"],
+                    'entity'    => $this->fields["entities_id"],
+                    'condition' => ['is_assign' => 1],
+                    'display'   => false,
+                ]),
+                'after'  => 'hr',
             ];
-
-            Group::dropdown($params);
-
-            echo '<hr>';
-        } else { // predefined value
-            if (isset($options["_groups_id_assign"])
-                && $options["_groups_id_assign"]
-                && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-                echo static::getActorIcon('group', CommonITILActor::ASSIGN) . "&nbsp;";
-                echo htmlescape(Dropdown::getDropdownName("glpi_groups", $options["_groups_id_assign"]));
-                echo Html::hidden('_groups_id_assign', ['value' => $options["_groups_id_assign"]]);
-                echo '<hr>';
-            }
+        } elseif (isset($options["_groups_id_assign"]) && $options["_groups_id_assign"] && $allowed) {
+            // predefined value
+            $rows[] = self::getPredefinedActorRow('group', CommonITILActor::ASSIGN, "glpi_groups", '_groups_id_assign', $options["_groups_id_assign"], 'hr');
         }
 
         // Assign Suppliers
-
-        if ($can_assign
-            && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-            $this->showSupplierAddFormOnCreate($options);
-        } else { // predefined value
-            if (isset($options["_suppliers_id_assign"])
-                && $options["_suppliers_id_assign"]
-                && $this->isAllowedStatus(CommonITILObject::INCOMING, CommonITILObject::ASSIGNED)) {
-                echo static::getActorIcon('supplier', CommonITILActor::ASSIGN) . "&nbsp;";
-                echo htmlescape(Dropdown::getDropdownName("glpi_suppliers", $options["_suppliers_id_assign"]));
-                echo Html::hidden('_suppliers_id_assign', ['value' => $options["_suppliers_id_assign"]]);
-                echo '<hr>';
-            }
+        if ($can_assign && $allowed) {
+            $rows[] = [
+                'icon'   => static::getActorIconData('supplier', CommonITILActor::ASSIGN),
+                'widget' => Supplier::dropdown([
+                    'name'    => '_suppliers_id_assign',
+                    'value'   => $options["_suppliers_id_assign"],
+                    'display' => false,
+                ]),
+            ];
+        } elseif (isset($options["_suppliers_id_assign"]) && $options["_suppliers_id_assign"] && $allowed) {
+            // predefined value
+            $rows[] = self::getPredefinedActorRow('supplier', CommonITILActor::ASSIGN, "glpi_suppliers", '_suppliers_id_assign', $options["_suppliers_id_assign"], 'hr');
         }
 
-        echo "</div>"; // end .actor-content
-        echo "</span>"; // end .actor-bloc
+        return $this->renderActorBloc(__('Assigned to'), $rows);
     }
 
     /**
@@ -1717,106 +1500,6 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * show actor add div
-     *
-     * @param $type         string   actor type
-     * @param $rand_type    integer  rand value of div to use
-     * @param $entities_id  integer  entity ID
-     * @param $is_hidden    array    of hidden fields (if empty consider as not hidden)
-     * @param $withgroup    boolean  allow adding a group (true by default)
-     * @param $withsupplier boolean  allow adding a supplier (only one possible in ASSIGN case)
-     *                               (false by default)
-     * @param $inobject     boolean  display in ITIL object ? (true by default)
-     *
-     * @return void|boolean Nothing if displayed, false if not applicable
-     **/
-    public function showActorAddForm(
-        $type,
-        $rand_type,
-        $entities_id,
-        $is_hidden = [],
-        $withgroup = true,
-        $withsupplier = false,
-        $inobject = true
-    ) {
-        global $CFG_GLPI;
-
-        $types = ['user' => __('User')];
-
-        if ($withgroup) {
-            $types['group'] = __('Group');
-        }
-
-        if ($withsupplier
-            && ($type == CommonITILActor::ASSIGN)) {
-            $types['supplier'] = __('Supplier');
-        }
-
-        $typename = static::getActorFieldNameType($type);
-        switch ($type) {
-            case CommonITILActor::REQUESTER:
-                if (isset($is_hidden['_users_id_requester']) && $is_hidden['_users_id_requester']) {
-                    unset($types['user']);
-                }
-                if (isset($is_hidden['_groups_id_requester']) && $is_hidden['_groups_id_requester']) {
-                    unset($types['group']);
-                }
-                break;
-
-            case CommonITILActor::OBSERVER:
-                if (isset($is_hidden['_users_id_observer']) && $is_hidden['_users_id_observer']) {
-                    unset($types['user']);
-                }
-                if (isset($is_hidden['_groups_id_observer']) && $is_hidden['_groups_id_observer']) {
-                    unset($types['group']);
-                }
-                break;
-
-            case CommonITILActor::ASSIGN:
-                if (isset($is_hidden['_users_id_assign']) && $is_hidden['_users_id_assign']) {
-                    unset($types['user']);
-                }
-                if (isset($is_hidden['_groups_id_assign']) && $is_hidden['_groups_id_assign']) {
-                    unset($types['group']);
-                }
-                if (isset($types['supplier'])
-                    && isset($is_hidden['_suppliers_id_assign']) && $is_hidden['_suppliers_id_assign']) {
-                    unset($types['supplier']);
-                }
-                break;
-
-            default:
-                return false;
-        }
-
-        echo "<div " . ($inobject ? "style='display:none'" : '') . " id='itilactor$rand_type' class='actor-dropdown'>";
-        $rand   = Dropdown::showFromArray(
-            "_itil_" . $typename . "[_type]",
-            $types,
-            ['display_emptychoice' => true],
-        );
-        $params = ['type'            => '__VALUE__',
-            'actortype'       => $typename,
-            'itemtype'        => $this->getType(),
-            'allow_email'     => (($type == CommonITILActor::OBSERVER)
-                                  || $type == CommonITILActor::REQUESTER),
-            'entity_restrict' => $entities_id,
-            'use_notif'       => Entity::getUsedConfig('is_notif_enable_default', $entities_id, '', 1)];
-
-        Ajax::updateItemOnSelectEvent(
-            "dropdown__itil_" . $typename . "[_type]$rand",
-            "showitilactor" . $typename . "_$rand",
-            $CFG_GLPI["root_doc"] . "/ajax/dropdownItilActors.php",
-            $params,
-        );
-        echo "<span id='showitilactor" . $typename . "_$rand' class='actor-dropdown'>&nbsp;</span>";
-        if ($inobject) {
-            echo "<hr>";
-        }
-        echo "</div>";
-    }
-
-    /**
      * get field part name corresponding to actor type
      *
      * @param $type      integer : user type
@@ -1844,61 +1527,54 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * Get Icon for Actor
+     * Get icon data (Tabler class + title) for an actor
      *
-     * @param $user_group   string   'user or 'group'
-     * @param $type         integer  user/group type
+     * @param string $user_group 'user', 'group' or 'supplier'
+     * @param mixed  $type       CommonITILActor type
      *
-     * @return string
+     * @return array{class: string, title: string}|null
      **/
-    public static function getActorIcon($user_group, $type)
+    public static function getActorIconData($user_group, $type)
     {
-
         switch ($user_group) {
             case 'user':
-                $icontitle = __s('User') . ' - ' . $type; // should never be used
+                $icontitle = __('User') . ' - ' . $type; // should never be used
                 switch ($type) {
                     case CommonITILActor::REQUESTER:
-                        $icontitle = __s('Requester user');
+                        $icontitle = __('Requester user');
                         break;
 
                     case CommonITILActor::OBSERVER:
-                        $icontitle = __s('Watcher user');
+                        $icontitle = __('Watcher user');
                         break;
 
                     case CommonITILActor::ASSIGN:
-                        $icontitle = __s('Technician');
+                        $icontitle = __('Technician');
                         break;
                 }
-                return "<i class='ti ti-user' title='$icontitle'></i><span class='sr-only'>$icontitle</span>";
+                return ['class' => 'ti-user', 'title' => $icontitle];
 
             case 'group':
                 $icontitle = __('Group');
                 switch ($type) {
                     case CommonITILActor::REQUESTER:
-                        $icontitle = __s('Requester group');
+                        $icontitle = __('Requester group');
                         break;
 
                     case CommonITILActor::OBSERVER:
-                        $icontitle = __s('Watcher group');
+                        $icontitle = __('Watcher group');
                         break;
 
                     case CommonITILActor::ASSIGN:
-                        $icontitle = __s('Group in charge of the release', 'releases');
+                        $icontitle = __('Group in charge of the release', 'releases');
                         break;
                 }
-
-                return "<i class='ti ti-users' title='$icontitle'></i>" .
-                       "<span class='sr-only'>$icontitle</span>";
+                return ['class' => 'ti-users', 'title' => $icontitle];
 
             case 'supplier':
-                $icontitle = __('Supplier');
-                return "<i class='ti ti-truck' title='$icontitle'></i>" .
-                       "<span class='sr-only'>$icontitle</span>";
-
+                return ['class' => 'ti-truck', 'title' => __('Supplier')];
         }
-        return '';
-
+        return null;
     }
 
     /**
@@ -2484,22 +2160,16 @@ class ReleaseTemplate extends CommonDropdown
     }
 
     /**
-     * show user add div on creation
+     * User selector row for an actor bloc on creation
      *
      * @param $type      integer  actor type
      * @param $options   array    options for default values ($options of showForm)
      *
-     * @return integer Random part of inputs ids
+     * @return array{icon: array|null, widget: string}
      **/
-    public function showActorAddFormOnCreate($type, array $options)
+    public function getActorAddFormOnCreateRow($type, array $options)
     {
-        global $CFG_GLPI;
-
         $typename = static::getActorFieldNameType($type);
-
-        $itemtype = $this->getType();
-
-        echo static::getActorIcon('user', $type);
 
         if (!isset($options["_right"])) {
             $right = $this->getDefaultActorRightSearch($type);
@@ -2507,16 +2177,16 @@ class ReleaseTemplate extends CommonDropdown
             $right = $options["_right"];
         }
 
-        $rand       = mt_rand();
         $actor_name = '_users_id_' . $typename;
         if ($type == CommonITILActor::OBSERVER) {
             $actor_name = '_users_id_' . $typename . '[]';
         }
-        $params = ['name'   => $actor_name,
-            'value'  => $options["_users_id_" . $typename],
-            'right'  => $right,
-            'rand'   => $rand,
-            'entity' => (isset($options['entities_id'])
+        $params = ['name'    => $actor_name,
+            'value'   => $options["_users_id_" . $typename],
+            'right'   => $right,
+            'rand'    => mt_rand(),
+            'display' => false,
+            'entity'  => (isset($options['entities_id'])
                ? $options['entities_id'] : $options['entity_restrict'])];
 
         //only for active ldap and corresponding right
@@ -2538,33 +2208,10 @@ class ReleaseTemplate extends CommonDropdown
         }
 
         // List all users in the active entities
-        User::dropdown($params);
-
-        return $rand;
-    }
-
-    /**
-     * show supplier add div on creation
-     *
-     * @param $options   array    options for default values ($options of showForm)
-     *
-     * @return void
-     **/
-    public function showSupplierAddFormOnCreate(array $options)
-    {
-        global $CFG_GLPI;
-
-        $itemtype = $this->getType();
-
-        echo static::getActorIcon('supplier', 'assign');
-
-        $rand   = mt_rand();
-        $params = ['name'  => '_suppliers_id_assign',
-            'value' => $options["_suppliers_id_assign"],
-            'rand'  => $rand];
-
-        Supplier::dropdown($params);
-
+        return [
+            'icon'   => static::getActorIconData('user', $type),
+            'widget' => User::dropdown($params),
+        ];
     }
 
     /**

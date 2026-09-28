@@ -48,7 +48,43 @@
         return params;
     }
 
+    // Highlight a single filter chip of the timeline form.
+    function activateFilter(type) {
+        var links = document.querySelectorAll(".filter_timeline_release li a[data-type]");
+        links.forEach(function (link) {
+            link.classList.toggle(
+                "h_active",
+                link.getAttribute("data-type").toLowerCase() === type.toLowerCase()
+            );
+        });
+    }
+
+    // The timeline announces (data-releases-active-type) the chip of the
+    // sub-item type last saved; apply it once per rendered timeline.
+    function applyInitialFilter() {
+        var timeline = document.querySelector(".timeline_releasehistory[data-releases-active-type]:not([data-releases-filter-applied])");
+        if (timeline) {
+            timeline.setAttribute("data-releases-filter-applied", "1");
+            activateFilter(timeline.getAttribute("data-releases-active-type"));
+        }
+    }
+
+    // Tabs are loaded asynchronously: try now, then on every DOM change.
+    applyInitialFilter();
+    new MutationObserver(applyInitialFilter).observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
+
     document.addEventListener("click", function (e) {
+        // Filter chip of the timeline form.
+        var filter = e.target.closest(".filter_timeline_release li a[data-type]");
+        if (filter) {
+            e.preventDefault();
+            activateFilter(filter.getAttribute("data-type"));
+            return;
+        }
+
         // Add a new subitem into the ajax box.
         var add = e.target.closest("[data-releases-add]");
         if (add) {

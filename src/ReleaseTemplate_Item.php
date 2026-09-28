@@ -34,7 +34,7 @@ use CommonDBTM;
 use CommonGLPI;
 use DbUtils;
 use Dropdown;
-use Html;
+use Glpi\Application\View\TemplateRenderer;
 use Session;
 use Toolbox;
 
@@ -157,132 +157,109 @@ class ReleaseTemplate_Item extends CommonDBRelation
         $rand    = mt_rand();
 
         $types_iterator = self::getDistinctTypes($instID);
-        $number         = count($types_iterator);
 
         if ($canedit) {
-            echo "<div class='firstbloc'>";
-            echo "<form name='releaseitem_form$rand' id='releaseitem_form$rand' method='post'
-                action='" . Toolbox::getItemTypeFormURL(__CLASS__) . "'>";
-
-            echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_2'><th colspan='2'>" . __('Add an item') . "</th></tr>";
-
-            echo "<tr class='tab_bg_1'><td>";
+            // Capture the itemtype selector (echoes internally) and render the add
+            // mini-form through Twig instead of echoing raw HTML.
+            ob_start();
             Dropdown::showSelectItemFromItemtypes([
                 'itemtypes'       => self::getLinkableItemtypes(),
                 'entity_restrict' => self::getEntityRestrict($release),
             ]);
-            echo "</td><td class='center' width='30%'>";
-            echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
-            echo Html::hidden('plugin_releases_releasetemplates_id', ['value' => $instID]);
-            echo "</td></tr>";
-            echo "</table>";
-            Html::closeForm();
-            echo "</div>";
+            $dropdown_html = ob_get_clean();
+
+            TemplateRenderer::getInstance()->display('@releases/form_change_release_add.html.twig', [
+                'action_url'    => Toolbox::getItemTypeFormURL(self::class),
+                'title'         => __('Add an item'),
+                'hidden_name'   => 'plugin_releases_releasetemplates_id',
+                'hidden_value'  => $instID,
+                'dropdown_html' => $dropdown_html,
+            ]);
         }
 
-        echo "<div class='spaced'>";
-        if ($canedit && $number) {
-            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = ['container' => 'mass' . __CLASS__ . $rand];
-            Html::showMassiveActions($massiveactionparams);
-        }
-        echo "<table class='tab_cadre_fixehov'>";
-        $header_begin  = "<tr>";
-        $header_top    = '';
-        $header_bottom = '';
-        $header_end    = '';
-        if ($canedit && $number) {
-            $header_top    .= "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand);
-            $header_top    .= "</th>";
-            $header_bottom .= "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand);
-            $header_bottom .= "</th>";
-        }
-        $header_end .= "<th>" . __('Type') . "</th>";
-        $header_end .= "<th>" . __('Entity') . "</th>";
-        $header_end .= "<th>" . __('Name') . "</th>";
-        $header_end .= "<th>" . __('Serial number') . "</th>";
-        $header_end .= "<th>" . __('Inventory number') . "</th></tr>";
-        echo $header_begin . $header_top . $header_end;
+        // CommonDBRelation::getTypeItems() applies no entity restriction at all, and
+        // canView() below is a global right per itemtype, not a per-row check. Replay
+        // the dropdown criteria so a link created before the sink check was added
+        // cannot display an asset from another entity.
+        $allowed = array_map('intval', (array) self::getEntityRestrict($release));
 
-        $totalnb = 0;
+        // Flatten the itemtype-grouped rows into a single datatable feed. Each entry
+        // carries its own itemtype+id so components/datatable.html.twig can render the
+        // massive-action checkbox (name="item[ReleaseTemplate_Item][linkid]").
+        $entries = [];
         foreach ($types_iterator as $row) {
-            //      while ($row = $types_iterator->next()) {
             $itemtype = $row['itemtype'];
             if (!($item = getItemForItemtype($itemtype))) {
                 continue;
             }
+            if (!$item->canView()) {
+                continue;
+            }
 
-            if ($item->canView()) {
-                // CommonDBRelation::getTypeItems() applies no entity restriction at all,
-                // and canView() above is a global right per itemtype, not a per-row check.
-                // Replay the dropdown criteria so a link created before the sink check was
-                // added cannot display an asset from another entity.
-                $allowed  = array_map('intval', (array) self::getEntityRestrict($release));
-                $rows     = [];
-                foreach (self::getTypeItems($instID, $itemtype) as $row_data) {
-                    $row_entity = (int) ($row_data['entity'] ?? 0);
-                    if (in_array($row_entity, $allowed, true)
-                        && Session::haveAccessToEntity($row_entity)) {
-                        $rows[] = $row_data;
-                    }
-                }
-                $nb = count($rows);
-                if ($nb === 0) {
+            foreach (self::getTypeItems($instID, $itemtype) as $data) {
+                $row_entity = (int) ($data['entity'] ?? 0);
+                if (!in_array($row_entity, $allowed, true)
+                    || !Session::haveAccessToEntity($row_entity)) {
                     continue;
                 }
 
-                $prem = true;
-                foreach ($rows as $data) {
-                    $name = $data["name"];
-                    if ($_SESSION["glpiis_ids_visible"]
-                        || empty($data["name"])) {
-                        $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);
-                    }
-                    $link     = $itemtype::getFormURLWithID($data['id']);
-                    // Stored XSS: asset name/serial/otherserial come straight from the DB
-                    // (stored un-escaped on GLPI 10+/11) and are echoed into the central page.
-                    // Escape every DB-sourced value before it reaches the HTML.
-                    $namelink = "<a href=\"" . $link . "\">" . htmlspecialchars($name) . "</a>";
-
-                    echo "<tr class='tab_bg_1'>";
-                    if ($canedit) {
-                        echo "<td width='10'>";
-                        Html::showMassiveActionCheckBox(__CLASS__, $data["linkid"]);
-                        echo "</td>";
-                    }
-                    if ($prem) {
-                        $typename = $item->getTypeName($nb);
-                        echo "<td class='center top' rowspan='$nb'>"
-                             . (($nb > 1) ? sprintf(__('%1$s: %2$s'), $typename, $nb) : $typename) . "</td>";
-                        $prem = false;
-                    }
-                    echo "<td class='center'>";
-                    echo htmlescape(Dropdown::getDropdownName("glpi_entities", $data['entity'])) . "</td>";
-                    echo "<td class='center"
-                         . (isset($data['is_deleted']) && $data['is_deleted'] ? " tab_bg_2_2'" : "'");
-                    echo ">" . $namelink . "</td>";
-                    echo "<td class='center'>" . (isset($data["serial"]) ? htmlspecialchars($data["serial"]) : "-")
-                         . "</td>";
-                    echo "<td class='center'>"
-                         . (isset($data["otherserial"]) ? htmlspecialchars($data["otherserial"]) : "-") . "</td>";
-                    echo "</tr>";
+                $name = $data["name"];
+                if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
+                    $name = sprintf(__('%1$s (%2$s)'), $name, $data["id"]);
                 }
-                $totalnb += $nb;
+                $link = $itemtype::getFormURLWithID($data['id']);
+                // Stored XSS: asset name/serial/otherserial come straight from the DB
+                // (stored un-escaped on GLPI 10+/11). The link cell is rendered raw
+                // (raw_html formatter) so escape the DB-sourced name here; the other
+                // cells use the default formatter, which escapes on its own.
+                $namelink = "<a href=\"" . htmlspecialchars($link) . "\">" . htmlspecialchars($name) . "</a>";
+                if (isset($data['is_deleted']) && $data['is_deleted']) {
+                    $namelink = "<span class='tab_bg_2_2'>" . $namelink . "</span>";
+                }
+
+                $entries[] = [
+                    'itemtype'    => self::class,
+                    'id'          => $data["linkid"],
+                    'type'        => $item->getTypeName(1),
+                    'entity'      => Dropdown::getDropdownName("glpi_entities", $data['entity']),
+                    'name'        => $namelink,
+                    'serial'      => $data["serial"] ?? "-",
+                    'otherserial' => $data["otherserial"] ?? "-",
+                ];
             }
         }
 
-        if ($number) {
-            echo $header_begin . $header_bottom . $header_end;
-        }
+        $total = count($entries);
 
-        echo "</table>";
-        if ($canedit && $number) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-        }
-        echo "</div>";
+        $columns = [
+            'type'        => __('Type'),
+            'entity'      => __('Entity'),
+            'name'        => __('Name'),
+            'serial'      => __('Serial number'),
+            'otherserial' => __('Inventory number'),
+        ];
+
+        $formatters = [
+            'name' => 'raw_html',
+        ];
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'super_header'        => _n('Item', 'Items', $total),
+            'columns'             => $columns,
+            'formatters'          => $formatters,
+            'entries'             => $entries,
+            'total_number'        => $total,
+            'filtered_number'     => $total,
+            'nofilter'            => true,
+            'nosort'              => true,
+            'showmassiveactions'  => $canedit && $total,
+            'massiveactionparams' => [
+                'num_displayed' => $total,
+                // Strip namespace backslashes: the container id becomes a DOM id and a
+                // JS selector, both of which break with backslashes.
+                'container'     => 'mass' . str_replace('\\', '', self::class) . $rand,
+            ],
+        ]);
     }
 
     public static function countForItem(CommonDBTM $item)

@@ -1,0 +1,53 @@
+{#
+ # -------------------------------------------------------------------------
+ # releases plugin for GLPI
+ # Copyright (C) 2020-2026 by the releases Development Team.
+ #
+ # https://github.com/InfotelGLPI/releases
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of releases.
+ #
+ # releases is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # releases is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with releases. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<span class="actor-bloc">
+    <div class="actor-head">{{ title }}</div>
+    <div class="actor-content">
+        {% for row in rows %}
+            {% if row.icon is defined and row.icon is not null %}
+                <i class="ti {{ row.icon.class }}" title="{{ row.icon.title }}"></i><span class="sr-only">{{ row.icon.title }}</span>
+                {% if row.label is defined %}&nbsp;{% endif %}
+            {% endif %}
+            {% if row.label is defined %}
+                {{ row.label }}
+            {% endif %}
+            {% if row.widget is defined %}
+                {# raw: core dropdown output (User/Group/Supplier/Entity::dropdown), escaped by the core #}
+                {{ row.widget|raw }}
+            {% endif %}
+            {% if row.hidden is defined %}
+                <input type="hidden" name="{{ row.hidden.name }}" value="{{ row.hidden.value }}">
+            {% endif %}
+            {% if row.after is defined and row.after == 'hr' %}
+                <hr>
+            {% elseif row.after is defined and row.after == 'br' %}
+                <br>
+            {% endif %}
+        {% endfor %}
+    </div>
+</span>

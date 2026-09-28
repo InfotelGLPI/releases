@@ -1,0 +1,112 @@
+{#
+ # -------------------------------------------------------------------------
+ # releases plugin for GLPI
+ # Copyright (C) 2020-2026 by the releases Development Team.
+ #
+ # https://github.com/InfotelGLPI/releases
+ # -------------------------------------------------------------------------
+ #
+ # LICENSE
+ #
+ # This file is part of releases.
+ #
+ # releases is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+ # the Free Software Foundation; either version 3 of the License, or
+ # (at your option) any later version.
+ #
+ # releases is distributed in the hope that it will be useful,
+ # but WITHOUT ANY WARRANTY; without even the implied warranty of
+ # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ #
+ # You should have received a copy of the GNU General Public License
+ # along with releases. If not, see <http://www.gnu.org/licenses/>.
+ # --------------------------------------------------------------------------
+ #}
+
+<div class="timeline_releasehistory"
+     {% if entries|length > 0 %}data-releases-active-type="{{ active_type }}"{% endif %}>
+    <h2>{{ __('Release actions details', 'releases') }} : </h2>
+
+    {% for entry in entries %}
+        <div class="h_item {{ entry.position }} {{ entry.class }}">
+            <div class="h_info">
+                <div class="h_date"><i class="ti ti-clock"></i>&nbsp;{{ entry.date }}</div>
+                {% if entry.show_user %}
+                    <div class="h_user">
+                        {% if entry.user_html is not null %}
+                            <span class="h_user_name">
+                                {# raw: User::getLink() + Html::showToolTip(), both escaped by the core #}
+                                {{ entry.user_html|raw }}
+                            </span>
+                        {% else %}
+                            {{ __('Requester') }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="h_content" id="{{ entry.domid }}" data-uid="{{ entry.uid }}">
+                {% if entry.can_edit %}
+                    <div class="edit_item_content"></div>
+                    <span class="cancel_edit_item_content"></span>
+                {% endif %}
+                <div class="displayed_content">
+                    <div class="h_controls">
+                        {% if entry.edit is not null %}
+                            {# wired by public/scripts/releasetemplate_timeline.js (delegated) #}
+                            <span class="ti ti-edit control_item pointer" title="{{ __('Edit') }}"
+                                  data-releases-edit
+                                  data-itemtype="{{ entry.edit.itemtype }}"
+                                  data-items-id="{{ entry.edit.items_id }}"
+                                  data-parenttype="{{ entry.edit.parenttype }}"
+                                  data-fkey="{{ entry.edit.fkey }}"
+                                  data-parentid="{{ entry.edit.parentid }}"
+                                  data-uid="{{ entry.uid }}"
+                                  data-url="{{ entry.edit.url }}"></span>
+                        {% endif %}
+                    </div>
+
+                    {% if entry.content is not null %}
+                        <div class="item_content {{ entry.long_text ? 'long_text' : '' }}">
+                            <div class="rich_text_container">
+                                {# raw: RichText::getEnhancedHtml() output, sanitized by the core #}
+                                {{ entry.content|raw }}
+                            </div>
+                            {% if entry.long_text %}
+                                <p class="read_more">
+                                    <a class="read_more_button">.....</a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="b_right">
+                        {% for type_name in entry.types %}
+                            {{ type_name }}<br>
+                        {% endfor %}
+                        {% if entry.associated_risk is not null %}
+                            {{ __('Associated with', 'releases') }} {{ entry.associated_risk }}<br>
+                        {% endif %}
+                        {% if entry.actiontime is not null %}
+                            <span class="actiontime">{{ entry.actiontime }}</span>
+                        {% endif %}
+                        {% if entry.begin is not null %}
+                            <span class="planification">{{ entry.begin }} &rArr; {{ entry.end }}</span>
+                        {% endif %}
+                        {% if entry.editor is not null %}
+                            <div class="users_id_editor" id="users_id_editor_{{ entry.editor.id }}">
+                                {# raw: sprintf() of core-escaped User::getLink() + Html::showToolTip() #}
+                                {{ entry.editor.html|raw }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <br><br>
+        <div class="center"><h3 class="noinfo">{{ __('No data available', 'releases') }}</h3></div>
+    {% endfor %}
+</div>

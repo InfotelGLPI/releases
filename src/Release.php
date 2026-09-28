@@ -50,7 +50,6 @@ use Glpi\RichText\RichText;
 use Group;
 use Html;
 use Impact;
-use Item_Ticket;
 use ITILFollowup;
 use KnowbaseItem_Item;
 use Location;
@@ -59,7 +58,6 @@ use Notepad;
 use NotificationEvent;
 use NotificationMailing;
 use Planning;
-use Search;
 use Session;
 use Toolbox;
 use User;
@@ -2114,54 +2112,6 @@ class Release extends CommonITILObject
         );
     }
 
-    /**
-     * Displays the timeline filter buttons
-     *
-     * @return void
-     * @since 9.4.0
-     *
-     */
-    public function filterTimeline()
-    {
-        echo "<div class='filter_timeline'>";
-        echo "<h3>" . __("Timeline filter") . " : </h3>";
-        echo "<ul>";
-
-        $riskClass = Risk::class;
-        echo "<li><a href='#' class='filterEle fas fa-bug pointer' data-type='Risk' title='" . $riskClass::getTypeName(
-            2,
-        )
-            . "'><span class='sr-only'>" . $riskClass::getTypeName(2) . "</span></a></li>";
-        $rollbackClass = Rollback::class;
-        echo "<li><a href='#' class='filterEle fas fa-undo-alt pointer' data-type='Rollback' title='" . $rollbackClass::getTypeName(
-            2,
-        )
-            . "'><span class='sr-only'>" . $rollbackClass::getTypeName(2) . "</span></a></li>";
-        $taskClass = Deploytask::class;
-        echo "<li><a href='#' class=' filterEle fas fa-check-square pointer' data-type='Deploytask' title='" . $taskClass::getTypeName(
-            2,
-        )
-            . "'><span class='sr-only'>" . $taskClass::getTypeName(2) . "</span></a></li>";
-        $testClass = Test::class;
-        echo "<li><a href='#' class=' filterEle fas fa-check pointer' data-type='Test' title='" . $testClass::getTypeName(
-            2,
-        )
-            . "'><span class='sr-only'>" . $testClass::getTypeName(2) . "</span></a></li>";
-        echo "<li><a href='#' class=' filterEle fas fa-comment pointer' data-type='ITILFollowup' title='" . __(
-            'Followup',
-        )
-            . "'><span class='sr-only'>" . __('Followup') . "</span></a></li>";
-        echo "<li><a href='#' class=' filterEle fa fa-ban pointer' data-type='reset' title=\"" . __s(
-            "Reset display options",
-        )
-            . "\"><span class='sr-only'>" . __('Reset display options') . "</span></a></li>";
-        echo "</ul>";
-        echo "</div>";
-
-        echo "<script type='text/javascript'>$(function() {filter_timeline();});</script>";
-        echo "<script type='text/javascript'>$(function() {filter_timeline_release();});</script>";
-    }
-
     public function getTimelineItems(array $options = [])
     {
         $objType = self::getType();
@@ -2541,19 +2491,6 @@ class Release extends CommonITILObject
     }
 
     /**
-     * Displays the timeline header (filters)
-     *
-     * @return void
-     * @since 9.4.0
-     *
-     */
-    public function showTimelineHeader()
-    {
-        echo "<h2>" . __("Release actions details", 'releases') . "</h2>";
-        $this->filterTimeline();
-    }
-
-    /**
      * Display releases for an item
      *
      * Will also display releases of linked items
@@ -2615,20 +2552,20 @@ class Release extends CommonITILObject
                 // Mini search engine
                 if ($item->haveChildren()) {
                     $tree = Session::getSavedOption(__CLASS__, 'tree', 0);
-                    echo "<table class='tab_cadre_fixe'>";
-                    echo "<tr class='tab_bg_1'><th>" . __('Last releases') . "</th></tr>";
-                    echo "<tr class='tab_bg_1'><td class='center'>";
-                    echo __('Child groups');
-                    Dropdown::showYesNo(
-                        'tree',
-                        $tree,
-                        -1,
-                        ['on_change' => 'reloadTab("start=0&tree="+this.value)'],
-                    );
+                    TemplateRenderer::getInstance()->display('@releases/list_group_tree.html.twig', [
+                        'dropdown_html' => Dropdown::showYesNo(
+                            'tree',
+                            $tree,
+                            -1,
+                            [
+                                'on_change' => 'reloadTab("start=0&tree="+this.value)',
+                                'display'   => false,
+                            ],
+                        ),
+                    ]);
                 } else {
                     $tree = 0;
                 }
-                echo "</td></tr></table>";
 
                 $restrict['glpi_plugin_releases_groups_releases.groups_id'] = ($tree ? getSonsOf(
                     'glpi_groups',
@@ -2673,13 +2610,6 @@ class Release extends CommonITILObject
         $iterator = $DB->request($criteria);
         $number = count($iterator);
 
-        // Ticket for the item
-        echo "<div><table class='tab_cadre_fixe'>";
-
-        $colspan = 11;
-        if (count($_SESSION["glpiactiveentities"]) > 1) {
-            $colspan++;
-        }
         if ($number > 0) {
             Session::initNavigateListItems(
                 Release::class,
@@ -2691,30 +2621,22 @@ class Release extends CommonITILObject
                     $item->getName(),
                 ),
             );
-
-            echo "<tr><th colspan='$colspan'>";
-
-            //TRANS : %d is the number of problems
-            echo sprintf(_n('%d last release', '%d last releases', $number, 'releases'), $number);
-
-            echo "</th></tr>";
-        } else {
-            echo "<tr><th>" . __('No release found.', 'releases') . "</th></tr>";
         }
-        // Ticket list
-        if ($number > 0) {
-            self::commonListHeader(Search::HTML_OUTPUT);
-
-            foreach ($iterator as $data) {
-                Session::addToNavigateListItems(Release::class, $data["id"]);
-                self::showShort($data["id"]);
-            }
-            self::commonListHeader(Search::HTML_OUTPUT);
+        $ids = [];
+        foreach ($iterator as $data) {
+            Session::addToNavigateListItems(Release::class, $data["id"]);
+            $ids[] = $data["id"];
         }
 
-        echo "</table></div>";
+        self::displayReleaseList(
+            $number > 0
+                //TRANS : %d is the number of releases
+                ? sprintf(_n('%d last release', '%d last releases', $number, 'releases'), $number)
+                : __('No release found.', 'releases'),
+            $ids,
+        );
 
-        // Tickets for linked items
+        // Releases for linked items
         $linkeditems = $item->getLinkedItems();
         $restrict = [];
         if (count($linkeditems)) {
@@ -2730,27 +2652,191 @@ class Release extends CommonITILObject
             $criteria['WHERE'] = ['OR' => $restrict]
                 + getEntitiesRestrictCriteria(self::getTable());
             $iterator = $DB->request($criteria);
-            $number = count($iterator);
 
-            echo "<div class='spaced'><table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='$colspan'>";
-            echo __('Releases on linked items', 'releases');
-
-            echo "</th></tr>";
-            if ($number > 0) {
-                self::commonListHeader(Search::HTML_OUTPUT);
-
-                foreach ($iterator as $data) {
-                    // Session::addToNavigateListItems(TRACKING_TYPE,$data["id"]);
-                    self::showShort($data["id"]);
-                }
-                self::commonListHeader(Search::HTML_OUTPUT);
-            } else {
-                echo "<tr><th>" . __('No release found.', 'releases') . "</th></tr>";
+            $ids = [];
+            foreach ($iterator as $data) {
+                $ids[] = $data["id"];
             }
-            echo "</table></div>";
-        } // Subquery for linked item
+            self::displayReleaseList(__('Releases on linked items', 'releases'), $ids);
+        }
+    }
 
+    /**
+     * Render a read-only list of releases through the core datatable component.
+     *
+     * @param string $title Header of the list
+     * @param int[]  $ids   Releases to display, in display order
+     *
+     * @return void
+     */
+    private static function displayReleaseList(string $title, array $ids): void
+    {
+        $columns = [
+            'status'   => __('Status'),
+            'date'     => __('Date'),
+            'date_mod' => __('Last update'),
+        ];
+        if (count($_SESSION["glpiactiveentities"]) > 1) {
+            $columns['entity'] = _n('Entity', 'Entities', 1);
+        }
+        $columns += [
+            'requester'     => __('Requester'),
+            'assigned'      => __('Assigned'),
+            'name'          => __('Title'),
+            'planification' => __('Planification'),
+        ];
+
+        // Every HTML cell is escaped at the source below; the others use the
+        // default formatter, which escapes on its own.
+        $formatters = [
+            'status'        => 'raw_html',
+            'date'          => 'raw_html',
+            'date_mod'      => 'datetime',
+            'requester'     => 'raw_html',
+            'assigned'      => 'raw_html',
+            'name'          => 'raw_html',
+            'planification' => 'raw_html',
+        ];
+
+        $entries = [];
+        foreach ($ids as $id) {
+            $entry = self::getReleaseListEntry((int) $id);
+            if ($entry !== null) {
+                $entries[] = $entry;
+            }
+        }
+
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'is_tab'          => true,
+            'nofilter'        => true,
+            'nosort'          => true,
+            'super_header'    => $title,
+            'columns'         => $columns,
+            'formatters'      => $formatters,
+            'entries'         => $entries,
+            'total_number'    => count($entries),
+            'filtered_number' => count($entries),
+        ]);
+    }
+
+    /**
+     * Build one datatable row for a release.
+     *
+     * @param int $id Release ID
+     *
+     * @return array<string, mixed>|null null when the release cannot be loaded
+     */
+    private static function getReleaseListEntry(int $id): ?array
+    {
+        global $DB;
+
+        $item = new static();
+        if (!$item->getFromDB($id)) {
+            return null;
+        }
+        $rand        = mt_rand();
+        $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
+
+        $entry = [
+            'itemtype' => static::class,
+            'id'       => $item->fields['id'],
+            'status'   => htmlescape(sprintf(__('%1$s: %2$s'), __('ID'), $item->fields["id"]))
+                . static::getStatusIcon($item->fields["status"]),
+            'date_mod' => $item->fields["date_mod"],
+        ];
+        if ($item->isDeleted()) {
+            $entry['row_class'] = 'table-danger';
+        }
+
+        if ($item->fields['status'] == static::CLOSED) {
+            $entry['date'] = htmlescape(sprintf(__('Closed on %s'), Html::convDateTime($item->fields['date_end'])));
+        } elseif ($item->fields['begin_waiting_date']) {
+            $entry['date'] = htmlescape(sprintf(__('Put on hold on %s'), Html::convDateTime($item->fields['begin_waiting_date'])));
+        } else {
+            $entry['date'] = htmlescape(sprintf(__('Opened on %s'), Html::convDateTime($item->fields['date'])));
+        }
+
+        if (count($_SESSION["glpiactiveentities"]) > 1) {
+            $entry['entity'] = Dropdown::getDropdownName('glpi_entities', $item->fields['entities_id']);
+        }
+
+        // Actor names and dropdown labels are stored raw: escape at the source.
+        $requester = '';
+        foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
+            $requester .= "<span class='b'>" . htmlescape(getUserName($d["users_id"])) . "</span><br>";
+        }
+        foreach ($item->getGroups(CommonITILActor::REQUESTER) as $d) {
+            $requester .= htmlescape(Dropdown::getDropdownName("glpi_groups", $d["groups_id"])) . "<br>";
+        }
+        $entry['requester'] = $requester;
+
+        $anonymize_helpdesk = Entity::getUsedConfig('anonymize_support_agents', $item->getEntityID())
+            && Session::getCurrentInterface() == 'helpdesk';
+        $assigned = '';
+        foreach ($item->getUsers(CommonITILActor::ASSIGN) as $d) {
+            $assigned .= ($anonymize_helpdesk
+                ? htmlescape(__("Helpdesk"))
+                : "<span class='b'>" . htmlescape(getUserName($d["users_id"])) . "</span>") . "<br>";
+        }
+        foreach ($item->getGroups(CommonITILActor::ASSIGN) as $d) {
+            $assigned .= htmlescape($anonymize_helpdesk
+                ? __("Helpdesk group")
+                : Dropdown::getDropdownName("glpi_groups", $d["groups_id"])) . "<br>";
+        }
+        foreach ($item->getSuppliers(CommonITILActor::ASSIGN) as $d) {
+            $assigned .= htmlescape(Dropdown::getDropdownName("glpi_suppliers", $d["suppliers_id"])) . "<br>";
+        }
+        $entry['assigned'] = $assigned;
+
+        $name = "<span class='b'>" . htmlescape($item->getName()) . "</span>&nbsp;";
+        if ($item->canViewItem()) {
+            $name_id = htmlescape($item->getType() . $item->fields["id"] . $rand);
+            $name    = "<a id='" . $name_id . "' href=\"" . htmlescape($item->getLinkURL()) . "\">" . $name . "</a>"
+                . htmlescape(sprintf(
+                    ' (%1$s - %2$s)',
+                    $item->numberOfFollowups($showprivate),
+                    $item->numberOfTasks($showprivate),
+                ))
+                . Html::showToolTip(
+                    RichText::getSafeHtml($item->fields["content"]),
+                    [
+                        'display' => false,
+                        'applyto' => $item->getType() . $item->fields["id"] . $rand,
+                    ],
+                );
+        }
+        $entry['name'] = $name;
+
+        $planned_infos = '';
+        $nb_planned    = 0;
+        $plan          = new Deploytask();
+        foreach ($DB->request([
+            'FROM'  => $plan->getTable(),
+            'WHERE' => [
+                $item->getForeignKeyField() => $item->fields['id'],
+            ],
+        ]) as $task) {
+            if (!empty($task['begin'])) {
+                $nb_planned++;
+                $planned_infos .= htmlescape(sprintf(__('From %s'), Html::convDateTime($task['begin']))) . '<br>';
+                $planned_infos .= htmlescape(sprintf(__('To %s'), Html::convDateTime($task['end']))) . '<br>';
+                if ($task['users_id_tech']) {
+                    $planned_infos .= htmlescape(sprintf(__('By %s'), getUserName($task['users_id_tech']))) . '<br>';
+                }
+                $planned_infos .= '<br>';
+            }
+        }
+        $entry['planification'] = '';
+        if ($nb_planned) {
+            $planning_id = $item->getType() . $item->fields["id"] . "planning" . $rand;
+            $entry['planification'] = "<span class='pointer' id='" . htmlescape($planning_id) . "'>" . $nb_planned . '</span> '
+                . Html::showToolTip($planned_infos, [
+                    'display' => false,
+                    'applyto' => $planning_id,
+                ]);
+        }
+
+        return $entry;
     }
 
     /**
@@ -2819,407 +2905,6 @@ class Release extends CommonITILObject
             );
         }
         return $criteria;
-    }
-
-    /**
-     * @param integer $output_type Output type
-     * @param string $mass_id id of the form to check all
-     */
-    public static function commonListHeader(
-        $output_type = Search::HTML_OUTPUT,
-        $mass_id = '',
-        array $params = []
-    ) {
-        // New Line for Header Items Line
-        echo Search::showNewLine($output_type);
-        // $show_sort if
-        $header_num = 1;
-
-        $items = [];
-        $items[(empty($mass_id) ? '&nbsp' : Html::getCheckAllAsCheckbox($mass_id))] = '';
-        $items[__('Status')] = "status";
-        $items[__('Date')] = "date";
-        $items[__('Last update')] = "date_mod";
-
-        if (count($_SESSION["glpiactiveentities"]) > 1) {
-            $items[_n('Entity', 'Entities', Session::getPluralNumber())] = "glpi_entities.completename";
-        }
-
-        //      $items[__('Priority')]           = "priority";
-        $items[__('Requester')] = "users_id";
-        $items[__('Assigned')] = "users_id_assign";
-        if (static::getType() == 'Ticket') {
-            $items[_n('Associated element', 'Associated elements', Session::getPluralNumber())] = "";
-        }
-        //      $items[__('Category')]           = "glpi_itilcategories.completename";
-        $items[__('Title')] = "name";
-        $items[__('Planification')] = "glpi_plugin_releases_deploytasks.begin";
-
-        foreach (array_keys($items) as $key) {
-            $link = "";
-            echo Search::showHeaderItem($output_type, $key, $header_num, $link);
-        }
-
-        // End Line for column headers
-        echo Search::showEndLine($output_type);
-    }
-
-    /**
-     * Display a line for an object
-     *
-     * @param $id                 Integer  ID of the object
-     * @param $options            array of options
-     *      output_type            : Default output type (see Search class / default Search::HTML_OUTPUT)
-     *      row_num                : row num used for display
-     *      type_for_massiveaction : itemtype for massive action
-     *      id_for_massaction      : default 0 means no massive action
-     *      followups              : show followup columns
-     *
-     * @since 0.85 (befor in each object with differents parameters)
-     *
-     */
-    public static function showShort($id, $options = [])
-    {
-        global $DB;
-
-        $p = [
-            'output_type' => Search::HTML_OUTPUT,
-            'row_num' => 0,
-            'type_for_massiveaction' => 0,
-            'id_for_massiveaction' => 0,
-            'followups' => false,
-        ];
-
-        if (count($options)) {
-            foreach ($options as $key => $val) {
-                $p[$key] = $val;
-            }
-        }
-
-        $rand = mt_rand();
-
-        /// TODO to be cleaned. Get datas and clean display links
-
-        // Prints a job in short form
-        // Should be called in a <table>-segment
-        // Print links or not in case of user view
-        // Make new job object and fill it from database, if success, print it
-        $item = new static();
-
-        $candelete = static::canDelete();
-        $canupdate = Session::haveRight(static::$rightname, UPDATE);
-        $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
-        $align = "class='center";
-        $align_desc = "class='left";
-
-        if ($p['followups']) {
-            $align .= " top'";
-            $align_desc .= " top'";
-        } else {
-            $align .= "'";
-            $align_desc .= "'";
-        }
-
-        if ($item->getFromDB($id)) {
-            $item_num = 1;
-            //         $bgcolor  = $_SESSION["glpipriority_".$item->fields["priority"]];
-
-            echo Search::showNewLine($p['output_type'], $p['row_num'] % 2, $item->isDeleted());
-
-            $check_col = '';
-            if (($candelete || $canupdate)
-                && ($p['output_type'] == Search::HTML_OUTPUT)
-                && $p['id_for_massiveaction']) {
-                $check_col = Html::getMassiveActionCheckBox($p['type_for_massiveaction'], $p['id_for_massiveaction']);
-            }
-            echo Search::showItem($p['output_type'], $check_col, $item_num, $p['row_num'], $align);
-
-            // First column
-            $first_col = sprintf(__('%1$s: %2$s'), __('ID'), $item->fields["id"]);
-            if ($p['output_type'] == Search::HTML_OUTPUT) {
-                $first_col .= static::getStatusIcon($item->fields["status"]);
-            } else {
-                $first_col = sprintf(
-                    __('%1$s - %2$s'),
-                    $first_col,
-                    static::getStatus($item->fields["status"]),
-                );
-            }
-
-            echo Search::showItem($p['output_type'], $first_col, $item_num, $p['row_num'], $align);
-
-            // Second column
-            if ($item->fields['status'] == static::CLOSED) {
-                $second_col = sprintf(
-                    __('Closed on %s'),
-                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '')
-                    . Html::convDateTime($item->fields['date_end']),
-                );
-            } elseif ($item->fields['begin_waiting_date']) {
-                $second_col = sprintf(
-                    __('Put on hold on %s'),
-                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '')
-                    . Html::convDateTime($item->fields['begin_waiting_date']),
-                );
-            } else {
-                $second_col = sprintf(
-                    __('Opened on %s'),
-                    ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : '')
-                    . Html::convDateTime($item->fields['date']),
-                );
-            }
-
-            echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align . " width=130");
-
-            // Second BIS column
-            $second_col = Html::convDateTime($item->fields["date_mod"]);
-            echo Search::showItem($p['output_type'], $second_col, $item_num, $p['row_num'], $align . " width=90");
-
-            // Second TER column
-            if (count($_SESSION["glpiactiveentities"]) > 1) {
-                $second_col = htmlescape(Dropdown::getDropdownName('glpi_entities', $item->fields['entities_id']));
-                echo Search::showItem(
-                    $p['output_type'],
-                    $second_col,
-                    $item_num,
-                    $p['row_num'],
-                    $align . " width=100",
-                );
-            }
-
-            // Third Column
-            //         echo Search::showItem($p['output_type'],
-            //                               "<span class='b'>".static::getPriorityName($item->fields["priority"]).
-            //                               "</span>",
-            //                               $item_num, $p['row_num'], "$align bgcolor='$bgcolor'");
-
-            // Fourth Column
-            $fourth_col = "";
-
-            foreach ($item->getUsers(CommonITILActor::REQUESTER) as $d) {
-                // Actor names and dropdown labels are stored raw: Search::showItem() forwards
-                // the column verbatim on the HTML output, so escape at the source.
-                $fourth_col .= "<span class='b'>" . htmlescape(getUserName($d["users_id"])) . "</span>";
-                $fourth_col .= "<br>";
-            }
-
-            foreach ($item->getGroups(CommonITILActor::REQUESTER) as $d) {
-                $fourth_col .= htmlescape(Dropdown::getDropdownName("glpi_groups", $d["groups_id"]));
-                $fourth_col .= "<br>";
-            }
-
-            echo Search::showItem($p['output_type'], $fourth_col, $item_num, $p['row_num'], $align);
-
-            // Fifth column
-            $fifth_col = "";
-
-            $entity = $item->getEntityID();
-            $anonymize_helpdesk = Entity::getUsedConfig('anonymize_support_agents', $entity)
-                && Session::getCurrentInterface() == 'helpdesk';
-
-            foreach ($item->getUsers(CommonITILActor::ASSIGN) as $d) {
-                if ($anonymize_helpdesk) {
-                    $fifth_col .= __("Helpdesk");
-                } else {
-                    $fifth_col .= "<span class='b'>" . htmlescape(getUserName($d["users_id"])) . "</span>";
-                }
-
-                $fifth_col .= "<br>";
-            }
-
-            foreach ($item->getGroups(CommonITILActor::ASSIGN) as $d) {
-                if ($anonymize_helpdesk) {
-                    $fifth_col .= __("Helpdesk group");
-                } else {
-                    $fifth_col .= htmlescape(Dropdown::getDropdownName("glpi_groups", $d["groups_id"]));
-                }
-                $fifth_col .= "<br>";
-            }
-
-            foreach ($item->getSuppliers(CommonITILActor::ASSIGN) as $d) {
-                $fifth_col .= htmlescape(Dropdown::getDropdownName("glpi_suppliers", $d["suppliers_id"]));
-                $fifth_col .= "<br>";
-            }
-
-            echo Search::showItem($p['output_type'], $fifth_col, $item_num, $p['row_num'], $align);
-
-            // Sixth Colum
-            // Ticket : simple link to item
-            $sixth_col = "";
-            $is_deleted = false;
-            $item_ticket = new Item_Ticket();
-            $data = $item_ticket->find(['tickets_id' => $item->fields['id']]);
-
-            if ($item->getType() == 'Ticket') {
-                if (!empty($data)) {
-                    foreach ($data as $val) {
-                        if (!empty($val["itemtype"]) && ($val["items_id"] > 0)) {
-                            if ($object = getItemForItemtype($val["itemtype"])) {
-                                if ($object->getFromDB($val["items_id"])) {
-                                    $is_deleted = $object->isDeleted();
-
-                                    $sixth_col .= $object->getTypeName();
-                                    $sixth_col .= " - <span class='b'>";
-                                    if ($item->canView()) {
-                                        $sixth_col .= $object->getLink();
-                                    } else {
-                                        $sixth_col .= $object->getNameID();
-                                    }
-                                    $sixth_col .= "</span><br>";
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    $sixth_col = __('General');
-                }
-
-                echo Search::showItem(
-                    $p['output_type'],
-                    $sixth_col,
-                    $item_num,
-                    $p['row_num'],
-                    ($is_deleted ? " class='center deleted' " : $align),
-                );
-            }
-
-            // Seventh column
-            //         echo Search::showItem($p['output_type'],
-            //                               "<span class='b'>".
-            //                               Dropdown::getDropdownName('glpi_itilcategories',
-            //                                                         $item->fields["itilcategories_id"]).
-            //                               "</span>",
-            //                               $item_num, $p['row_num'], $align);
-
-            // Eigth column
-            $eigth_column = "<span class='b'>" . htmlescape($item->getName()) . "</span>&nbsp;";
-
-            // Add link
-            if ($item->canViewItem()) {
-                $eigth_column = "<a id='" . $item->getType(
-                ) . $item->fields["id"] . "$rand' href=\"" . $item->getLinkURL()
-                    . "\">$eigth_column</a>";
-
-                if ($p['followups']
-                    && ($p['output_type'] == Search::HTML_OUTPUT)) {
-                    $eigth_column = sprintf(
-                        __('%1$s (%2$s)'),
-                        $eigth_column,
-                        sprintf(
-                            __('%1$s - %2$s'),
-                            $item->numberOfFollowups($showprivate),
-                            $item->numberOfTasks($showprivate),
-                        ),
-                    );
-                } else {
-                    $eigth_column = sprintf(
-                        __('%1$s (%2$s)'),
-                        $eigth_column,
-                        sprintf(
-                            __('%1$s - %2$s'),
-                            $item->numberOfFollowups($showprivate),
-                            $item->numberOfTasks($showprivate),
-                        ),
-                    );
-                }
-            }
-
-            if ($p['output_type'] == Search::HTML_OUTPUT) {
-                $eigth_column = sprintf(
-                    __('%1$s %2$s'),
-                    $eigth_column,
-                    Html::showToolTip(
-                        RichText::getSafeHtml($item->fields["content"]),
-                        [
-                            'display' => false,
-                            'applyto' => $item->getType() . $item->fields["id"]
-                                . $rand,
-                        ],
-                    ),
-                );
-            }
-
-            echo Search::showItem(
-                $p['output_type'],
-                $eigth_column,
-                $item_num,
-                $p['row_num'],
-                $align_desc . " width='200'",
-            );
-
-            //tenth column
-            $tenth_column = '';
-            $planned_infos = '';
-
-            $tasktype = Deploytask::class;
-            $plan = new $tasktype();
-            $items = [];
-
-            $result = $DB->request(
-                [
-                    'FROM' => $plan->getTable(),
-                    'WHERE' => [
-                        $item->getForeignKeyField() => $item->fields['id'],
-                    ],
-                ],
-            );
-            foreach ($result as $plan) {
-                if (isset($plan['begin']) && $plan['begin']) {
-                    $items[$plan['id']] = $plan['id'];
-                    $planned_infos .= sprintf(
-                        __('From %s')
-                        . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
-                        Html::convDateTime($plan['begin']),
-                    );
-                    $planned_infos .= sprintf(
-                        __('To %s')
-                        . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
-                        Html::convDateTime($plan['end']),
-                    );
-                    if ($plan['users_id_tech']) {
-                        $planned_infos .= sprintf(
-                            __('By %s')
-                            . ($p['output_type'] == Search::HTML_OUTPUT ? '<br>' : ''),
-                            htmlescape(getUserName($plan['users_id_tech'])),
-                        );
-                    }
-                    $planned_infos .= "<br>";
-                }
-            }
-
-            $tenth_column = count($items);
-            if ($tenth_column) {
-                $tenth_column = "<span class='pointer'
-                              id='" . $item->getType() . $item->fields["id"] . "planning$rand'>"
-                    . $tenth_column . '</span>';
-                $tenth_column = sprintf(
-                    __('%1$s %2$s'),
-                    $tenth_column,
-                    Html::showToolTip(
-                        $planned_infos,
-                        [
-                            'display' => false,
-                            'applyto' => $item->getType()
-                                . $item->fields["id"]
-                                . "planning" . $rand,
-                        ],
-                    ),
-                );
-            }
-            echo Search::showItem(
-                $p['output_type'],
-                $tenth_column,
-                $item_num,
-                $p['row_num'],
-                $align_desc . " width='150'",
-            );
-
-            // Finish Line
-            echo Search::showEndLine($p['output_type']);
-        } else {
-            echo "<tr class='tab_bg_2'>";
-            echo "<td colspan='6' ><i>" . __('No item in progress.') . "</i></td></tr>";
-        }
     }
 
     /**

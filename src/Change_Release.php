@@ -35,8 +35,6 @@ use CommonGLPI;
 use DbUtils;
 use Glpi\Application\View\TemplateRenderer;
 use Glpi\RichText\RichText;
-use Html;
-use Search;
 use Session;
 use Toolbox;
 
@@ -192,59 +190,49 @@ class Change_Release extends CommonDBRelation
             ]);
         }
 
-        // The change list relies on core rendering helpers (commonListHeader /
-        // showShort) and the legacy massive-actions form, all of which echo
-        // internally. Capture the whole region and hand it to Twig as a single
-        // raw block so the controller no longer echoes HTML directly.
-        ob_start();
-        echo "<div class='spaced'>";
-        if ($canedit && $numrows) {
-            Html::openMassiveActionsForm($mass_id);
-            $massiveactionparams = ['num_displayed' => min($_SESSION['glpilist_limit'], $numrows),
-                'container'     => $mass_id];
-            Html::showMassiveActions($massiveactionparams);
+        [$columns, $formatters] = array_values(Change::getCommonDatatableColumns());
+
+        Session::initNavigateListItems(
+            Change::class,
+            //TRANS : %1$s is the itemtype name,
+            //        %2$s is the name of the item (used for headings of a list)
+            sprintf(
+                __('%1$s = %2$s'),
+                Change::getTypeName(1),
+                $release->fields["name"],
+            ),
+        );
+        $rows = [];
+        foreach ($changes as $data) {
+            Session::addToNavigateListItems(Change::class, $data["id"]);
+            $rows[] = [
+                'itemtype' => Change::class,
+                'item_id'  => $data['id'],
+                'id'       => $data['linkid'],
+            ];
         }
+        // Entries are built from the Change, then retargeted to the link so the
+        // massive actions (unlink) apply to Change_Release rows, as before.
+        $entries = array_map(static function ($entry) {
+            $entry['itemtype'] = self::class;
+            return $entry;
+        }, Change::getDatatableEntries($rows));
 
-        echo "<table class='tab_cadre_fixehov'>";
-        echo "<tr class='noHover'><th colspan='12'>" . Change::getTypeName($numrows) . "</th>";
-        echo "</tr>";
-        if ($numrows) {
-            Change::commonListHeader(Search::HTML_OUTPUT, $mass_id);
-            Session::initNavigateListItems(
-                'Change',
-                //TRANS : %1$s is the itemtype name,
-                //        %2$s is the name of the item (used for headings of a list)
-                sprintf(
-                    __('%1$s = %2$s'),
-                    Change::getTypeName(1),
-                    $release->fields["name"],
-                ),
-            );
-
-            $i = 0;
-            foreach ($changes as $data) {
-                Session::addToNavigateListItems('Change', $data["id"]);
-                Change::showShort($data['id'], [
-                    'output_type' => Search::HTML_OUTPUT,
-                    'row_num'                => $i,
-                    'type_for_massiveaction' => self::class,
-                    'id_for_massiveaction'   => $data['linkid']]);
-                $i++;
-            }
-            Change::commonListHeader(Search::HTML_OUTPUT, $mass_id);
-        }
-        echo "</table>";
-
-        if ($canedit && $numrows) {
-            $massiveactionparams['ontop'] = false;
-            Html::showMassiveActions($massiveactionparams);
-            Html::closeForm();
-        }
-        echo "</div>";
-        $list_html = ob_get_clean();
-
-        TemplateRenderer::getInstance()->display('@releases/tab_raw.html.twig', [
-            'content' => $list_html,
+        TemplateRenderer::getInstance()->display('components/datatable.html.twig', [
+            'is_tab'              => true,
+            'nofilter'            => true,
+            'nosort'              => true,
+            'super_header'        => Change::getTypeName($numrows),
+            'columns'             => $columns,
+            'formatters'          => $formatters,
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => $canedit,
+            'massiveactionparams' => [
+                'num_displayed' => count($entries),
+                'container'     => $mass_id,
+            ],
         ]);
     }
 
