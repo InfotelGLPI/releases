@@ -54,7 +54,7 @@ if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_produ
     $val['id']       = (int) $_POST["id"];
     $val['status']   = Release::REVIEW;
     $val['date_end'] = $_SESSION["glpi_currenttime"];
-    $release->update($val);
+    $release->updateWorkflowStatus($val);
     $release->getFromDB((int) $_POST["id"]);
     $review = new Review();
 
@@ -101,7 +101,7 @@ if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_produ
     $val['id']       = (int) $_POST["id"];
     $val['status']   = Release::FAIL;
     $val['date_end'] = $_SESSION["glpi_currenttime"];
-    $release->update($val);
+    $release->updateWorkflowStatus($val);
     $release->getFromDB((int) $_POST["id"]);
     if ($review->getFromDBByCrit(["plugin_releases_releases_id" => $_POST["id"]])) {
         $val                           = [];

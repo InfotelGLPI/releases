@@ -190,15 +190,44 @@ class Deploytask extends CommonDBTM
         $input["plugin_releases_releases_id"] = $release->getID();
         $input["entities_id"]                 = $release->fields["entities_id"];
 
-        if (isset($input["plugin_releases_deploytasks_id"])
-            && $input["plugin_releases_deploytasks_id"] != 0) {
-            $task = new self();
-            $task->getFromDB($input["plugin_releases_deploytasks_id"]);
-            $input["level"] = $task->getField("level") + 1;
-        }
+        $input = $this->checkParentTaskInput($input, $release->getID());
 
         if (!isset($input["date"])) {
             $input["date"] = $_SESSION["glpi_currenttime"];
+        }
+
+        return $input;
+    }
+
+    /**
+     * Keep the "previous task" pointer inside the release of the task.
+     *
+     * The posted id used to be loaded only to read its level and was then stored as is, so a
+     * crafted POST could hang a task under a task of another release -- and another entity.
+     * A parent that does not belong to the same release (or is the task itself) is dropped.
+     *
+     * @param array $input       Input of the add/update
+     * @param int   $releases_id Release the task belongs to
+     *
+     * @return array
+     */
+    private function checkParentTaskInput(array $input, int $releases_id): array
+    {
+        if (!isset($input["plugin_releases_deploytasks_id"])) {
+            return $input;
+        }
+
+        $parents_id = (int) $input["plugin_releases_deploytasks_id"];
+        $input["plugin_releases_deploytasks_id"] = 0;
+        $input["level"]                          = 0;
+
+        $parent = new self();
+        if ($parents_id > 0
+            && $parents_id !== (int) ($this->fields["id"] ?? 0)
+            && $parent->getFromDB($parents_id)
+            && (int) $parent->fields["plugin_releases_releases_id"] === $releases_id) {
+            $input["plugin_releases_deploytasks_id"] = $parents_id;
+            $input["level"]                          = $parent->getField("level") + 1;
         }
 
         return $input;
@@ -247,7 +276,11 @@ class Deploytask extends CommonDBTM
         // changes them (ajax/timeline.php only re-sends the row's own release id).
         unset($input["entities_id"], $input["plugin_releases_releases_id"], $input["items_id"]);
 
-        Toolbox::manageBeginAndEndPlanDates($input['plan']);
+        $input = $this->checkParentTaskInput($input, (int) $this->fields["plugin_releases_releases_id"]);
+
+        if (isset($input['plan'])) {
+            Toolbox::manageBeginAndEndPlanDates($input['plan']);
+        }
 
         //      if (isset($input["plugin_releases_deploytasks_id"]) && $input["plugin_releases_deploytasks_id"] != 0) {
         //         $task = new self();

@@ -67,6 +67,9 @@ use User;
  */
 class Release extends CommonITILObject
 {
+    /** Set by updateWorkflowStatus() only, never from any input. */
+    private bool $workflow_transition = false;
+
     public $dohistory = true;
     public static $rightname = 'plugin_releases_releases';
     protected $usenotepad = true;
@@ -793,6 +796,11 @@ class Release extends CommonITILObject
             $input['communication_type'] ?? '',
         );
         $input['target'] = json_encode($input['target']);
+        // A new release starts in the definition steps: finalization, review and closure are
+        // only reached through updateWorkflowStatus(), never from a posted value.
+        if (isset($input['status']) && (int) $input['status'] > self::TESTDEFINITION) {
+            unset($input['status']);
+        }
         // The status may be missing from the payload; read it once with a fallback rather
         // than letting null compare as lower than every constant.
         $current_status = (int) ($input["status"] ?? self::NEWRELEASE);
@@ -1197,8 +1205,41 @@ class Release extends CommonITILObject
      *
      * @return array|false
      */
+    /**
+     * Update the release through one of the workflow controllers allowed to move it past the
+     * definition steps (finalization, failure, review, conclusion).
+     *
+     * @param array $input
+     *
+     * @return bool
+     */
+    public function updateWorkflowStatus(array $input): bool
+    {
+        $this->workflow_transition = true;
+        try {
+            return $this->update($input);
+        } finally {
+            $this->workflow_transition = false;
+        }
+    }
+
     public function prepareInputForUpdate($input)
     {
+        // FINALIZE, REVIEW, CLOSED and FAIL each come with their own checks and side effects
+        // (Finalization::canFinalize(), the Review record, the failure counts, the closeRelease
+        // notification) held by front/finalization.php, front/review.form.php and Review. Any
+        // other update path (inline edition, release form) carrying one of them skipped the
+        // whole finalization and locked the release: only the definition steps are writable
+        // there, the rest goes through updateWorkflowStatus().
+        if (
+            isset($input['status'])
+            && (int) $input['status'] > self::TESTDEFINITION
+            && (int) $input['status'] !== (int) ($this->fields['status'] ?? 0)
+            && !$this->workflow_transition
+        ) {
+            unset($input['status']);
+        }
+
         // Same guard as every sub-item of the plugin (Deploytask, Risk, Rollback, Test,
         // Review): front/release.form.php checks UPDATE against the entity the row sits in
         // today and CommonDBTM::update() revalidates nothing, so a forged POST carrying

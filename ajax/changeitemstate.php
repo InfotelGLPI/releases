@@ -58,11 +58,14 @@ if (isset($_POST["value"]) && isset($_POST["plugin_releases_releases_id"]) && is
     if (in_array($item->getField('status'), Release::getClosedStatusArray(), true)) {
         exit;
     }
-    // Only accept a known status value, never a raw/out-of-range integer from the POST
+    // Only accept a known status value, never a raw/out-of-range integer from the POST.
+    // Inline edition only moves through the definition steps: finalization, review and
+    // closure belong to front/finalization.php and front/review.form.php.
     $new_status = (int) $_POST["status"];
     if (
         array_key_exists($new_status, Release::getAllStatusArray())
         && $new_status > (int) $item->getField('status')
+        && $new_status <= Release::TESTDEFINITION
     ) {
         $update = [$_POST["field"] => $_POST["value"], "id" => $item->getID(), 'status' => $new_status];
     } else {

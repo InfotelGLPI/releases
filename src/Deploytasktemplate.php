@@ -286,11 +286,8 @@ class Deploytasktemplate extends CommonDropdown
             return false;
         }
 
-        if (!empty($input["plugin_releases_deploytasktemplates_id"])) {
-            $task = new self();
-            $task->getFromDB($input["plugin_releases_deploytasktemplates_id"]);
-            $input["level"] = $task->getField("level") + 1;
-        }
+        $input = $this->checkParentTaskInput($input, (int) ($input['plugin_releases_releasetemplates_id'] ?? 0));
+
 
         return $input;
     }
@@ -306,19 +303,52 @@ class Deploytasktemplate extends CommonDropdown
     {
         $input = ReleaseTemplate::stripParentTemplateInput($input, $this);
 
-        Toolbox::manageBeginAndEndPlanDates($input['plan']);
-
-        if (!empty($input["plugin_releases_deploytasktemplates_id"])) {
-            $task = new self();
-            $task->getFromDB($input["plugin_releases_deploytasktemplates_id"]);
-            $input["level"] = $task->getField("level") + 1;
+        if (isset($input['plan'])) {
+            Toolbox::manageBeginAndEndPlanDates($input['plan']);
         }
+
+        $input = $this->checkParentTaskInput($input, (int) ($this->fields['plugin_releases_releasetemplates_id'] ?? 0));
+
 
         // update last editor if content change
         if (isset($input['update'])
             && ($uid = Session::getLoginUserID())) { // Change from task form
             $input["users_id_editor"] = $uid;
         }
+        return $input;
+    }
+
+    /**
+     * Keep the "previous task" pointer inside the release template of the task.
+     *
+     * The posted id used to be loaded only to read its level and was then stored as is, so a
+     * crafted POST could hang a task under a task of another template -- and another entity.
+     * A parent that does not belong to the same template (or is the task itself) is dropped.
+     *
+     * @param array $input        Input of the add/update
+     * @param int   $templates_id Release template the task belongs to
+     *
+     * @return array
+     */
+    private function checkParentTaskInput(array $input, int $templates_id): array
+    {
+        if (!isset($input["plugin_releases_deploytasktemplates_id"])) {
+            return $input;
+        }
+
+        $parents_id = (int) $input["plugin_releases_deploytasktemplates_id"];
+        $input["plugin_releases_deploytasktemplates_id"] = 0;
+        $input["level"]                                  = 0;
+
+        $parent = new self();
+        if ($parents_id > 0
+            && $parents_id !== (int) ($this->fields["id"] ?? 0)
+            && $parent->getFromDB($parents_id)
+            && (int) $parent->fields["plugin_releases_releasetemplates_id"] === $templates_id) {
+            $input["plugin_releases_deploytasktemplates_id"] = $parents_id;
+            $input["level"]                                  = $parent->getField("level") + 1;
+        }
+
         return $input;
     }
 

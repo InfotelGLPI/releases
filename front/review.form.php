@@ -97,7 +97,7 @@ if (isset($_POST["add"])) {
     $r->check((int) $_POST["plugin_releases_releases_id"], UPDATE);
     $input["id"]     = (int) $_POST["plugin_releases_releases_id"];
     $input["status"] = Release::CLOSED;
-    $r->update($input);
+    $r->updateWorkflowStatus($input);
     $r->getFromDBByCrit(["id" => $_POST["plugin_releases_releases_id"]]);
     if ($CFG_GLPI['use_notifications']) {
         NotificationEvent::raiseEvent('closeRelease', $r);

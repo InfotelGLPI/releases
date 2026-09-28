@@ -118,7 +118,7 @@ class Review extends CommonDBTM
             $val           = [];
             $val['id']     = $release->getID();
             $val['status'] = Release::REVIEW;
-            $release->update($val);
+            $release->updateWorkflowStatus($val);
         }
 
 
@@ -143,7 +143,7 @@ class Review extends CommonDBTM
         $val           = [];
         $val['id']     = $this->getField("plugin_releases_releases_id");
         $val['status'] = Release::FINALIZE;
-        $release->update($val);
+        $release->updateWorkflowStatus($val);
     }
 
     public function showForm($ID, $options = [])
