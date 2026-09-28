@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 10:06+0000\n"
+"POT-Creation-Date: 2026-09-28 14:16+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2026\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -23,8 +23,8 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
-#. TRANS : %d is the number of problems
-#: src/Release.php:2698
+#. TRANS : %d is the number of releases
+#: src/Release.php:2634
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -91,31 +91,31 @@ msgctxt "button"
 msgid "Add"
 msgstr "Přidat"
 
-#: src/Release.php:1568
+#: src/Release.php:1566
 msgctxt "button"
 msgid "Add a deployment task"
 msgstr "Přidat úkol nasazení"
 
-#: src/Release.php:1511
+#: src/Release.php:1509
 msgctxt "button"
 msgid "Add a followup"
 msgstr "Přidat doplňující zprávu"
 
-#: src/Change_Release.php:342
+#: src/Change_Release.php:330
 msgid "Add a release"
 msgstr "Přidat vydání"
 
-#: src/Release.php:1530
+#: src/Release.php:1528
 msgctxt "button"
 msgid "Add a risk"
 msgstr "Přidat riziko"
 
-#: src/Release.php:1549
+#: src/Release.php:1547
 msgctxt "button"
 msgid "Add a rollback"
 msgstr "Přidat vrácení"
 
-#: src/Release.php:1587
+#: src/Release.php:1585
 msgctxt "button"
 msgid "Add a test"
 msgstr "Přidat test"
@@ -133,7 +133,7 @@ msgstr[3] "Přiřazené změny"
 msgid "Associated risk"
 msgstr "Přiřazené riziko"
 
-#: src/ReleaseTemplate.php:1249
+#: templates/timeline_releasetemplate.html.twig:90
 msgid "Associated with"
 msgstr "Přiřazeno k"
 
@@ -153,13 +153,17 @@ msgstr[1] "Kategorií"
 msgstr[2] "Kategorií"
 msgstr[3] "Kategorie"
 
-#: src/Release.php:1067
+#: src/Release.php:1065
 msgid "Changes defined"
 msgstr "Změny definovány"
 
 #: templates/fields_panel.html.twig:85
 msgid "Child entities"
 msgstr "Podřízené entity"
+
+#: templates/list_group_tree.html.twig:33
+msgid "Child groups"
+msgstr ""
 
 #: templates/form_finalization.html.twig:111
 msgid "Close"
@@ -169,14 +173,14 @@ msgstr ""
 msgid "Closure of a releases"
 msgstr "Uzavření vydání"
 
-#: src/Release.php:374 templates/form_releasetemplate.html.twig:149
+#: src/Release.php:372 templates/form_releasetemplate.html.twig:149
 #: templates/form_releasetemplate.html.twig:157
 #: templates/fields_panel.html.twig:304 templates/fields_panel.html.twig:319
 #: templates/fields_panel.html.twig:331
 msgid "Communication"
 msgstr "Komunikace"
 
-#: src/Release.php:389 templates/form_releasetemplate.html.twig:163
+#: src/Release.php:387 templates/form_releasetemplate.html.twig:163
 #: templates/fields_panel.html.twig:347
 msgid "Communication type"
 msgstr "Typ komunikace"
@@ -217,7 +221,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: src/Release.php:1066
+#: src/Release.php:1064
 msgid "Dates defined"
 msgstr "Termíny jsou definovány"
 
@@ -241,14 +245,13 @@ msgstr[1] "Nasazení šablon úkolů"
 msgstr[2] "Nasazení šablon úkolů"
 msgstr[3] "Nasazení šablon úkolů"
 
-#: src/Deploytasktemplate.php:71 src/ReleaseTemplate.php:221
+#: src/Deploytasktemplate.php:71 src/ReleaseTemplate.php:213
 #: templates/form_deploytasktemplate.html.twig:68
 msgid "Deploy Task type"
 msgstr "Nasazení typu úkolu"
 
 #: src/Deploytask.php:67 src/NotificationTargetRelease.php:943
-#: src/NotificationTargetRelease.php:963 src/ReleaseTemplate.php:200
-#: src/ReleaseTemplate.php:1048 src/ReleaseTemplate.php:1049
+#: src/NotificationTargetRelease.php:963 src/ReleaseTemplate.php:192
 #: templates/filter_timeline.html.twig:54 templates/timeline.html.twig:120
 #: templates/form_finalization.html.twig:64
 msgid "Deploy task"
@@ -266,11 +269,11 @@ msgstr[1] "Nasazení typů úkolů"
 msgstr[2] "Nasazení typů úkolů"
 msgstr[3] "Nasazení typů úkolů"
 
-#: src/Release.php:1070
+#: src/Release.php:1068
 msgid "Deployment tasks in progress"
 msgstr "Probíhající úkoly nasazení"
 
-#: src/ReleaseTemplate.php:168 templates/filter_timeline.html.twig:30
+#: src/ReleaseTemplate.php:160 templates/filter_timeline.html.twig:30
 #: templates/form_testtemplate.html.twig:75
 #: templates/form_risktemplate.html.twig:63 templates/form_review.html.twig:77
 #: templates/form_rollbacktemplate.html.twig:56
@@ -300,6 +303,10 @@ msgstr "Provedeno"
 msgid "Duration"
 msgstr "Trvání"
 
+#: templates/timeline_releasetemplate.html.twig:59
+msgid "Edit"
+msgstr ""
+
 #: templates/actor_notification.html.twig:40
 #: templates/actor_notification.html.twig:42
 #: templates/actor_notification.html.twig:44
@@ -314,7 +321,7 @@ msgstr[3] "E-maily"
 msgid "Email Followup"
 msgstr "Následná komunikace e-mailem"
 
-#: src/Release.php:1074
+#: src/Release.php:1072
 msgctxt "status"
 msgid "End"
 msgstr "Konec"
@@ -332,7 +339,7 @@ msgstr[2] "Entit"
 msgstr[3] "Entity"
 
 #: src/Deploytask.php:359 src/Deploytask.php:742 src/Test.php:231
-#: src/Test.php:247 src/Release.php:1075 src/Deploytasktemplate.php:236
+#: src/Test.php:247 src/Release.php:1073 src/Deploytasktemplate.php:236
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
 #: templates/form_deploytask.html.twig:62
@@ -352,8 +359,7 @@ msgstr "Dokončení"
 msgid "Finalize"
 msgstr "Dokončit"
 
-#: src/Release.php:2151 templates/filter_timeline.html.twig:36
-#: templates/timeline.html.twig:122
+#: templates/filter_timeline.html.twig:36 templates/timeline.html.twig:122
 #, fuzzy
 msgid "Followup"
 msgid_plural "Followups"
@@ -362,7 +368,7 @@ msgstr[1] "Doplňující zpráva"
 msgstr[2] "Doplňující zpráva"
 msgstr[3] "Doplňující zpráva"
 
-#: src/Release.php:2330 templates/fields_panel.html.twig:104
+#: src/Release.php:2280 templates/fields_panel.html.twig:104
 msgid "For this change"
 msgstr "Pro tuto změnu"
 
@@ -370,7 +376,7 @@ msgstr "Pro tuto změnu"
 msgid "Group"
 msgstr ""
 
-#: src/ReleaseTemplate.php:1887
+#: src/ReleaseTemplate.php:1569
 msgid "Group in charge of the release"
 msgstr "Skupina odpovědná za uvolnění"
 
@@ -382,11 +388,15 @@ msgstr ""
 msgid "Incidents during process"
 msgstr "Incidenty během procesu"
 
-#: src/Release.php:712
+#: src/Release.php:710
 msgid "Invalid communication type"
 msgstr ""
 
-#: src/Change_Release.php:59
+#: templates/list_group_tree.html.twig:30
+msgid "Last releases"
+msgstr ""
+
+#: src/Change_Release.php:57
 msgid "Link Release/Change"
 msgid_plural "Links Release/Change"
 msgstr[0] "Odkaz Uvolnění/Změny"
@@ -415,15 +425,15 @@ msgstr "Název"
 msgid "New release"
 msgstr "Nové vydání"
 
-#: src/ReleaseTemplate.php:1299
+#: templates/timeline_releasetemplate.html.twig:110
 msgid "No data available"
 msgstr "Data nejsou k dispozici"
 
-#: src/Release.php:2702 src/Release.php:2749
+#: src/Release.php:2635
 msgid "No release found."
 msgstr "Nebylo nalezeno žádné vydání."
 
-#: src/ReleaseTemplate.php:188 templates/form_releasetemplate.html.twig:60
+#: src/ReleaseTemplate.php:180 templates/form_releasetemplate.html.twig:60
 #: templates/fields_panel.html.twig:268
 msgid "Non-working hours"
 msgstr "Mimopracovní doba"
@@ -432,22 +442,22 @@ msgstr "Mimopracovní doba"
 msgid "Not yet completed"
 msgstr "Ještě nedokončeno"
 
-#: src/Release.php:287 src/NotificationTargetRelease.php:755
+#: src/Release.php:285 src/NotificationTargetRelease.php:755
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Počet rizik"
 
-#: src/Release.php:300 src/NotificationTargetRelease.php:761
+#: src/Release.php:298 src/NotificationTargetRelease.php:761
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Počet vrácení"
 
-#: src/Release.php:327 src/NotificationTargetRelease.php:885
+#: src/Release.php:325 src/NotificationTargetRelease.php:885
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Počet úkolů"
 
-#: src/Release.php:313 src/NotificationTargetRelease.php:768
+#: src/Release.php:311 src/NotificationTargetRelease.php:768
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Počet testů"
@@ -460,11 +470,11 @@ msgstr "Datum otevření"
 msgid "Plan this task"
 msgstr "Naplánovat tento úkol"
 
-#: src/Change_Release.php:384 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:372 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Předprodukční plánované datum nasazení"
 
-#: src/Release.php:279 src/ReleaseTemplate.php:172
+#: src/Release.php:277 src/ReleaseTemplate.php:164
 msgid "Pre-production run date"
 msgstr "Předprodukční datum nasazení"
 
@@ -477,7 +487,7 @@ msgstr "Předchozí úkol"
 msgid "Private"
 msgstr ""
 
-#: src/ReleaseTemplate.php:108
+#: src/ReleaseTemplate.php:107
 msgid "Processing release"
 msgstr "Zpracování vydání"
 
@@ -485,11 +495,11 @@ msgstr "Zpracování vydání"
 msgid "Production deployment details"
 msgstr ""
 
-#: src/Change_Release.php:385 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:373 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Plánované datum nasazení"
 
-#: src/Release.php:349 src/ReleaseTemplate.php:176
+#: src/Release.php:347 src/ReleaseTemplate.php:168
 #: templates/form_finalization_confirm.html.twig:40
 msgid "Production run date"
 msgstr "Datum nasazení"
@@ -499,12 +509,12 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Dát do koše"
 
-#: src/NotificationTargetRelease.php:769 src/Change_Release.php:386
+#: src/NotificationTargetRelease.php:769 src/Change_Release.php:374
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Skutečné datum nasazení"
 
-#: front/change_release.form.php:46 setup.php:112 src/Release.php:102
+#: front/change_release.form.php:46 setup.php:110 src/Release.php:100
 #: src/NotificationTargetRelease.php:967 src/Profile.php:58
 #: templates/form_releasetemplate_menu.html.twig:32
 msgid "Release"
@@ -514,15 +524,15 @@ msgstr[1] "Vydání"
 msgstr[2] "Vydání"
 msgstr[3] "Vydání"
 
-#: src/Release.php:2552 src/ReleaseTemplate.php:1337
+#: templates/timeline_releasetemplate.html.twig:30
 msgid "Release actions details"
 msgstr "Podrobnosti o akcích uvolnění"
 
-#: src/Change_Release.php:383 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:371 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Oblast uvolnění"
 
-#: src/Release.php:1065
+#: src/Release.php:1063
 msgid "Release area defined"
 msgstr "Definovaná oblast uvolnění"
 
@@ -530,7 +540,7 @@ msgstr "Definovaná oblast uvolnění"
 msgid "Release finalization"
 msgstr "Dokončení vydání"
 
-#: src/ReleaseTemplate.php:84
+#: src/ReleaseTemplate.php:83
 msgid "Release template"
 msgid_plural "Release templates"
 msgstr[0] "Šablona vydání"
@@ -538,9 +548,13 @@ msgstr[1] "Šablon vydání"
 msgstr[2] "Šablon vydání"
 msgstr[3] "Šablony vydání"
 
-#: src/Release.php:2737
+#: src/Release.php:2660
 msgid "Releases on linked items"
 msgstr "Vydání u propojených položek"
+
+#: templates/timeline_releasetemplate.html.twig:44
+msgid "Requester"
+msgstr ""
 
 #: src/NotificationTargetRelease.php:857
 msgid "Requester group"
@@ -549,10 +563,6 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
-
-#: src/Release.php:2155
-msgid "Reset display options"
-msgstr ""
 
 #: templates/footer.html.twig:129 templates/footer.html.twig:131
 msgctxt "button"
@@ -567,7 +577,7 @@ msgstr[1] "Recenzí"
 msgstr[2] "Recenzí"
 msgstr[3] "Recenze"
 
-#: src/Release.php:1073
+#: src/Release.php:1071
 msgid "Reviewed"
 msgstr "Recenzováno"
 
@@ -600,13 +610,13 @@ msgstr[1] "Typů rizika"
 msgstr[2] "Typů rizika"
 msgstr[3] "Typy rizika"
 
-#: src/Release.php:1068
+#: src/Release.php:1066
 msgid "Risks defined"
 msgstr "Definovaná rizika"
 
 #: src/NotificationTargetRelease.php:788 src/NotificationTargetRelease.php:789
 #: src/NotificationTargetRelease.php:946 src/NotificationTargetRelease.php:966
-#: src/Rollback.php:54 src/ReleaseTemplate.php:196
+#: src/Rollback.php:54 src/ReleaseTemplate.php:188
 #: templates/filter_timeline.html.twig:48 templates/timeline.html.twig:118
 #: templates/form_finalization.html.twig:55
 msgid "Rollback"
@@ -624,7 +634,7 @@ msgstr[1] "Šablon vrácení"
 msgstr[2] "Šablon vrácení"
 msgstr[3] "Šablony vrácení"
 
-#: src/Release.php:1069
+#: src/Release.php:1067
 msgid "Rollbacks defined"
 msgstr "Definovaná vrácení zpět"
 
@@ -636,7 +646,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Uložit"
 
-#: src/Release.php:357 src/Change_Release.php:387 src/ReleaseTemplate.php:180
+#: src/Release.php:355 src/Change_Release.php:375 src/ReleaseTemplate.php:172
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
@@ -644,7 +654,7 @@ msgstr "Uložit"
 msgid "Service shutdown"
 msgstr "Vypnutí služby"
 
-#: src/Release.php:365 src/ReleaseTemplate.php:184
+#: src/Release.php:363 src/ReleaseTemplate.php:176
 #: templates/form_releasetemplate.html.twig:132
 #: templates/fields_panel.html.twig:284
 msgid "Service shutdown details"
@@ -693,7 +703,7 @@ msgid "Technical Support Document"
 msgstr "Dokument technické podpory"
 
 #: src/Test.php:56 src/NotificationTargetRelease.php:944
-#: src/NotificationTargetRelease.php:964 src/ReleaseTemplate.php:192
+#: src/NotificationTargetRelease.php:964 src/ReleaseTemplate.php:184
 #: templates/filter_timeline.html.twig:60 templates/timeline.html.twig:114
 #: templates/form_finalization.html.twig:75
 msgid "Test"
@@ -721,7 +731,7 @@ msgstr[1] "Typů testu"
 msgstr[2] "Typů testu"
 msgstr[3] "Typy testu"
 
-#: src/Release.php:1071
+#: src/Release.php:1069
 msgid "Tests in progress"
 msgstr "Probíhající testy"
 
@@ -746,7 +756,7 @@ msgstr "Nadpis"
 msgid "To do"
 msgstr "Udělat"
 
-#: src/Release.php:1072
+#: src/Release.php:1070
 msgid "To finalized"
 msgstr "K dokončení"
 
