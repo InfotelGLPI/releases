@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 14:45+0000\n"
+"POT-Creation-Date: 2026-10-02 10:16+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Maykon Henrique Facincani <facincani.maykon@gmail.com>, "
 "2022\n"
@@ -459,7 +459,7 @@ msgstr "Data de abertura"
 msgid "Plan this task"
 msgstr "Planejar essa tarefa"
 
-#: src/Change_Release.php:372 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:373 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Data planejada para Pré-produção"
 
@@ -484,7 +484,7 @@ msgstr "Processando liberação"
 msgid "Production deployment details"
 msgstr ""
 
-#: src/Change_Release.php:373 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:374 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Data planejada de produção"
 
@@ -498,7 +498,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Colocar na lixeira"
 
-#: src/NotificationTargetRelease.php:769 src/Change_Release.php:374
+#: src/NotificationTargetRelease.php:769 src/Change_Release.php:375
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Data real de execução em produção"
@@ -516,7 +516,7 @@ msgstr[2] "Liberações"
 msgid "Release actions details"
 msgstr "Detalhes das ações da liberação"
 
-#: src/Change_Release.php:371 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:372 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Área da liberação"
 
@@ -627,7 +627,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Salvar"
 
-#: src/Release.php:358 src/Change_Release.php:375 src/ReleaseTemplate.php:172
+#: src/Release.php:358 src/Change_Release.php:376 src/ReleaseTemplate.php:172
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240

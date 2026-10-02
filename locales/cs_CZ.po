@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 14:45+0000\n"
+"POT-Creation-Date: 2026-10-02 10:16+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2026\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -470,7 +470,7 @@ msgstr "Datum otevření"
 msgid "Plan this task"
 msgstr "Naplánovat tento úkol"
 
-#: src/Change_Release.php:372 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:373 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Předprodukční plánované datum nasazení"
 
@@ -495,7 +495,7 @@ msgstr "Zpracování vydání"
 msgid "Production deployment details"
 msgstr ""
 
-#: src/Change_Release.php:373 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:374 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Plánované datum nasazení"
 
@@ -509,7 +509,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Dát do koše"
 
-#: src/NotificationTargetRelease.php:769 src/Change_Release.php:374
+#: src/NotificationTargetRelease.php:769 src/Change_Release.php:375
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Skutečné datum nasazení"
@@ -528,7 +528,7 @@ msgstr[3] "Vydání"
 msgid "Release actions details"
 msgstr "Podrobnosti o akcích uvolnění"
 
-#: src/Change_Release.php:371 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:372 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Oblast uvolnění"
 
@@ -646,7 +646,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Uložit"
 
-#: src/Release.php:358 src/Change_Release.php:375 src/ReleaseTemplate.php:172
+#: src/Release.php:358 src/Change_Release.php:376 src/ReleaseTemplate.php:172
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240

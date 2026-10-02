@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 14:45+0000\n"
+"POT-Creation-Date: 2026-10-02 10:16+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Michael Schieferer, 2022\n"
 "Language-Team: German (Germany) (https://www.transifex.com/infotelGLPI/"
@@ -445,7 +445,7 @@ msgstr "Erstellungsdatum"
 msgid "Plan this task"
 msgstr "Aufgabe einplanen"
 
-#: src/Change_Release.php:372 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:373 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Vorproduktion geplantes Datum"
 
@@ -470,7 +470,7 @@ msgstr "Verarbeite Release"
 msgid "Production deployment details"
 msgstr ""
 
-#: src/Change_Release.php:373 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:374 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Geplantes Datum der Produktivstellung"
 
@@ -484,7 +484,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "In Papierkorb legen"
 
-#: src/NotificationTargetRelease.php:769 src/Change_Release.php:374
+#: src/NotificationTargetRelease.php:769 src/Change_Release.php:375
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Tatsächliches Datum der Produktivstellung"
@@ -501,7 +501,7 @@ msgstr[1] "Releases"
 msgid "Release actions details"
 msgstr "Details der Release-Aktionen"
 
-#: src/Change_Release.php:371 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:372 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Releasebereich"
 
@@ -604,7 +604,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Speichern"
 
-#: src/Release.php:358 src/Change_Release.php:375 src/ReleaseTemplate.php:172
+#: src/Release.php:358 src/Change_Release.php:376 src/ReleaseTemplate.php:172
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
