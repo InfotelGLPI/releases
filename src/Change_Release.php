@@ -357,7 +357,8 @@ class Change_Release extends CommonDBRelation
                     'id'                 => $d["linkid"],
                     'name'               => "<a href='" . htmlspecialchars($link) . "'>" . $name . "</a>",
                     'status'             => "<span class='status'>" . Release::getStatusIcon($d["status"]) . Release::getStatus($d["status"]) . "</span>",
-                    'content'            => RichText::getTextFromHtml($d["content"]),
+                    // Fully decoded plain text, escaped once by the default formatter below
+                    'content'            => RichText::getTextFromHtml($d["content"], false),
                     'date_preproduction' => $d["date_preproduction"],
                     'date_production'    => $d["date_production"],
                     'real_date_release'  => $real_date,
@@ -378,9 +379,9 @@ class Change_Release extends CommonDBRelation
             $formatters = [
                 'name'               => 'raw_html',
                 'status'             => 'raw_html',
-                // getTextFromHtml already returns escaped plain text; raw_html avoids
-                // the double-encoding that the default formatter would introduce.
-                'content'            => 'raw_html',
+                // No raw_html on content: getTextFromHtml() does NOT escape its output. It
+                // strips the tags then decodes the entities, so a "&lt;img onerror&gt;" typed
+                // in the editor came back as a live tag (stored XSS).
                 'date_preproduction' => 'datetime',
                 'date_production'    => 'datetime',
                 'real_date_release'  => 'datetime',
