@@ -2,23 +2,24 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Kaya Zeren <kayazeren@gmail.com>, 2026
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 14:51+0000\n"
+"POT-Creation-Date: 2026-10-02 10:16+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/teams/12376/tr_TR/)\n"
+"Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
+"teams/12376/tr_TR/)\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. TRANS : %d is the number of releases
@@ -443,7 +444,7 @@ msgstr "Açılış tarihi"
 msgid "Plan this task"
 msgstr "Bu görevi planla"
 
-#: src/Change_Release.php:372 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:373 templates/fields_panel.html.twig:136
 msgid "Pre-production planned date"
 msgstr "Planlanan üretim öncesi tarihi"
 
@@ -468,7 +469,7 @@ msgstr "Sürüm işleniyor"
 msgid "Production deployment details"
 msgstr "Üretim dağıtımı bilgileri"
 
-#: src/Change_Release.php:373 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:374 templates/fields_panel.html.twig:152
 msgid "Production planned date"
 msgstr "Planlanan üretim zamanı"
 
@@ -482,7 +483,7 @@ msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Çöpe at"
 
-#: src/NotificationTargetRelease.php:769 src/Change_Release.php:374
+#: src/NotificationTargetRelease.php:769 src/Change_Release.php:375
 #: templates/form_review.html.twig:50
 msgid "Real production run date"
 msgstr "Gerçek üretim çalışma tarihi"
@@ -499,7 +500,7 @@ msgstr[1] "Sürümler"
 msgid "Release actions details"
 msgstr "Sürüm işlemleri bilgileri"
 
-#: src/Change_Release.php:371 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:372 templates/form_releasetemplate.html.twig:73
 msgid "Release area"
 msgstr "Sürüm bölgesi"
 
@@ -601,7 +602,7 @@ msgctxt "button"
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/Release.php:358 src/Change_Release.php:375 src/ReleaseTemplate.php:172
+#: src/Release.php:358 src/Change_Release.php:376 src/ReleaseTemplate.php:172
 #: templates/form_releasetemplate.html.twig:116
 #: templates/form_releasetemplate.html.twig:124
 #: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
