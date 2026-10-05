@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:16+0000\n"
+"POT-Creation-Date: 2026-10-05 15:27+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -176,7 +176,7 @@ msgstr "İletişim"
 msgid "Communication type"
 msgstr "İletişim türü"
 
-#: templates/form_review.html.twig:154
+#: templates/form_review.html.twig:153
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "İncelemeyi sonlandır"
@@ -596,7 +596,7 @@ msgstr "Tanımlanmış geri almalar"
 
 #: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
 #: templates/footer.html.twig:159 templates/footer.html.twig:161
-#: templates/profile.html.twig:34 templates/actor_notification.html.twig:52
+#: templates/profile.html.twig:34 templates/actor_notification.html.twig:51
 #: templates/form_deploytask.html.twig:401 templates/form_test.html.twig:243
 msgctxt "button"
 msgid "Save"

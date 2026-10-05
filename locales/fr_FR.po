@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:16+0000\n"
+"POT-Creation-Date: 2026-10-05 15:27+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/"
@@ -182,7 +182,7 @@ msgstr "Communication"
 msgid "Communication type"
 msgstr "Type de communication"
 
-#: templates/form_review.html.twig:154
+#: templates/form_review.html.twig:153
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "Terminer la revue"
@@ -619,7 +619,7 @@ msgstr "Retours en arrière définis"
 
 #: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
 #: templates/footer.html.twig:159 templates/footer.html.twig:161
-#: templates/profile.html.twig:34 templates/actor_notification.html.twig:52
+#: templates/profile.html.twig:34 templates/actor_notification.html.twig:51
 #: templates/form_deploytask.html.twig:401 templates/form_test.html.twig:243
 msgctxt "button"
 msgid "Save"

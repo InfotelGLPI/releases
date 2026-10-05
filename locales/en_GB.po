@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Release plugin 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 10:16+0000\n"
+"POT-Creation-Date: 2026-10-05 15:27+0000\n"
 "PO-Revision-Date: 2020-07-31 16:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -173,7 +173,7 @@ msgstr "Communication"
 msgid "Communication type"
 msgstr "Communication type"
 
-#: templates/form_review.html.twig:154
+#: templates/form_review.html.twig:153
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "Conclude the review"
@@ -594,7 +594,7 @@ msgstr "Rollbacks defined"
 
 #: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
 #: templates/footer.html.twig:159 templates/footer.html.twig:161
-#: templates/profile.html.twig:34 templates/actor_notification.html.twig:52
+#: templates/profile.html.twig:34 templates/actor_notification.html.twig:51
 #: templates/form_deploytask.html.twig:401 templates/form_test.html.twig:243
 msgctxt "button"
 msgid "Save"
