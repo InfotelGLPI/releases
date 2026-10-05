@@ -36,8 +36,8 @@ use GlpiPlugin\Releases\Test;
 
 Html::popHeader(__("Release finalization", 'releases'), $_SERVER['PHP_SELF']);
 
-// Mutating branches only accept POST: the finalize/fail forms are method=post and
-// carry the _glpi_csrf_token validated by the core CheckCsrfListener. Reading $_POST
+// Mutating branches only accept POST: the finalize/fail forms are method=post, whose
+// origin is validated by the core CheckCsrfListener. Reading $_POST
 // (not $_REQUEST) prevents these state changes from being triggered by a forged GET.
 // Dispatch on the submit button name (finalize/failed): both forms always emit the
 // date_production field, so keying on field presence would route a "failed" submit

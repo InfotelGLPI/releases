@@ -34,12 +34,13 @@ use GlpiPlugin\Releases\ReleaseTemplate;
 use GlpiPlugin\Releases\Risktemplate;
 use GlpiPlugin\Releases\Rollbacktemplate;
 use GlpiPlugin\Releases\Testtemplate;
+use GlpiPlugin\Releases\Release;
 
 if (strpos($_SERVER['PHP_SELF'], "viewsubitemtemplate.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkRight('plugin_releases_releases', UPDATE);
+Session::checkRight(Release::$rightname, UPDATE);
 
 global $CFG_GLPI;
 Html::header_nocache();

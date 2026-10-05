@@ -46,15 +46,15 @@ use Toolbox;
 class ReleaseTemplate_Item extends CommonDBRelation
 {
     // From CommonDBRelation
-    public static $itemtype_1 = ReleaseTemplate::class;
-    public static $items_id_1 = 'plugin_releases_releasetemplates_id';
+    public static ?string $itemtype_1 = ReleaseTemplate::class;
+    public static ?string $items_id_1 = 'plugin_releases_releasetemplates_id';
 
-    public static $itemtype_2         = 'itemtype';
-    public static $items_id_2         = 'items_id';
+    public static ?string $itemtype_2         = 'itemtype';
+    public static ?string $items_id_2         = 'items_id';
     // Same contract as Release_Item: CommonDBRelation must apply the view right and
     // checkEntity() on the linked asset, which is an itemtype/items_id pair coming
     // straight from the client.
-    public static $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
+    public static int $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
     public static function getIcon()
     {
@@ -303,7 +303,7 @@ class ReleaseTemplate_Item extends CommonDBRelation
                     return self::createTabEntry(ReleaseTemplate::getTypeName(Session::getPluralNumber()), $nb);
 
                 default:
-                    if (Session::haveRight("plugin_releases_releases", READ)) {
+                    if (Session::haveRight(Release::$rightname, READ)) {
                         if ($_SESSION['glpishow_count_on_tabs']) {
                             // Direct one
                             $nb = self::countForItem($item);

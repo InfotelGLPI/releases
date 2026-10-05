@@ -36,7 +36,7 @@ use GlpiPlugin\Releases\Risk;
 use GlpiPlugin\Releases\Rollback;
 use GlpiPlugin\Releases\Test;
 
-Session::checkRight('plugin_releases_releases', UPDATE);
+Session::checkRight(Release::$rightname, UPDATE);
 
 if (($_POST['action'] ?? null) === 'done_fail') {
     header("Content-Type: application/json; charset=UTF-8");
@@ -195,7 +195,7 @@ if (($_POST['action'] ?? null) === 'done_fail') {
         case "change_task_state":
             header("Content-Type: application/json; charset=UTF-8");
             // Toggling a task state mutates data; require POST so the
-            // CheckCsrfListener enforces the CSRF token (it only validates
+            // CheckCsrfListener validates the request origin (it only checks
             // non-GET requests, so a GET-routed switch action bypasses it).
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new BadRequestHttpException();

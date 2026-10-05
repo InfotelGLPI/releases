@@ -40,7 +40,7 @@ use Session;
  */
 class Test extends CommonDBTM
 {
-    public static $rightname = 'plugin_releases_tests';
+    public static string $rightname = 'plugin_releases_tests';
     public const TODO = 1; // todo
     public const DONE = 2; // done
     public const FAIL = 3; // Failed

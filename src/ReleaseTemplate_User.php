@@ -39,10 +39,10 @@ use User;
 class ReleaseTemplate_User extends CommonITILActor
 {
     // From CommonDBRelation
-    public static $itemtype_1 = ReleaseTemplate::class;
-    public static $items_id_1 = 'plugin_releases_releasetemplates_id';
-    public static $itemtype_2 = 'User';
-    public static $items_id_2 = 'users_id';
+    public static ?string $itemtype_1 = ReleaseTemplate::class;
+    public static ?string $items_id_1 = 'plugin_releases_releasetemplates_id';
+    public static ?string $itemtype_2 = 'User';
+    public static ?string $items_id_2 = 'users_id';
 
     public function post_addItem()
     {

@@ -34,7 +34,7 @@ if (strpos($_SERVER['PHP_SELF'], "changeTarget.php")) {
     Html::header_nocache();
 }
 
-Session::checkRight('plugin_releases_releases', UPDATE);
+Session::checkRight(Release::$rightname, UPDATE);
 
 if (isset($_POST["type"]) && isset($_POST["current_type"])) {
     $values = [];

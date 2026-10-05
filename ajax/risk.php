@@ -36,7 +36,7 @@ use GlpiPlugin\Releases\Risktemplate;
 header("Content-Type: application/json; charset=UTF-8");
 Html::header_nocache();
 
-Session::checkRight('plugin_releases_releases', UPDATE);
+Session::checkRight(Release::$rightname, UPDATE);
 
 $_POST['itemtype'] = Release::class;
 

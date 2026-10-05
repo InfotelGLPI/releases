@@ -39,7 +39,7 @@ use Session;
  */
 class Rollback extends CommonDBTM
 {
-    public static $rightname = 'plugin_releases_rollbacks';
+    public static string $rightname = 'plugin_releases_rollbacks';
     public const TODO = 1; // todo
     public const DONE = 2; // done
 

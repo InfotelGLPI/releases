@@ -136,7 +136,6 @@
                                         onclick="return confirm('{{ __('Confirm the final deletion?')|e('js') }}');">
                                     <i class="ti ti-trash"></i>
                                 </button>
-                                <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
                             </form>
                         {% endif %}
                     </span>
@@ -153,6 +152,5 @@
         <button type="submit" name="conclude" class="btn btn-primary">
             {{ _x('button', 'Conclude the review', 'releases') }}
         </button>
-        <input type="hidden" name="_glpi_csrf_token" value="{{ csrf_token() }}"/>
     </form>
 {% endif %}

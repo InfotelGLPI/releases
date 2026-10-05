@@ -40,8 +40,8 @@ use Html;
  */
 class Finalization extends CommonDBTM
 {
-    public $dohistory = true;
-    public static $rightname = 'plugin_releases_releases';
+    public bool $dohistory = true;
+    public static string $rightname = 'plugin_releases_releases';
     public const TODO = 1; // todo
     public const DONE = 2; // done
     public const FAIL = 3; // Failed

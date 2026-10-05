@@ -46,11 +46,11 @@ use Toolbox;
 class Change_Release extends CommonDBRelation
 {
     // From CommonDBRelation
-    public static $itemtype_1 = 'Change';
-    public static $items_id_1 = 'changes_id';
+    public static ?string $itemtype_1 = 'Change';
+    public static ?string $items_id_1 = 'changes_id';
 
-    public static $itemtype_2 = Release::class;
-    public static $items_id_2 = 'plugin_releases_releases_id';
+    public static ?string $itemtype_2 = Release::class;
+    public static ?string $items_id_2 = 'plugin_releases_releases_id';
 
     public static function getTypeName($nb = 0)
     {
@@ -356,7 +356,7 @@ class Change_Release extends CommonDBRelation
                     'itemtype'           => self::class,
                     'id'                 => $d["linkid"],
                     'name'               => "<a href='" . htmlspecialchars($link) . "'>" . $name . "</a>",
-                    'status'             => "<span class='status'>" . Release::getStatusIcon($d["status"]) . Release::getStatus($d["status"]) . "</span>",
+                    'status'             => "<span class='status'>" . Release::getStatusIcon($d["status"], false) . Release::getStatus($d["status"]) . "</span>",
                     // Fully decoded plain text, escaped once by the default formatter below
                     'content'            => RichText::getTextFromHtml($d["content"], false),
                     'date_preproduction' => $d["date_preproduction"],

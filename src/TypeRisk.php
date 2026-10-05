@@ -51,8 +51,8 @@ class TypeRisk extends CommonTreeDropdown
         return _n('Risk type', 'Risk types', $nb, 'releases');
     }
 
-    public static $rightname         = 'plugin_releases_risks';
-    public $can_be_translated = true;
+    public static string $rightname         = 'plugin_releases_risks';
+    public bool $can_be_translated = true;
 
     /**
      * @param $ID

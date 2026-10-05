@@ -408,7 +408,7 @@ function plugin_releases_getDropdown()
  */
 function plugin_releases_AssignToTicket($types)
 {
-    if (Session::haveRight("plugin_releases_releases", "1")
+    if (Session::haveRight(Release::$rightname, "1")
        && isset($_REQUEST["_itemtype"]) && $_REQUEST["_itemtype"] == "Ticket") {
         $types[Release::class] = Release::getTypeName(2);
     }

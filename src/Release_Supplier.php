@@ -43,10 +43,10 @@ use Supplier;
 class Release_Supplier extends CommonITILActor
 {
     // From CommonDBRelation
-    public static $itemtype_1 = Release::class;
-    public static $items_id_1 = 'plugin_releases_releases_id';
-    public static $itemtype_2 = 'Supplier';
-    public static $items_id_2 = 'suppliers_id';
+    public static ?string $itemtype_1 = Release::class;
+    public static ?string $items_id_1 = 'plugin_releases_releases_id';
+    public static ?string $itemtype_2 = 'Supplier';
+    public static ?string $items_id_2 = 'suppliers_id';
 
     /**
      * Print the object user form for notification

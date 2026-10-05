@@ -43,7 +43,7 @@ use Toolbox;
  */
 class Review extends CommonDBTM
 {
-    public static $rightname = 'plugin_releases_releases';
+    public static string $rightname = 'plugin_releases_releases';
 
     public static function getIcon()
     {

@@ -30,8 +30,7 @@
 /**
  * ReleaseTemplate timeline add/edit behaviours (externalized from
  * showTimelineForm / showTimeLine). Uses jQuery .load() so the embedded
- * richtext/select2 init scripts of the loaded subitem form execute; the
- * global jQuery ajaxSetup adds the GLPI CSRF token to the POST.
+ * richtext/select2 init scripts of the loaded subitem form execute.
  */
 (function () {
     "use strict";

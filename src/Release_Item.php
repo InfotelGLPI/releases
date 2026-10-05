@@ -48,12 +48,12 @@ use Toolbox;
 class Release_Item extends CommonDBRelation
 {
     // From CommonDBRelation
-    public static $itemtype_1 = Release::class;
-    public static $items_id_1 = 'plugin_releases_releases_id';
+    public static ?string $itemtype_1 = Release::class;
+    public static ?string $items_id_1 = 'plugin_releases_releases_id';
 
-    public static $itemtype_2         = 'itemtype';
-    public static $items_id_2         = 'items_id';
-    public static $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
+    public static ?string $itemtype_2         = 'itemtype';
+    public static ?string $items_id_2         = 'items_id';
+    public static int $checkItem_2_Rights = self::HAVE_VIEW_RIGHT_ON_ITEM;
 
     /**
      * Release just created from a template by Release::post_addItem(): the items of the
@@ -366,7 +366,7 @@ class Release_Item extends CommonDBRelation
                     // The default branch below already gates on the plugin right; these
                     // three did not, so the tab and its counter appeared — and disclosed
                     // release activity — to sessions holding no right on the plugin.
-                    if (!Session::haveRight("plugin_releases_releases", READ)) {
+                    if (!Session::haveRight(Release::$rightname, READ)) {
                         return '';
                     }
                     if ($_SESSION['glpishow_count_on_tabs']) {
@@ -381,7 +381,7 @@ class Release_Item extends CommonDBRelation
                         $types[] = $key;
                     }
                     if (in_array($item->getType(), $types)
-                    && Session::haveRight("plugin_releases_releases", READ)) {
+                    && Session::haveRight(Release::$rightname, READ)) {
                         if ($_SESSION['glpishow_count_on_tabs']) {
                             // Direct one
                             $nb = self::countForItem($item);

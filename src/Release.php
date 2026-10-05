@@ -70,13 +70,13 @@ class Release extends CommonITILObject
     /** Set by updateWorkflowStatus() only, never from any input. */
     private bool $workflow_transition = false;
 
-    public $dohistory = true;
-    public static $rightname = 'plugin_releases_releases';
-    protected $usenotepad = true;
+    public bool $dohistory = true;
+    public static string $rightname = 'plugin_releases_releases';
+    protected bool $usenotepad = true;
     public static $types = [];
-    public $userlinkclass = Release_User::class;
-    public $grouplinkclass = Group_Release::class;
-    public $supplierlinkclass = Release_Supplier::class;
+    public string $userlinkclass = Release_User::class;
+    public string $grouplinkclass = Group_Release::class;
+    public string $supplierlinkclass = Release_Supplier::class;
 
     // STATUS
 
@@ -483,7 +483,7 @@ class Release extends CommonITILObject
         switch ($field) {
             case 'status':
                 //            $var = "<span class='status'>";
-                $var = self::getStatusIcon($values["status"]);
+                $var = self::getStatusIcon($values["status"], false);
                 $var .= self::getStatus($values["status"]);
                 //            $var .= "</span>";
                 return $var;
@@ -1091,11 +1091,11 @@ class Release extends CommonITILObject
      * @since 9.3
      *
      */
-    public static function getStatusIcon($status)
+    public static function getStatusIcon($status, bool $with_name = true)
     {
-        $class = static::getStatusClass($status);
-        $label = static::getStatus($status);
-        return "<i class='$class' title='$label'></i>";
+        // Same signature as CommonITILObject::getStatusIcon() (GLPI 12), whose markup is reused:
+        // the label is escaped and, with $with_name, exposed to assistive technologies
+        return parent::getStatusIcon($status, $with_name);
     }
 
     /**
@@ -2180,7 +2180,7 @@ class Release extends CommonITILObject
 
         //checks rights
         $restrict_fup = $restrict_task = [];
-        if (!Session::haveRight("followup", ITILFollowup::SEEPRIVATE)) {
+        if (!Session::haveRight(\ITILFollowup::$rightname, ITILFollowup::SEEPRIVATE)) {
             $restrict_fup = [
                 'OR' => [
                     'is_private' => 0,
@@ -2495,7 +2495,7 @@ class Release extends CommonITILObject
      */
     public function canReopen()
     {
-        return Session::haveRight('plugin_releases_releases', CREATE)
+        return Session::haveRight(Release::$rightname, CREATE)
             && in_array($this->fields["status"], $this->getClosedStatusArray());
     }
 
@@ -2776,7 +2776,7 @@ class Release extends CommonITILObject
             return null;
         }
         $rand        = mt_rand();
-        $showprivate = Session::haveRight('followup', ITILFollowup::SEEPRIVATE);
+        $showprivate = Session::haveRight(\ITILFollowup::$rightname, ITILFollowup::SEEPRIVATE);
 
         $entry = [
             'itemtype' => static::class,

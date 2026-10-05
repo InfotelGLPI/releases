@@ -51,8 +51,8 @@ class TypeDeployTask extends CommonTreeDropdown
         return _n('Deploy task type', 'Deploy task types', $nb, 'releases');
     }
 
-    public static $rightname         = 'plugin_releases_tasks';
-    public $can_be_translated = true;
+    public static string $rightname         = 'plugin_releases_tasks';
+    public bool $can_be_translated = true;
 
     /**
      * @param $ID

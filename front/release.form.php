@@ -156,7 +156,7 @@ if (isset($_POST["add"])) {
 } elseif (isset($_POST['delete_document'])) {
 
     // Detaching a document mutates state: read it from POST only so the
-    // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
+    // CheckCsrfListener validates the request origin (it checks non-GET requests
     // only). A GET-triggered detach would otherwise be forgeable.
     // The timeline attaches its documents to the subitems, not to the release itself,
     // so the posted itemtype must be whitelisted before it reaches the query.

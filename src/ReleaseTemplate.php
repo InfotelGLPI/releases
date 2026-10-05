@@ -56,13 +56,13 @@ use User;
 class ReleaseTemplate extends CommonDropdown
 {
     // From CommonDBTM
-    public $dohistory         = true;
-    public $can_be_translated = true;
+    public bool $dohistory         = true;
+    public bool $can_be_translated = true;
     public $userlinkclass     = ReleaseTemplate_User::class; //todo chnage after table create for template
     public $grouplinkclass    = Group_ReleaseTemplate::class;//todo chnage after table create for template
     public $supplierlinkclass = ReleaseTemplate_Supplier::class;//todo chnage after table create for template
 
-    public static $rightname = 'plugin_releases_releases';
+    public static string $rightname = 'plugin_releases_releases';
 
     // Propriétés attendues par les plugins qui itèrent sur les CommonITILObject
     // (ex. metademands) — Release n'utilise pas de champs ITIL template
@@ -941,7 +941,7 @@ class ReleaseTemplate extends CommonDropdown
      */
     public function canReopen()
     {
-        return Session::haveRight('plugin_releases_releases', CREATE)
+        return Session::haveRight(Release::$rightname, CREATE)
                && in_array($this->fields["status"], $this->getClosedStatusArray());
     }
 
@@ -1158,7 +1158,7 @@ class ReleaseTemplate extends CommonDropdown
 
     public function canAddFollowups()
     {
-        return Session::haveRightsOr("plugin_releases_releases", [CREATE, UPDATE]);
+        return Session::haveRightsOr(Release::$rightname, [CREATE, UPDATE]);
     }
 
     public static function getDefaultValues($entity = 0)
@@ -2192,7 +2192,7 @@ class ReleaseTemplate extends CommonDropdown
         //only for active ldap and corresponding right
         $ldap_methods = getAllDataFromTable('glpi_authldaps', ['is_active' => 1]);
         if (count($ldap_methods)
-            && Session::haveRight('user', User::IMPORTEXTAUTHUSERS)) {
+            && Session::haveRight(\User::$rightname, User::IMPORTEXTAUTHUSERS)) {
             $params['ldap_import'] = true;
         }
 

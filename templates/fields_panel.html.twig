@@ -100,7 +100,7 @@
                 {{ fields.dropdownField(
                     'Change',
                     'changes_id',
-                    params['changes_id'],
+                    params['changes_id'] ?? 0,
                     __('For this change', 'releases'),
                     field_options|merge({
                         'hide_if_no_elements': true,

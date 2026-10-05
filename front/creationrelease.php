@@ -30,7 +30,7 @@
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\ReleaseTemplate;
 
-Session::checkRight('plugin_releases_releases', CREATE);
+Session::checkRight(Release::$rightname, CREATE);
 
 $item = new ReleaseTemplate();
 

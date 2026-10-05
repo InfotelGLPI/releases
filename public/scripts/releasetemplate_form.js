@@ -25,8 +25,6 @@
  * --------------------------------------------------------------------------
  */
 
-/* global getAjaxCsrfToken */
-
 /**
  * ReleaseTemplate main form behaviours (externalized from showForm).
  * All handlers are delegated at document level because GLPI dropdowns are
@@ -35,10 +33,9 @@
 (function () {
     "use strict";
 
-    function csrfHeaders() {
+    function postHeaders() {
         return {
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "X-Glpi-Csrf-Token": (typeof getAjaxCsrfToken === "function") ? getAjaxCsrfToken() : ""
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
         };
     }
 
@@ -71,7 +68,7 @@
         }
         fetch(url, {
             method: "POST",
-            headers: csrfHeaders(),
+            headers: postHeaders(),
             body: targetsBody(type, currentType, values)
         }).then(function (r) {
             return r.text();

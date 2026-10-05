@@ -75,7 +75,7 @@ if (isset($_POST["add"])) {
 
 } elseif (isset($_POST["delete_document"])) {
     // Detaching a document mutates state: read it from POST only so the
-    // CheckCsrfListener enforces the CSRF token (it validates non-GET requests
+    // CheckCsrfListener validates the request origin (it checks non-GET requests
     // only). A GET-triggered detach would otherwise be forgeable.
     $d = new Document_Item();
     // Fail closed when no such link exists: without this guard the object stays empty

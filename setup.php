@@ -82,7 +82,7 @@ function plugin_init_releases()
             'planning_types' => true,
         ]);
 
-        if (Session::haveRight("plugin_releases_releases", READ)) {
+        if (Session::haveRight(Release::$rightname, READ)) {
             $PLUGIN_HOOKS[Hooks::MENU_TOADD]['releases'] = ['helpdesk' => Release::class];
         }
     }
@@ -115,8 +115,8 @@ function plugin_version_releases()
         'minGlpiVersion' => '11.0',// For compatibility / no install
         'requirements'   => [
             'glpi' => [
-                'min' => '11.0',
-                'max' => '12.0',
+                'min' => '11.0.99',
+                'max' => '12.0.99',
             ],
         ],
     ];

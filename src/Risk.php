@@ -39,7 +39,7 @@ use Session;
  */
 class Risk extends CommonDBTM
 {
-    public static $rightname = 'plugin_releases_risks';
+    public static string $rightname = 'plugin_releases_risks';
     public const TODO = 1; // todo
     public const DONE = 2; // done
 

@@ -39,7 +39,7 @@ if (strpos($_SERVER['PHP_SELF'], "viewsubitem.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkRight('plugin_releases_releases', UPDATE);
+Session::checkRight(Release::$rightname, UPDATE);
 
 global $CFG_GLPI;
 Html::header_nocache();

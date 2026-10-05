@@ -46,10 +46,10 @@ use User;
 class Deploytasktemplate extends CommonDropdown
 {
     // From CommonDBTM
-    public $dohistory = true;
-    public $can_be_translated = true;
+    public bool $dohistory = true;
+    public bool $can_be_translated = true;
 
-    public static $rightname = 'plugin_releases_tasks';
+    public static string $rightname = 'plugin_releases_tasks';
 
     public static function getTypeName($nb = 0)
     {

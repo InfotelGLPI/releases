@@ -54,7 +54,7 @@ use User;
  **/
 class NotificationTargetRelease extends NotificationTargetCommonITILObject
 {
-    public $private_profiles = [];
+    public array $private_profiles = [];
 
     /**
      * Get events related to tickets

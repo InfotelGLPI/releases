@@ -26,6 +26,7 @@
  * along with releases. If not, see <http://www.gnu.org/licenses/>.
  * --------------------------------------------------------------------------
  */
+use GlpiPlugin\Releases\Release;
 
 if (strpos($_SERVER['PHP_SELF'], "showShutdownDetails.php")) {
 
@@ -34,7 +35,7 @@ if (strpos($_SERVER['PHP_SELF'], "showShutdownDetails.php")) {
     Html::header_nocache();
 }
 
-Session::checkRight('plugin_releases_releases', UPDATE);
+Session::checkRight(Release::$rightname, UPDATE);
 
 
 if (isset($_POST["value"])) {

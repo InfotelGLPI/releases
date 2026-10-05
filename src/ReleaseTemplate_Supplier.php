@@ -44,10 +44,10 @@ use Supplier;
 class ReleaseTemplate_Supplier extends CommonITILActor
 {
     // From CommonDBRelation
-    public static $itemtype_1 = ReleaseTemplate::class;
-    public static $items_id_1 = 'plugin_releases_releasetemplates_id';
-    public static $itemtype_2 = 'Supplier';
-    public static $items_id_2 = 'suppliers_id';
+    public static ?string $itemtype_1 = ReleaseTemplate::class;
+    public static ?string $items_id_1 = 'plugin_releases_releasetemplates_id';
+    public static ?string $itemtype_2 = 'Supplier';
+    public static ?string $items_id_2 = 'suppliers_id';
 
     public function post_addItem()
     {
