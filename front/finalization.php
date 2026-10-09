@@ -50,6 +50,16 @@ if (isset($_POST["finalize"]) && isset($_POST["id"]) && isset($_POST["date_produ
     if (!Finalization::canFinalize($release)) {
         throw new BadRequestHttpException();
     }
+    // The real production run date is recorded in the review and locked there: refuse an
+    // empty or malformed one rather than finalizing with a wrong date that cannot be fixed.
+    $date_production = DateTime::createFromFormat('Y-m-d H:i:s', (string) $_POST["date_production"]);
+    if ($date_production === false || $date_production->format('Y-m-d H:i:s') !== $_POST["date_production"]) {
+        echo '<div class="alert alert-important alert-danger d-flex">';
+        echo __('Invalid production run date', 'releases') . '</div>';
+        Finalization::showFinalizeForm(['release_id' => (int) $_POST["id"]]);
+        Html::popFooter();
+        return;
+    }
     $val             = [];
     $val['id']       = (int) $_POST["id"];
     $val['status']   = Release::REVIEW;
