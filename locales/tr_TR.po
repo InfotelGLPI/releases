@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 15:27+0000\n"
+"POT-Creation-Date: 2026-10-09 14:09+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2026\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/infotelGLPI/"
@@ -55,13 +55,13 @@ msgstr "%s / %s geri alma"
 msgid "%s / %s tests"
 msgstr "%s / %s sınama"
 
-#: front/finalization.php:114 front/finalization.php:129
+#: front/finalization.php:124 front/finalization.php:139
 #: templates/form_finalization.html.twig:66
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr "%s dağıtım görevi tamamlanamadı"
 
-#: front/finalization.php:117 front/finalization.php:132
+#: front/finalization.php:127 front/finalization.php:142
 #, php-format
 msgid "%s tests failed"
 msgstr "%s sınama tamamlanamadı"
@@ -367,6 +367,10 @@ msgstr "İşlenirken çıkan sorunlar"
 #: src/Release.php:713
 msgid "Invalid communication type"
 msgstr "İletişim türü geçersiz"
+
+#: front/finalization.php:58
+msgid "Invalid production run date"
+msgstr ""
 
 #: templates/list_group_tree.html.twig:30
 msgid "Last releases"
@@ -679,7 +683,7 @@ msgstr[1] "Sınama türleri"
 msgid "Tests in progress"
 msgstr "İşlenen sınamalar"
 
-#: front/finalization.php:86
+#: front/finalization.php:96
 msgid "The release has been finalized"
 msgstr "Sürüm sonuçlandırıldı"
 

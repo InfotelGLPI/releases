@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 10:45+0000\n"
+"POT-Creation-Date: 2026-10-09 14:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,13 +51,13 @@ msgstr ""
 msgid "%s / %s tests"
 msgstr ""
 
-#: front/finalization.php:114 front/finalization.php:129
+#: front/finalization.php:124 front/finalization.php:139
 #: templates/form_finalization.html.twig:66
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr ""
 
-#: front/finalization.php:117 front/finalization.php:132
+#: front/finalization.php:127 front/finalization.php:142
 #, php-format
 msgid "%s tests failed"
 msgstr ""
@@ -362,6 +362,10 @@ msgstr ""
 
 #: src/Release.php:713
 msgid "Invalid communication type"
+msgstr ""
+
+#: front/finalization.php:58
+msgid "Invalid production run date"
 msgstr ""
 
 #: templates/list_group_tree.html.twig:30
@@ -675,7 +679,7 @@ msgstr[1] ""
 msgid "Tests in progress"
 msgstr ""
 
-#: front/finalization.php:86
+#: front/finalization.php:96
 msgid "The release has been finalized"
 msgstr ""
 
