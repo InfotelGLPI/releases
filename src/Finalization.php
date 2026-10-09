@@ -248,6 +248,9 @@ class Finalization extends CommonDBTM
                    && (Rollback::countForItem($release) == Rollback::countDoneForItem($release));
 
         TemplateRenderer::getInstance()->display('@releases/form_finalization_confirm.html.twig', [
+            // Prefilled with the planned production date, or now: typing a date by hand is
+            // error prone (the picker reads it in the user date format).
+            'date_production' => $release->fields['date_production'] ?: $_SESSION['glpi_currenttime'],
             'allfinish'    => $allfinish,
             'action_url'   => $CFG_GLPI['root_doc'] . "/plugins/releases/front/finalization.php",
             'id'           => $ID,

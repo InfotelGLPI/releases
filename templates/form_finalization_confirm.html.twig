@@ -36,9 +36,9 @@
 <form name="release_form" id="release_form" method="post" action="{{ action_url }}">
     {{ fields.datetimeField(
         'date_production',
-        '',
+        date_production,
         __('Production run date', 'releases'),
-        {'maybeempty': false}
+        {'maybeempty': false, 'required': true}
     ) }}
 
     {# The failure counts are recomputed server-side in front/finalization.php: the review
