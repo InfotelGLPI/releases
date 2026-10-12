@@ -182,46 +182,6 @@ h3.noinfo {
 }
 
 
-.node {
-   height: 20px;
-   width: 20px;
-   border-radius: 50%;
-   display: inline-block;
-   transition: all 1000ms ease;
-}
-
-.activated {
-   box-shadow: 0px 0px 3px 2px rgba(194, 255, 194, 0.8);
-}
-
-.divider {
-   height: 40px;
-   width: 2px;
-   margin-left: 9px;
-   transition: all 800ms ease;
-}
-
-div.workflow {
-   text-align: left;
-   margin-left: 30px;
-}
-
-div.workflow li p {
-   display: inline-block;
-   margin-left: 25px;
-}
-
-*, *:after, *:before {
-   margin: 0;
-   padding: 0;
-}
-
-div.workflow li {
-   list-style: none;
-   line-height: 1px;
-}
-
-
 /*.blue {*/
 /*   background-color: rgba(82, 165, 255, 1);*/
 /*}*/
