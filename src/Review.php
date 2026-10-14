@@ -114,7 +114,11 @@ class Review extends CommonDBTM
 
         $release = new Release();
         $release->getFromDB($this->input['plugin_releases_releases_id']);
-        if ($release->getField('status') < Release::REVIEW) {
+        // front/finalization.php moves the release to REVIEW itself, after canFinalize(). The
+        // only state left to restore here is FINALIZE, set by post_purgeItem() when the review
+        // of a finalized release is purged: a review added to a release still in definition
+        // must not skip the finalization step.
+        if ((int) $release->getField('status') === Release::FINALIZE) {
             $val           = [];
             $val['id']     = $release->getID();
             $val['status'] = Release::REVIEW;

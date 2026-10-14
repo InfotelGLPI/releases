@@ -323,7 +323,8 @@ class Deploytasktemplate extends CommonDropdown
      *
      * The posted id used to be loaded only to read its level and was then stored as is, so a
      * crafted POST could hang a task under a task of another template -- and another entity.
-     * A parent that does not belong to the same template (or is the task itself) is dropped.
+     * A parent that does not belong to the same template, or that is the task itself or one of
+     * its descendants (a cycle would make leveling_task() recurse endlessly), is dropped.
      *
      * @param array $input        Input of the add/update
      * @param int   $templates_id Release template the task belongs to
@@ -341,10 +342,11 @@ class Deploytasktemplate extends CommonDropdown
         $input["level"]                                  = 0;
 
         $parent = new self();
+        $tasks_id = (int) ($this->fields["id"] ?? 0);
         if ($parents_id > 0
-            && $parents_id !== (int) ($this->fields["id"] ?? 0)
             && $parent->getFromDB($parents_id)
-            && (int) $parent->fields["plugin_releases_releasetemplates_id"] === $templates_id) {
+            && (int) $parent->fields["plugin_releases_releasetemplates_id"] === $templates_id
+            && ($tasks_id <= 0 || !in_array($parents_id, self::getAllDescendant($tasks_id), true))) {
             $input["plugin_releases_deploytasktemplates_id"] = $parents_id;
             $input["level"]                                  = $parent->getField("level") + 1;
         }
@@ -410,9 +412,18 @@ class Deploytasktemplate extends CommonDropdown
         return 0;
     }
 
-    public static function leveling_task($id, $previous_task)
+    public static function leveling_task($id, $previous_task, array &$visited = [])
     {
-        $task = new Deploytask();
+        // A cycle stored before checkParentTaskInput() refused them must not loop forever
+        if (isset($visited[(int) $id])) {
+            return;
+        }
+        $visited[(int) $id] = true;
+
+        // Template tasks, not release tasks: the release task table also carries a
+        // plugin_releases_deploytasktemplates_id column (origin of the clone), so the
+        // release class rewrote the level of unrelated release tasks instead.
+        $task = new self();
         $input = [];
         $input['id'] = $id;
         $input['_disablenotif'] = true;
@@ -427,18 +438,24 @@ class Deploytasktemplate extends CommonDropdown
         $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
         $task->getFromDB($id);
         foreach ($tasks as $t) {
-            self::leveling_task($t['id'], $task);
+            self::leveling_task($t['id'], $task, $visited);
         }
     }
 
-    public static function getAllDescendant($id)
+    public static function getAllDescendant($id, array &$visited = [])
     {
+        // A cycle stored before checkParentTaskInput() refused them must not loop forever
+        if (isset($visited[(int) $id])) {
+            return [];
+        }
+        $visited[(int) $id] = true;
+
         $childrens = [];
         $task = new Deploytasktemplate();
         $tasks = $task->find(["plugin_releases_deploytasktemplates_id" => $id]);
-        $childrens[] = $id;
+        $childrens[] = (int) $id;
         foreach ($tasks as $t) {
-            $childs = self::getAllDescendant($t['id']);
+            $childs = self::getAllDescendant($t['id'], $visited);
             $childrens = array_merge($childrens, $childs);
         }
         return $childrens;

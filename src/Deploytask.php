@@ -204,7 +204,8 @@ class Deploytask extends CommonDBTM
      *
      * The posted id used to be loaded only to read its level and was then stored as is, so a
      * crafted POST could hang a task under a task of another release -- and another entity.
-     * A parent that does not belong to the same release (or is the task itself) is dropped.
+     * A parent that does not belong to the same release, or that is the task itself or one of
+     * its descendants (a cycle would make leveling_task() recurse endlessly), is dropped.
      *
      * @param array $input       Input of the add/update
      * @param int   $releases_id Release the task belongs to
@@ -222,10 +223,11 @@ class Deploytask extends CommonDBTM
         $input["level"]                          = 0;
 
         $parent = new self();
+        $tasks_id = (int) ($this->fields["id"] ?? 0);
         if ($parents_id > 0
-            && $parents_id !== (int) ($this->fields["id"] ?? 0)
             && $parent->getFromDB($parents_id)
-            && (int) $parent->fields["plugin_releases_releases_id"] === $releases_id) {
+            && (int) $parent->fields["plugin_releases_releases_id"] === $releases_id
+            && ($tasks_id <= 0 || !in_array($parents_id, self::getAllDescendant($tasks_id, $releases_id), true))) {
             $input["plugin_releases_deploytasks_id"] = $parents_id;
             $input["level"]                          = $parent->getField("level") + 1;
         }
@@ -825,8 +827,13 @@ class Deploytask extends CommonDBTM
         }
     }
 
-    public static function leveling_task($id, $previous_task)
+    public static function leveling_task($id, $previous_task, array &$visited = [])
     {
+        // A cycle stored before checkParentTaskInput() refused them must not loop forever
+        if (isset($visited[(int) $id])) {
+            return;
+        }
+        $visited[(int) $id] = true;
 
         $task                   = new Deploytask();
         $input                  = [];
@@ -843,7 +850,7 @@ class Deploytask extends CommonDBTM
         $tasks = $task->find(["plugin_releases_deploytasks_id" => $id]);
         $task->getFromDB($id);
         foreach ($tasks as $t) {
-            self::leveling_task($t['id'], $task);
+            self::leveling_task($t['id'], $task, $visited);
         }
     }
 
@@ -852,15 +859,21 @@ class Deploytask extends CommonDBTM
      *
      * @return array
      */
-    public static function getAllDescendant($id, $release_id)
+    public static function getAllDescendant($id, $release_id, array &$visited = [])
     {
+        // A cycle stored before checkParentTaskInput() refused them must not loop forever
+        if (isset($visited[(int) $id])) {
+            return [];
+        }
+        $visited[(int) $id] = true;
+
         $childrens   = [];
         $task        = new Deploytask();
         $tasks       = $task->find(["plugin_releases_deploytasks_id" => $id,
             "plugin_releases_releases_id" => $release_id]);
-        $childrens[] = $id;
+        $childrens[] = (int) $id;
         foreach ($tasks as $t) {
-            $childs    = self::getAllDescendant($t['id'], $release_id);
+            $childs    = self::getAllDescendant($t['id'], $release_id, $visited);
             $childrens = array_merge($childrens, $childs);
         }
         return $childrens;

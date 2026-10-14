@@ -27,6 +27,7 @@
  * --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
 use GlpiPlugin\Releases\Release;
 use GlpiPlugin\Releases\Review;
@@ -95,6 +96,11 @@ if (isset($_POST["add"])) {
     global $CFG_GLPI;
     $r               = new Release();
     $r->check((int) $_POST["plugin_releases_releases_id"], UPDATE);
+    // check() says nothing about the state: only a reviewed release can be concluded, a
+    // forged POST used to close a release still in definition or relabel a failed one.
+    if ((int) $r->fields["status"] !== Release::REVIEW) {
+        throw new BadRequestHttpException();
+    }
     $input["id"]     = (int) $_POST["plugin_releases_releases_id"];
     $input["status"] = Release::CLOSED;
     $r->updateWorkflowStatus($input);
