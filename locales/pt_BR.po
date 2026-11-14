@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 06:47+0000\n"
+"POT-Creation-Date: 2026-11-14 16:25+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Maykon Henrique Facincani <facincani.maykon@gmail.com>, "
 "2022\n"
@@ -33,33 +33,32 @@ msgstr[0] "%d última liberação"
 msgstr[1] "%d últimas liberações"
 msgstr[2] "%d últimas liberações"
 
-#: templates/form_finalization.html.twig:77
+#: ⁨standard input⁩:77
 #, php-format
 msgid "%s  tests failed"
 msgstr "%s testes com falha"
 
-#: templates/form_finalization.html.twig:65
+#: ⁨standard input⁩:65
 #, php-format
 msgid "%s / %s deploy tasks"
 msgstr "%s / %s tarefas implantadas"
 
-#: templates/form_finalization.html.twig:47
+#: ⁨standard input⁩:47
 #, php-format
 msgid "%s / %s risks"
 msgstr "%s / %s riscos"
 
-#: templates/form_finalization.html.twig:56
+#: ⁨standard input⁩:56
 #, php-format
 msgid "%s / %s rollbacks"
 msgstr "%s / %s reversões"
 
-#: templates/form_finalization.html.twig:76
+#: ⁨standard input⁩:76
 #, php-format
 msgid "%s / %s tests"
 msgstr "%s / %s testes"
 
-#: front/finalization.php:124 front/finalization.php:139
-#: templates/form_finalization.html.twig:66
+#: front/finalization.php:124 front/finalization.php:139 ⁨standard input⁩:66
 #, php-format
 msgid "%s deploy tasks failed"
 msgstr "%s tarefas de implantação com falhas"
@@ -69,23 +68,20 @@ msgstr "%s tarefas de implantação com falhas"
 msgid "%s tests failed"
 msgstr "%s testes com falha"
 
-#: templates/form_releasetemplate.html.twig:88
+#: ⁨standard input⁩:88
 msgid "Actor"
 msgid_plural "Actors"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/fields_panel.html.twig:194
+#: ⁨standard input⁩:194
 msgid "Actors"
 msgstr "Atores"
 
-#: templates/form_risk.html.twig:194 templates/form_rollback.html.twig:164
-#: templates/footer.html.twig:119 templates/footer.html.twig:121
-#: templates/timeline_form_releasetemplate.html.twig:39
-#: templates/timeline_form_releasetemplate.html.twig:48
-#: templates/form_deploytask.html.twig:377 templates/form_test.html.twig:236
-#: templates/form_change_release_add.html.twig:41
+#: ⁨standard input⁩:164 ⁨standard input⁩:39 ⁨standard input⁩:48 ⁨standard input⁩:194
+#: ⁨standard input⁩:236 ⁨standard input⁩:119 ⁨standard input⁩:121 ⁨standard input⁩:377
+#: ⁨standard input⁩:41
 msgctxt "button"
 msgid "Add"
 msgstr "Adicionar"
@@ -119,31 +115,30 @@ msgctxt "button"
 msgid "Add a test"
 msgstr "Adicionar um teste"
 
-#: templates/fields_panel.html.twig:212
+#: ⁨standard input⁩:212
 msgid "Associated change"
 msgid_plural "Associated changes"
 msgstr[0] "Mudança associada"
 msgstr[1] "Mudanças associadas"
 msgstr[2] "Mudanças associadas"
 
-#: templates/form_testtemplate.html.twig:64
-#: templates/form_deploytask.html.twig:262 templates/form_test.html.twig:190
+#: ⁨standard input⁩:190 ⁨standard input⁩:64 ⁨standard input⁩:262
 msgid "Associated risk"
 msgstr "Risco associado"
 
-#: templates/timeline_releasetemplate.html.twig:90
+#: ⁨standard input⁩:90
 msgid "Associated with"
 msgstr "Associado com"
 
-#: templates/form_deploytasktemplate.html.twig:115
+#: ⁨standard input⁩:115
 msgid "By"
 msgstr ""
 
-#: templates/form_finalization_confirm.html.twig:32
+#: ⁨standard input⁩:32
 msgid "Care all steps are not finish !"
 msgstr "Cuidado, todas as etapas não estão finalizadas!"
 
-#: templates/form_deploytask.html.twig:245
+#: ⁨standard input⁩:245
 msgid "Category"
 msgid_plural "Categories"
 msgstr[0] "Categoria"
@@ -154,15 +149,15 @@ msgstr[2] "Categorias"
 msgid "Changes defined"
 msgstr "Mudanças definidas"
 
-#: templates/fields_panel.html.twig:85
+#: ⁨standard input⁩:85
 msgid "Child entities"
 msgstr "Entidades filhas"
 
-#: templates/list_group_tree.html.twig:33
+#: ⁨standard input⁩:33
 msgid "Child groups"
 msgstr ""
 
-#: templates/form_finalization.html.twig:111
+#: ⁨standard input⁩:111
 msgid "Close"
 msgstr ""
 
@@ -170,51 +165,46 @@ msgstr ""
 msgid "Closure of a releases"
 msgstr "Encerramento de uma liberação"
 
-#: src/Release.php:375 templates/form_releasetemplate.html.twig:149
-#: templates/form_releasetemplate.html.twig:157
-#: templates/fields_panel.html.twig:304 templates/fields_panel.html.twig:319
-#: templates/fields_panel.html.twig:331
+#: src/Release.php:375 ⁨standard input⁩:149 ⁨standard input⁩:157 ⁨standard input⁩:304
+#: ⁨standard input⁩:319 ⁨standard input⁩:331
 msgid "Communication"
 msgstr "Comunicação"
 
-#: src/Release.php:390 templates/form_releasetemplate.html.twig:163
-#: templates/fields_panel.html.twig:347
+#: src/Release.php:390 ⁨standard input⁩:163 ⁨standard input⁩:347
 msgid "Communication type"
 msgstr "Tipo de comunicação"
 
-#: templates/form_review.html.twig:153
+#: ⁨standard input⁩:153
 msgctxt "button"
 msgid "Conclude the review"
 msgstr "Conclusão da revisão"
 
-#: templates/form_risk.html.twig:206 templates/form_rollback.html.twig:176
-#: templates/footer.html.twig:136 templates/form_review.html.twig:136
-#: templates/form_deploytask.html.twig:406 templates/form_test.html.twig:248
+#: ⁨standard input⁩:176 ⁨standard input⁩:206 ⁨standard input⁩:136 ⁨standard input⁩:248
+#: ⁨standard input⁩:406
 msgid "Confirm the final deletion?"
 msgstr "Confirma a exclusão final?"
 
-#: src/NotificationTargetRelease.php:770 templates/form_review.html.twig:59
+#: src/NotificationTargetRelease.php:770 ⁨standard input⁩:59
 msgid "Conforming realization"
 msgstr "Realização em conformidade"
 
-#: templates/form_deploytasktemplate.html.twig:147
+#: ⁨standard input⁩:147
 msgid "Content"
 msgstr ""
 
-#: templates/form_releasetemplate_menu.html.twig:45
-#: templates/create_release_link.html.twig:34
+#: ⁨standard input⁩:34 ⁨standard input⁩:45
 msgid "Create a release"
 msgstr "Criar uma liberação"
 
-#: templates/form_risk.html.twig:179
+#: ⁨standard input⁩:179
 msgid "Create a test from this risk"
 msgstr "Criar um teste a partir do risco"
 
-#: templates/form_finalization.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Creation date"
 msgstr ""
 
-#: templates/form_deploytasktemplate.html.twig:137
+#: ⁨standard input⁩:137
 msgid "Date"
 msgstr ""
 
@@ -222,10 +212,8 @@ msgstr ""
 msgid "Dates defined"
 msgstr "Datas definidas"
 
-#: templates/form_risk.html.twig:208 templates/form_rollback.html.twig:178
-#: templates/footer.html.twig:135 templates/footer.html.twig:138
-#: templates/form_review.html.twig:135 templates/form_deploytask.html.twig:408
-#: templates/form_test.html.twig:250
+#: ⁨standard input⁩:178 ⁨standard input⁩:208 ⁨standard input⁩:135 ⁨standard input⁩:250
+#: ⁨standard input⁩:138 ⁨standard input⁩:408
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Excluir permanentemente"
@@ -241,22 +229,20 @@ msgstr[0] "Modelo de Tarefs de Implantaçã"
 msgstr[1] "Modelos de Tarefas de Implantação"
 msgstr[2] "Modelos de Tarefas de Implantação"
 
-#: src/Deploytasktemplate.php:71 src/ReleaseTemplate.php:213
-#: templates/form_deploytasktemplate.html.twig:68
+#: src/Deploytasktemplate.php:71 src/ReleaseTemplate.php:213 ⁨standard input⁩:68
 msgid "Deploy Task type"
 msgstr "Tipo de Tarefa de Implantação"
 
-#: src/Deploytask.php:67 src/NotificationTargetRelease.php:943
-#: src/NotificationTargetRelease.php:963 src/ReleaseTemplate.php:192
-#: templates/filter_timeline.html.twig:54 templates/timeline.html.twig:120
-#: templates/form_finalization.html.twig:64
+#: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
+#: src/Deploytask.php:67 src/ReleaseTemplate.php:192 ⁨standard input⁩:64
+#: ⁨standard input⁩:54 ⁨standard input⁩:120
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Tarefa de implantação"
 msgstr[1] "Tarefas de implantação"
 msgstr[2] "Tarefas de implantação"
 
-#: src/TypeDeployTask.php:51 src/NotificationTargetRelease.php:878
+#: src/NotificationTargetRelease.php:878 src/TypeDeployTask.php:51
 msgid "Deploy task type"
 msgid_plural "Deploy task types"
 msgstr[0] "Tipo de Tarefa de implantação"
@@ -267,49 +253,40 @@ msgstr[2] "Tipos de Tarefas de implantação"
 msgid "Deployment tasks in progress"
 msgstr "Tarefas de implantação em andamento"
 
-#: src/ReleaseTemplate.php:160 templates/filter_timeline.html.twig:30
-#: templates/form_testtemplate.html.twig:75
-#: templates/form_risktemplate.html.twig:63 templates/form_review.html.twig:77
-#: templates/form_rollbacktemplate.html.twig:56
+#: src/ReleaseTemplate.php:160 ⁨standard input⁩:63 ⁨standard input⁩:30
+#: ⁨standard input⁩:56 ⁨standard input⁩:77 ⁨standard input⁩:75
 msgid "Description"
 msgstr "Descrição"
 
-#: templates/filter_timeline.html.twig:66
+#: ⁨standard input⁩:66
 msgid "Document"
 msgid_plural "Documents"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/form_risk.html.twig:50 templates/form_rollback.html.twig:50
-#: templates/timeline.html.twig:146 templates/form_deploytask.html.twig:45
-#: templates/form_deploytask.html.twig:52
-#: templates/form_deploytask.html.twig:59
-#: templates/form_deploytask.html.twig:288 templates/form_test.html.twig:48
-#: templates/form_test.html.twig:51 templates/form_test.html.twig:54
-#: templates/form_test.html.twig:216
+#: ⁨standard input⁩:50 ⁨standard input⁩:146 ⁨standard input⁩:48 ⁨standard input⁩:51
+#: ⁨standard input⁩:54 ⁨standard input⁩:216 ⁨standard input⁩:45 ⁨standard input⁩:52
+#: ⁨standard input⁩:59 ⁨standard input⁩:288
 msgid "Done"
 msgstr "Feito"
 
-#: templates/form_deploytasktemplate.html.twig:101
-#: templates/form_deploytask.html.twig:299
+#: ⁨standard input⁩:299 ⁨standard input⁩:101
 msgid "Duration"
 msgstr "Duração"
 
-#: templates/timeline_releasetemplate.html.twig:59
+#: ⁨standard input⁩:59
 msgid "Edit"
 msgstr ""
 
-#: templates/actor_notification.html.twig:40
-#: templates/actor_notification.html.twig:42
-#: templates/actor_notification.html.twig:44
+#: ⁨standard input⁩:40 ⁨standard input⁩:42 ⁨standard input⁩:44
 msgid "Email"
 msgid_plural "Emails"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/actor_notification.html.twig:37
+#: ⁨standard input⁩:37
 msgid "Email Followup"
 msgstr ""
 
@@ -318,25 +295,21 @@ msgctxt "status"
 msgid "End"
 msgstr "Fim"
 
-#: templates/form_finalization.html.twig:86
+#: ⁨standard input⁩:86
 msgid "End date"
 msgstr ""
 
-#: templates/fields_panel.html.twig:60 templates/fields_panel.html.twig:74
+#: ⁨standard input⁩:60 ⁨standard input⁩:74
 msgid "Entity"
 msgid_plural "Entities"
 msgstr[0] "Entidade"
 msgstr[1] "Entidades"
 msgstr[2] "Entidades"
 
-#: src/Deploytask.php:394 src/Deploytask.php:777 src/Test.php:231
-#: src/Test.php:247 src/Release.php:1081 src/Deploytasktemplate.php:236
-#: templates/form_deploytask.html.twig:48
-#: templates/form_deploytask.html.twig:55
-#: templates/form_deploytask.html.twig:62
-#: templates/form_deploytask.html.twig:289 templates/form_test.html.twig:49
-#: templates/form_test.html.twig:52 templates/form_test.html.twig:55
-#: templates/form_test.html.twig:217
+#: src/Deploytask.php:394 src/Deploytask.php:777 src/Release.php:1081
+#: src/Deploytasktemplate.php:236 src/Test.php:231 src/Test.php:247
+#: ⁨standard input⁩:49 ⁨standard input⁩:52 ⁨standard input⁩:55 ⁨standard input⁩:217
+#: ⁨standard input⁩:48 ⁨standard input⁩:62 ⁨standard input⁩:289
 msgid "Failed"
 msgstr "Falhou"
 
@@ -344,13 +317,11 @@ msgstr "Falhou"
 msgid "Finalization"
 msgstr "Finalização"
 
-#: templates/form_finalization_confirm.html.twig:55
-#: templates/form_finalization.html.twig:92
-#: templates/form_finalization.html.twig:110
+#: ⁨standard input⁩:92 ⁨standard input⁩:110 ⁨standard input⁩:55
 msgid "Finalize"
 msgstr "Finalizar"
 
-#: templates/filter_timeline.html.twig:36 templates/timeline.html.twig:122
+#: ⁨standard input⁩:36 ⁨standard input⁩:122
 #, fuzzy
 msgid "Followup"
 msgid_plural "Followups"
@@ -358,11 +329,11 @@ msgstr[0] "Acompanhamento"
 msgstr[1] "Acompanhamento"
 msgstr[2] "Acompanhamento"
 
-#: src/Release.php:2321 templates/fields_panel.html.twig:104
+#: src/Release.php:2321 ⁨standard input⁩:104
 msgid "For this change"
 msgstr "Para essa mudança"
 
-#: templates/form_deploytasktemplate.html.twig:126
+#: ⁨standard input⁩:126
 msgid "Group"
 msgstr ""
 
@@ -370,11 +341,11 @@ msgstr ""
 msgid "Group in charge of the release"
 msgstr "Grupo encarregado da liberação"
 
-#: templates/filter_timeline.html.twig:76
+#: ⁨standard input⁩:76
 msgid "Historical"
 msgstr ""
 
-#: src/NotificationTargetRelease.php:772 templates/form_review.html.twig:71
+#: src/NotificationTargetRelease.php:772 ⁨standard input⁩:71
 msgid "Incidents during process"
 msgstr "Incidentes durante o processo"
 
@@ -386,7 +357,7 @@ msgstr ""
 msgid "Invalid production run date"
 msgstr ""
 
-#: templates/list_group_tree.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Last releases"
 msgstr ""
 
@@ -397,20 +368,15 @@ msgstr[0] "Ligação entre Liberação/Mudança"
 msgstr[1] "Ligações entre Liberação/Mudança"
 msgstr[2] "Vínculos entre Liberação/Mudança"
 
-#: templates/form_releasetemplate.html.twig:54
+#: ⁨standard input⁩:54
 msgid "Location"
 msgstr ""
 
-#: templates/form_finalization_confirm.html.twig:51
-#: templates/form_finalization.html.twig:92
-#: templates/form_finalization.html.twig:110
+#: ⁨standard input⁩:92 ⁨standard input⁩:110 ⁨standard input⁩:51
 msgid "Mark as failed"
 msgstr "Marcar como falhada"
 
-#: templates/form_deploytasktemplate.html.twig:50
-#: templates/form_testtemplate.html.twig:50
-#: templates/form_risktemplate.html.twig:50 templates/form_review.html.twig:65
-#: templates/form_rollbacktemplate.html.twig:50
+#: ⁨standard input⁩:50 ⁨standard input⁩:65
 msgid "Name"
 msgstr ""
 
@@ -418,7 +384,7 @@ msgstr ""
 msgid "New release"
 msgstr "Nova liberação"
 
-#: templates/timeline_releasetemplate.html.twig:110
+#: ⁨standard input⁩:110
 msgid "No data available"
 msgstr "Sem dados disponíveis"
 
@@ -426,8 +392,7 @@ msgstr "Sem dados disponíveis"
 msgid "No release found."
 msgstr "Nenhuma liberação encontrada"
 
-#: src/ReleaseTemplate.php:180 templates/form_releasetemplate.html.twig:60
-#: templates/fields_panel.html.twig:268
+#: src/ReleaseTemplate.php:180 ⁨standard input⁩:60 ⁨standard input⁩:268
 msgid "Non-working hours"
 msgstr "Horas não trabalhadas"
 
@@ -435,35 +400,35 @@ msgstr "Horas não trabalhadas"
 msgid "Not yet completed"
 msgstr "Não completados ainda"
 
-#: src/Release.php:288 src/NotificationTargetRelease.php:755
+#: src/NotificationTargetRelease.php:755 src/Release.php:288
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Número de riscos"
 
-#: src/Release.php:301 src/NotificationTargetRelease.php:761
+#: src/NotificationTargetRelease.php:761 src/Release.php:301
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Número de reversões"
 
-#: src/Release.php:328 src/NotificationTargetRelease.php:885
+#: src/NotificationTargetRelease.php:885 src/Release.php:328
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Número de tarefas"
 
-#: src/Release.php:314 src/NotificationTargetRelease.php:768
+#: src/NotificationTargetRelease.php:768 src/Release.php:314
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Número de testes"
 
-#: templates/fields_panel.html.twig:120
+#: ⁨standard input⁩:120
 msgid "Opening date"
 msgstr "Data de abertura"
 
-#: templates/form_deploytask.html.twig:364
+#: ⁨standard input⁩:364
 msgid "Plan this task"
 msgstr "Planejar essa tarefa"
 
-#: src/Change_Release.php:373 templates/fields_panel.html.twig:136
+#: src/Change_Release.php:373 ⁨standard input⁩:136
 msgid "Pre-production planned date"
 msgstr "Data planejada para Pré-produção"
 
@@ -471,12 +436,11 @@ msgstr "Data planejada para Pré-produção"
 msgid "Pre-production run date"
 msgstr "Data de execução da pré-produção"
 
-#: templates/form_deploytasktemplate.html.twig:57
-#: templates/form_deploytask.html.twig:214
+#: ⁨standard input⁩:214 ⁨standard input⁩:57
 msgid "Previous task"
 msgstr "Tarefa anterior"
 
-#: templates/form_deploytasktemplate.html.twig:94
+#: ⁨standard input⁩:94
 msgid "Private"
 msgstr ""
 
@@ -484,43 +448,42 @@ msgstr ""
 msgid "Processing release"
 msgstr "Processando liberação"
 
-#: templates/form_releasetemplate.html.twig:45
+#: ⁨standard input⁩:45
 msgid "Production deployment details"
 msgstr ""
 
-#: src/Change_Release.php:374 templates/fields_panel.html.twig:152
+#: src/Change_Release.php:374 ⁨standard input⁩:152
 msgid "Production planned date"
 msgstr "Data planejada de produção"
 
-#: src/Release.php:350 src/ReleaseTemplate.php:168
-#: templates/form_finalization_confirm.html.twig:40
+#: src/Release.php:350 src/ReleaseTemplate.php:168 ⁨standard input⁩:40
 msgid "Production run date"
 msgstr "Data de execução da produção"
 
-#: templates/footer.html.twig:142
+#: ⁨standard input⁩:142
 msgctxt "button"
 msgid "Put in trashbin"
 msgstr "Colocar na lixeira"
 
 #: src/NotificationTargetRelease.php:769 src/Change_Release.php:375
-#: templates/form_review.html.twig:50
+#: ⁨standard input⁩:50
 msgid "Real production run date"
 msgstr "Data real de execução em produção"
 
-#: front/change_release.form.php:46 setup.php:110 src/Release.php:103
-#: src/NotificationTargetRelease.php:967 src/Profile.php:58
-#: templates/form_releasetemplate_menu.html.twig:32
+#: front/change_release.form.php:46 setup.php:110
+#: src/NotificationTargetRelease.php:967 src/Release.php:103 src/Profile.php:58
+#: ⁨standard input⁩:32
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Liberação"
 msgstr[1] "Liberações"
 msgstr[2] "Liberações"
 
-#: templates/timeline_releasetemplate.html.twig:30
+#: ⁨standard input⁩:30
 msgid "Release actions details"
 msgstr "Detalhes das ações da liberação"
 
-#: src/Change_Release.php:372 templates/form_releasetemplate.html.twig:73
+#: src/Change_Release.php:372 ⁨standard input⁩:73
 msgid "Release area"
 msgstr "Área da liberação"
 
@@ -543,7 +506,7 @@ msgstr[2] "Modelos de Liberação"
 msgid "Releases on linked items"
 msgstr "Liberações nos items vinculados"
 
-#: templates/timeline_releasetemplate.html.twig:44
+#: ⁨standard input⁩:44
 msgid "Requester"
 msgstr ""
 
@@ -554,7 +517,7 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/footer.html.twig:129 templates/footer.html.twig:131
+#: ⁨standard input⁩:129 ⁨standard input⁩:131
 msgctxt "button"
 msgid "Restore"
 msgstr "Restaurar"
@@ -570,11 +533,10 @@ msgstr[2] "Revisões"
 msgid "Reviewed"
 msgstr "Revisto"
 
-#: src/Testtemplate.php:65 src/NotificationTargetRelease.php:787
+#: src/Risk.php:53 src/NotificationTargetRelease.php:787
 #: src/NotificationTargetRelease.php:945 src/NotificationTargetRelease.php:965
-#: src/Risk.php:53 templates/form_deploytasktemplate.html.twig:75
-#: templates/filter_timeline.html.twig:42 templates/timeline.html.twig:116
-#: templates/form_finalization.html.twig:46
+#: src/Testtemplate.php:65 ⁨standard input⁩:46 ⁨standard input⁩:42
+#: ⁨standard input⁩:116 ⁨standard input⁩:75
 #, fuzzy
 msgid "Risk"
 msgid_plural "Risks"
@@ -582,15 +544,15 @@ msgstr[0] "Risco"
 msgstr[1] "Riscos"
 msgstr[2] "Riscos"
 
-#: src/Risktemplate.php:54 templates/form_risk.html.twig:116
+#: src/Risktemplate.php:54 ⁨standard input⁩:116
 msgid "Risk template"
 msgid_plural "Risk templates"
 msgstr[0] "Modelo de Risco"
 msgstr[1] "Modelos de Risco"
 msgstr[2] "Modelos de Risco"
 
-#: src/TypeRisk.php:51 src/NotificationTargetRelease.php:753
-#: templates/form_risk.html.twig:143 templates/form_risktemplate.html.twig:57
+#: src/NotificationTargetRelease.php:753 src/TypeRisk.php:51 ⁨standard input⁩:57
+#: ⁨standard input⁩:143
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] "Tipo de Risco"
@@ -603,16 +565,15 @@ msgstr "Riscos definidos"
 
 #: src/NotificationTargetRelease.php:788 src/NotificationTargetRelease.php:789
 #: src/NotificationTargetRelease.php:946 src/NotificationTargetRelease.php:966
-#: src/Rollback.php:54 src/ReleaseTemplate.php:188
-#: templates/filter_timeline.html.twig:48 templates/timeline.html.twig:118
-#: templates/form_finalization.html.twig:55
+#: src/Rollback.php:54 src/ReleaseTemplate.php:188 ⁨standard input⁩:55
+#: ⁨standard input⁩:48 ⁨standard input⁩:118
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] "Reversão"
 msgstr[1] "Reversões"
 msgstr[2] "Reversões"
 
-#: src/Rollbacktemplate.php:52 templates/form_rollback.html.twig:116
+#: src/Rollbacktemplate.php:52 ⁨standard input⁩:116
 msgid "Rollback template"
 msgid_plural "Rollback templates"
 msgstr[0] "Modelo de Reversão"
@@ -623,87 +584,79 @@ msgstr[2] "Modelos de Reversão"
 msgid "Rollbacks defined"
 msgstr "Reversões definidas"
 
-#: templates/form_risk.html.twig:201 templates/form_rollback.html.twig:171
-#: templates/footer.html.twig:159 templates/footer.html.twig:161
-#: templates/profile.html.twig:34 templates/actor_notification.html.twig:51
-#: templates/form_deploytask.html.twig:401 templates/form_test.html.twig:243
+#: ⁨standard input⁩:34 ⁨standard input⁩:171 ⁨standard input⁩:51 ⁨standard input⁩:201
+#: ⁨standard input⁩:243 ⁨standard input⁩:159 ⁨standard input⁩:161 ⁨standard input⁩:401
 msgctxt "button"
 msgid "Save"
 msgstr "Salvar"
 
 #: src/Release.php:358 src/Change_Release.php:376 src/ReleaseTemplate.php:172
-#: templates/form_releasetemplate.html.twig:116
-#: templates/form_releasetemplate.html.twig:124
-#: templates/fields_panel.html.twig:225 templates/fields_panel.html.twig:240
-#: templates/fields_panel.html.twig:252
+#: ⁨standard input⁩:116 ⁨standard input⁩:124 ⁨standard input⁩:225 ⁨standard input⁩:240
+#: ⁨standard input⁩:252
 msgid "Service shutdown"
 msgstr "Desligamento do serviço"
 
-#: src/Release.php:366 src/ReleaseTemplate.php:176
-#: templates/form_releasetemplate.html.twig:132
-#: templates/fields_panel.html.twig:284
+#: src/Release.php:366 src/ReleaseTemplate.php:176 ⁨standard input⁩:132
+#: ⁨standard input⁩:284
 msgid "Service shutdown details"
 msgstr "Detalhes do desligamento de serviço"
 
-#: templates/form_deploytask.html.twig:380
+#: ⁨standard input⁩:380
 msgid "Set the status to pending"
 msgstr "Colocar o status para pendente"
 
-#: templates/form_review.html.twig:126 templates/form_review.html.twig:127
+#: ⁨standard input⁩:126 ⁨standard input⁩:127
 msgctxt "button"
 msgid "Show"
 msgstr ""
 
-#: templates/form_deploytasktemplate.html.twig:86
-#: templates/form_deploytask.html.twig:284 templates/form_test.html.twig:212
+#: ⁨standard input⁩:212 ⁨standard input⁩:284 ⁨standard input⁩:86
 msgid "Status"
 msgstr "Status"
 
-#: templates/form_releasetemplate.html.twig:178
+#: ⁨standard input⁩:178
 msgid "Target"
 msgid_plural "Targets"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: templates/timeline.html.twig:218
+#: ⁨standard input⁩:218
 msgid "Task"
 msgid_plural "Tasks"
 msgstr[0] "Tarefa"
 msgstr[1] "Tarefas"
 msgstr[2] "Tarefas"
 
-#: templates/form_deploytask.html.twig:169
+#: ⁨standard input⁩:169
 msgid "Task template"
 msgid_plural "Task templates"
 msgstr[0] "Modelo de Tarefa"
 msgstr[1] "Modelos de Tarefas"
 msgstr[2] "Modelos de Tarefas"
 
-#: templates/form_review.html.twig:97
+#: ⁨standard input⁩:97
 msgid "Technical Support Document"
 msgstr "Documentos de Suporte Técnico"
 
-#: src/Test.php:56 src/NotificationTargetRelease.php:944
-#: src/NotificationTargetRelease.php:964 src/ReleaseTemplate.php:184
-#: templates/filter_timeline.html.twig:60 templates/timeline.html.twig:114
-#: templates/form_finalization.html.twig:75
+#: src/NotificationTargetRelease.php:944 src/NotificationTargetRelease.php:964
+#: src/ReleaseTemplate.php:184 src/Test.php:56 ⁨standard input⁩:75
+#: ⁨standard input⁩:60 ⁨standard input⁩:114
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Teste"
 msgstr[1] "Testes"
 msgstr[2] "Testes"
 
-#: src/Testtemplate.php:52 templates/form_test.html.twig:128
+#: src/Testtemplate.php:52 ⁨standard input⁩:128
 msgid "Test template"
 msgid_plural "Test templates"
 msgstr[0] "Modelo de Teste"
 msgstr[1] "Modelos de Teste"
 msgstr[2] "Modelos de Teste"
 
-#: src/Testtemplate.php:60 src/NotificationTargetRelease.php:766
-#: src/TypeTest.php:51 templates/form_testtemplate.html.twig:57
-#: templates/form_test.html.twig:155
+#: src/TypeTest.php:51 src/NotificationTargetRelease.php:766
+#: src/Testtemplate.php:60 ⁨standard input⁩:155 ⁨standard input⁩:57
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Tipo de Teste"
@@ -718,20 +671,15 @@ msgstr "Teste em progresso"
 msgid "The release has been finalized"
 msgstr "A liberação foi finalizada"
 
-#: templates/filter_timeline.html.twig:85
+#: ⁨standard input⁩:85
 msgid "Timeline filter"
 msgstr "Filtro da linha do tempo"
 
-#: templates/form_risk.html.twig:134 templates/form_rollback.html.twig:134
-#: templates/form_deploytask.html.twig:188
-#: templates/form_releasetemplate.html.twig:66
-#: templates/form_test.html.twig:146
+#: ⁨standard input⁩:134 ⁨standard input⁩:66 ⁨standard input⁩:146 ⁨standard input⁩:188
 msgid "Title"
 msgstr "Título"
 
-#: templates/form_risk.html.twig:48 templates/form_rollback.html.twig:48
-#: templates/timeline.html.twig:144 templates/form_deploytask.html.twig:287
-#: templates/form_test.html.twig:215
+#: ⁨standard input⁩:48 ⁨standard input⁩:144 ⁨standard input⁩:215 ⁨standard input⁩:287
 msgid "To do"
 msgstr "A fazer"
 
@@ -739,7 +687,7 @@ msgstr "A fazer"
 msgid "To finalized"
 msgstr "Para finalizar"
 
-#: templates/footer.html.twig:107
+#: ⁨standard input⁩:107
 msgid "Toggle panels width"
 msgstr "Mudar largura dos painéis"
 
@@ -751,21 +699,21 @@ msgstr ""
 msgid "Update of a release"
 msgstr "Atualização de uma liberação"
 
-#: templates/form_releasetemplate_menu.html.twig:40
+#: ⁨standard input⁩:40
 msgid "Use this template"
 msgstr ""
 
-#: templates/timeline.html.twig:224
+#: ⁨standard input⁩:224
 msgid "Validation"
 msgid_plural "Validations"
 msgstr[0] "Validação"
 msgstr[1] "Validações"
 msgstr[2] "Validações"
 
-#: templates/filter_timeline.html.twig:118
+#: ⁨standard input⁩:118
 msgid "View TODO list"
 msgstr "Ver a lista TODO"
 
-#: templates/footer.html.twig:80
+#: ⁨standard input⁩:80
 msgid "View other actions"
 msgstr "Ver outras ações"
