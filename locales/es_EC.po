@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 14:09+0000\n"
+"POT-Creation-Date: 2026-10-14 06:47+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Soporte Infraestructura Standby, 2023\n"
 "Language-Team: Spanish (Ecuador) (https://app.transifex.com/infotelGLPI/"
@@ -328,7 +328,7 @@ msgstr[0] "Entidades"
 msgstr[1] "Entidades"
 msgstr[2] "Entidades"
 
-#: src/Deploytask.php:392 src/Deploytask.php:775 src/Test.php:231
+#: src/Deploytask.php:394 src/Deploytask.php:777 src/Test.php:231
 #: src/Test.php:247 src/Release.php:1081 src/Deploytasktemplate.php:236
 #: templates/form_deploytask.html.twig:48
 #: templates/form_deploytask.html.twig:55
