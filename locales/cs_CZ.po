@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 16:25+0000\n"
+"POT-Creation-Date: 2026-11-14 17:17+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: David Stepan <stepand@tiscali.cz>, 2026\n"
 "Language-Team: Czech (Czech Republic) (https://app.transifex.com/infotelGLPI/"
@@ -80,9 +80,9 @@ msgstr[3] ""
 msgid "Actors"
 msgstr "Účastníci"
 
-#: ⁨standard input⁩:164 ⁨standard input⁩:39 ⁨standard input⁩:48 ⁨standard input⁩:194
-#: ⁨standard input⁩:236 ⁨standard input⁩:119 ⁨standard input⁩:121 ⁨standard input⁩:377
-#: ⁨standard input⁩:41
+#: ⁨standard input⁩:194 ⁨standard input⁩:41 ⁨standard input⁩:377 ⁨standard input⁩:119
+#: ⁨standard input⁩:121 ⁨standard input⁩:39 ⁨standard input⁩:48 ⁨standard input⁩:236
+#: ⁨standard input⁩:164
 msgctxt "button"
 msgid "Add"
 msgstr "Přidat"
@@ -124,7 +124,7 @@ msgstr[1] "Přiřazených změn"
 msgstr[2] "Přiřazených změn"
 msgstr[3] "Přiřazené změny"
 
-#: ⁨standard input⁩:190 ⁨standard input⁩:64 ⁨standard input⁩:262
+#: ⁨standard input⁩:262 ⁨standard input⁩:64 ⁨standard input⁩:190
 msgid "Associated risk"
 msgstr "Přiřazené riziko"
 
@@ -182,8 +182,8 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr "Uzavřít recenzi"
 
-#: ⁨standard input⁩:176 ⁨standard input⁩:206 ⁨standard input⁩:136 ⁨standard input⁩:248
-#: ⁨standard input⁩:406
+#: ⁨standard input⁩:206 ⁨standard input⁩:406 ⁨standard input⁩:136 ⁨standard input⁩:248
+#: ⁨standard input⁩:176
 msgid "Confirm the final deletion?"
 msgstr "Potvrdit konečné smazání?"
 
@@ -215,8 +215,8 @@ msgstr ""
 msgid "Dates defined"
 msgstr "Termíny jsou definovány"
 
-#: ⁨standard input⁩:178 ⁨standard input⁩:208 ⁨standard input⁩:135 ⁨standard input⁩:250
-#: ⁨standard input⁩:138 ⁨standard input⁩:408
+#: ⁨standard input⁩:208 ⁨standard input⁩:408 ⁨standard input⁩:135 ⁨standard input⁩:138
+#: ⁨standard input⁩:250 ⁨standard input⁩:178
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Smazat trvale"
@@ -238,8 +238,8 @@ msgid "Deploy Task type"
 msgstr "Nasazení typu úkolu"
 
 #: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
-#: src/Deploytask.php:67 src/ReleaseTemplate.php:192 ⁨standard input⁩:64
-#: ⁨standard input⁩:54 ⁨standard input⁩:120
+#: src/Deploytask.php:67 src/ReleaseTemplate.php:192 ⁨standard input⁩:120
+#: ⁨standard input⁩:54 ⁨standard input⁩:64
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Nasazení úkolu"
@@ -259,8 +259,8 @@ msgstr[3] "Nasazení typů úkolů"
 msgid "Deployment tasks in progress"
 msgstr "Probíhající úkoly nasazení"
 
-#: src/ReleaseTemplate.php:160 ⁨standard input⁩:63 ⁨standard input⁩:30
-#: ⁨standard input⁩:56 ⁨standard input⁩:77 ⁨standard input⁩:75
+#: src/ReleaseTemplate.php:160 ⁨standard input⁩:56 ⁨standard input⁩:63
+#: ⁨standard input⁩:30 ⁨standard input⁩:75 ⁨standard input⁩:77
 msgid "Description"
 msgstr "Popis"
 
@@ -272,13 +272,13 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: ⁨standard input⁩:50 ⁨standard input⁩:146 ⁨standard input⁩:48 ⁨standard input⁩:51
-#: ⁨standard input⁩:54 ⁨standard input⁩:216 ⁨standard input⁩:45 ⁨standard input⁩:52
-#: ⁨standard input⁩:59 ⁨standard input⁩:288
+#: ⁨standard input⁩:146 ⁨standard input⁩:50 ⁨standard input⁩:45 ⁨standard input⁩:52
+#: ⁨standard input⁩:59 ⁨standard input⁩:288 ⁨standard input⁩:48 ⁨standard input⁩:51
+#: ⁨standard input⁩:54 ⁨standard input⁩:216
 msgid "Done"
 msgstr "Provedeno"
 
-#: ⁨standard input⁩:299 ⁨standard input⁩:101
+#: ⁨standard input⁩:101 ⁨standard input⁩:299
 msgid "Duration"
 msgstr "Trvání"
 
@@ -315,10 +315,10 @@ msgstr[1] "Entit"
 msgstr[2] "Entit"
 msgstr[3] "Entity"
 
-#: src/Deploytask.php:394 src/Deploytask.php:777 src/Release.php:1081
+#: src/Release.php:1081 src/Deploytask.php:394 src/Deploytask.php:777
 #: src/Deploytasktemplate.php:236 src/Test.php:231 src/Test.php:247
-#: ⁨standard input⁩:49 ⁨standard input⁩:52 ⁨standard input⁩:55 ⁨standard input⁩:217
-#: ⁨standard input⁩:48 ⁨standard input⁩:62 ⁨standard input⁩:289
+#: ⁨standard input⁩:48 ⁨standard input⁩:55 ⁨standard input⁩:62 ⁨standard input⁩:289
+#: ⁨standard input⁩:49 ⁨standard input⁩:52 ⁨standard input⁩:217
 msgid "Failed"
 msgstr "Selhalo"
 
@@ -326,11 +326,11 @@ msgstr "Selhalo"
 msgid "Finalization"
 msgstr "Dokončení"
 
-#: ⁨standard input⁩:92 ⁨standard input⁩:110 ⁨standard input⁩:55
+#: ⁨standard input⁩:55 ⁨standard input⁩:92 ⁨standard input⁩:110
 msgid "Finalize"
 msgstr "Dokončit"
 
-#: ⁨standard input⁩:36 ⁨standard input⁩:122
+#: ⁨standard input⁩:122 ⁨standard input⁩:36
 #, fuzzy
 msgid "Followup"
 msgid_plural "Followups"
@@ -383,7 +383,7 @@ msgstr[3] "Odkazy Uvolnění/Změny"
 msgid "Location"
 msgstr ""
 
-#: ⁨standard input⁩:92 ⁨standard input⁩:110 ⁨standard input⁩:51
+#: ⁨standard input⁩:51 ⁨standard input⁩:92 ⁨standard input⁩:110
 msgid "Mark as failed"
 msgstr "Označit jako neúspěšné"
 
@@ -411,22 +411,22 @@ msgstr "Mimopracovní doba"
 msgid "Not yet completed"
 msgstr "Ještě nedokončeno"
 
-#: src/NotificationTargetRelease.php:755 src/Release.php:288
+#: src/Release.php:288 src/NotificationTargetRelease.php:755
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Počet rizik"
 
-#: src/NotificationTargetRelease.php:761 src/Release.php:301
+#: src/Release.php:301 src/NotificationTargetRelease.php:761
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Počet vrácení"
 
-#: src/NotificationTargetRelease.php:885 src/Release.php:328
+#: src/Release.php:328 src/NotificationTargetRelease.php:885
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Počet úkolů"
 
-#: src/NotificationTargetRelease.php:768 src/Release.php:314
+#: src/Release.php:314 src/NotificationTargetRelease.php:768
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Počet testů"
@@ -447,7 +447,7 @@ msgstr "Předprodukční plánované datum nasazení"
 msgid "Pre-production run date"
 msgstr "Předprodukční datum nasazení"
 
-#: ⁨standard input⁩:214 ⁨standard input⁩:57
+#: ⁨standard input⁩:57 ⁨standard input⁩:214
 msgid "Previous task"
 msgstr "Předchozí úkol"
 
@@ -481,9 +481,8 @@ msgstr "Dát do koše"
 msgid "Real production run date"
 msgstr "Skutečné datum nasazení"
 
-#: front/change_release.form.php:46 setup.php:110
-#: src/NotificationTargetRelease.php:967 src/Release.php:103 src/Profile.php:58
-#: ⁨standard input⁩:32
+#: setup.php:110 src/Release.php:103 src/NotificationTargetRelease.php:967
+#: src/Profile.php:58 front/change_release.form.php:46 ⁨standard input⁩:32
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Vydání"
@@ -548,10 +547,10 @@ msgstr[3] "Recenze"
 msgid "Reviewed"
 msgstr "Recenzováno"
 
-#: src/Risk.php:53 src/NotificationTargetRelease.php:787
-#: src/NotificationTargetRelease.php:945 src/NotificationTargetRelease.php:965
-#: src/Testtemplate.php:65 ⁨standard input⁩:46 ⁨standard input⁩:42
-#: ⁨standard input⁩:116 ⁨standard input⁩:75
+#: src/NotificationTargetRelease.php:787 src/NotificationTargetRelease.php:945
+#: src/NotificationTargetRelease.php:965 src/Testtemplate.php:65
+#: src/Risk.php:53 ⁨standard input⁩:75 ⁨standard input⁩:116 ⁨standard input⁩:42
+#: ⁨standard input⁩:46
 msgid "Risk"
 msgid_plural "Risks"
 msgstr[0] "Riziko"
@@ -567,8 +566,8 @@ msgstr[1] "Šablon rizika"
 msgstr[2] "Šablon rizika"
 msgstr[3] "Šablony rizika"
 
-#: src/NotificationTargetRelease.php:753 src/TypeRisk.php:51 ⁨standard input⁩:57
-#: ⁨standard input⁩:143
+#: src/NotificationTargetRelease.php:753 src/TypeRisk.php:51 ⁨standard input⁩:143
+#: ⁨standard input⁩:57
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] "Typ rizika"
@@ -582,8 +581,8 @@ msgstr "Definovaná rizika"
 
 #: src/NotificationTargetRelease.php:788 src/NotificationTargetRelease.php:789
 #: src/NotificationTargetRelease.php:946 src/NotificationTargetRelease.php:966
-#: src/Rollback.php:54 src/ReleaseTemplate.php:188 ⁨standard input⁩:55
-#: ⁨standard input⁩:48 ⁨standard input⁩:118
+#: src/Rollback.php:54 src/ReleaseTemplate.php:188 ⁨standard input⁩:118
+#: ⁨standard input⁩:48 ⁨standard input⁩:55
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] "Vrácení"
@@ -603,8 +602,8 @@ msgstr[3] "Šablony vrácení"
 msgid "Rollbacks defined"
 msgstr "Definovaná vrácení zpět"
 
-#: ⁨standard input⁩:34 ⁨standard input⁩:171 ⁨standard input⁩:51 ⁨standard input⁩:201
-#: ⁨standard input⁩:243 ⁨standard input⁩:159 ⁨standard input⁩:161 ⁨standard input⁩:401
+#: ⁨standard input⁩:34 ⁨standard input⁩:201 ⁨standard input⁩:401 ⁨standard input⁩:159
+#: ⁨standard input⁩:161 ⁨standard input⁩:51 ⁨standard input⁩:243 ⁨standard input⁩:171
 msgctxt "button"
 msgid "Save"
 msgstr "Uložit"
@@ -629,7 +628,7 @@ msgctxt "button"
 msgid "Show"
 msgstr ""
 
-#: ⁨standard input⁩:212 ⁨standard input⁩:284 ⁨standard input⁩:86
+#: ⁨standard input⁩:86 ⁨standard input⁩:284 ⁨standard input⁩:212
 msgid "Status"
 msgstr "Stav"
 
@@ -662,8 +661,8 @@ msgid "Technical Support Document"
 msgstr "Dokument technické podpory"
 
 #: src/NotificationTargetRelease.php:944 src/NotificationTargetRelease.php:964
-#: src/ReleaseTemplate.php:184 src/Test.php:56 ⁨standard input⁩:75
-#: ⁨standard input⁩:60 ⁨standard input⁩:114
+#: src/Test.php:56 src/ReleaseTemplate.php:184 ⁨standard input⁩:114
+#: ⁨standard input⁩:60 ⁨standard input⁩:75
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Test"
@@ -679,8 +678,8 @@ msgstr[1] "Šablon testu"
 msgstr[2] "Šablon testu"
 msgstr[3] "Šablony testu"
 
-#: src/TypeTest.php:51 src/NotificationTargetRelease.php:766
-#: src/Testtemplate.php:60 ⁨standard input⁩:155 ⁨standard input⁩:57
+#: src/NotificationTargetRelease.php:766 src/Testtemplate.php:60
+#: src/TypeTest.php:51 ⁨standard input⁩:57 ⁨standard input⁩:155
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Typ testu"
@@ -700,11 +699,11 @@ msgstr "Vydání bylo dokončeno"
 msgid "Timeline filter"
 msgstr "Filtr časové osy"
 
-#: ⁨standard input⁩:134 ⁨standard input⁩:66 ⁨standard input⁩:146 ⁨standard input⁩:188
+#: ⁨standard input⁩:134 ⁨standard input⁩:66 ⁨standard input⁩:188 ⁨standard input⁩:146
 msgid "Title"
 msgstr "Nadpis"
 
-#: ⁨standard input⁩:48 ⁨standard input⁩:144 ⁨standard input⁩:215 ⁨standard input⁩:287
+#: ⁨standard input⁩:144 ⁨standard input⁩:48 ⁨standard input⁩:287 ⁨standard input⁩:215
 msgid "To do"
 msgstr "Udělat"
 
