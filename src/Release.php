@@ -1134,7 +1134,7 @@ class Release extends CommonITILObject
             case self::ROLLBACKDEFINITION:
             case self::REVIEW:
             case self::FINALIZE:
-            case self::RELEASEDEFINITION :
+            case self::RELEASEDEFINITION:
                 $class = 'circle';
                 $solid = false;
                 break;
