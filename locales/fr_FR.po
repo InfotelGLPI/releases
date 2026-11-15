@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 17:17+0000\n"
+"POT-Creation-Date: 2026-11-15 16:24+0000\n"
 "PO-Revision-Date: 2020-07-28 11:31+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/"
@@ -25,7 +25,7 @@ msgstr ""
 "1000000 == 0 ? 1 : 2;\n"
 
 #. TRANS : %d is the number of releases
-#: src/Release.php:2675
+#: src/Release.php:2676
 #, php-format
 msgid "%d last release"
 msgid_plural "%d last releases"
@@ -79,9 +79,9 @@ msgstr[2] "Acteurs"
 msgid "Actors"
 msgstr "Acteurs"
 
-#: ⁨standard input⁩:194 ⁨standard input⁩:41 ⁨standard input⁩:377 ⁨standard input⁩:119
-#: ⁨standard input⁩:121 ⁨standard input⁩:39 ⁨standard input⁩:48 ⁨standard input⁩:236
-#: ⁨standard input⁩:164
+#: ⁨standard input⁩:164 ⁨standard input⁩:39 ⁨standard input⁩:48 ⁨standard input⁩:194
+#: ⁨standard input⁩:236 ⁨standard input⁩:119 ⁨standard input⁩:121 ⁨standard input⁩:383
+#: ⁨standard input⁩:41
 msgctxt "button"
 msgid "Add"
 msgstr "Ajouter"
@@ -122,7 +122,7 @@ msgstr[0] "Changement associé"
 msgstr[1] "Changements associés"
 msgstr[2] "Changements associés"
 
-#: ⁨standard input⁩:262 ⁨standard input⁩:64 ⁨standard input⁩:190
+#: ⁨standard input⁩:190 ⁨standard input⁩:64 ⁨standard input⁩:262
 msgid "Associated risk"
 msgstr "Risque associé"
 
@@ -179,8 +179,8 @@ msgctxt "button"
 msgid "Conclude the review"
 msgstr "Terminer la revue"
 
-#: ⁨standard input⁩:206 ⁨standard input⁩:406 ⁨standard input⁩:136 ⁨standard input⁩:248
-#: ⁨standard input⁩:176
+#: ⁨standard input⁩:176 ⁨standard input⁩:206 ⁨standard input⁩:136 ⁨standard input⁩:248
+#: ⁨standard input⁩:412
 msgid "Confirm the final deletion?"
 msgstr "Confirmer la suppression définitive ?"
 
@@ -212,8 +212,8 @@ msgstr "Date"
 msgid "Dates defined"
 msgstr "Dates définies"
 
-#: ⁨standard input⁩:208 ⁨standard input⁩:408 ⁨standard input⁩:135 ⁨standard input⁩:138
-#: ⁨standard input⁩:250 ⁨standard input⁩:178
+#: ⁨standard input⁩:178 ⁨standard input⁩:208 ⁨standard input⁩:135 ⁨standard input⁩:250
+#: ⁨standard input⁩:138 ⁨standard input⁩:414
 msgctxt "button"
 msgid "Delete permanently"
 msgstr "Supprimer définitivement"
@@ -234,8 +234,8 @@ msgid "Deploy Task type"
 msgstr "Type de tâche de déploiement"
 
 #: src/NotificationTargetRelease.php:943 src/NotificationTargetRelease.php:963
-#: src/Deploytask.php:67 src/ReleaseTemplate.php:192 ⁨standard input⁩:120
-#: ⁨standard input⁩:54 ⁨standard input⁩:64
+#: src/Deploytask.php:67 src/ReleaseTemplate.php:192 ⁨standard input⁩:64
+#: ⁨standard input⁩:54 ⁨standard input⁩:120
 msgid "Deploy task"
 msgid_plural "Deploy tasks"
 msgstr[0] "Tâche de déploiement"
@@ -253,8 +253,8 @@ msgstr[2] "Types de tâche"
 msgid "Deployment tasks in progress"
 msgstr "Tâche de déploiement en cours"
 
-#: src/ReleaseTemplate.php:160 ⁨standard input⁩:56 ⁨standard input⁩:63
-#: ⁨standard input⁩:30 ⁨standard input⁩:75 ⁨standard input⁩:77
+#: src/ReleaseTemplate.php:160 ⁨standard input⁩:63 ⁨standard input⁩:30
+#: ⁨standard input⁩:56 ⁨standard input⁩:77 ⁨standard input⁩:75
 msgid "Description"
 msgstr "Description"
 
@@ -265,13 +265,13 @@ msgstr[0] "Document"
 msgstr[1] "Documents"
 msgstr[2] "Documents"
 
-#: ⁨standard input⁩:146 ⁨standard input⁩:50 ⁨standard input⁩:45 ⁨standard input⁩:52
-#: ⁨standard input⁩:59 ⁨standard input⁩:288 ⁨standard input⁩:48 ⁨standard input⁩:51
-#: ⁨standard input⁩:54 ⁨standard input⁩:216
+#: ⁨standard input⁩:50 ⁨standard input⁩:146 ⁨standard input⁩:48 ⁨standard input⁩:51
+#: ⁨standard input⁩:54 ⁨standard input⁩:216 ⁨standard input⁩:45 ⁨standard input⁩:52
+#: ⁨standard input⁩:59 ⁨standard input⁩:288
 msgid "Done"
 msgstr "Fait"
 
-#: ⁨standard input⁩:101 ⁨standard input⁩:299
+#: ⁨standard input⁩:299 ⁨standard input⁩:101
 msgid "Duration"
 msgstr "Durée"
 
@@ -306,10 +306,10 @@ msgstr[0] "Entité"
 msgstr[1] "Entités"
 msgstr[2] "Entités"
 
-#: src/Release.php:1081 src/Deploytask.php:394 src/Deploytask.php:777
+#: src/Deploytask.php:394 src/Deploytask.php:778 src/Release.php:1081
 #: src/Deploytasktemplate.php:236 src/Test.php:231 src/Test.php:247
-#: ⁨standard input⁩:48 ⁨standard input⁩:55 ⁨standard input⁩:62 ⁨standard input⁩:289
-#: ⁨standard input⁩:49 ⁨standard input⁩:52 ⁨standard input⁩:217
+#: ⁨standard input⁩:49 ⁨standard input⁩:52 ⁨standard input⁩:55 ⁨standard input⁩:217
+#: ⁨standard input⁩:48 ⁨standard input⁩:62 ⁨standard input⁩:289
 msgid "Failed"
 msgstr "Echouée"
 
@@ -317,11 +317,11 @@ msgstr "Echouée"
 msgid "Finalization"
 msgstr "Finalisation"
 
-#: ⁨standard input⁩:55 ⁨standard input⁩:92 ⁨standard input⁩:110
+#: ⁨standard input⁩:92 ⁨standard input⁩:110 ⁨standard input⁩:55
 msgid "Finalize"
 msgstr "Finaliser"
 
-#: ⁨standard input⁩:122 ⁨standard input⁩:36
+#: ⁨standard input⁩:36 ⁨standard input⁩:122
 msgid "Followup"
 msgid_plural "Followups"
 msgstr[0] "Suivi"
@@ -371,7 +371,7 @@ msgstr[2] "Liens Mise en production/Changement"
 msgid "Location"
 msgstr "Lieu"
 
-#: ⁨standard input⁩:51 ⁨standard input⁩:92 ⁨standard input⁩:110
+#: ⁨standard input⁩:92 ⁨standard input⁩:110 ⁨standard input⁩:51
 msgid "Mark as failed"
 msgstr "Marquer comme échouée"
 
@@ -387,7 +387,7 @@ msgstr "Nouvelle mise en production"
 msgid "No data available"
 msgstr "Pas d'informations trouvées"
 
-#: src/Release.php:2676
+#: src/Release.php:2677
 msgid "No release found."
 msgstr "Pas de mise en production trouvé."
 
@@ -399,22 +399,22 @@ msgstr "Heures non travaillées"
 msgid "Not yet completed"
 msgstr "Pas encore terminé"
 
-#: src/Release.php:288 src/NotificationTargetRelease.php:755
+#: src/NotificationTargetRelease.php:755 src/Release.php:288
 msgctxt "quantity"
 msgid "Number of risks"
 msgstr "Nombre de risques"
 
-#: src/Release.php:301 src/NotificationTargetRelease.php:761
+#: src/NotificationTargetRelease.php:761 src/Release.php:301
 msgctxt "quantity"
 msgid "Number of rollbacks"
 msgstr "Nombre de retours en arrière"
 
-#: src/Release.php:328 src/NotificationTargetRelease.php:885
+#: src/NotificationTargetRelease.php:885 src/Release.php:328
 msgctxt "quantity"
 msgid "Number of tasks"
 msgstr "Nombre de tâches"
 
-#: src/Release.php:314 src/NotificationTargetRelease.php:768
+#: src/NotificationTargetRelease.php:768 src/Release.php:314
 msgctxt "quantity"
 msgid "Number of tests"
 msgstr "Nombre de tests"
@@ -435,7 +435,7 @@ msgstr "Date planifiée de mise en pré production"
 msgid "Pre-production run date"
 msgstr "Date de mise en pré production"
 
-#: ⁨standard input⁩:57 ⁨standard input⁩:214
+#: ⁨standard input⁩:214 ⁨standard input⁩:57
 msgid "Previous task"
 msgstr "Tâche précédente"
 
@@ -469,8 +469,9 @@ msgstr "Mettre à la corbeille"
 msgid "Real production run date"
 msgstr "Date de mise en production réelle"
 
-#: setup.php:110 src/Release.php:103 src/NotificationTargetRelease.php:967
-#: src/Profile.php:58 front/change_release.form.php:46 ⁨standard input⁩:32
+#: front/change_release.form.php:46 setup.php:112
+#: src/NotificationTargetRelease.php:967 src/Release.php:103 src/Profile.php:58
+#: ⁨standard input⁩:32
 msgid "Release"
 msgid_plural "Releases"
 msgstr[0] "Mise en production"
@@ -500,7 +501,7 @@ msgstr[0] "Gabarit de mise en production"
 msgstr[1] "Gabarits de mise en production"
 msgstr[2] "Gabarits de mise en production"
 
-#: src/Release.php:2701
+#: src/Release.php:2702
 msgid "Releases on linked items"
 msgstr "Mise en production sur les objets liés"
 
@@ -531,10 +532,10 @@ msgstr[2] "Revues"
 msgid "Reviewed"
 msgstr "Revue"
 
-#: src/NotificationTargetRelease.php:787 src/NotificationTargetRelease.php:945
-#: src/NotificationTargetRelease.php:965 src/Testtemplate.php:65
-#: src/Risk.php:53 ⁨standard input⁩:75 ⁨standard input⁩:116 ⁨standard input⁩:42
-#: ⁨standard input⁩:46
+#: src/Risk.php:53 src/NotificationTargetRelease.php:787
+#: src/NotificationTargetRelease.php:945 src/NotificationTargetRelease.php:965
+#: src/Testtemplate.php:65 ⁨standard input⁩:46 ⁨standard input⁩:42
+#: ⁨standard input⁩:116 ⁨standard input⁩:75
 msgid "Risk"
 msgid_plural "Risks"
 msgstr[0] "Risque"
@@ -548,8 +549,8 @@ msgstr[0] "Gabarit de risque"
 msgstr[1] "Gabarits de risque"
 msgstr[2] "Gabarits de risque"
 
-#: src/NotificationTargetRelease.php:753 src/TypeRisk.php:51 ⁨standard input⁩:143
-#: ⁨standard input⁩:57
+#: src/NotificationTargetRelease.php:753 src/TypeRisk.php:51 ⁨standard input⁩:57
+#: ⁨standard input⁩:143
 msgid "Risk type"
 msgid_plural "Risk types"
 msgstr[0] "Type de risque"
@@ -562,8 +563,8 @@ msgstr "Risques définis"
 
 #: src/NotificationTargetRelease.php:788 src/NotificationTargetRelease.php:789
 #: src/NotificationTargetRelease.php:946 src/NotificationTargetRelease.php:966
-#: src/Rollback.php:54 src/ReleaseTemplate.php:188 ⁨standard input⁩:118
-#: ⁨standard input⁩:48 ⁨standard input⁩:55
+#: src/Rollback.php:54 src/ReleaseTemplate.php:188 ⁨standard input⁩:55
+#: ⁨standard input⁩:48 ⁨standard input⁩:118
 msgid "Rollback"
 msgid_plural "Rollbacks"
 msgstr[0] "Retour en arrière"
@@ -581,8 +582,8 @@ msgstr[2] "Gabarits de retours en arrière"
 msgid "Rollbacks defined"
 msgstr "Retours en arrière définis"
 
-#: ⁨standard input⁩:34 ⁨standard input⁩:201 ⁨standard input⁩:401 ⁨standard input⁩:159
-#: ⁨standard input⁩:161 ⁨standard input⁩:51 ⁨standard input⁩:243 ⁨standard input⁩:171
+#: ⁨standard input⁩:34 ⁨standard input⁩:171 ⁨standard input⁩:51 ⁨standard input⁩:201
+#: ⁨standard input⁩:243 ⁨standard input⁩:159 ⁨standard input⁩:161 ⁨standard input⁩:407
 msgctxt "button"
 msgid "Save"
 msgstr "Sauvegarder"
@@ -598,7 +599,7 @@ msgstr "Arrêt du service"
 msgid "Service shutdown details"
 msgstr "Détail de l'arrêt de service"
 
-#: ⁨standard input⁩:380
+#: ⁨standard input⁩:386
 msgid "Set the status to pending"
 msgstr "Mettre en attente"
 
@@ -607,7 +608,7 @@ msgctxt "button"
 msgid "Show"
 msgstr "Voir"
 
-#: ⁨standard input⁩:86 ⁨standard input⁩:284 ⁨standard input⁩:212
+#: ⁨standard input⁩:212 ⁨standard input⁩:284 ⁨standard input⁩:86
 msgid "Status"
 msgstr "Statut"
 
@@ -637,8 +638,8 @@ msgid "Technical Support Document"
 msgstr "Document d'Architecture Technique"
 
 #: src/NotificationTargetRelease.php:944 src/NotificationTargetRelease.php:964
-#: src/Test.php:56 src/ReleaseTemplate.php:184 ⁨standard input⁩:114
-#: ⁨standard input⁩:60 ⁨standard input⁩:75
+#: src/ReleaseTemplate.php:184 src/Test.php:56 ⁨standard input⁩:75
+#: ⁨standard input⁩:60 ⁨standard input⁩:114
 msgid "Test"
 msgid_plural "Tests"
 msgstr[0] "Test"
@@ -652,8 +653,8 @@ msgstr[0] "Gabarit de test"
 msgstr[1] "Gabarits de test"
 msgstr[2] "Gabarits de test"
 
-#: src/NotificationTargetRelease.php:766 src/Testtemplate.php:60
-#: src/TypeTest.php:51 ⁨standard input⁩:57 ⁨standard input⁩:155
+#: src/TypeTest.php:51 src/NotificationTargetRelease.php:766
+#: src/Testtemplate.php:60 ⁨standard input⁩:155 ⁨standard input⁩:57
 msgid "Test type"
 msgid_plural "Test types"
 msgstr[0] "Type de test"
@@ -672,11 +673,11 @@ msgstr "La mise en production a été finalisée"
 msgid "Timeline filter"
 msgstr "Filtrer l'historique"
 
-#: ⁨standard input⁩:134 ⁨standard input⁩:66 ⁨standard input⁩:188 ⁨standard input⁩:146
+#: ⁨standard input⁩:134 ⁨standard input⁩:66 ⁨standard input⁩:146 ⁨standard input⁩:188
 msgid "Title"
 msgstr "Titre"
 
-#: ⁨standard input⁩:144 ⁨standard input⁩:48 ⁨standard input⁩:287 ⁨standard input⁩:215
+#: ⁨standard input⁩:48 ⁨standard input⁩:144 ⁨standard input⁩:215 ⁨standard input⁩:287
 msgid "To do"
 msgstr "A faire"
 
