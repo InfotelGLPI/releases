@@ -45,14 +45,14 @@
         <div class="read-only-content {{ entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::DONE') ? 'done' : '' }}">
             {% if not status_closed %}
             {% if entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::TODO') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' data-releases-action="done_fail_test" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Test::DONE'), rpath ~ '/ajax/timeline.php']|json_encode }}" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' data-releases-action="done_fail_test" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Test::FAIL'), rpath ~ '/ajax/timeline.php']|json_encode }}" title="{{ __('Failed', 'releases') }}"></i>
             {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::DONE') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;' data-releases-action="done_fail_test" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Test::DONE'), rpath ~ '/ajax/timeline.php']|json_encode }}" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;' data-releases-action="done_fail_test" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Test::FAIL'), rpath ~ '/ajax/timeline.php']|json_encode }}" title="{{ __('Failed', 'releases') }}"></i>
             {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::FAIL') %}
-                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::DONE') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Done') }}"></i>
-                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' onclick="done_fail_test({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Test::FAIL') }}, '{{ rpath }}/ajax/timeline.php')" title="{{ __('Failed', 'releases') }}"></i>
+                <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;' data-releases-action="done_fail_test" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Test::DONE'), rpath ~ '/ajax/timeline.php']|json_encode }}" title="{{ __('Done') }}"></i>
+                <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;' data-releases-action="done_fail_test" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Test::FAIL'), rpath ~ '/ajax/timeline.php']|json_encode }}" title="{{ __('Failed', 'releases') }}"></i>
             {% endif %}
             {% endif %}
 
@@ -245,7 +245,7 @@
 
                         {% if subitem.can(id, constant('PURGE')) %}
                             <button class="btn btn-outline-danger me-2" type="submit" name="purge"
-                                    onclick="return confirm('{{ __('Confirm the final deletion?') }}');">
+                                    data-releases-confirm="{{ __('Confirm the final deletion?') }}">
                                 <i class="fas fa-trash-alt"></i>
                                 <span>{{ _x('button', 'Delete permanently') }}</span>
                             </button>

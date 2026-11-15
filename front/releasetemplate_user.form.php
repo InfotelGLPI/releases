@@ -41,9 +41,7 @@ if (isset($_POST["update"])) {
     $link->check($_POST["id"], UPDATE);
 
     $link->update($_POST);
-    echo "<script type='text/javascript' >\n";
-    echo "window.parent.location.reload();";
-    echo "</script>";
+    echo Html::scriptBlock("window.parent.location.reload();");
 
 } elseif (isset($_POST['delete'])) {
     $link->check($_POST['id'], DELETE);

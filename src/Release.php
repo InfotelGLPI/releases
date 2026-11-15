@@ -2599,7 +2599,8 @@ class Release extends CommonITILObject
                             $tree,
                             -1,
                             [
-                                'on_change' => 'reloadTab("start=0&tree="+this.value)',
+                                // Reloads the tab, by public/scripts/csp_handlers.js (CSP)
+                                'add_data_attributes' => ['releases-reload-tab-on-change' => 'start=0&tree=%value%'],
                                 'display'   => false,
                             ],
                         ),

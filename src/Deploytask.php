@@ -628,8 +628,9 @@ class Deploytask extends CommonDBTM
         $rand = mt_rand();
         $html .= "<a href='" . $CFG_GLPI['root_doc'] . "/plugins/releases/front/deploytask.form.php?id=" . $val["id"] . "'";
 
-        $html .= " onmouseout=\"cleanhide('content_task_" . $val["id"] . $rand . "')\"
-               onmouseover=\"cleandisplay('content_task_" . $val["id"] . $rand . "')\"";
+        // Its content shown while hovered, by public/scripts/csp_handlers.js (no inline
+        // handler: CSP)
+        $html .= " data-releases-hover=\"" . htmlescape('content_task_' . $val["id"] . $rand) . "\"";
         $html .= ">";
 
         switch ($type) {
