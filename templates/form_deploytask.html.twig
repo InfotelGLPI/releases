@@ -41,24 +41,24 @@
         {% if not status_closed %}
         {% if entry_i['state'] is constant('GlpiPlugin\\Releases\\Deploytask::TODO') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               data-releases-action="done_fail_deploytask" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Deploytask::DONE'), rpath ~ '/ajax/timeline.php']|json_encode }}"
                title="{{ __('Done') }}"></i>
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               data-releases-action="done_fail_deploytask" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Deploytask::FAIL'), rpath ~ '/ajax/timeline.php']|json_encode }}"
                title="{{ __('Failed', 'releases') }}"></i>
         {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::DONE') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:forestgreen;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               data-releases-action="done_fail_deploytask" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Deploytask::DONE'), rpath ~ '/ajax/timeline.php']|json_encode }}"
                title="{{ __('Done') }}"></i>
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               data-releases-action="done_fail_deploytask" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Deploytask::FAIL'), rpath ~ '/ajax/timeline.php']|json_encode }}"
                title="{{ __('Failed', 'releases') }}"></i>
         {% elseif entry_i['state'] is constant('GlpiPlugin\\Releases\\Test::FAIL') %}
             <i data-type='done' class='fas fa-check-circle pointer fa-2x' style='color:gray;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::DONE') }}, '{{ rpath }}/ajax/timeline.php')"
+               data-releases-action="done_fail_deploytask" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Deploytask::DONE'), rpath ~ '/ajax/timeline.php']|json_encode }}"
                title="{{ __('Done') }}"></i>
             <i data-type='fail' class='fas fa-times-circle pointer fa-2x' style='color:firebrick;'
-               onclick="done_fail_deploytask({{ entry_i['id'] }}, this, {{ constant('GlpiPlugin\\Releases\\Deploytask::FAIL') }}, '{{ rpath }}/ajax/timeline.php')"
+               data-releases-action="done_fail_deploytask" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], constant('GlpiPlugin\\Releases\\Deploytask::FAIL'), rpath ~ '/ajax/timeline.php']|json_encode }}"
                title="{{ __('Failed', 'releases') }}"></i>
         {% endif %}
         {% endif %}
@@ -359,10 +359,16 @@
                        }
                     </script>
                     <button id="plan{{ rand }}" class="submit btn btn-outline-secondary d-block mb-2 text-truncate"
-                            onclick="showPlanUpdate{{ rand }}()" type="button">
+                            type="button">
                         <i class="fas fa-calendar"></i>
                         <span>{{ __('Plan this task') }}</span>
                     </button>
+                    {#- Bound here rather than an inline handler (CSP): the function carries the rand -#}
+                    <script>
+                        document.getElementById('plan{{ rand }}').addEventListener('click', () => {
+                            showPlanUpdate{{ rand }}();
+                        });
+                    </script>
                     <div id="viewplan{{ rand }}"></div>
                 </div>
             </div>
@@ -403,7 +409,7 @@
 
                 {% if subitem.can(id, constant('PURGE')) %}
                     <button class="submit btn btn-outline-danger me-2" type="submit" name="purge"
-                            onclick="return confirm('{{ __('Confirm the final deletion?') }}');">
+                            data-releases-confirm="{{ __('Confirm the final deletion?') }}">
                         <i class="fas fa-trash-alt"></i>
                         <span>{{ _x('button', 'Delete permanently') }}</span>
                     </button>

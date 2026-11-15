@@ -133,7 +133,7 @@
                                 <button type="submit" name="delete_document"
                                         class="btn btn-link p-0 text-danger align-baseline"
                                         title="{{ _x('button', 'Delete permanently') }}"
-                                        onclick="return confirm('{{ __('Confirm the final deletion?')|e('js') }}');">
+                                        data-releases-confirm="{{ __('Confirm the final deletion?') }}">
                                     <i class="ti ti-trash"></i>
                                 </button>
                             </form>

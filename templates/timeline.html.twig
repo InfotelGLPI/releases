@@ -141,9 +141,9 @@
              {% if itiltype is same as 'Risk' or itiltype is same as 'Rollback' %}
             <div class="col-auto todo-list-state d-none">
                {% if entry_i['state'] is constant('Planning::TODO') %}
-                  <span class="state state_1" onclick="change_task_state({{ entry_i['id'] }}, this, '{{ itiltype}}')" title="{{ __('To do') }}"></span>
+                  <span class="state state_1" data-releases-action="change_task_state" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], itiltype]|json_encode }}" title="{{ __('To do') }}"></span>
                {% elseif entry_i['state'] is constant('Planning::DONE') %}
-                  <span class="state state_2" onclick="change_task_state({{ entry_i['id'] }}, this, '{{ itiltype}}')" title="{{ __('Done') }}"></span>
+                  <span class="state state_2" data-releases-action="change_task_state" data-releases-element-at="1" data-releases-args="{{ [entry_i['id'], itiltype]|json_encode }}" title="{{ __('Done') }}"></span>
                {% endif %}
             </div>
              {% endif %}

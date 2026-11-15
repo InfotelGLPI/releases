@@ -55,6 +55,8 @@ function plugin_init_releases()
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/releasetemplate_form.js";
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/releasetemplate_timeline.js";
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['releases'][] = "scripts/change_release_form.js";
+        // Delegated listeners replacing the inline event handlers (CSP)
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT_MODULE]['releases'][] = "scripts/csp_handlers.js";
         $PLUGIN_HOOKS[Hooks::ADD_CSS]['releases'][]      = "css/styles.css";
     }
 
@@ -112,6 +114,9 @@ function plugin_version_releases()
         'license'        => 'GPLv3+',
         'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>, Xavier CAILLAUD, Alban LESELLIER",
         'homepage'       => 'https://github.com/InfotelGLPI/releases',
+        // No inline event handler, javascript: URL nor script without nonce: the plugin works
+        // under the Content Security Policy of GLPI (public/scripts/csp_handlers.js)
+        'csp_compliant'  => true,
         'minGlpiVersion' => '11.0',// For compatibility / no install
         'requirements'   => [
             'glpi' => [
