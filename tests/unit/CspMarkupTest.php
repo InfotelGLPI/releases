@@ -27,7 +27,6 @@
  * --------------------------------------------------------------------------
  */
 
-
 namespace GlpiPlugin\Releases\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\DataProvider;
